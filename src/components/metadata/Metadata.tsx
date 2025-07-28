@@ -4,6 +4,8 @@ import {
   SeeAlso,
   Summary,
   PrimitivesExternalWebResource,
+  type IIIFLabel,
+  type MetadataItem,
 } from '@/components/iiif/primitives';
 import { useTranslations } from 'next-intl';
 
@@ -22,14 +24,14 @@ const Metadata = () => {
           <div className="border-b pb-2 border-gray-200 dark:border-gray-700">
             <div className="text-sm text-gray-500 dark:text-gray-400">{t('title')}</div>
             <div className="text-gray-900 dark:text-gray-100">
-              <Label label={manifest.label as any} as="span" />
+              <Label label={manifest.label as IIIFLabel} as="span" />
             </div>
           </div>
           {manifest.summary && (
             <div className="border-b pb-2 border-gray-200 dark:border-gray-700">
               <div className="text-sm text-gray-500 dark:text-gray-400">{t('description')}</div>
               <div className="text-gray-900 dark:text-gray-100">
-                <Summary summary={manifest.summary as any} />
+                <Summary summary={manifest.summary as IIIFLabel} />
               </div>
             </div>
           )}
@@ -38,7 +40,7 @@ const Metadata = () => {
             <div className="border-b pb-2 border-gray-200 dark:border-gray-700">
               <div className="text-sm text-gray-500 dark:text-gray-400">{t('metadata')}</div>
               <div className="text-gray-900 dark:text-gray-100">
-                <CloverMetadata metadata={manifest.metadata as any || []} />
+                <CloverMetadata metadata={(manifest.metadata || []) as MetadataItem[]} />
               </div>
             </div>
           )}

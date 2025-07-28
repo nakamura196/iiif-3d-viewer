@@ -1,7 +1,7 @@
 // Custom IIIF primitive components to replace @samvera/clover-iiif/primitives
 import React from 'react';
 
-type IIIFLabel = string | string[] | Record<string, string | string[]>;
+export type IIIFLabel = string | string[] | Record<string, string | string[]>;
 
 interface LabelProps {
   label: IIIFLabel;
@@ -10,8 +10,6 @@ interface LabelProps {
 }
 
 export function Label({ label, as = 'span', className = '' }: LabelProps) {
-  const Component = as as keyof React.JSX.IntrinsicElements;
-  
   if (!label) return null;
   
   // Handle different label formats from IIIF
@@ -36,7 +34,17 @@ export function Label({ label, as = 'span', className = '' }: LabelProps) {
     }
   }
   
-  return React.createElement(Component as any, { className }, displayText);
+  const props = { className };
+  
+  if (as === 'span') return <span {...props}>{displayText}</span>;
+  if (as === 'div') return <div {...props}>{displayText}</div>;
+  if (as === 'p') return <p {...props}>{displayText}</p>;
+  if (as === 'h1') return <h1 {...props}>{displayText}</h1>;
+  if (as === 'h2') return <h2 {...props}>{displayText}</h2>;
+  if (as === 'h3') return <h3 {...props}>{displayText}</h3>;
+  
+  // Default to span
+  return <span {...props}>{displayText}</span>;
 }
 
 interface SummaryProps {
@@ -70,7 +78,7 @@ export function Summary({ summary, className = '' }: SummaryProps) {
   return <div className={className}>{displayText}</div>;
 }
 
-interface MetadataItem {
+export interface MetadataItem {
   label: IIIFLabel;
   value: IIIFLabel;
 }
