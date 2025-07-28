@@ -1,0 +1,69 @@
+{
+  "Header": {
+    "title": "IIIF 3D Viewer",
+    "download": "ダウンロード",
+    "downloadShort": "DL",
+    "english": "English",
+    "japanese": "日本語"
+  },
+  "Footer": {
+    "title": "IIIF 3D Viewer",
+    "help": "ヘルプ",
+    "privacy": "プライバシーポリシー",
+    "terms": "利用規約",
+    "developedBy": "開発者",
+    "developers": "中村 覚・小川 潤（東京大学）"
+  },
+  "Input": {
+    "title": "3Dモデルを表示",
+    "description": "IIIFマニフェストのURLを入力してください",
+    "submit": "表示する",
+    "sampleManifest": "サンプルマニフェスト",
+    "sampleManifest1": "サンプルマニフェスト1",
+    "sampleManifest2": "サンプルマニフェスト2",
+    "requiredUrl": "マニフェストURLを入力してください",
+    "invalidUrl": "有効なURLを入力してください"
+  },
+  "Metadata": {
+    "title": "タイトル",
+    "description": "説明",
+    "metadata": "メタデータ",
+    "seeAlso": "参照"
+  },
+  "Info": {
+    "metadata": "メタデータ",
+    "annotations": "アノテーション"
+  },
+  "Annotation": {
+    "title": "アノテーション一覧",
+    "annotations": "アノテーション",
+    "annotationCount": "{count}件"
+  },
+  "Help": {
+    "title": "ヘルプ"
+  },
+  "Privacy": {
+    "title": "プライバシーポリシー"
+  },
+  "Terms": {
+    "title": "利用規約"
+  },
+  "Home": {
+    "developers": "開発者",
+    "developerNames": "中村 覚・小川 潤（東京大学）",
+    "title": "IIIF 3D Viewer",
+    "subtitle": "IIIF Manifestに基づいた3Dモデルの表示とアノテーション機能を提供するビューアアプリケーションです。",
+    "features": "主な機能",
+    "feature1Title": "3Dモデル表示",
+    "feature1Description": "GLBフォーマットの3Dモデルをインタラクティブに表示。マウスやタッチ操作で自由に回転・ズームが可能。",
+    "feature2Title": "アノテーション",
+    "feature2Description": "3Dモデル上の特定位置にアノテーションを追加。詳細情報やコメントを関連付けて管理。",
+    "feature3Title": "IIIF対応",
+    "feature3Description": "IIIF Manifestフォーマットに準拠。標準化された方法でデジタルコンテンツを共有・表示。",
+    "howToUse": "使い方",
+    "step1": "1. 下記のフォームにIIIF ManifestのURLを入力してください。",
+    "step2": "2. 「ビューアを開く」ボタンをクリックすると、3Dモデルが表示されます。",
+    "step3": "3. マウスやタッチ操作でモデルを回転・ズームして、詳細を確認できます。",
+    "step4": "4. アノテーションがある場合は、モデル上に表示され、クリックで詳細を確認できます。"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "Header": {
+    "title": "IIIF 3D Viewer",
+    "download": "Download",
+    "downloadShort": "DL",
+    "english": "English",
+    "japanese": "日本語"
+  },
+  "Footer": {
+    "title": "IIIF 3D Viewer",
+    "help": "Help",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "developedBy": "Developed by",
+    "developers": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)"
+  },
+  "Input": {
+    "title": "3D Model Viewer",
+    "description": "Enter the URL of the IIIF Manifest",
+    "submit": "View",
+    "sampleManifest": "Sample Manifest",
+    "sampleManifest1": "Sample Manifest 1",
+    "sampleManifest2": "Sample Manifest 2",
+    "requiredUrl": "Enter the Manifest URL",
+    "invalidUrl": "Enter a valid URL"
+  },
+  "Metadata": {
+    "title": "Title",
+    "description": "Description",
+    "metadata": "Metadata",
+    "seeAlso": "See Also"
+  },
+  "Info": {
+    "metadata": "Metadata",
+    "annotations": "Annotations"
+  },
+  "Annotation": {
+    "title": "Annotation List",
+    "annotations": "Annotations",
+    "annotationCount": "{count} items"
+  },
+  "Help": {
+    "title": "Help"
+  },
+  "Privacy": {
+    "title": "Privacy Policy"
+  },
+  "Terms": {
+    "title": "Terms of Service"
+  },
+  "Home": {
+    "developers": "Developers",
+    "developerNames": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)",
+    "title": "IIIF 3D Viewer",
+    "subtitle": "A viewer application that provides 3D model display and annotation functionality based on IIIF Manifest.",
+    "features": "Main Features",
+    "feature1Title": "3D Model Display",
+    "feature1Description": "Interactive display of 3D models in GLB format. Freely rotate and zoom with mouse or touch controls.",
+    "feature2Title": "Annotations",
+    "feature2Description": "Add annotations to specific positions on 3D models. Manage detailed information and comments in association.",
+    "feature3Title": "IIIF Support",
+    "feature3Description": "Compliant with IIIF Manifest format. Share and display digital content in a standardized way.",
+    "howToUse": "How to Use",
+    "step1": "1. Enter the URL of an IIIF Manifest in the form below.",
+    "step2": "2. Click the \"Open Viewer\" button to display the 3D model.",
+    "step3": "3. Rotate and zoom the model with mouse or touch controls to examine details.",
+    "step4": "4. If annotations are present, they will be displayed on the model and can be clicked for details."
+  }
+}

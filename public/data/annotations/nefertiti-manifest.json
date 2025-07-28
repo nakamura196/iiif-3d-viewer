@@ -1,0 +1,205 @@
+{
+    "@context": [
+        "http://www.w3.org/ns/anno.jsonld",
+        "http://iiif.io/api/presentation/3/context.json"
+    ],
+    "type": "Manifest",
+    "id": "http://www.kanzaki.com/works/2018/threed/nefertiti-manifest.json",
+    "label": {
+        "en": [
+            "Bust of Queen Nefertiti"
+        ],
+        "ja": [
+            "ネフェルティティの胸像"
+        ]
+    },
+    "description": {
+        "en": [
+            "limestone and stucco, 1345 BC: by Thutmose, ancient Egypt. Presented at Neues Museum, Berlin"
+        ],
+        "ja": [
+            "紀元前1345年のエジプトでつくられた胸像。ベルリン新博物館蔵"
+        ]
+    },
+    "requiredStatement": {
+      "label": { "@none": [ "Attribution" ] },
+      "value": { "@none": [ "3D models by Nefertiti Hack, converted to Threejs data by UniversalViewer example site." ] }
+    },
+    "metadata": [
+        {
+            "label": {"@none": ["Nefertiti Hack"]}, 
+            "value": {"@none": ["http://nefertitihack.alloversky.com/"]}
+        }
+    ],
+    "items": [
+        {
+            "type": "Canvas",
+            "id": "http://www.kanzaki.com/works/2018/threed/nefertiti/canvas/1",
+            "label": {
+                "@none": [
+                    "Three D canvas"
+                ]
+            },
+            "width": 800,
+            "height": 700,
+            "items": [
+                {
+                    "id": "http://www.kanzaki.com/works/2018/threed/nefertiti/content/media-1-1",
+                    "type": "AnnotationPage",
+                    "items": [
+                        {
+                            "id": "http://www.kanzaki.com/works/2018/threed/nefertiti/media/1-1-1",
+                            "type": "Annotation",
+                            "motivation": "painting",
+                            "target": "http://www.kanzaki.com/works/2018/threed/nefertiti/canvas/1",
+                            "body": {
+                                "type": "PhysicalObject",
+                                "id": "http://files.universalviewer.io/manifests/demo/nefertiti/nefertiti.json",
+                                "format": "application/vnd.threejs+json"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": "http://www.kanzaki.com/works/2018/threed/nefertiti/content/annot-1-1",
+                    "type": "AnnotationPage",
+                    "items": [
+                        {
+                            "id": "http://www.kanzaki.com/works/2018/threed/nefertiti/annot/1-1-1",
+                            "type": "Annotation",
+                            "motivation": "painting",
+                            "target": {
+                                "source": "http://www.kanzaki.com/works/2018/threed/nefertiti/canvas/1",
+                                "selector": {
+                                    "type": "3DSelector",
+                                    "value": [0,0,0.5]
+                                }
+                            },
+                            "body": {
+                                "type": "TextualBody",
+                                "label": "Bathroom Sink",
+                                "value": "<p><a href='https://dlib.nyu.edu/awdl/isaw/isaw-papers/20-5/' target='_blank'>Bathroom</a> Sink is good for washing your hands</p>"
+                            }
+                        },
+                        {
+                            "id": "http://www.kanzaki.com/works/2018/threed/nefertiti/annot/1-1-1",
+                            "type": "Annotation",
+                            "motivation": "painting",
+                            "target": {
+                                "source": "http://www.kanzaki.com/works/2018/threed/nefertiti/canvas/1",
+                                "selector": {
+                                    "type": "3DSelector",
+                                    "value": [0.5,0,0]
+                                }
+                            },
+                            "body": {
+                                "type": "TextualBody",
+                                "label": "Bath",
+                                "value": "<p>Bathroom Sink is good for washing your hands</p>"
+                            }
+                        },
+                        {
+                            "id": "http://www.kanzaki.com/works/2018/threed/nefertiti/annot/1-1-1",
+                            "type": "Annotation",
+                            "motivation": "painting",
+                            "target": {
+                                "source": "http://www.kanzaki.com/works/2018/threed/nefertiti/canvas/1",
+                                "selector": {
+                                    "type": "3DSelector",
+                                    "value": [0,0,0]
+                                }
+                            },
+                            "body": {
+                                "type": "TextualBody",
+                                "label":"Radiator",
+                                "value": "<p>Keeps you warm in winter.</p>"
+                            }
+                        },
+                        {
+                            "id": "http://www.kanzaki.com/works/2018/threed/nefertiti/annot/1-1-1",
+                            "type": "Annotation",
+                            "motivation": "painting",
+                            "target": {
+                                "source": "http://www.kanzaki.com/works/2018/threed/nefertiti/canvas/1",
+                                "selector": {
+                                    "type": "3DSelector",
+                                    "value": [0.5,0.5,0]
+                                }
+                            },
+                            "body": {
+                                "type": "TextualBody",
+                                "label":"Sky Light",
+                                "value": "<p>Bathroom Sink is good for washing your hands</p>"
+                            }
+                        },
+                        {
+                            "id": "http://www.kanzaki.com/works/2018/threed/nefertiti/annot/1-1-1",
+                            "type": "Annotation",
+                            "motivation": "painting",
+                            "target": {
+                                "source": "http://www.kanzaki.com/works/2018/threed/nefertiti/canvas/1",
+                                "selector": {
+                                    "type": "3DSelector",
+                                    "value": [0.12358536931868289,0.9468520884384275,0.08519675812773923]
+                                }
+                            },
+                            "body": {
+                                "type": "TextualBody",
+                                "label":"aaa",
+                                "value": "<p>bbb</p>"
+                            }
+                        },
+                        {
+                            "id": "http://www.kanzaki.com/works/2018/threed/nefertiti/annot/1-1-1",
+                            "type": "Annotation",
+                            "motivation": "painting",
+                            "target": {
+                                "source": "http://www.kanzaki.com/works/2018/threed/nefertiti/canvas/1",
+                                "selector": {
+                                    "type": "3DSelector",
+                                    "value": [0.2343593675549637,0.8237950303868238,-0.2788433800923982]
+                                }
+                            },
+                            "body": {
+                                "type": "TextualBody",
+                                "label":"ccc",
+                                "value": "<p>ddd</p>"
+                            }
+                        },
+                        {
+                            "id": "http://www.kanzaki.com/works/2018/threed/nefertiti/annot/1-1-1",
+                            "type": "Annotation",
+                            "motivation": "painting",
+                            "target": {
+                                "source": "http://www.kanzaki.com/works/2018/threed/nefertiti/canvas/1",
+                                "selector": {
+                                    "type": "PolygonSelector",
+                                    "area": [
+                                        0.3198457360267639,
+                                        0.805331826210022,
+                                        -0.2785956859588623,
+                                        0.19282524287700653,
+                                        0.8053269386291504,
+                                        -0.27898335456848145,
+                                        0.19404809176921844,
+                                        0.7414807677268982,
+                                        -0.2783949375152588,
+                                        0.32123419642448425,
+                                        0.7367392182350159,
+                                        -0.2772940695285797
+                                    ],
+                                    "value": "-0.2,0.5,-0.28"
+                                }
+                            },
+                            "body": {
+                                "type": "TextualBody",
+                                "label":"Polygon annotation",
+                                "value": "<p>Polygon annotation test</p>"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

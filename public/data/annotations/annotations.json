@@ -1,0 +1,60 @@
+{
+  "annotations":[
+    {
+      "title": "Bathroom Sink",
+      "description": "<p><a href='https://dlib.nyu.edu/awdl/isaw/isaw-papers/20-5/' target='_blank'>Bathroom</a> Sink is good for washing your hands</p>",
+      "camPos": {
+        "x": 1.61,
+        "y": 1.89,
+        "z": 1.37
+      },
+      "lookAt": {
+        "x": 0,
+        "y": 0,
+        "z": 0.5
+      }
+    },
+    {
+      "title": "Bath",
+      "description": "<p>Bathroom Sink is good for washing your hands</p>",
+      "camPos": {
+        "x": 1.13,
+        "y": 1.33,
+        "z": 1.98
+      },
+      "lookAt": {
+        "x": 0.5,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "title": "Radiator",
+      "description": "<p>Keeps you warm in winter.</p>",
+      "camPos": {
+        "x": 1.13,
+        "y": 1.15,
+        "z": 0.66
+      },
+      "lookAt": {
+        "x": 0,
+        "y": 0,
+        "z": 0
+      }
+    },
+    {
+      "title": "Sky Light",
+      "description": "<p>Bathroom Sink is good for washing your hands</p>",
+      "camPos": {
+        "x": 1.05,
+        "y": 1.35,
+        "z": 1.06
+      },
+      "lookAt": {
+        "x": 0.5,
+        "y": 0.5,
+        "z": 0
+      }
+    }
+  ]
+}

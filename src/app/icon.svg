@@ -1,0 +1,17 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" fill="#3B82F6" rx="64"/>
+  <g transform="translate(256, 256)">
+    <!-- 3D cube -->
+    <g stroke="#ffffff" stroke-width="12" fill="none">
+      <!-- Front face -->
+      <path d="M -80,-80 L 80,-80 L 80,80 L -80,80 Z" fill="rgba(255,255,255,0.3)"/>
+      <!-- Top face -->
+      <path d="M -80,-80 L -40,-120 L 120,-120 L 80,-80 Z" fill="rgba(255,255,255,0.2)"/>
+      <!-- Right face -->
+      <path d="M 80,-80 L 120,-120 L 120,40 L 80,80 Z" fill="rgba(255,255,255,0.1)"/>
+    </g>
+    <!-- 3D text -->
+    <text x="0" y="10" font-family="Arial, sans-serif" font-size="80" font-weight="bold" 
+          text-anchor="middle" fill="#ffffff">3D</text>
+  </g>
+</svg>
