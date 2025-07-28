@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@iiif/presentation-3": "^2.1.0",
     "@react-three/drei": "^10.6.0",
     "@react-three/fiber": "^9.2.0",
     "@tailwindcss/postcss": "^4.1.11",
