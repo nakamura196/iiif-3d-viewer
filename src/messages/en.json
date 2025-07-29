@@ -19,8 +19,8 @@
     "description": "Enter the URL of the IIIF Manifest",
     "submit": "View",
     "sampleManifest": "Sample Manifest",
-    "sampleManifest1": "Sample Manifest 1",
-    "sampleManifest2": "Sample Manifest 2",
+    "sampleManifest1": "Ishibuchi Family Globe (Kikuchi City Library Collection)",
+    "sampleManifest2": "Ishibuchi Family Globe (Kikuchi City Library Collection) - With Annotations",
     "requiredUrl": "Enter the Manifest URL",
     "invalidUrl": "Enter a valid URL"
   },
@@ -37,7 +37,9 @@
   "Annotation": {
     "title": "Annotation List",
     "annotations": "Annotations",
-    "annotationCount": "{count} items"
+    "annotationCount": "{count} items",
+    "type": "Type",
+    "unknown": "Unknown"
   },
   "Help": {
     "title": "Help"

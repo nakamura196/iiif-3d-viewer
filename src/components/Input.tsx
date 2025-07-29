@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-const ManifestInput = ({ onSubmit }: { onSubmit: (url: string) => void }) => {
+const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => void }) => {
   const t = useTranslations('Input');
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
@@ -69,10 +69,18 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string) => void }) => {
         <ul className="space-y-2">
           <li>
             <button
-              onClick={() => onSubmit('https://sukilam.aws.ldas.jp/iiif/3/11/manifest')}
+              onClick={() => onSubmit('/manifests/sample-manifest.json')}
               className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
             >
               {t('sampleManifest1')}
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => onSubmit('/manifests/sample-manifest-with-annotations.json', 'annotations')}
+              className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
+            >
+              {t('sampleManifest2')}
             </button>
           </li>
         </ul>

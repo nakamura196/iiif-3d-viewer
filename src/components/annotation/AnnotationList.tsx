@@ -71,7 +71,7 @@ export default function AnnotationList() {
                 </div>
                 <div className="mt-2">
                   <span className="text-xs text-gray-500 dark:text-gray-400">
-                    Type: {annotation.data?.target?.selector?.type || '不明'}
+                    {t('type')}: {annotation.data?.target?.selector?.type || t('unknown')}
                   </span>
                 </div>
               </div>

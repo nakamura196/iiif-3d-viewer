@@ -11,8 +11,9 @@ export default function HomeContent() {
   const t = useTranslations('Home');
   const locale = useLocale();
 
-  const handleManifestSubmit = async (manifestUrl: string) => {
-    router.push(`/${locale}/viewer?manifest=${encodeURIComponent(manifestUrl)}`);
+  const handleManifestSubmit = async (manifestUrl: string, tab?: string) => {
+    const url = `/${locale}/viewer?manifest=${encodeURIComponent(manifestUrl)}`;
+    router.push(tab ? `${url}&tab=${tab}` : url);
   };
 
   return (

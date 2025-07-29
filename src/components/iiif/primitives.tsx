@@ -75,7 +75,7 @@ export function Summary({ summary, className = '' }: SummaryProps) {
     }
   }
   
-  return <div className={className}>{displayText}</div>;
+  return <div className={className} dangerouslySetInnerHTML={{ __html: displayText }} />;
 }
 
 export interface MetadataItem {
@@ -93,16 +93,56 @@ export function Metadata({ metadata, className = '' }: MetadataProps) {
   
   return (
     <div className={className}>
-      {metadata.map((item, index) => (
-        <div key={index} className="mb-2">
-          <dt className="font-medium text-gray-700 dark:text-gray-300">
-            <Label label={item.label} />
-          </dt>
-          <dd className="text-gray-900 dark:text-gray-100">
-            <Label label={item.value} />
-          </dd>
-        </div>
-      ))}
+      {metadata.map((item, index) => {
+        // Extract text from label
+        let labelText = '';
+        const label = item.label;
+        if (typeof label === 'string') {
+          labelText = label;
+        } else if (Array.isArray(label)) {
+          labelText = label[0] || '';
+        } else if (typeof label === 'object') {
+          if (label.ja) {
+            labelText = Array.isArray(label.ja) ? label.ja[0] : label.ja;
+          } else if (label.en) {
+            labelText = Array.isArray(label.en) ? label.en[0] : label.en;
+          } else {
+            const firstKey = Object.keys(label)[0];
+            if (firstKey) {
+              labelText = Array.isArray(label[firstKey]) ? label[firstKey][0] : label[firstKey];
+            }
+          }
+        }
+        
+        // Extract text from value
+        let valueText = '';
+        const value = item.value;
+        if (typeof value === 'string') {
+          valueText = value;
+        } else if (Array.isArray(value)) {
+          valueText = value[0] || '';
+        } else if (typeof value === 'object') {
+          if (value.ja) {
+            valueText = Array.isArray(value.ja) ? value.ja[0] : value.ja;
+          } else if (value.en) {
+            valueText = Array.isArray(value.en) ? value.en[0] : value.en;
+          } else {
+            const firstKey = Object.keys(value)[0];
+            if (firstKey) {
+              valueText = Array.isArray(value[firstKey]) ? value[firstKey][0] : value[firstKey];
+            }
+          }
+        }
+        
+        return (
+          <div key={index} className="mb-2">
+            <dt className="font-medium text-gray-700 dark:text-gray-300">
+              {labelText}
+            </dt>
+            <dd className="text-gray-900 dark:text-gray-100" dangerouslySetInnerHTML={{ __html: valueText }} />
+          </div>
+        );
+      })}
     </div>
   );
 }

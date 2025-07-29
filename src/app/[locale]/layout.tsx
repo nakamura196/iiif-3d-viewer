@@ -91,16 +91,8 @@ export async function generateMetadata({
       },
     },
     icons: {
-      icon: [
-        { url: '/icon.svg', type: 'image/svg+xml' },
-        { url: '/icon/icon-16x16.png', sizes: '16x16', type: 'image/png' },
-        { url: '/icon/icon-32x32.png', sizes: '32x32', type: 'image/png' },
-        { url: '/icon/icon-192x192.png', sizes: '192x192', type: 'image/png' },
-        { url: '/icon/icon-512x512.png', sizes: '512x512', type: 'image/png' },
-      ],
-      apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+      icon: '/favicon.ico',
     },
-    manifest: '/manifest.json',
   };
 }
 

@@ -1,0 +1,257 @@
+{
+  "@context": "http://iiif.io/api/presentation/3/context.json",
+  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json",
+  "type": "Manifest",
+  "label": {
+    "none": [
+      "石淵家地球儀"
+    ]
+  },
+  "metadata": [
+    {
+      "label": {
+        "none": [
+          "Title"
+        ]
+      },
+      "value": {
+        "none": [
+          "石淵家地球儀"
+        ]
+      }
+    },
+    {
+      "label": {
+        "none": [
+          "Description"
+        ]
+      },
+      "value": {
+        "none": [
+          "『石淵家地球儀』（菊池市立図書館所蔵）を改変<br />\n<br />\nhttps://adeac.jp/kikuchi-city/catalog/e0001<br />\n<br />\n石淵萬寿(いしぶちばんじゅ：1837-1902)は水次村(みつぎむら)で家業の医を営みながら、地域の子弟に対する儒学教育を志し、私塾「楽只堂(らくしどう)」を開いた。本地球儀は、楽只堂で利用された教材と目されている。製作者を萬壽と仮定すると、安政後期から明治初年(1857-70)頃の作と推定できる。 画像中央に描かれた「大日本」を始め、様々な地名が散見される。当時、作成者がどういった形で世界を理解していたか、うかがい知ることが出来る。"
+        ]
+      }
+    }
+  ],
+  "summary": [
+    [
+      "『石淵家地球儀』（菊池市立図書館所蔵）を改変\n\nhttps://adeac.jp/kikuchi-city/catalog/e0001\n\n石淵萬寿(いしぶちばんじゅ：1837-1902)は水次村(みつぎむら)で家業の医を営みながら、地域の子弟に対する儒学教育を志し、私塾「楽只堂(らくしどう)」を開いた。本地球儀は、楽只堂で利用された教材と目されている。製作者を萬壽と仮定すると、安政後期から明治初年(1857-70)頃の作と推定できる。 画像中央に描かれた「大日本」を始め、様々な地名が散見される。当時、作成者がどういった形で世界を理解していたか、うかがい知ることが出来る。"
+    ]
+  ],
+  "rights": "https://rightsstatements.org/vocab/CNE/1.0/",
+  "provider": [
+    {
+      "id": "https://iiif-3d-viewer-wpym.vercel.app/",
+      "type": "Agent",
+      "label": {
+        "none": [
+          "Sukilam"
+        ]
+      }
+    }
+  ],
+  "viewingDirection": "left-to-right",
+  "items": [
+    {
+      "@context": "http://iiif.io/api/presentation/3/context.json",
+      "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+      "type": "Canvas",
+      "label": {
+        "none": [
+          "1"
+        ]
+      },
+      "rights": "https://rightsstatements.org/vocab/CNE/1.0/",
+      "items": [
+        {
+          "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-page-12",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-12",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "/models/ishibuchi-globe.glb",
+                "type": "Model",
+                "format": "model/gltf-binary",
+                "service": [],
+                "height": null,
+                "width": null,
+                "duration": null
+              },
+              "target": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+              "label": {
+                "none": [
+                  "[Untitled]"
+                ]
+              }
+            },
+            {
+              "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-page-57967a26-b097-4b9b-8511-adba590ecc62",
+              "type": "AnnotationPage",
+              "items": [
+                {
+                  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-282kyICrlKEeRyEWyGZ1",
+                  "type": "Annotation",
+                  "motivation": "painting",
+                  "body": {
+                    "value": "<p></p>",
+                    "label": "海",
+                    "type": "TextualBody"
+                  },
+                  "target": {
+                    "source": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                    "selector": {
+                      "camPos": [
+                        -0.5110838501089687,
+                        0.7650802836142999,
+                        -0.9555411915119435
+                      ],
+                      "type": "3DSelector",
+                      "value": [
+                        -0.3459178779604953,
+                        0.5445255810435351,
+                        -0.7525717093022277
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-5IcXdF4MptnLiLwHOj5a",
+                  "type": "Annotation",
+                  "motivation": "painting",
+                  "body": {
+                    "value": "<p></p>",
+                    "label": "中",
+                    "type": "TextualBody"
+                  },
+                  "target": {
+                    "source": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                    "selector": {
+                      "camPos": [
+                        -0.34980256349676153,
+                        1.175981469429255,
+                        -1.5751070563774578
+                      ],
+                      "type": "3DSelector",
+                      "value": [
+                        -0.525735125573101,
+                        0.4741805796176385,
+                        -0.6889875943082124
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-5PQUNskDnZwuoTmQrCUq",
+                  "type": "Annotation",
+                  "motivation": "painting",
+                  "body": {
+                    "value": "<p></p>",
+                    "label": "北海",
+                    "type": "TextualBody"
+                  },
+                  "target": {
+                    "source": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                    "selector": {
+                      "camPos": [
+                        -0.3782648431244856,
+                        0.874079497767241,
+                        -0.9111313450003292
+                      ],
+                      "type": "3DSelector",
+                      "value": [
+                        -0.2557678207152946,
+                        0.7615613040808595,
+                        -0.5854673025803923
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-9CdwCGrf1ZlWQqjxJhVT",
+                  "type": "Annotation",
+                  "motivation": "painting",
+                  "body": {
+                    "value": "<p></p>",
+                    "label": "イギリス",
+                    "type": "TextualBody"
+                  },
+                  "target": {
+                    "source": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                    "selector": {
+                      "value": [
+                        -0.2056713368677782,
+                        0.7115841685636456,
+                        -0.6593850997323897
+                      ],
+                      "type": "3DSelector",
+                      "camPos": [
+                        -0.37826484312621145,
+                        0.8740794977624307,
+                        -0.9111313450033702
+                      ]
+                    }
+                  }
+                },
+                {
+                  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-9P1Ue3GEfXhSTaudeU1n",
+                  "type": "Annotation",
+                  "motivation": "painting",
+                  "body": {
+                    "value": "<p></p>",
+                    "label": "小東洋",
+                    "type": "TextualBody"
+                  },
+                  "target": {
+                    "source": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                    "selector": {
+                      "value": [
+                        -0.09398788112830524,
+                        0.5775810943899139,
+                        0.8016204908400757
+                      ],
+                      "camPos": [
+                        -0.20613236980381078,
+                        0.7611383700808708,
+                        1.3999376747185257
+                      ],
+                      "type": "3DSelector"
+                    }
+                  }
+                },
+                {
+                  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-DAWUDcrCTQLfiBUMLDMc",
+                  "type": "Annotation",
+                  "motivation": "painting",
+                  "body": {
+                    "value": "<p></p>",
+                    "label": "フランス",
+                    "type": "TextualBody"
+                  },
+                  "target": {
+                    "source": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                    "selector": {
+                      "camPos": [
+                        -0.5110838501217312,
+                        0.7650802836070401,
+                        -0.9555411915129721
+                      ],
+                      "type": "3DSelector",
+                      "value": [
+                        -0.2733104982705924,
+                        0.6521283770526259,
+                        -0.701585131297753
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -19,8 +19,8 @@
     "description": "IIIFマニフェストのURLを入力してください",
     "submit": "表示する",
     "sampleManifest": "サンプルマニフェスト",
-    "sampleManifest1": "サンプルマニフェスト1",
-    "sampleManifest2": "サンプルマニフェスト2",
+    "sampleManifest1": "石淵家地球儀（菊池市立図書館所蔵）",
+    "sampleManifest2": "石淵家地球儀（菊池市立図書館所蔵） - アノテーション付き",
     "requiredUrl": "マニフェストURLを入力してください",
     "invalidUrl": "有効なURLを入力してください"
   },
@@ -37,7 +37,9 @@
   "Annotation": {
     "title": "アノテーション一覧",
     "annotations": "アノテーション",
-    "annotationCount": "{count}件"
+    "annotationCount": "{count}件",
+    "type": "タイプ",
+    "unknown": "不明"
   },
   "Help": {
     "title": "ヘルプ"

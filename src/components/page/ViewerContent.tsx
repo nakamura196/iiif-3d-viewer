@@ -12,6 +12,7 @@ import CanvasComponent from '@/components/three/Canvas';
 import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import type { Annotation } from '@/types/main';
 
 const ViewerContent: NextPage = () => {
   const [manifestUrl, setManifestUrl] = useAtom(manifestUrlAtom);
@@ -34,6 +35,98 @@ const ViewerContent: NextPage = () => {
     fetchManifest(manifestUrl).then((manifest) => {
       setGlbUrl(manifest.items[0].items[0].items[0].body.id);
       setManifest(manifest);
+      
+      // Extract annotations from manifest
+      const annotations: Annotation[] = [];
+      const canvas = manifest.items?.[0];
+      
+      // Check if annotations exist in different locations
+      if (canvas?.annotations) {
+        canvas.annotations.forEach((annotationPage: any) => {
+          if (annotationPage.items) {
+            annotationPage.items.forEach((annotation: any, index: number) => {
+              if (annotation.body && annotation.target?.selector) {
+                const selector = annotation.target.selector;
+                annotations.push({
+                  id: annotation.id || `annotation-${index}`,
+                  creator: '',
+                  title: annotation.body.label || '',
+                  description: annotation.body.value || '',
+                  media: [],
+                  wikidata: [],
+                  bibliography: [],
+                  position: {
+                    x: selector.value?.[0] || 0,
+                    y: selector.value?.[1] || 0,
+                    z: selector.value?.[2] || 0,
+                  },
+                  data: {
+                    body: {
+                      value: annotation.body.value || '',
+                      label: annotation.body.label || '',
+                    },
+                    target: {
+                      selector: {
+                        type: selector.type || '3DSelector',
+                        value: selector.value || [0, 0, 0],
+                        area: selector.area || [0, 0, 0],
+                        camPos: selector.camPos || [0, 0, 0],
+                      },
+                    },
+                  },
+                });
+              }
+            });
+          }
+        });
+      }
+      
+      // Also check in items[0].items array (sometimes annotations are in the same array as the 3D model)
+      if (canvas?.items && canvas.items[0]?.items) {
+        
+        // Look for AnnotationPage items (usually the second item after the painting annotation)
+        canvas.items[0].items.forEach((item: any) => {
+          if (item.type === 'AnnotationPage' && item.items) {
+            
+            item.items.forEach((annotation: any, index: number) => {
+              
+              if (annotation.type === 'Annotation' && annotation.body && annotation.target?.selector) {
+                const selector = annotation.target.selector;
+                annotations.push({
+                  id: annotation.id || `annotation-${index}`,
+                  creator: '',
+                  title: annotation.body.label || '',
+                  description: annotation.body.value || '',
+                  media: [],
+                  wikidata: [],
+                  bibliography: [],
+                  position: {
+                    x: selector.value?.[0] || 0,
+                    y: selector.value?.[1] || 0,
+                    z: selector.value?.[2] || 0,
+                  },
+                  data: {
+                    body: {
+                      value: annotation.body.value || '',
+                      label: annotation.body.label || '',
+                    },
+                    target: {
+                      selector: {
+                        type: selector.type || '3DSelector',
+                        value: selector.value || [0, 0, 0],
+                        area: selector.area || [0, 0, 0],
+                        camPos: selector.camPos || [0, 0, 0],
+                      },
+                    },
+                  },
+                });
+              }
+            });
+          }
+        });
+      }
+      
+      setAnnotations(annotations);
     });
   }, [manifestUrl, setManifest, setAnnotations]);
 
