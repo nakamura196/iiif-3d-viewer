@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '../globals.css';
 import Provider from '@/context/provider';
-import {NextIntlClientProvider} from 'next-intl';
-import {getMessages, setRequestLocale} from 'next-intl/server';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 
@@ -18,28 +18,30 @@ const geistMono = localFont({
   weight: '100 900',
 });
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
   const { locale } = await params;
-  const baseUrl = 'https://3d-viewer.example.com'; // TODO: Update with actual domain
-  
-  const title = locale === 'ja' ? 'IIIF 3D Viewer' : 'IIIF 3D Viewer';
-  const description = locale === 'ja' 
-    ? 'IIIF Manifestに基づいた3Dモデルの表示とアノテーション機能を提供するビューアアプリケーション'
-    : 'A viewer application that provides 3D model display and annotation functionality based on IIIF Manifest';
-  
+  const baseUrl = 'https://iiif-3d-viewer-wpym.vercel.app'; // TODO: Update with actual domain
+
+  const title = locale === 'ja' ? 'IIIF 3D ビューア' : 'IIIF 3D Viewer';
+  const description =
+    locale === 'ja'
+      ? 'IIIF Manifestに基づいた3Dモデルの表示とアノテーション機能を提供するビューアアプリケーション'
+      : 'A viewer application that provides 3D model display and annotation functionality based on IIIF Manifest';
+
   return {
     title: {
       default: title,
-      template: `%s | ${title}`
+      template: `%s | ${title}`,
     },
     description,
     keywords: ['IIIF', '3D', 'viewer', 'annotation', 'GLB', 'model', 'digital humanities'],
-    authors: [
-      { name: 'Satoru Nakamura' },
-      { name: 'Jun Ogawa' }
-    ],
-    creator: 'The University of Tokyo',
-    publisher: 'The University of Tokyo',
+    authors: [{ name: 'Satoru Nakamura' }, { name: 'Jun Ogawa' }],
+    creator: 'Satoru Nakamura, Jun Ogawa',
+    publisher: 'Satoru Nakamura, Jun Ogawa',
     formatDetection: {
       email: false,
       address: false,
@@ -49,8 +51,8 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     alternates: {
       canonical: '/',
       languages: {
-        'en': '/en',
-        'ja': '/ja',
+        en: '/en',
+        ja: '/ja',
       },
     },
     openGraph: {
@@ -70,11 +72,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       type: 'website',
     },
     twitter: {
-      card: 'summary_large_image',
+      card: 'summary',
       title,
       description,
+      site: '@satoru196',
       images: ['/twitter-image.png'],
-      creator: '@UTokyo',
+      creator: '@satoru196',
     },
     robots: {
       index: true,
@@ -95,9 +98,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
         { url: '/icon/icon-192x192.png', sizes: '192x192', type: 'image/png' },
         { url: '/icon/icon-512x512.png', sizes: '512x512', type: 'image/png' },
       ],
-      apple: [
-        { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
-      ],
+      apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
     },
     manifest: '/manifest.json',
   };
@@ -105,13 +106,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function RootLayout({
   children,
-  params
+  params,
 }: Readonly<{
   children: React.ReactNode;
-  params: Promise<{locale: string}>;
+  params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
-  
+
   // Ensure that the incoming `locale` is valid
   if (!routing.locales.includes(locale as 'en' | 'ja')) {
     notFound();
@@ -119,16 +120,14 @@ export default async function RootLayout({
 
   // Enable static rendering
   setRequestLocale(locale);
-  
+
   const messages = await getMessages();
 
   return (
     <html lang={locale}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Provider>
-          <NextIntlClientProvider messages={messages}>
-            {children}
-          </NextIntlClientProvider>
+          <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
         </Provider>
       </body>
     </html>
