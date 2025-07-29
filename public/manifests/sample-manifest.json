@@ -1,6 +1,6 @@
 {
   "@context": "http://iiif.io/api/presentation/3/context.json",
-  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest.json",
+  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json",
   "type": "Manifest",
   "label": {
     "none": [
@@ -41,7 +41,7 @@
   "rights": "https://rightsstatements.org/vocab/CNE/1.0/",
   "provider": [
     {
-      "id": "https://iiif-3d-viewer-wpym.vercel.app/",
+      "id": "https://3d-iiif-viewer.vercel.app/",
       "type": "Agent",
       "label": {
         "none": [
@@ -54,7 +54,7 @@
   "items": [
     {
       "@context": "http://iiif.io/api/presentation/3/context.json",
-      "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest.json#canvas-p1",
+      "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json#canvas-p1",
       "type": "Canvas",
       "label": {
         "none": [
@@ -64,11 +64,11 @@
       "rights": "https://rightsstatements.org/vocab/CNE/1.0/",
       "items": [
         {
-          "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest.json#annotation-page-12",
+          "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json#annotation-page-12",
           "type": "AnnotationPage",
           "items": [
             {
-              "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest.json#annotation-12",
+              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json#annotation-12",
               "type": "Annotation",
               "motivation": "painting",
               "body": {
@@ -80,7 +80,7 @@
                 "width": null,
                 "duration": null
               },
-              "target": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest.json#canvas-p1",
+              "target": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json#canvas-p1",
               "label": {
                 "none": [
                   "[Untitled]"

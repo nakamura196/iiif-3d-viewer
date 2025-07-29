@@ -1,6 +1,6 @@
 {
   "@context": "http://iiif.io/api/presentation/3/context.json",
-  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json",
+  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json",
   "type": "Manifest",
   "label": {
     "none": [
@@ -41,7 +41,7 @@
   "rights": "https://rightsstatements.org/vocab/CNE/1.0/",
   "provider": [
     {
-      "id": "https://iiif-3d-viewer-wpym.vercel.app/",
+      "id": "https://3d-iiif-viewer.vercel.app/",
       "type": "Agent",
       "label": {
         "none": [
@@ -54,7 +54,7 @@
   "items": [
     {
       "@context": "http://iiif.io/api/presentation/3/context.json",
-      "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+      "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
       "type": "Canvas",
       "label": {
         "none": [
@@ -64,11 +64,11 @@
       "rights": "https://rightsstatements.org/vocab/CNE/1.0/",
       "items": [
         {
-          "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-page-12",
+          "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-page-12",
           "type": "AnnotationPage",
           "items": [
             {
-              "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-12",
+              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-12",
               "type": "Annotation",
               "motivation": "painting",
               "body": {
@@ -80,7 +80,7 @@
                 "width": null,
                 "duration": null
               },
-              "target": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+              "target": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
               "label": {
                 "none": [
                   "[Untitled]"
@@ -88,11 +88,11 @@
               }
             },
             {
-              "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-page-57967a26-b097-4b9b-8511-adba590ecc62",
+              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-page-57967a26-b097-4b9b-8511-adba590ecc62",
               "type": "AnnotationPage",
               "items": [
                 {
-                  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-282kyICrlKEeRyEWyGZ1",
+                  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-282kyICrlKEeRyEWyGZ1",
                   "type": "Annotation",
                   "motivation": "painting",
                   "body": {
@@ -101,7 +101,7 @@
                     "type": "TextualBody"
                   },
                   "target": {
-                    "source": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                    "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
                     "selector": {
                       "camPos": [
                         -0.5110838501089687,
@@ -118,7 +118,7 @@
                   }
                 },
                 {
-                  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-5IcXdF4MptnLiLwHOj5a",
+                  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-5IcXdF4MptnLiLwHOj5a",
                   "type": "Annotation",
                   "motivation": "painting",
                   "body": {
@@ -127,7 +127,7 @@
                     "type": "TextualBody"
                   },
                   "target": {
-                    "source": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                    "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
                     "selector": {
                       "camPos": [
                         -0.34980256349676153,
@@ -144,7 +144,7 @@
                   }
                 },
                 {
-                  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-5PQUNskDnZwuoTmQrCUq",
+                  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-5PQUNskDnZwuoTmQrCUq",
                   "type": "Annotation",
                   "motivation": "painting",
                   "body": {
@@ -153,7 +153,7 @@
                     "type": "TextualBody"
                   },
                   "target": {
-                    "source": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                    "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
                     "selector": {
                       "camPos": [
                         -0.3782648431244856,
@@ -170,7 +170,7 @@
                   }
                 },
                 {
-                  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-9CdwCGrf1ZlWQqjxJhVT",
+                  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-9CdwCGrf1ZlWQqjxJhVT",
                   "type": "Annotation",
                   "motivation": "painting",
                   "body": {
@@ -179,7 +179,7 @@
                     "type": "TextualBody"
                   },
                   "target": {
-                    "source": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                    "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
                     "selector": {
                       "value": [
                         -0.2056713368677782,
@@ -196,7 +196,7 @@
                   }
                 },
                 {
-                  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-9P1Ue3GEfXhSTaudeU1n",
+                  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-9P1Ue3GEfXhSTaudeU1n",
                   "type": "Annotation",
                   "motivation": "painting",
                   "body": {
@@ -205,7 +205,7 @@
                     "type": "TextualBody"
                   },
                   "target": {
-                    "source": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                    "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
                     "selector": {
                       "value": [
                         -0.09398788112830524,
@@ -222,7 +222,7 @@
                   }
                 },
                 {
-                  "id": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-DAWUDcrCTQLfiBUMLDMc",
+                  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-DAWUDcrCTQLfiBUMLDMc",
                   "type": "Annotation",
                   "motivation": "painting",
                   "body": {
@@ -231,7 +231,7 @@
                     "type": "TextualBody"
                   },
                   "target": {
-                    "source": "https://iiif-3d-viewer-wpym.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                    "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
                     "selector": {
                       "camPos": [
                         -0.5110838501217312,

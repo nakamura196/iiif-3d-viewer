@@ -24,7 +24,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const baseUrl = 'https://iiif-3d-viewer-wpym.vercel.app'; // TODO: Update with actual domain
+  const baseUrl = 'https://3d-iiif-viewer.vercel.app';
 
   const title = locale === 'ja' ? 'IIIF 3D ビューア' : 'IIIF 3D Viewer';
   const description =
