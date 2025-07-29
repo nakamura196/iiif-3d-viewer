@@ -14,6 +14,28 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import type { Annotation } from '@/types/main';
 
+interface AnnotationPage {
+  type?: string;
+  items?: IIIFAnnotation[];
+}
+
+interface IIIFAnnotation {
+  id?: string;
+  type?: string;
+  body?: {
+    value?: string;
+    label?: string;
+  };
+  target?: {
+    selector?: {
+      type?: string;
+      value?: number[];
+      area?: number[];
+      camPos?: number[];
+    };
+  };
+}
+
 const ViewerContent: NextPage = () => {
   const [manifestUrl, setManifestUrl] = useAtom(manifestUrlAtom);
   const [, setManifest] = useAtom(manifestAtom);
@@ -42,9 +64,9 @@ const ViewerContent: NextPage = () => {
       
       // Check if annotations exist in different locations
       if (canvas?.annotations) {
-        canvas.annotations.forEach((annotationPage: any) => {
+        canvas.annotations.forEach((annotationPage: AnnotationPage) => {
           if (annotationPage.items) {
-            annotationPage.items.forEach((annotation: any, index: number) => {
+            annotationPage.items.forEach((annotation: IIIFAnnotation, index: number) => {
               if (annotation.body && annotation.target?.selector) {
                 const selector = annotation.target.selector;
                 annotations.push({
@@ -68,9 +90,9 @@ const ViewerContent: NextPage = () => {
                     target: {
                       selector: {
                         type: selector.type || '3DSelector',
-                        value: selector.value || [0, 0, 0],
-                        area: selector.area || [0, 0, 0],
-                        camPos: selector.camPos || [0, 0, 0],
+                        value: (selector.value || [0, 0, 0]) as [number, number, number],
+                        area: (selector.area || [0, 0, 0]) as [number, number, number],
+                        camPos: (selector.camPos || [0, 0, 0]) as [number, number, number],
                       },
                     },
                   },
@@ -85,10 +107,10 @@ const ViewerContent: NextPage = () => {
       if (canvas?.items && canvas.items[0]?.items) {
         
         // Look for AnnotationPage items (usually the second item after the painting annotation)
-        canvas.items[0].items.forEach((item: any) => {
+        canvas.items[0].items.forEach((item: AnnotationPage) => {
           if (item.type === 'AnnotationPage' && item.items) {
             
-            item.items.forEach((annotation: any, index: number) => {
+            item.items.forEach((annotation: IIIFAnnotation, index: number) => {
               
               if (annotation.type === 'Annotation' && annotation.body && annotation.target?.selector) {
                 const selector = annotation.target.selector;
@@ -113,9 +135,9 @@ const ViewerContent: NextPage = () => {
                     target: {
                       selector: {
                         type: selector.type || '3DSelector',
-                        value: selector.value || [0, 0, 0],
-                        area: selector.area || [0, 0, 0],
-                        camPos: selector.camPos || [0, 0, 0],
+                        value: (selector.value || [0, 0, 0]) as [number, number, number],
+                        area: (selector.area || [0, 0, 0]) as [number, number, number],
+                        camPos: (selector.camPos || [0, 0, 0]) as [number, number, number],
                       },
                     },
                   },
