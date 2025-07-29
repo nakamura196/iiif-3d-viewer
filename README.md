@@ -121,8 +121,33 @@ Developed by The University of Tokyo
 
 ## License
 
-[Add your license information here]
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
-[Add contributing guidelines here]
+We welcome contributions to the IIIF 3D Viewer project! Here's how you can help:
+
+### Reporting Issues
+
+- Use the [GitHub Issues](https://github.com/nakamura196/iiif-3d-viewer/issues) page to report bugs
+- Clearly describe the issue including steps to reproduce
+- Include browser version, OS, and any error messages
+
+### Submitting Pull Requests
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Development Guidelines
+
+- Follow the existing code style
+- Add tests for new features
+- Update documentation as needed
+- Ensure all tests pass before submitting PR
+
+### Code of Conduct
+
+Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by its terms.
