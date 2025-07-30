@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import NextLink from 'next/link';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const Header = () => {
   const [manifestUrl, setManifestUrl] = useAtom(manifestUrlAtom);
@@ -47,6 +48,8 @@ const Header = () => {
         </Link>
       </div>
       <div className="flex items-center space-x-2 sm:space-x-4 ml-2 shrink-0">
+        <ThemeToggle />
+        
         <button
           onClick={() => changeLanguage(locale === 'ja' ? 'en' : 'ja')}
           className="px-3 sm:px-4 py-2 text-sm text-white bg-blue-500 rounded-md hover:bg-blue-600 cursor-pointer whitespace-nowrap"

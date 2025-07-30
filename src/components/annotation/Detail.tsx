@@ -5,15 +5,16 @@ const Detail = () => {
   const [infoPanelContent] = useAtom(infoPanelAtom);
 
   return (
-    <div className="metadata-container" style={{ padding: '20px' }}>
+    <div className="p-5">
       {/* タイトルセクション */}
-      <div style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>
+      <div className="text-2xl font-bold mb-5 text-gray-900 dark:text-gray-100">
         {infoPanelContent?.title || 'No Title'}
       </div>
 
       {/* 説明セクション */}
-      <div style={{ marginBottom: '20px' }}>
+      <div className="mb-5">
         <div
+          className="text-gray-800 dark:text-gray-200"
           dangerouslySetInnerHTML={{ __html: infoPanelContent?.description || 'No description' }}
         />
       </div>

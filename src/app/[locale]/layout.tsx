@@ -1,22 +1,10 @@
 import type { Metadata } from 'next';
-import localFont from 'next/font/local';
 import '../globals.css';
 import Provider from '@/context/provider';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
-
-const geistSans = localFont({
-  src: '../fonts/GeistVF.woff',
-  variable: '--font-geist-sans',
-  weight: '100 900',
-});
-const geistMono = localFont({
-  src: '../fonts/GeistMonoVF.woff',
-  variable: '--font-geist-mono',
-  weight: '100 900',
-});
 
 export async function generateMetadata({
   params,
@@ -116,13 +104,9 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={locale}>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Provider>
-          <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
-        </Provider>
-      </body>
-    </html>
+    <Provider>
+      <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+    </Provider>
   );
 }
 

@@ -189,14 +189,14 @@ const ViewerContent: NextPage = () => {
               <div className="h-[50vh] sm:h-full sm:w-[70%] relative bg-gray-100 dark:bg-gray-900">
                 {glbUrl && <CanvasComponent glbUrl={glbUrl} />}
               </div>
-              <div className="flex-1 sm:w-[30%] bg-white shadow-lg overflow-y-auto border-t sm:border-t-0 sm:border-l border-gray-200">
+              <div className="flex-1 sm:w-[30%] bg-white dark:bg-gray-800 shadow-lg overflow-y-auto border-t sm:border-t-0 sm:border-l border-gray-200 dark:border-gray-700">
                 <Suspense
                   fallback={
                     <div className="p-6 animate-pulse">
-                      <div className="h-6 w-48 bg-gray-200 rounded mb-6"></div>
+                      <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded mb-6"></div>
                       <div className="space-y-4">
                         {[...Array(3)].map((_, i) => (
-                          <div key={i} className="h-20 bg-gray-200 rounded"></div>
+                          <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
                         ))}
                       </div>
                     </div>

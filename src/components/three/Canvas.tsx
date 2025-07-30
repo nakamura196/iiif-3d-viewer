@@ -1,8 +1,10 @@
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Scene from '@/components/three/Scene';
 import { useProgress } from '@react-three/drei';
+import { useTheme } from 'next-themes';
+import * as THREE from 'three';
 // ローディングコンポーネント
 const LoadingScreen = () => {
   const { progress, total, loaded } = useProgress();
@@ -30,6 +32,23 @@ const LoadingScreen = () => {
 };
 
 const CanvasComponent = ({ glbUrl }: { glbUrl: string }) => {
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  const [sceneRef, setSceneRef] = useState<THREE.Scene | null>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (sceneRef && mounted) {
+      const isDark = theme === 'dark';
+      sceneRef.background = isDark ? new THREE.Color(0x111827) : new THREE.Color(0xf3f4f6);
+    }
+  }, [theme, sceneRef, mounted]);
+
+  const isDark = mounted && theme === 'dark';
+
   return (
     <Canvas
       camera={{
@@ -43,6 +62,12 @@ const CanvasComponent = ({ glbUrl }: { glbUrl: string }) => {
         width: '100%',
         height: '100%',
       }}
+      gl={{ antialias: true }}
+      onCreated={({ scene }) => {
+        setSceneRef(scene);
+        // Set initial background color based on theme
+        scene.background = isDark ? new THREE.Color(0x111827) : new THREE.Color(0xf3f4f6);
+      }}
     >
       <Suspense fallback={<LoadingScreen />}>
         <Scene glbUrl={glbUrl} />
@@ -55,9 +80,9 @@ const CanvasComponent = ({ glbUrl }: { glbUrl: string }) => {
           minPolarAngle={0}
           maxPolarAngle={Math.PI}
         />
-        <gridHelper />
-        <ambientLight intensity={0.5} />
-        <directionalLight position={[10, 10, 5]} intensity={1} />
+        <gridHelper args={[10, 10, isDark ? 0x374151 : 0x9ca3af, isDark ? 0x1f2937 : 0xe5e7eb]} />
+        <ambientLight intensity={isDark ? 0.3 : 0.5} />
+        <directionalLight position={[10, 10, 5]} intensity={isDark ? 0.8 : 1} />
       </Suspense>
     </Canvas>
   );
