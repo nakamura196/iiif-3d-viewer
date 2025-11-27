@@ -61,6 +61,7 @@ const GeoRefContent: NextPage = () => {
   const [, setAnnotations] = useAtom(annotationsAtom);
   const [selectedAnnotationId, setSelectedAnnotationId] = useAtom(selectedAnnotationIdAtom);
   const [geoFeatures, setGeoFeatures] = useState<GeoFeature[]>([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const annotationRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
 
   useEffect(() => {
@@ -267,14 +268,46 @@ const GeoRefContent: NextPage = () => {
               )}
             </div>
             {/* Annotations */}
-            <div className="h-[40%] lg:h-full lg:w-64 lg:flex-none relative bg-white dark:bg-gray-800 overflow-y-auto">
+            <div className="h-[40%] lg:h-full lg:w-64 lg:flex-none relative bg-white dark:bg-gray-800 flex flex-col">
               <div className="sticky top-0 bg-white dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700 z-10">
-                <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Annotations ({geoFeatures.length})
                 </h2>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search..."
+                    className="w-full px-3 py-1.5 pl-8 text-sm rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  />
+                  <svg
+                    className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                  {searchQuery && (
+                    <button
+                      onClick={() => setSearchQuery('')}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                      </svg>
+                    </button>
+                  )}
+                </div>
               </div>
-              <div className="p-4 space-y-2">
-                {geoFeatures.map((feature, index) => (
+              <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                {geoFeatures
+                  .filter((feature) =>
+                    feature.metadata.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                    (feature.metadata.description?.toLowerCase().includes(searchQuery.toLowerCase()))
+                  )
+                  .map((feature, index) => (
                   <button
                     key={feature.metadata.id}
                     ref={(el) => {
@@ -311,6 +344,14 @@ const GeoRefContent: NextPage = () => {
                 {geoFeatures.length === 0 && (
                   <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
                     No annotations
+                  </p>
+                )}
+                {geoFeatures.length > 0 && searchQuery && geoFeatures.filter((feature) =>
+                  feature.metadata.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                  (feature.metadata.description?.toLowerCase().includes(searchQuery.toLowerCase()))
+                ).length === 0 && (
+                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
+                    No results found
                   </p>
                 )}
               </div>
