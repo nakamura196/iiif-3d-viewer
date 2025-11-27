@@ -72,7 +72,7 @@
               "type": "Annotation",
               "motivation": "painting",
               "body": {
-                "id": "/models/ishibuchi-globe.glb",
+                "id": "https://3d-iiif-viewer.vercel.app/models/ishibuchi-globe.glb",
                 "type": "Model",
                 "format": "model/gltf-binary",
                 "service": [],
