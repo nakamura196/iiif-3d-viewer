@@ -52,6 +52,14 @@
   "Terms": {
     "title": "利用規約"
   },
+  "GeoRef": {
+    "map": "地図",
+    "viewer3d": "3D",
+    "annotations": "アノテーション",
+    "searchPlaceholder": "検索...",
+    "noAnnotations": "アノテーションがありません",
+    "noResults": "結果が見つかりません"
+  },
   "Home": {
     "developers": "開発者",
     "developerNames": "中村 覚・小川 潤（東京大学）",

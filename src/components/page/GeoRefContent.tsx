@@ -12,6 +12,7 @@ import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
 import MapView from '@/components/map/MapView';
 import type { Annotation } from '@/types/main';
+import { useTranslations } from 'next-intl';
 
 interface AnnotationPage {
   type?: string;
@@ -55,6 +56,7 @@ interface GeoFeature {
 }
 
 const GeoRefContent: NextPage = () => {
+  const t = useTranslations('GeoRef');
   const [manifestUrl, setManifestUrl] = useAtom(manifestUrlAtom);
   const [, setManifest] = useAtom(manifestAtom);
   const [glbUrl, setGlbUrl] = useState<string | null>(null);
@@ -242,7 +244,7 @@ const GeoRefContent: NextPage = () => {
             {/* Map */}
             <div className="h-[30%] lg:h-full lg:flex-[2] relative border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700">
               <div className="absolute top-4 left-4 z-10 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow text-sm font-medium text-gray-700 dark:text-gray-300">
-                Map
+                {t('map')}
               </div>
               <MapView
                 features={geoFeatures}
@@ -253,7 +255,7 @@ const GeoRefContent: NextPage = () => {
             {/* 3D Viewer */}
             <div className="h-[30%] lg:h-full lg:flex-[2] relative bg-gray-100 dark:bg-gray-900 border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700">
               <div className="absolute top-4 left-4 z-10 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow text-sm font-medium text-gray-700 dark:text-gray-300">
-                3D
+                {t('viewer3d')}
               </div>
               {glbUrl && (
                 <Suspense
@@ -271,14 +273,14 @@ const GeoRefContent: NextPage = () => {
             <div className="h-[40%] lg:h-full lg:w-64 lg:flex-none relative bg-white dark:bg-gray-800 flex flex-col">
               <div className="sticky top-0 bg-white dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700 z-10">
                 <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Annotations ({geoFeatures.length})
+                  {t('annotations')} ({geoFeatures.length})
                 </h2>
                 <div className="relative">
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search..."
+                    placeholder={t('searchPlaceholder')}
                     className="w-full px-3 py-1.5 pl-8 text-sm rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
                   />
                   <svg
@@ -343,7 +345,7 @@ const GeoRefContent: NextPage = () => {
                 ))}
                 {geoFeatures.length === 0 && (
                   <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
-                    No annotations
+                    {t('noAnnotations')}
                   </p>
                 )}
                 {geoFeatures.length > 0 && searchQuery && geoFeatures.filter((feature) =>
@@ -351,7 +353,7 @@ const GeoRefContent: NextPage = () => {
                   (feature.metadata.description?.toLowerCase().includes(searchQuery.toLowerCase()))
                 ).length === 0 && (
                   <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
-                    No results found
+                    {t('noResults')}
                   </p>
                 )}
               </div>

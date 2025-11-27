@@ -52,6 +52,14 @@
   "Terms": {
     "title": "Terms of Service"
   },
+  "GeoRef": {
+    "map": "Map",
+    "viewer3d": "3D",
+    "annotations": "Annotations",
+    "searchPlaceholder": "Search...",
+    "noAnnotations": "No annotations",
+    "noResults": "No results found"
+  },
   "Home": {
     "developers": "Developers",
     "developerNames": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)",
