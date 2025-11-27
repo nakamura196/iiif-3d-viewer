@@ -32,7 +32,7 @@ const LoadingScreen = () => {
 };
 
 const CanvasComponent = ({ glbUrl }: { glbUrl: string }) => {
-  const { theme } = useTheme();
+  const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [sceneRef, setSceneRef] = useState<THREE.Scene | null>(null);
 
@@ -42,12 +42,12 @@ const CanvasComponent = ({ glbUrl }: { glbUrl: string }) => {
 
   useEffect(() => {
     if (sceneRef && mounted) {
-      const isDark = theme === 'dark';
+      const isDark = resolvedTheme === 'dark';
       sceneRef.background = isDark ? new THREE.Color(0x111827) : new THREE.Color(0xf3f4f6);
     }
-  }, [theme, sceneRef, mounted]);
+  }, [resolvedTheme, sceneRef, mounted]);
 
-  const isDark = mounted && theme === 'dark';
+  const isDark = mounted && resolvedTheme === 'dark';
 
   return (
     <Canvas

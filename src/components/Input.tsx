@@ -1,9 +1,11 @@
 // 入力フォームコンポーネント
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
+import { Link } from '@/i18n/routing';
 
 const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => void }) => {
   const t = useTranslations('Input');
+  const locale = useLocale();
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
 
@@ -66,11 +68,11 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
 
       <div className="mt-8 text-sm text-gray-500 dark:text-gray-400">
         <h3 className="font-medium mb-2">{t('sampleManifest')}:</h3>
-        <ul className="space-y-2">
+        <ul className="space-y-2 text-left">
           <li>
             <button
               onClick={() => onSubmit('/manifests/sample-manifest.json')}
-              className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
+              className="text-left text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
             >
               {t('sampleManifest1')}
             </button>
@@ -78,10 +80,18 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
           <li>
             <button
               onClick={() => onSubmit('/manifests/sample-manifest-with-annotations.json', 'annotations')}
-              className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
+              className="text-left text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
             >
               {t('sampleManifest2')}
             </button>
+          </li>
+          <li>
+            <Link
+              href={`/georef?manifest=${encodeURIComponent('/manifests/sample-manifest-with-annotations.json')}`}
+              className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
+            >
+              {t('sampleManifest3')}
+            </Link>
           </li>
         </ul>
       </div>

@@ -103,51 +103,6 @@ const ViewerContent: NextPage = () => {
         });
       }
       
-      // Also check in items[0].items array (sometimes annotations are in the same array as the 3D model)
-      if (canvas?.items && canvas.items[0]?.items) {
-        
-        // Look for AnnotationPage items (usually the second item after the painting annotation)
-        canvas.items[0].items.forEach((item: AnnotationPage) => {
-          if (item.type === 'AnnotationPage' && item.items) {
-            
-            item.items.forEach((annotation: IIIFAnnotation, index: number) => {
-              
-              if (annotation.type === 'Annotation' && annotation.body && annotation.target?.selector) {
-                const selector = annotation.target.selector;
-                annotations.push({
-                  id: annotation.id || `annotation-${index}`,
-                  creator: '',
-                  title: annotation.body.label || '',
-                  description: annotation.body.value || '',
-                  media: [],
-                  wikidata: [],
-                  bibliography: [],
-                  position: {
-                    x: selector.value?.[0] || 0,
-                    y: selector.value?.[1] || 0,
-                    z: selector.value?.[2] || 0,
-                  },
-                  data: {
-                    body: {
-                      value: annotation.body.value || '',
-                      label: annotation.body.label || '',
-                    },
-                    target: {
-                      selector: {
-                        type: selector.type || '3DSelector',
-                        value: (selector.value || [0, 0, 0]) as [number, number, number],
-                        area: (selector.area || [0, 0, 0]) as [number, number, number],
-                        camPos: (selector.camPos || [0, 0, 0]) as [number, number, number],
-                      },
-                    },
-                  },
-                });
-              }
-            });
-          }
-        });
-      }
-      
       setAnnotations(annotations);
     });
   }, [manifestUrl, setManifest, setAnnotations]);

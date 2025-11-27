@@ -1,6 +1,7 @@
 {
   "Header": {
     "title": "IIIF 3D Viewer",
+    "home": "Home",
     "download": "Download",
     "downloadShort": "DL",
     "english": "English",
@@ -21,6 +22,7 @@
     "sampleManifest": "Sample Manifest",
     "sampleManifest1": "Ishibuchi Family Globe (Kikuchi City Library Collection)",
     "sampleManifest2": "Ishibuchi Family Globe (Kikuchi City Library Collection) - With Annotations",
+    "sampleManifest3": "Ishibuchi Family Globe (Kikuchi City Library Collection) - Map Viewer",
     "requiredUrl": "Enter the Manifest URL",
     "invalidUrl": "Enter a valid URL"
   },

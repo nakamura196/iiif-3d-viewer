@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useThree } from '@react-three/fiber';
+import { useState, useRef, useMemo, useCallback } from 'react';
+import { useThree, useFrame } from '@react-three/fiber';
 import gsap from 'gsap';
 import AnnotationMarker from '@/components/three/AnnotationMarker';
 import AreaMarker from '@/components/three/AreaMarker';
@@ -9,18 +9,24 @@ import { useAtom } from 'jotai';
 import { annotationsAtom } from '@/atoms/infoPanelAtom';
 import { selectedAnnotationIdAtom } from '@/atoms/infoPanelAtom';
 import { useEffect } from 'react';
-import { Vector3, Mesh } from 'three';
+import { Vector3, Mesh, Frustum, Matrix4, Raycaster } from 'three';
 import { GLTF } from 'three-stdlib';
+
+// 再利用可能なオブジェクト
+const sharedFrustum = new Frustum();
+const sharedMatrix = new Matrix4();
+const sharedRaycaster = new Raycaster();
+const sharedCameraDirection = new Vector3();
+const sharedToAnnotation = new Vector3();
 
 export default function Annotations({ model }: { model: GLTF }) {
   const [openAnnotationId, setOpenAnnotationId] = useState<string | null>(null);
   const [selectedAnnotationId, setSelectedAnnotationId] = useAtom(selectedAnnotationIdAtom);
-
   const [annotations] = useAtom(annotationsAtom);
-
   const { camera } = useThree();
-
   const [meshList, setMeshList] = useState<Mesh[]>([]);
+  const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
+  const frameCountRef = useRef(0);
 
   useEffect(() => {
     const meshes: Mesh[] = [];
@@ -32,12 +38,86 @@ export default function Annotations({ model }: { model: GLTF }) {
     setMeshList(meshes);
   }, [model]);
 
-  const focusOnAnnotation = (annotationId: string) => {
+  // アノテーション位置をメモ化
+  const annotationPositions = useMemo(() => {
+    const positions: Record<string, Vector3> = {};
+    annotations.forEach((annotation) => {
+      const value = annotation.data?.target?.selector?.value;
+      if (value) {
+        positions[annotation.id] = new Vector3(value[0], value[1], value[2]);
+      }
+    });
+    return positions;
+  }, [annotations]);
+
+  // 一括で可視性を計算（視野内のみRaycast）
+  useFrame(() => {
+    frameCountRef.current++;
+    if (frameCountRef.current % 15 !== 0) return;
+    if (annotations.length === 0) return;
+
+    // Frustum更新（1回だけ）
+    sharedMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
+    sharedFrustum.setFromProjectionMatrix(sharedMatrix);
+    camera.getWorldDirection(sharedCameraDirection);
+
+    const newVisibilityMap: Record<string, boolean> = {};
+    const visibleAnnotations: { id: string; position: Vector3 }[] = [];
+
+    // 第1パス: Frustum + カメラ前方判定（軽量）
+    annotations.forEach((annotation) => {
+      const position = annotationPositions[annotation.id];
+      if (!position) {
+        newVisibilityMap[annotation.id] = true;
+        return;
+      }
+
+      // Frustum判定
+      if (!sharedFrustum.containsPoint(position)) {
+        newVisibilityMap[annotation.id] = false;
+        return;
+      }
+
+      // カメラ前後判定
+      sharedToAnnotation.subVectors(position, camera.position).normalize();
+      if (sharedCameraDirection.dot(sharedToAnnotation) <= 0) {
+        newVisibilityMap[annotation.id] = false;
+        return;
+      }
+
+      // 視野内のアノテーションをリストに追加
+      visibleAnnotations.push({ id: annotation.id, position });
+    });
+
+    // 第2パス: 視野内のアノテーションのみRaycast（重い処理）
+    if (meshList.length > 0) {
+      visibleAnnotations.forEach(({ id, position }) => {
+        sharedToAnnotation.subVectors(position, camera.position).normalize();
+        sharedRaycaster.set(camera.position, sharedToAnnotation);
+        const intersects = sharedRaycaster.intersectObjects(meshList, true);
+        const distance = camera.position.distanceTo(position);
+
+        if (intersects.length > 0 && intersects[0].distance < distance - 0.01) {
+          newVisibilityMap[id] = false;
+        } else {
+          newVisibilityMap[id] = true;
+        }
+      });
+    } else {
+      // メッシュがない場合は視野内=可視
+      visibleAnnotations.forEach(({ id }) => {
+        newVisibilityMap[id] = true;
+      });
+    }
+
+    setVisibilityMap(newVisibilityMap);
+  });
+
+  const focusOnAnnotation = useCallback((annotationId: string) => {
     const annotation = annotations.find((a) => a.id === annotationId);
     if (!annotation) return;
 
     const rawEndPosition = annotation.data.target.selector.camPos;
-
     const endPosition = new Vector3(rawEndPosition[0], rawEndPosition[1], rawEndPosition[2]);
 
     gsap.to(camera.position, {
@@ -47,21 +127,19 @@ export default function Annotations({ model }: { model: GLTF }) {
       duration: 1,
       ease: 'power2.inOut',
     });
-  };
+  }, [annotations, camera]);
 
   useEffect(() => {
     if (selectedAnnotationId) {
       setOpenAnnotationId(selectedAnnotationId);
       focusOnAnnotation(selectedAnnotationId);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedAnnotationId]);
+  }, [selectedAnnotationId, focusOnAnnotation]);
 
   return (
     <>
       {annotations.map((annotation, index) => {
         const selector = annotation.data?.target?.selector;
-
         const type = selector?.type;
 
         return type === '3DSelector' ? (
@@ -73,8 +151,7 @@ export default function Annotations({ model }: { model: GLTF }) {
             onClick={() => {
               setSelectedAnnotationId(annotation.id);
             }}
-            /*mesh={mesh} */
-            meshList={meshList}
+            isVisible={visibilityMap[annotation.id] ?? true}
           />
         ) : (
           <AreaMarker
@@ -87,8 +164,6 @@ export default function Annotations({ model }: { model: GLTF }) {
             }}
           />
         );
-        // }
-        return null;
       })}
     </>
   );

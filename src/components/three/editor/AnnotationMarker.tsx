@@ -11,13 +11,11 @@ export default function AnnotationMarker({
 }) {
   return (
     <div className="relative">
-      {/* 番号マーカー */}
+      {/* マーカー（外周青、中は透明） */}
       <div
         onClick={onClick}
-        className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer hover:bg-blue-600 transition-colors"
-      >
-        <span className="text-white text-sm font-medium">{number}</span>
-      </div>
+        className="w-6 h-6 border-2 border-blue-500 rounded-full cursor-pointer hover:border-blue-600 transition-colors"
+      />
 
       {/* ポップアップ */}
       {isOpen && (

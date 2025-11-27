@@ -74,180 +74,154 @@
               "body": {
                 "id": "https://3d-iiif-viewer.vercel.app/models/ishibuchi-globe.glb",
                 "type": "Model",
-                "format": "model/gltf-binary",
-                "service": [],
-                "height": null,
-                "width": null,
-                "duration": null
+                "format": "model/gltf-binary"
               },
+              "target": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-page-georef",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-georef",
+              "type": "Annotation",
+              "motivation": "georeferencing",
               "target": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
-              "label": {
-                "none": [
-                  "[Untitled]"
+              "body": {
+                "type": "FeatureCollection",
+                "features": [
+                  {
+                    "type": "Feature",
+                    "metadata": {
+                      "label": "北海",
+                      "id": "annotation-5PQUNskDnZwuoTmQrCUq"
+                    },
+                    "geometry": {
+                      "coordinates": [3.5, 56.0],
+                      "type": "Point"
+                    },
+                    "properties": {
+                      "resourceCoords": [-0.2557678207152946, 0.7615613040808595, -0.5854673025803923]
+                    }
+                  },
+                  {
+                    "type": "Feature",
+                    "metadata": {
+                      "label": "イギリス",
+                      "id": "annotation-9CdwCGrf1ZlWQqjxJhVT"
+                    },
+                    "geometry": {
+                      "coordinates": [-0.1276, 51.5074],
+                      "type": "Point"
+                    },
+                    "properties": {
+                      "resourceCoords": [-0.2056713368677782, 0.7115841685636456, -0.6593850997323897]
+                    }
+                  },
+                  {
+                    "type": "Feature",
+                    "metadata": {
+                      "label": "フランス",
+                      "id": "annotation-DAWUDcrCTQLfiBUMLDMc"
+                    },
+                    "geometry": {
+                      "coordinates": [2.3522, 48.8566],
+                      "type": "Point"
+                    },
+                    "properties": {
+                      "resourceCoords": [-0.2733104982705924, 0.6521283770526259, -0.701585131297753]
+                    }
+                  }
                 ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-page-57967a26-b097-4b9b-8511-adba590ecc62",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-5PQUNskDnZwuoTmQrCUq",
+              "type": "Annotation",
+              "motivation": "commenting",
+              "body": {
+                "value": "<p></p>",
+                "label": "北海",
+                "type": "TextualBody"
+              },
+              "target": {
+                "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                "selector": {
+                  "camPos": [
+                    -0.3782648431244856,
+                    0.874079497767241,
+                    -0.9111313450003292
+                  ],
+                  "type": "3DSelector",
+                  "value": [
+                    -0.2557678207152946,
+                    0.7615613040808595,
+                    -0.5854673025803923
+                  ]
+                }
               }
             },
             {
-              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-page-57967a26-b097-4b9b-8511-adba590ecc62",
-              "type": "AnnotationPage",
-              "items": [
-                {
-                  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-282kyICrlKEeRyEWyGZ1",
-                  "type": "Annotation",
-                  "motivation": "painting",
-                  "body": {
-                    "value": "<p></p>",
-                    "label": "海",
-                    "type": "TextualBody"
-                  },
-                  "target": {
-                    "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
-                    "selector": {
-                      "camPos": [
-                        -0.5110838501089687,
-                        0.7650802836142999,
-                        -0.9555411915119435
-                      ],
-                      "type": "3DSelector",
-                      "value": [
-                        -0.3459178779604953,
-                        0.5445255810435351,
-                        -0.7525717093022277
-                      ]
-                    }
-                  }
-                },
-                {
-                  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-5IcXdF4MptnLiLwHOj5a",
-                  "type": "Annotation",
-                  "motivation": "painting",
-                  "body": {
-                    "value": "<p></p>",
-                    "label": "中",
-                    "type": "TextualBody"
-                  },
-                  "target": {
-                    "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
-                    "selector": {
-                      "camPos": [
-                        -0.34980256349676153,
-                        1.175981469429255,
-                        -1.5751070563774578
-                      ],
-                      "type": "3DSelector",
-                      "value": [
-                        -0.525735125573101,
-                        0.4741805796176385,
-                        -0.6889875943082124
-                      ]
-                    }
-                  }
-                },
-                {
-                  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-5PQUNskDnZwuoTmQrCUq",
-                  "type": "Annotation",
-                  "motivation": "painting",
-                  "body": {
-                    "value": "<p></p>",
-                    "label": "北海",
-                    "type": "TextualBody"
-                  },
-                  "target": {
-                    "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
-                    "selector": {
-                      "camPos": [
-                        -0.3782648431244856,
-                        0.874079497767241,
-                        -0.9111313450003292
-                      ],
-                      "type": "3DSelector",
-                      "value": [
-                        -0.2557678207152946,
-                        0.7615613040808595,
-                        -0.5854673025803923
-                      ]
-                    }
-                  }
-                },
-                {
-                  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-9CdwCGrf1ZlWQqjxJhVT",
-                  "type": "Annotation",
-                  "motivation": "painting",
-                  "body": {
-                    "value": "<p></p>",
-                    "label": "イギリス",
-                    "type": "TextualBody"
-                  },
-                  "target": {
-                    "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
-                    "selector": {
-                      "value": [
-                        -0.2056713368677782,
-                        0.7115841685636456,
-                        -0.6593850997323897
-                      ],
-                      "type": "3DSelector",
-                      "camPos": [
-                        -0.37826484312621145,
-                        0.8740794977624307,
-                        -0.9111313450033702
-                      ]
-                    }
-                  }
-                },
-                {
-                  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-9P1Ue3GEfXhSTaudeU1n",
-                  "type": "Annotation",
-                  "motivation": "painting",
-                  "body": {
-                    "value": "<p></p>",
-                    "label": "小東洋",
-                    "type": "TextualBody"
-                  },
-                  "target": {
-                    "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
-                    "selector": {
-                      "value": [
-                        -0.09398788112830524,
-                        0.5775810943899139,
-                        0.8016204908400757
-                      ],
-                      "camPos": [
-                        -0.20613236980381078,
-                        0.7611383700808708,
-                        1.3999376747185257
-                      ],
-                      "type": "3DSelector"
-                    }
-                  }
-                },
-                {
-                  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-DAWUDcrCTQLfiBUMLDMc",
-                  "type": "Annotation",
-                  "motivation": "painting",
-                  "body": {
-                    "value": "<p></p>",
-                    "label": "フランス",
-                    "type": "TextualBody"
-                  },
-                  "target": {
-                    "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
-                    "selector": {
-                      "camPos": [
-                        -0.5110838501217312,
-                        0.7650802836070401,
-                        -0.9555411915129721
-                      ],
-                      "type": "3DSelector",
-                      "value": [
-                        -0.2733104982705924,
-                        0.6521283770526259,
-                        -0.701585131297753
-                      ]
-                    }
-                  }
+              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-9CdwCGrf1ZlWQqjxJhVT",
+              "type": "Annotation",
+              "motivation": "commenting",
+              "body": {
+                "value": "<p></p>",
+                "label": "イギリス",
+                "type": "TextualBody"
+              },
+              "target": {
+                "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                "selector": {
+                  "value": [
+                    -0.2056713368677782,
+                    0.7115841685636456,
+                    -0.6593850997323897
+                  ],
+                  "type": "3DSelector",
+                  "camPos": [
+                    -0.37826484312621145,
+                    0.8740794977624307,
+                    -0.9111313450033702
+                  ]
                 }
-              ]
+              }
+            },
+            {
+              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-DAWUDcrCTQLfiBUMLDMc",
+              "type": "Annotation",
+              "motivation": "commenting",
+              "body": {
+                "value": "<p></p>",
+                "label": "フランス",
+                "type": "TextualBody"
+              },
+              "target": {
+                "source": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#canvas-p1",
+                "selector": {
+                  "camPos": [
+                    -0.5110838501217312,
+                    0.7650802836070401,
+                    -0.9555411915129721
+                  ],
+                  "type": "3DSelector",
+                  "value": [
+                    -0.2733104982705924,
+                    0.6521283770526259,
+                    -0.701585131297753
+                  ]
+                }
+              }
             }
           ]
         }

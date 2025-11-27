@@ -1,6 +1,7 @@
 {
   "Header": {
     "title": "IIIF 3D Viewer",
+    "home": "ホーム",
     "download": "ダウンロード",
     "downloadShort": "DL",
     "english": "English",
@@ -21,6 +22,7 @@
     "sampleManifest": "サンプルマニフェスト",
     "sampleManifest1": "石淵家地球儀（菊池市立図書館所蔵）",
     "sampleManifest2": "石淵家地球儀（菊池市立図書館所蔵） - アノテーション付き",
+    "sampleManifest3": "石淵家地球儀（菊池市立図書館所蔵） - 地図連携ビューア",
     "requiredUrl": "マニフェストURLを入力してください",
     "invalidUrl": "有効なURLを入力してください"
   },

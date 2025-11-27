@@ -32,6 +32,10 @@ export default function HomeContent() {
             </section>
 
             <section className="mb-16">
+              <ManifestInput onSubmit={handleManifestSubmit} />
+            </section>
+
+            <section className="mb-16">
               <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-6 text-center">
                 {t('features')}
               </h2>
@@ -118,10 +122,6 @@ export default function HomeContent() {
                 <p>{t('step3')}</p>
                 <p>{t('step4')}</p>
               </div>
-            </section>
-
-            <section className="mt-16">
-              <ManifestInput onSubmit={handleManifestSubmit} />
             </section>
           </div>
         </div>
