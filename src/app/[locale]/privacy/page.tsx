@@ -1,4 +1,5 @@
 import PrivacyContent from '@/components/page/PrivacyContent';
+import { getMarkdownContent } from '@/lib/markdown';
 import { setRequestLocale } from 'next-intl/server';
 
 export default async function PrivacyPage({
@@ -8,7 +9,8 @@ export default async function PrivacyPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <PrivacyContent />;
+  const content = getMarkdownContent(locale, 'privacy');
+  return <PrivacyContent content={content} />;
 }
 
 export function generateStaticParams() {

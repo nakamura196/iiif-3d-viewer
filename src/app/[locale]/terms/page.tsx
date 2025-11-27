@@ -1,4 +1,5 @@
 import TermsContent from '@/components/page/TermsContent';
+import { getMarkdownContent } from '@/lib/markdown';
 import { setRequestLocale } from 'next-intl/server';
 
 export default async function TermsPage({
@@ -8,7 +9,8 @@ export default async function TermsPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <TermsContent />;
+  const content = getMarkdownContent(locale, 'terms');
+  return <TermsContent content={content} />;
 }
 
 export function generateStaticParams() {
