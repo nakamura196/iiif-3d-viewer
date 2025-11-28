@@ -14,3 +14,6 @@ export const annotationsAtom3 = atom<Annotation3[]>([]);
 export const selectedAnnotationIdAtom = atom<string | null>(null);
 
 export const manifestUrlAtom = atom<string | null>(null);
+
+// アノテーション表示/非表示のアトム
+export const showAnnotationsAtom = atom<boolean>(true);

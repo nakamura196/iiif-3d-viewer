@@ -3,13 +3,11 @@ import { Html } from '@react-three/drei';
 import { Annotation } from '@/types/main';
 
 export default function AnnotationMarker({
-  number,
   annotation,
   isOpen,
   onClick,
   isVisible = true,
 }: {
-  number: string;
   annotation: Annotation;
   isOpen: boolean;
   onClick: () => void;
@@ -19,9 +17,9 @@ export default function AnnotationMarker({
   const value = annotation.data.target.selector.value;
 
   return (
-    <Html position={[value[0], value[1], value[2]]} style={{ opacity: isVisible ? 1 : 0.1 }}>
+    <Html position={[value[0], value[1], value[2]]} style={{ opacity: isVisible ? 1 : 0.15 }}>
       <div className="relative">
-        {/* マーカー（前面は青、背後はグレー + 透明度） */}
+        {/* マーカー（可視=青、非可視/背面=グレー） */}
         <div
           onClick={onClick}
           className={`w-6 h-6 border-2 rounded-full cursor-pointer transition-colors ${

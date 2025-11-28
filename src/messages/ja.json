@@ -60,6 +60,10 @@
     "noAnnotations": "アノテーションがありません",
     "noResults": "結果が見つかりません"
   },
+  "Viewer": {
+    "showAnnotations": "アノテーションを表示",
+    "hideAnnotations": "アノテーションを非表示"
+  },
   "Home": {
     "developers": "開発者",
     "developerNames": "中村 覚・小川 潤（東京大学）",

@@ -18,6 +18,11 @@ const sharedMatrix = new Matrix4();
 const sharedRaycaster = new Raycaster();
 const sharedCameraDirection = new Vector3();
 const sharedToAnnotation = new Vector3();
+const prevCameraPosition = new Vector3();
+
+// パフォーマンス設定
+const CAMERA_MOVE_THRESHOLD = 0.001; // カメラ移動の閾値
+const IDLE_FRAMES_BEFORE_RAYCAST = 10; // 停止後このフレーム数待ってからRaycast
 
 export default function Annotations({ model }: { model: GLTF }) {
   const [openAnnotationId, setOpenAnnotationId] = useState<string | null>(null);
@@ -26,7 +31,8 @@ export default function Annotations({ model }: { model: GLTF }) {
   const { camera } = useThree();
   const [meshList, setMeshList] = useState<Mesh[]>([]);
   const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
-  const frameCountRef = useRef(0);
+  const idleFrameCountRef = useRef(0);
+  const needsRaycastRef = useRef(true);
 
   useEffect(() => {
     const meshes: Mesh[] = [];
@@ -50,13 +56,32 @@ export default function Annotations({ model }: { model: GLTF }) {
     return positions;
   }, [annotations]);
 
-  // 一括で可視性を計算（視野内のみRaycast）
+  // カメラが停止した時のみRaycastを実行
   useFrame(() => {
-    frameCountRef.current++;
-    if (frameCountRef.current % 15 !== 0) return;
     if (annotations.length === 0) return;
 
-    // Frustum更新（1回だけ）
+    // カメラの移動量をチェック
+    const cameraMoved = camera.position.distanceTo(prevCameraPosition) > CAMERA_MOVE_THRESHOLD;
+    prevCameraPosition.copy(camera.position);
+
+    if (cameraMoved) {
+      // カメラが動いている間はカウンタをリセット
+      idleFrameCountRef.current = 0;
+      needsRaycastRef.current = true;
+      return;
+    }
+
+    // カメラが停止している
+    idleFrameCountRef.current++;
+
+    // 停止後、一定フレーム待ってからRaycast実行（1回のみ）
+    if (!needsRaycastRef.current) return;
+    if (idleFrameCountRef.current < IDLE_FRAMES_BEFORE_RAYCAST) return;
+
+    // Raycast実行
+    needsRaycastRef.current = false;
+
+    // Frustum更新
     sharedMatrix.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse);
     sharedFrustum.setFromProjectionMatrix(sharedMatrix);
     camera.getWorldDirection(sharedCameraDirection);
@@ -145,7 +170,6 @@ export default function Annotations({ model }: { model: GLTF }) {
         return type === '3DSelector' ? (
           <AnnotationMarker
             key={annotation.id}
-            number={(index + 1).toString()}
             annotation={annotation}
             isOpen={openAnnotationId === annotation.id}
             onClick={() => {

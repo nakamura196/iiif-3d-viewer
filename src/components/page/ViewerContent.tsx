@@ -2,7 +2,7 @@
 
 import type { NextPage } from 'next';
 import { Suspense } from 'react';
-import { annotationsAtom, manifestUrlAtom } from '@/atoms/infoPanelAtom';
+import { annotationsAtom, manifestUrlAtom, showAnnotationsAtom } from '@/atoms/infoPanelAtom';
 import { useAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import Info from '@/components/layout/panels/Info';
@@ -13,6 +13,7 @@ import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import type { Annotation } from '@/types/main';
+import { useTranslations } from 'next-intl';
 
 interface AnnotationPage {
   type?: string;
@@ -43,6 +44,8 @@ const ViewerContent: NextPage = () => {
   const [, setLayout] = useState<'horizontal' | 'vertical'>('horizontal');
   const [, setViewerHeight] = useState('100vh');
   const [, setAnnotations] = useAtom(annotationsAtom);
+  const [showAnnotations, setShowAnnotations] = useAtom(showAnnotationsAtom);
+  const t = useTranslations('Viewer');
   
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -143,6 +146,16 @@ const ViewerContent: NextPage = () => {
             <div className="flex flex-col sm:flex-row w-full">
               <div className="h-[50vh] sm:h-full sm:w-[70%] relative bg-gray-100 dark:bg-gray-900">
                 {glbUrl && <CanvasComponent glbUrl={glbUrl} />}
+                {/* アノテーション表示切替ボタン */}
+                <button
+                  onClick={() => setShowAnnotations(!showAnnotations)}
+                  className="absolute top-4 left-4 z-10 px-3 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-600"
+                  title={showAnnotations ? t('hideAnnotations') : t('showAnnotations')}
+                >
+                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                    {showAnnotations ? t('hideAnnotations') : t('showAnnotations')}
+                  </span>
+                </button>
               </div>
               <div className="flex-1 sm:w-[30%] bg-white dark:bg-gray-800 shadow-lg overflow-y-auto border-t sm:border-t-0 sm:border-l border-gray-200 dark:border-gray-700">
                 <Suspense

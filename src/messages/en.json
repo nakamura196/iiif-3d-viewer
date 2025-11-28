@@ -60,6 +60,10 @@
     "noAnnotations": "No annotations",
     "noResults": "No results found"
   },
+  "Viewer": {
+    "showAnnotations": "Show Annotations",
+    "hideAnnotations": "Hide Annotations"
+  },
   "Home": {
     "developers": "Developers",
     "developerNames": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)",

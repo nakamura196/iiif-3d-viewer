@@ -1,20 +1,18 @@
 'use client';
 
-import { Clone, useGLTF, OrbitControls } from '@react-three/drei';
-import type { OrbitControls as OrbitControlsType } from 'three-stdlib';
+import { Clone, useGLTF } from '@react-three/drei';
 import Annotations from '@/components/three/Annotations';
-import { useRef } from 'react';
+import { useAtom } from 'jotai';
+import { showAnnotationsAtom } from '@/atoms/infoPanelAtom';
 
 export default function Scene({ glbUrl }: { glbUrl: string }) {
-  const controlsRef = useRef<OrbitControlsType>(null);
-  // glbUrl = '/models/inscription_1.glb';
+  const [showAnnotations] = useAtom(showAnnotationsAtom);
   const model = useGLTF(glbUrl);
 
   return (
     <>
-      <OrbitControls ref={controlsRef} />
       <Clone object={model.scene} />
-      {model && <Annotations model={model} />}
+      {model && showAnnotations && <Annotations model={model} />}
     </>
   );
 }
