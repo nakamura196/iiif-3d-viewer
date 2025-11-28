@@ -21,8 +21,8 @@ const sharedToAnnotation = new Vector3();
 const prevCameraPosition = new Vector3();
 
 // パフォーマンス設定
-const CAMERA_MOVE_THRESHOLD = 0.001; // カメラ移動の閾値
-const IDLE_FRAMES_BEFORE_RAYCAST = 10; // 停止後このフレーム数待ってからRaycast
+const CAMERA_MOVE_THRESHOLD = 0.01; // カメラ移動の閾値（スクロール時の微小な動きを無視）
+const IDLE_FRAMES_BEFORE_RAYCAST = 30; // 停止後このフレーム数待ってからRaycast（約0.5秒 @ 60fps）
 
 export default function Annotations({ model }: { model: GLTF }) {
   const [openAnnotationId, setOpenAnnotationId] = useState<string | null>(null);

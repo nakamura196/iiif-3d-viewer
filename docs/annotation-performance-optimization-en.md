@@ -23,7 +23,7 @@ Camera moving → Skip Raycast processing (lightweight)
     ↓
 Camera stop detected
     ↓
-Wait 10 frames (stabilization)
+Wait 30 frames (~0.5 sec, stabilization)
     ↓
 Execute Raycast once
     ↓
@@ -34,8 +34,8 @@ No recalculation until camera moves again
 
 ```typescript
 // Performance settings
-const CAMERA_MOVE_THRESHOLD = 0.001; // Camera movement threshold
-const IDLE_FRAMES_BEFORE_RAYCAST = 10; // Frames to wait after stopping before Raycast
+const CAMERA_MOVE_THRESHOLD = 0.01; // Camera movement threshold (ignore small movements during scroll)
+const IDLE_FRAMES_BEFORE_RAYCAST = 30; // Frames to wait after stopping before Raycast (~0.5 sec @ 60fps)
 
 useFrame(() => {
   // Check camera movement

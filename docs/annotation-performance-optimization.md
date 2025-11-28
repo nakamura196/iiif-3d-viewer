@@ -23,7 +23,7 @@
     ↓
 カメラ停止検出
     ↓
-10フレーム待機（安定化）
+30フレーム待機（約0.5秒、安定化）
     ↓
 1回だけRaycast実行
     ↓
@@ -34,8 +34,8 @@
 
 ```typescript
 // パフォーマンス設定
-const CAMERA_MOVE_THRESHOLD = 0.001; // カメラ移動の閾値
-const IDLE_FRAMES_BEFORE_RAYCAST = 10; // 停止後このフレーム数待ってからRaycast
+const CAMERA_MOVE_THRESHOLD = 0.01; // カメラ移動の閾値（スクロール時の微小な動きを無視）
+const IDLE_FRAMES_BEFORE_RAYCAST = 30; // 停止後このフレーム数待ってからRaycast（約0.5秒 @ 60fps）
 
 useFrame(() => {
   // カメラの移動量をチェック
