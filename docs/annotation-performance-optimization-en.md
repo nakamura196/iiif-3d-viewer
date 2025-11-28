@@ -1,8 +1,8 @@
-# Annotation Display Performance Optimization
+# Annotation Display Performance Improvement
 
 ## Overview
 
-When there are many annotations in the 3D viewer, the occlusion detection (Raycast) process becomes a performance bottleneck. This document explains the optimization techniques adopted.
+When there are many annotations in the 3D viewer, the occlusion detection (Raycast) process becomes a performance bottleneck. This document explains the improvement techniques adopted.
 
 ## Problem
 
