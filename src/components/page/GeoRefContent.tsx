@@ -45,6 +45,8 @@ interface GeoFeature {
     label: string;
     description?: string;
     id: string;
+    thumbnail?: string;
+    url?: string;
   };
   geometry: {
     coordinates: [number, number];
@@ -64,7 +66,7 @@ const GeoRefContent: NextPage = () => {
   const [selectedAnnotationId, setSelectedAnnotationId] = useAtom(selectedAnnotationIdAtom);
   const [geoFeatures, setGeoFeatures] = useState<GeoFeature[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const annotationRefs = useRef<Map<string, HTMLButtonElement>>(new Map());
+  const annotationRefs = useRef<Map<string, HTMLDivElement>>(new Map());
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -310,38 +312,75 @@ const GeoRefContent: NextPage = () => {
                     (feature.metadata.description?.toLowerCase().includes(searchQuery.toLowerCase()))
                   )
                   .map((feature, index) => (
-                  <button
+                  <div
                     key={feature.metadata.id}
                     ref={(el) => {
                       if (el) {
                         annotationRefs.current.set(feature.metadata.id, el);
                       }
                     }}
-                    onClick={() => handleFeatureClick(feature.metadata.id)}
                     className={`
-                      w-full px-4 py-3 rounded-lg text-sm text-left transition-colors
+                      w-full rounded-lg text-sm text-left transition-colors overflow-hidden
                       ${selectedAnnotationId === feature.metadata.id
                         ? 'bg-blue-500 text-white'
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                       }
                     `}
                   >
-                    <div className="flex items-start">
-                      <span className="text-xs opacity-70 mr-2 mt-0.5">{index + 1}.</span>
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium">{feature.metadata.label}</div>
-                        {feature.metadata.description && (
-                          <div className={`text-xs mt-0.5 truncate ${
-                            selectedAnnotationId === feature.metadata.id
-                              ? 'text-blue-100'
-                              : 'text-gray-500 dark:text-gray-400'
-                          }`}>
-                            {feature.metadata.description}
+                    <button
+                      onClick={() => handleFeatureClick(feature.metadata.id)}
+                      className="w-full px-4 py-3 text-left"
+                    >
+                      <div className="flex items-start">
+                        {feature.metadata.thumbnail ? (
+                          <div className="w-10 h-10 flex-shrink-0 mr-3 rounded overflow-hidden bg-gray-200 dark:bg-gray-600">
+                            <img
+                              src={feature.metadata.thumbnail}
+                              alt={feature.metadata.label}
+                              className="w-full h-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                              }}
+                            />
                           </div>
+                        ) : (
+                          <span className="text-xs opacity-70 mr-2 mt-0.5">{index + 1}.</span>
                         )}
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium">{feature.metadata.label}</div>
+                          {feature.metadata.description && (
+                            <div className={`text-xs mt-0.5 truncate ${
+                              selectedAnnotationId === feature.metadata.id
+                                ? 'text-blue-100'
+                                : 'text-gray-500 dark:text-gray-400'
+                            }`}>
+                              {feature.metadata.description}
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  </button>
+                    </button>
+                    {feature.metadata.url && (
+                      <div className={`px-4 pb-2 ${feature.metadata.thumbnail ? 'pl-[68px]' : 'pl-8'}`}>
+                        <a
+                          href={feature.metadata.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className={`inline-flex items-center text-xs hover:underline ${
+                            selectedAnnotationId === feature.metadata.id
+                              ? 'text-blue-100 hover:text-white'
+                              : 'text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300'
+                          }`}
+                        >
+                          <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                          Wikipedia
+                        </a>
+                      </div>
+                    )}
+                  </div>
                 ))}
                 {geoFeatures.length === 0 && (
                   <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">

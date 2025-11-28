@@ -11,6 +11,9 @@ interface GeoFeature {
   metadata: {
     label: string;
     id: string;
+    description?: string;
+    thumbnail?: string;
+    url?: string;
   };
   geometry: {
     coordinates: [number, number];
@@ -83,13 +86,26 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
       el.style.cursor = 'pointer';
 
       const isDark = resolvedTheme === 'dark';
+      const thumbnailHtml = feature.metadata.thumbnail
+        ? `<div style="width: 100%; max-width: 150px; margin-bottom: 8px; border-radius: 4px; overflow: hidden;">
+            <img src="${feature.metadata.thumbnail}" alt="${feature.metadata.label}" style="width: 100%; height: auto; display: block;" onerror="this.parentElement.style.display='none'" />
+          </div>`
+        : '';
+      const descriptionHtml = feature.metadata.description
+        ? `<div style="font-size: 12px; color: ${isDark ? '#9ca3af' : '#6b7280'}; margin-top: 4px;">${feature.metadata.description}</div>`
+        : '';
       const popup = new maplibregl.Popup({
         offset: 25,
         closeButton: false,
         closeOnClick: false,
-        className: isDark ? 'dark-popup' : ''
+        className: isDark ? 'dark-popup' : '',
+        maxWidth: '200px'
       }).setHTML(
-        `<div style="font-weight: bold; padding: 8px; background-color: ${isDark ? '#1f2937' : '#ffffff'}; color: ${isDark ? '#f3f4f6' : '#111827'}; border-radius: 4px;">${feature.metadata.label}</div>`
+        `<div style="padding: 8px; background-color: ${isDark ? '#1f2937' : '#ffffff'}; color: ${isDark ? '#f3f4f6' : '#111827'}; border-radius: 4px;">
+          ${thumbnailHtml}
+          <div style="font-weight: bold;">${feature.metadata.label}</div>
+          ${descriptionHtml}
+        </div>`
       );
 
       el.addEventListener('mouseenter', () => {
