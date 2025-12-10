@@ -12,7 +12,7 @@ import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
 import MapView from '@/components/map/MapView';
 import type { Annotation } from '@/types/main';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 interface AnnotationPage {
   type?: string;
@@ -39,29 +39,57 @@ interface IIIFAnnotation {
   };
 }
 
-interface GeoFeature {
-  type: 'Feature';
-  metadata: {
+interface GeoFeatureName {
+  toponym: string;
+  lang: string;
+  citations?: {
     label: string;
-    description?: string;
-    id: string;
-    thumbnail?: string;
-    url?: string;
-  };
+    '@id': string;
+  }[];
+}
+
+interface GeoFeatureLink {
+  type: string;
+  identifier: string;
+}
+
+interface GeoFeatureDepiction {
+  '@id': string;
+}
+
+interface GeoFeature {
+  '@id': string;
+  type: 'Feature';
   geometry: {
     coordinates: [number, number];
     type: 'Point';
   };
   properties: {
+    title: string;
     resourceCoords: [number, number, number];
   };
+  names?: GeoFeatureName[];
+  links?: GeoFeatureLink[];
+  depictions?: GeoFeatureDepiction[];
 }
+
+// マニフェストからattributionを取得するヘルパー関数
+const getAttribution = (manifest: Record<string, unknown>, locale: string): string | undefined => {
+  const requiredStatement = manifest.requiredStatement as {
+    value?: Record<string, string[]>;
+  } | undefined;
+  if (!requiredStatement?.value) return undefined;
+  const value = requiredStatement.value;
+  return value[locale]?.[0] || value['en']?.[0] || value['none']?.[0] || Object.values(value)[0]?.[0];
+};
 
 const GeoRefContent: NextPage = () => {
   const t = useTranslations('GeoRef');
+  const locale = useLocale();
   const [manifestUrl, setManifestUrl] = useAtom(manifestUrlAtom);
   const [, setManifest] = useAtom(manifestAtom);
   const [glbUrl, setGlbUrl] = useState<string | null>(null);
+  const [attribution, setAttribution] = useState<string | undefined>(undefined);
   const [, setAnnotations] = useAtom(annotationsAtom);
   const [selectedAnnotationId, setSelectedAnnotationId] = useAtom(selectedAnnotationIdAtom);
   const [geoFeatures, setGeoFeatures] = useState<GeoFeature[]>([]);
@@ -81,6 +109,7 @@ const GeoRefContent: NextPage = () => {
     fetchManifest(manifestUrl).then((manifest) => {
       setGlbUrl(manifest.items[0].items[0].items[0].body.id);
       setManifest(manifest);
+      setAttribution(getAttribution(manifest as unknown as Record<string, unknown>, locale));
 
       const annotations: Annotation[] = [];
       const geoFeaturesTemp: GeoFeature[] = [];
@@ -182,12 +211,13 @@ const GeoRefContent: NextPage = () => {
       }
 
       // Convert geoFeatures to annotations for 3D viewer
-      geoFeaturesTemp.forEach((feature) => {
+      geoFeaturesTemp.forEach((feature, idx) => {
         const coords = feature.properties.resourceCoords;
+        const title = feature.properties.title;
         annotations.push({
-          id: feature.metadata.id,
+          id: feature['@id'] || `geo-feature-${idx}`,
           creator: '',
-          title: feature.metadata.label,
+          title: title,
           description: '',
           media: [],
           wikidata: [],
@@ -200,7 +230,7 @@ const GeoRefContent: NextPage = () => {
           data: {
             body: {
               value: '',
-              label: feature.metadata.label,
+              label: title,
             },
             target: {
               selector: {
@@ -217,7 +247,7 @@ const GeoRefContent: NextPage = () => {
       setAnnotations(annotations);
       setGeoFeatures(geoFeaturesTemp);
     });
-  }, [manifestUrl, setManifest, setAnnotations]);
+  }, [manifestUrl, setManifest, setAnnotations, locale]);
 
   const handleManifestSubmit = async (manifestUrl: string) => {
     setManifestUrl(manifestUrl);
@@ -267,7 +297,7 @@ const GeoRefContent: NextPage = () => {
                     </div>
                   }
                 >
-                  <CanvasComponent glbUrl={glbUrl} />
+                  <CanvasComponent glbUrl={glbUrl} attribution={attribution} />
                 </Suspense>
               )}
             </div>
@@ -307,90 +337,103 @@ const GeoRefContent: NextPage = () => {
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-2">
                 {geoFeatures
-                  .filter((feature) =>
-                    feature.metadata.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    (feature.metadata.description?.toLowerCase().includes(searchQuery.toLowerCase()))
-                  )
-                  .map((feature, index) => (
-                  <div
-                    key={feature.metadata.id}
-                    ref={(el) => {
-                      if (el) {
-                        annotationRefs.current.set(feature.metadata.id, el);
-                      }
-                    }}
-                    className={`
-                      w-full rounded-lg text-sm text-left transition-colors overflow-hidden
-                      ${selectedAnnotationId === feature.metadata.id
-                        ? 'bg-blue-500 text-white'
-                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                      }
-                    `}
-                  >
-                    <button
-                      onClick={() => handleFeatureClick(feature.metadata.id)}
-                      className="w-full px-4 py-3 text-left"
-                    >
-                      <div className="flex items-start">
-                        {feature.metadata.thumbnail ? (
-                          <div className="w-10 h-10 flex-shrink-0 mr-3 rounded overflow-hidden bg-gray-200 dark:bg-gray-600">
-                            <img
-                              src={feature.metadata.thumbnail}
-                              alt={feature.metadata.label}
-                              className="w-full h-full object-cover"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).style.display = 'none';
-                              }}
-                            />
-                          </div>
-                        ) : (
-                          <span className="text-xs opacity-70 mr-2 mt-0.5">{index + 1}.</span>
-                        )}
-                        <div className="flex-1 min-w-0">
-                          <div className="font-medium">{feature.metadata.label}</div>
-                          {feature.metadata.description && (
-                            <div className={`text-xs mt-0.5 truncate ${
-                              selectedAnnotationId === feature.metadata.id
-                                ? 'text-blue-100'
-                                : 'text-gray-500 dark:text-gray-400'
-                            }`}>
-                              {feature.metadata.description}
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </button>
-                    {feature.metadata.url && (
-                      <div className={`px-4 pb-2 ${feature.metadata.thumbnail ? 'pl-[68px]' : 'pl-8'}`}>
-                        <a
-                          href={feature.metadata.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className={`inline-flex items-center text-xs hover:underline ${
-                            selectedAnnotationId === feature.metadata.id
-                              ? 'text-blue-100 hover:text-white'
-                              : 'text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300'
-                          }`}
+                  .filter((feature) => {
+                    const query = searchQuery.toLowerCase();
+                    // Search in title
+                    if (feature.properties.title.toLowerCase().includes(query)) return true;
+                    // Search in names array
+                    if (feature.names?.some(name => name.toponym.toLowerCase().includes(query))) return true;
+                    return false;
+                  })
+                  .map((feature, index) => {
+                    const thumbnail = feature.depictions?.[0]?.['@id'];
+                    const wikipediaLink = feature.links?.find(link => link.type === 'primaryTopicOf')?.identifier;
+                    const altNames = feature.names?.filter(name => name.toponym !== feature.properties.title);
+
+                    const featureId = feature['@id'] || `geo-feature-${index}`;
+                    return (
+                      <div
+                        key={featureId}
+                        ref={(el) => {
+                          if (el) {
+                            annotationRefs.current.set(featureId, el);
+                          }
+                        }}
+                        className={`
+                          w-full rounded-lg text-sm text-left transition-colors overflow-hidden
+                          ${selectedAnnotationId === featureId
+                            ? 'bg-blue-500 text-white'
+                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                          }
+                        `}
+                      >
+                        <button
+                          onClick={() => handleFeatureClick(featureId)}
+                          className="w-full px-4 py-3 text-left"
                         >
-                          <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                          Wikipedia
-                        </a>
+                          <div className="flex items-start">
+                            {thumbnail ? (
+                              <div className="w-10 h-10 flex-shrink-0 mr-3 rounded overflow-hidden bg-gray-200 dark:bg-gray-600">
+                                <img
+                                  src={thumbnail}
+                                  alt={feature.properties.title}
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    (e.target as HTMLImageElement).style.display = 'none';
+                                  }}
+                                />
+                              </div>
+                            ) : (
+                              <span className="text-xs opacity-70 mr-2 mt-0.5">{index + 1}.</span>
+                            )}
+                            <div className="flex-1 min-w-0">
+                              <div className="font-medium">{feature.properties.title}</div>
+                              {altNames && altNames.length > 0 && (
+                                <div className={`text-xs mt-0.5 truncate ${
+                                  selectedAnnotationId === featureId
+                                    ? 'text-blue-100'
+                                    : 'text-gray-500 dark:text-gray-400'
+                                }`}>
+                                  {altNames.map(n => n.toponym).join(', ')}
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </button>
+                        {wikipediaLink && (
+                          <div className={`px-4 pb-2 ${thumbnail ? 'pl-[68px]' : 'pl-8'}`}>
+                            <a
+                              href={wikipediaLink}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className={`inline-flex items-center text-xs hover:underline ${
+                                selectedAnnotationId === featureId
+                                  ? 'text-blue-100 hover:text-white'
+                                  : 'text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300'
+                              }`}
+                            >
+                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                              Wikipedia
+                            </a>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                ))}
+                    );
+                  })}
                 {geoFeatures.length === 0 && (
                   <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
                     {t('noAnnotations')}
                   </p>
                 )}
-                {geoFeatures.length > 0 && searchQuery && geoFeatures.filter((feature) =>
-                  feature.metadata.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                  (feature.metadata.description?.toLowerCase().includes(searchQuery.toLowerCase()))
-                ).length === 0 && (
+                {geoFeatures.length > 0 && searchQuery && geoFeatures.filter((feature) => {
+                  const query = searchQuery.toLowerCase();
+                  if (feature.properties.title.toLowerCase().includes(query)) return true;
+                  if (feature.names?.some(name => name.toponym.toLowerCase().includes(query))) return true;
+                  return false;
+                }).length === 0 && (
                   <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
                     {t('noResults')}
                   </p>

@@ -39,6 +39,16 @@
     ]
   ],
   "rights": "https://rightsstatements.org/vocab/CNE/1.0/",
+  "requiredStatement": {
+    "label": {
+      "ja": ["帰属表示"],
+      "en": ["Attribution"]
+    },
+    "value": {
+      "ja": ["『石淵家地球儀』（菊池市立図書館所蔵）を改変"],
+      "en": ["Modified from 'Ishibuchi Family Globe' (Kikuchi City Library Collection)"]
+    }
+  },
   "provider": [
     {
       "id": "https://3d-iiif-viewer.vercel.app/",
@@ -95,46 +105,146 @@
                 "type": "FeatureCollection",
                 "features": [
                   {
+                    "@id": "annotation-5PQUNskDnZwuoTmQrCUq",
                     "type": "Feature",
-                    "metadata": {
-                      "label": "北海",
-                      "id": "annotation-5PQUNskDnZwuoTmQrCUq"
-                    },
                     "geometry": {
                       "coordinates": [3.5, 56.0],
                       "type": "Point"
                     },
                     "properties": {
+                      "title": "北海",
                       "resourceCoords": [-0.2557678207152946, 0.7615613040808595, -0.5854673025803923]
-                    }
+                    },
+                    "names": [
+                      {
+                        "toponym": "北海",
+                        "lang": "ja",
+                        "citations": [
+                          {
+                            "label": "石淵家地球儀",
+                            "@id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json"
+                          }
+                        ]
+                      },
+                      {
+                        "toponym": "North Sea",
+                        "lang": "en",
+                        "citations": [
+                          {
+                            "label": "Wikipedia",
+                            "@id": "https://en.wikipedia.org/wiki/North_Sea"
+                          }
+                        ]
+                      }
+                    ],
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "http://www.wikidata.org/entity/Q1693"
+                      },
+                      {
+                        "type": "primaryTopicOf",
+                        "identifier": "https://en.wikipedia.org/wiki/North_Sea"
+                      }
+                    ]
                   },
                   {
+                    "@id": "annotation-9CdwCGrf1ZlWQqjxJhVT",
                     "type": "Feature",
-                    "metadata": {
-                      "label": "イギリス",
-                      "id": "annotation-9CdwCGrf1ZlWQqjxJhVT"
-                    },
                     "geometry": {
                       "coordinates": [-0.1276, 51.5074],
                       "type": "Point"
                     },
                     "properties": {
+                      "title": "イギリス",
                       "resourceCoords": [-0.2056713368677782, 0.7115841685636456, -0.6593850997323897]
-                    }
+                    },
+                    "names": [
+                      {
+                        "toponym": "イギリス",
+                        "lang": "ja",
+                        "citations": [
+                          {
+                            "label": "石淵家地球儀",
+                            "@id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json"
+                          }
+                        ]
+                      },
+                      {
+                        "toponym": "United Kingdom",
+                        "lang": "en",
+                        "citations": [
+                          {
+                            "label": "Wikipedia",
+                            "@id": "https://en.wikipedia.org/wiki/United_Kingdom"
+                          }
+                        ]
+                      }
+                    ],
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "http://www.wikidata.org/entity/Q145"
+                      },
+                      {
+                        "type": "primaryTopicOf",
+                        "identifier": "https://en.wikipedia.org/wiki/United_Kingdom"
+                      }
+                    ],
+                    "depictions": [
+                      {
+                        "@id": "http://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_the_United_Kingdom.svg?width=300"
+                      }
+                    ]
                   },
                   {
+                    "@id": "annotation-DAWUDcrCTQLfiBUMLDMc",
                     "type": "Feature",
-                    "metadata": {
-                      "label": "フランス",
-                      "id": "annotation-DAWUDcrCTQLfiBUMLDMc"
-                    },
                     "geometry": {
                       "coordinates": [2.3522, 48.8566],
                       "type": "Point"
                     },
                     "properties": {
+                      "title": "フランス",
                       "resourceCoords": [-0.2733104982705924, 0.6521283770526259, -0.701585131297753]
-                    }
+                    },
+                    "names": [
+                      {
+                        "toponym": "フランス",
+                        "lang": "ja",
+                        "citations": [
+                          {
+                            "label": "石淵家地球儀",
+                            "@id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json"
+                          }
+                        ]
+                      },
+                      {
+                        "toponym": "France",
+                        "lang": "en",
+                        "citations": [
+                          {
+                            "label": "Wikipedia",
+                            "@id": "https://en.wikipedia.org/wiki/France"
+                          }
+                        ]
+                      }
+                    ],
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "http://www.wikidata.org/entity/Q142"
+                      },
+                      {
+                        "type": "primaryTopicOf",
+                        "identifier": "https://en.wikipedia.org/wiki/France"
+                      }
+                    ],
+                    "depictions": [
+                      {
+                        "@id": "http://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_France.svg?width=300"
+                      }
+                    ]
                   }
                 ]
               }

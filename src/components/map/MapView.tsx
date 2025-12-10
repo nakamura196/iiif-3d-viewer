@@ -6,22 +6,38 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import { useTheme } from 'next-themes';
 import { useLocale } from 'next-intl';
 
-interface GeoFeature {
-  type: 'Feature';
-  metadata: {
+interface GeoFeatureName {
+  toponym: string;
+  lang: string;
+  citations?: {
     label: string;
-    id: string;
-    description?: string;
-    thumbnail?: string;
-    url?: string;
-  };
+    '@id': string;
+  }[];
+}
+
+interface GeoFeatureLink {
+  type: string;
+  identifier: string;
+}
+
+interface GeoFeatureDepiction {
+  '@id': string;
+}
+
+interface GeoFeature {
+  '@id': string;
+  type: 'Feature';
   geometry: {
     coordinates: [number, number];
     type: 'Point';
   };
   properties: {
+    title: string;
     resourceCoords: [number, number, number];
   };
+  names?: GeoFeatureName[];
+  links?: GeoFeatureLink[];
+  depictions?: GeoFeatureDepiction[];
 }
 
 interface MapViewProps {
@@ -75,24 +91,29 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
       if (lat > 85 || lat < -85) {
         return;
       }
+      const featureId = feature['@id'] || `geo-feature-${currentFeatures.indexOf(feature)}`;
+      const title = feature.properties.title;
+      const thumbnail = feature.depictions?.[0]?.['@id'];
+      const altNames = feature.names?.filter(n => n.toponym !== title).map(n => n.toponym).join(', ');
+
       const el = document.createElement('div');
       el.className = 'marker';
       el.style.width = '24px';
       el.style.height = '24px';
       el.style.borderRadius = '50%';
-      el.style.backgroundColor = feature.metadata.id === currentSelectedId ? '#ef4444' : '#3b82f6';
+      el.style.backgroundColor = featureId === currentSelectedId ? '#ef4444' : '#3b82f6';
       el.style.border = '3px solid white';
       el.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
       el.style.cursor = 'pointer';
 
       const isDark = resolvedTheme === 'dark';
-      const thumbnailHtml = feature.metadata.thumbnail
+      const thumbnailHtml = thumbnail
         ? `<div style="width: 100%; max-width: 150px; margin-bottom: 8px; border-radius: 4px; overflow: hidden;">
-            <img src="${feature.metadata.thumbnail}" alt="${feature.metadata.label}" style="width: 100%; height: auto; display: block;" onerror="this.parentElement.style.display='none'" />
+            <img src="${thumbnail}" alt="${title}" style="width: 100%; height: auto; display: block;" onerror="this.parentElement.style.display='none'" />
           </div>`
         : '';
-      const descriptionHtml = feature.metadata.description
-        ? `<div style="font-size: 12px; color: ${isDark ? '#9ca3af' : '#6b7280'}; margin-top: 4px;">${feature.metadata.description}</div>`
+      const altNamesHtml = altNames
+        ? `<div style="font-size: 12px; color: ${isDark ? '#9ca3af' : '#6b7280'}; margin-top: 4px;">${altNames}</div>`
         : '';
       const popup = new maplibregl.Popup({
         offset: 25,
@@ -103,8 +124,8 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
       }).setHTML(
         `<div style="padding: 8px; background-color: ${isDark ? '#1f2937' : '#ffffff'}; color: ${isDark ? '#f3f4f6' : '#111827'}; border-radius: 4px;">
           ${thumbnailHtml}
-          <div style="font-weight: bold;">${feature.metadata.label}</div>
-          ${descriptionHtml}
+          <div style="font-weight: bold;">${title}</div>
+          ${altNamesHtml}
         </div>`
       );
 
@@ -127,14 +148,14 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
         if (activePopupRef.current === popup) {
           activePopupRef.current = null;
         }
-        currentOnFeatureClick(feature.metadata.id);
+        currentOnFeatureClick(featureId);
       });
 
       const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
         .setLngLat(feature.geometry.coordinates)
         .addTo(map.current!);
 
-      markersRef.current.set(feature.metadata.id, marker);
+      markersRef.current.set(featureId, marker);
     });
 
     // Fit bounds if there are features
@@ -220,7 +241,7 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
 
     // Fly to selected marker
     if (selectedId) {
-      const feature = features.find(f => f.metadata.id === selectedId);
+      const feature = features.find((f, idx) => (f['@id'] || `geo-feature-${idx}`) === selectedId);
       if (feature && map.current) {
         map.current.flyTo({
           center: feature.geometry.coordinates,

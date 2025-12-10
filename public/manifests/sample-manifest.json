@@ -39,6 +39,16 @@
     ]
   ],
   "rights": "https://rightsstatements.org/vocab/CNE/1.0/",
+  "requiredStatement": {
+    "label": {
+      "ja": ["帰属表示"],
+      "en": ["Attribution"]
+    },
+    "value": {
+      "ja": ["『石淵家地球儀』（菊池市立図書館所蔵）を改変"],
+      "en": ["Modified from 'Ishibuchi Family Globe' (Kikuchi City Library Collection)"]
+    }
+  },
   "provider": [
     {
       "id": "https://3d-iiif-viewer.vercel.app/",
