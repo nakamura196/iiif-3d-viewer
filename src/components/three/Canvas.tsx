@@ -1,11 +1,16 @@
-import { Canvas, useThree } from '@react-three/fiber';
+import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html } from '@react-three/drei';
-import { Suspense, useEffect, useState, useRef, useImperativeHandle, forwardRef } from 'react';
+import { Suspense, useEffect, useState, useRef, useImperativeHandle, forwardRef, useCallback } from 'react';
 import Scene from '@/components/three/Scene';
 import { useProgress } from '@react-three/drei';
 import { useTheme } from 'next-themes';
 import * as THREE from 'three';
 import type { OrbitControls as OrbitControlsType } from 'three-stdlib';
+
+// MapLibre風のイージング関数
+const easeOutCubic = (t: number): number => {
+  return 1 - Math.pow(1 - t, 3);
+};
 // ローディングコンポーネント
 const LoadingScreen = () => {
   const { progress, total, loaded } = useProgress();
@@ -32,33 +37,84 @@ const LoadingScreen = () => {
   );
 };
 
-// カメラズーム制御用のコンポーネント
+// カメラズーム制御用のコンポーネント（MapLibre風スムーズズーム）
 interface CameraControllerProps {
   controlsRef: React.RefObject<OrbitControlsType | null>;
 }
 
+interface ZoomAnimation {
+  startTime: number;
+  duration: number;
+  startDistance: number;
+  targetDistance: number;
+}
+
+const ZOOM_DURATION = 300; // ミリ秒
+const ZOOM_FACTOR = 0.3; // ズーム量（割合）
+
 const CameraController = forwardRef<{ zoomIn: () => void; zoomOut: () => void }, CameraControllerProps>(
   ({ controlsRef }, ref) => {
     const { camera } = useThree();
+    const zoomAnimationRef = useRef<ZoomAnimation | null>(null);
+    const targetRef = useRef(new THREE.Vector3(0, 0, 0));
+
+    // アニメーションフレーム処理
+    useFrame(() => {
+      if (!zoomAnimationRef.current || !controlsRef.current) return;
+
+      const { startTime, duration, startDistance, targetDistance } = zoomAnimationRef.current;
+      const elapsed = performance.now() - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easedProgress = easeOutCubic(progress);
+
+      // OrbitControlsのターゲットを取得
+      const target = controlsRef.current.target;
+      targetRef.current.copy(target);
+
+      // カメラからターゲットへの方向ベクトル
+      const direction = new THREE.Vector3();
+      direction.subVectors(camera.position, targetRef.current).normalize();
+
+      // 現在の距離を補間
+      const currentDistance = startDistance + (targetDistance - startDistance) * easedProgress;
+
+      // カメラ位置を更新
+      camera.position.copy(targetRef.current).addScaledVector(direction, currentDistance);
+      controlsRef.current.update();
+
+      // アニメーション完了
+      if (progress >= 1) {
+        zoomAnimationRef.current = null;
+      }
+    });
+
+    const startZoomAnimation = useCallback((zoomIn: boolean) => {
+      if (!controlsRef.current) return;
+
+      const target = controlsRef.current.target;
+      const currentDistance = camera.position.distanceTo(target);
+
+      // ズームイン/アウトに応じて目標距離を計算
+      const factor = zoomIn ? (1 - ZOOM_FACTOR) : (1 + ZOOM_FACTOR);
+      const targetDistance = currentDistance * factor;
+
+      // 最小/最大距離の制限
+      const minDistance = 0.5;
+      const maxDistance = 50;
+      const clampedTargetDistance = Math.max(minDistance, Math.min(maxDistance, targetDistance));
+
+      zoomAnimationRef.current = {
+        startTime: performance.now(),
+        duration: ZOOM_DURATION,
+        startDistance: currentDistance,
+        targetDistance: clampedTargetDistance,
+      };
+    }, [camera, controlsRef]);
 
     useImperativeHandle(ref, () => ({
-      zoomIn: () => {
-        if (camera instanceof THREE.PerspectiveCamera) {
-          const direction = new THREE.Vector3();
-          camera.getWorldDirection(direction);
-          camera.position.addScaledVector(direction, 0.5);
-          controlsRef.current?.update();
-        }
-      },
-      zoomOut: () => {
-        if (camera instanceof THREE.PerspectiveCamera) {
-          const direction = new THREE.Vector3();
-          camera.getWorldDirection(direction);
-          camera.position.addScaledVector(direction, -0.5);
-          controlsRef.current?.update();
-        }
-      },
-    }));
+      zoomIn: () => startZoomAnimation(true),
+      zoomOut: () => startZoomAnimation(false),
+    }), [startZoomAnimation]);
 
     return null;
   }
@@ -160,7 +216,7 @@ const CanvasComponent = ({ glbUrl, attribution }: CanvasComponentProps) => {
       </div>
       {/* Attribution（MapLibre GL風） */}
       {attribution && (
-        <div className="absolute bottom-0 right-0 z-10 bg-white/80 dark:bg-gray-800/80 px-1.5 py-0.5 text-[11px] text-gray-700 dark:text-gray-300">
+        <div className="absolute bottom-3 right-3 z-10 bg-white/90 dark:bg-gray-800/90 px-3 py-1.5 text-sm text-gray-800 dark:text-gray-200 rounded shadow-sm font-medium">
           {attribution}
         </div>
       )}
