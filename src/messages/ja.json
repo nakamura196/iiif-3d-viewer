@@ -41,7 +41,11 @@
     "annotations": "アノテーション",
     "annotationCount": "{count}件",
     "type": "タイプ",
-    "unknown": "不明"
+    "unknown": "不明",
+    "annotationId": "アノテーション {id}",
+    "viewDetails": "詳細を見る",
+    "edit": "編集",
+    "newAnnotation": "新しいアノテーション"
   },
   "Help": {
     "title": "ヘルプ"
@@ -62,7 +66,8 @@
   },
   "Viewer": {
     "showAnnotations": "アノテーションを表示",
-    "hideAnnotations": "アノテーションを非表示"
+    "hideAnnotations": "アノテーションを非表示",
+    "loading": "3Dモデルを読み込み中..."
   },
   "Home": {
     "developers": "開発者",

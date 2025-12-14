@@ -12,7 +12,12 @@ import type { Annotation3 as Annotation } from '@/types/main';
 import { useAtom } from 'jotai';
 import { annotationsAtom3 } from '@/atoms/infoPanelAtom';
 
-export default function Scene({ glbUrl }: { glbUrl: string }) {
+interface SceneProps {
+  glbUrl: string;
+  newAnnotationText?: string;
+}
+
+export default function Scene({ glbUrl, newAnnotationText = 'New Annotation' }: SceneProps) {
   const controlsRef = useRef<OrbitControlsType>(null);
   const [annotations, setAnnotations] = useAtom(annotationsAtom3);
   // const [annotations, setAnnotations] = useState<Annotation[]>(sampleAnnotations);
@@ -27,7 +32,7 @@ export default function Scene({ glbUrl }: { glbUrl: string }) {
       const annotation: Annotation = {
         id: (annotations.length + 1).toString(),
         position: clickedPosition,
-        content: '新しいアノテーション',
+        content: newAnnotationText,
         cameraPosition: camera.position.clone(),
         targetPosition: controlsRef.current?.target.clone() || new Vector3(),
       };

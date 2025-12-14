@@ -41,7 +41,11 @@
     "annotations": "Annotations",
     "annotationCount": "{count} items",
     "type": "Type",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "annotationId": "Annotation {id}",
+    "viewDetails": "View Details",
+    "edit": "Edit",
+    "newAnnotation": "New Annotation"
   },
   "Help": {
     "title": "Help"
@@ -62,7 +66,8 @@
   },
   "Viewer": {
     "showAnnotations": "Show Annotations",
-    "hideAnnotations": "Hide Annotations"
+    "hideAnnotations": "Hide Annotations",
+    "loading": "Loading 3D model..."
   },
   "Home": {
     "developers": "Developers",

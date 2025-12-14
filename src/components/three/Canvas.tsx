@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState, useRef, useImperativeHandle, forwardRef,
 import Scene from '@/components/three/Scene';
 import { useProgress } from '@react-three/drei';
 import { useTheme } from 'next-themes';
+import { useTranslations } from 'next-intl';
 import * as THREE from 'three';
 import type { OrbitControls as OrbitControlsType } from 'three-stdlib';
 
@@ -12,7 +13,7 @@ const easeOutCubic = (t: number): number => {
   return 1 - Math.pow(1 - t, 3);
 };
 // ローディングコンポーネント
-const LoadingScreen = () => {
+const LoadingScreen = ({ loadingText }: { loadingText: string }) => {
   const { progress, total, loaded } = useProgress();
 
   return (
@@ -20,7 +21,7 @@ const LoadingScreen = () => {
       <div className="flex flex-col items-center bg-white/80 dark:bg-gray-800/80 p-6 rounded-lg backdrop-blur-sm">
         <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
         <div className="text-gray-700 dark:text-gray-300 font-medium mb-2">
-          3Dモデルを読み込み中...
+          {loadingText}
         </div>
         <div className="w-48 bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-2">
           <div
@@ -128,6 +129,7 @@ interface CanvasComponentProps {
 
 const CanvasComponent = ({ glbUrl, attribution }: CanvasComponentProps) => {
   const { resolvedTheme } = useTheme();
+  const t = useTranslations('Viewer');
   const [mounted, setMounted] = useState(false);
   const [sceneRef, setSceneRef] = useState<THREE.Scene | null>(null);
   const controlsRef = useRef<OrbitControlsType>(null);
@@ -175,7 +177,7 @@ const CanvasComponent = ({ glbUrl, attribution }: CanvasComponentProps) => {
           scene.background = isDark ? new THREE.Color(0x111827) : new THREE.Color(0xf3f4f6);
         }}
       >
-        <Suspense fallback={<LoadingScreen />}>
+        <Suspense fallback={<LoadingScreen loadingText={t('loading')} />}>
           <Scene glbUrl={glbUrl} />
           <OrbitControls
             ref={controlsRef}

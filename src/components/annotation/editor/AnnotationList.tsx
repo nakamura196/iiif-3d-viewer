@@ -1,8 +1,10 @@
 import { annotationsAtom3, selectedAnnotationIdAtom } from '@/atoms/infoPanelAtom';
 import { useAtom } from 'jotai';
+import { useTranslations } from 'next-intl';
 import type { Annotation3 } from '@/types/main';
 
 export default function AnnotationList() {
+  const t = useTranslations('Annotation');
   const [annotations, setAnnotations] = useAtom(annotationsAtom3);
   const [selectedAnnotationId, setSelectedAnnotationId] = useAtom(selectedAnnotationIdAtom);
 
@@ -19,7 +21,7 @@ export default function AnnotationList() {
   };
   return (
     <div className="p-6">
-      <h2 className="text-xl font-bold mb-6 text-gray-800">アノテーション一覧</h2>
+      <h2 className="text-xl font-bold mb-6 text-gray-800">{t('title')}</h2>
       <div className="space-y-4">
         {annotations.map((annotation) => (
           <div
@@ -55,7 +57,7 @@ export default function AnnotationList() {
                                       : 'text-gray-600 group-hover:text-blue-600'
                                   }`}
                   >
-                    アノテーション {annotation.id}
+                    {t('annotationId', { id: annotation.id })}
                   </div>
                 </div>
                 <button
@@ -83,10 +85,10 @@ export default function AnnotationList() {
               {/* アクションボタン */}
               <div className="mt-3 pl-9 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button className="text-xs text-blue-500 hover:text-blue-600 font-medium">
-                  詳細を見る
+                  {t('viewDetails')}
                 </button>
                 <button className="text-xs text-gray-500 hover:text-gray-600 font-medium">
-                  編集
+                  {t('edit')}
                 </button>
               </div>
             </div>
