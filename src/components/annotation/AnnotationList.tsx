@@ -2,6 +2,7 @@ import { annotationsAtom, selectedAnnotationIdAtom } from '@/atoms/infoPanelAtom
 import { useAtom } from 'jotai';
 import { useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
+import { SeeAlso, type PrimitivesExternalWebResource } from '@/components/iiif/primitives';
 
 export default function AnnotationList() {
   const t = useTranslations('Annotation');
@@ -81,6 +82,18 @@ export default function AnnotationList() {
                 className="text-gray-700 dark:text-gray-300 text-sm pl-9"
                 dangerouslySetInnerHTML={{ __html: annotation.data.body.value }}
               />
+
+              {annotation.seeAlso && annotation.seeAlso.length > 0 && (
+                <div
+                  className="mt-3 pl-9 text-sm"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                    {t('seeAlso')}
+                  </div>
+                  <SeeAlso seeAlso={annotation.seeAlso as unknown as PrimitivesExternalWebResource[]} />
+                </div>
+              )}
 
               {/* アクションボタン */}
               {/*

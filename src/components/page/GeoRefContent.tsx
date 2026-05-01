@@ -19,6 +19,13 @@ interface AnnotationPage {
   items?: IIIFAnnotation[];
 }
 
+interface IIIFAnnotationLink {
+  id: string;
+  type?: string;
+  label?: string | string[] | Record<string, string | string[]>;
+  format?: string;
+}
+
 interface IIIFAnnotation {
   id?: string;
   type?: string;
@@ -37,6 +44,7 @@ interface IIIFAnnotation {
       camPos?: number[];
     };
   };
+  seeAlso?: IIIFAnnotationLink[];
 }
 
 interface GeoFeatureName {
@@ -141,6 +149,7 @@ const GeoRefContent: NextPage = () => {
                     y: selector.value?.[1] || 0,
                     z: selector.value?.[2] || 0,
                   },
+                  seeAlso: annotation.seeAlso,
                   data: {
                     body: {
                       value: annotation.body.value || '',
@@ -189,6 +198,7 @@ const GeoRefContent: NextPage = () => {
                     y: selector.value?.[1] || 0,
                     z: selector.value?.[2] || 0,
                   },
+                  seeAlso: annotation.seeAlso,
                   data: {
                     body: {
                       value: annotation.body.value || '',

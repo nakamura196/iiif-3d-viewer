@@ -1,5 +1,12 @@
 import type { Vector3 } from 'three';
 
+export interface AnnotationLink {
+  id: string;
+  type?: string;
+  label?: string | string[] | Record<string, string | string[]>;
+  format?: string;
+}
+
 export interface Annotation {
   id: string;
   creator: string;
@@ -14,6 +21,7 @@ export interface Annotation {
     z: number;
   };
   target_manifest?: string;
+  seeAlso?: AnnotationLink[];
   data: {
     body: {
       value: string;

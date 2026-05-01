@@ -30,7 +30,17 @@
     "title": "タイトル",
     "description": "説明",
     "metadata": "メタデータ",
-    "seeAlso": "参照"
+    "seeAlso": "参照",
+    "provider": "提供者",
+    "homepage": "ホームページ",
+    "rendering": "関連リソース",
+    "rights": "権利",
+    "requiredStatement": "出典表記",
+    "navDate": "日付",
+    "thumbnail": "サムネイル",
+    "partOf": "親リソース",
+    "viewingDirection": "表示方向",
+    "behavior": "ビヘイビア"
   },
   "Info": {
     "metadata": "メタデータ",
@@ -45,7 +55,8 @@
     "annotationId": "アノテーション {id}",
     "viewDetails": "詳細を見る",
     "edit": "編集",
-    "newAnnotation": "新しいアノテーション"
+    "newAnnotation": "新しいアノテーション",
+    "seeAlso": "参照"
   },
   "Help": {
     "title": "ヘルプ"

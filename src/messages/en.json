@@ -30,7 +30,17 @@
     "title": "Title",
     "description": "Description",
     "metadata": "Metadata",
-    "seeAlso": "See Also"
+    "seeAlso": "See Also",
+    "provider": "Provider",
+    "homepage": "Homepage",
+    "rendering": "Rendering",
+    "rights": "Rights",
+    "requiredStatement": "Attribution",
+    "navDate": "Date",
+    "thumbnail": "Thumbnail",
+    "partOf": "Part Of",
+    "viewingDirection": "Viewing Direction",
+    "behavior": "Behavior"
   },
   "Info": {
     "metadata": "Metadata",
@@ -45,7 +55,8 @@
     "annotationId": "Annotation {id}",
     "viewDetails": "View Details",
     "edit": "Edit",
-    "newAnnotation": "New Annotation"
+    "newAnnotation": "New Annotation",
+    "seeAlso": "See Also"
   },
   "Help": {
     "title": "Help"

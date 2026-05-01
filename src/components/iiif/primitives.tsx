@@ -150,6 +150,8 @@ export function Metadata({ metadata, className = '' }: MetadataProps) {
 interface SeeAlsoItem {
   id?: string;
   label?: IIIFLabel;
+  type?: string;
+  format?: string;
 }
 
 interface SeeAlsoProps {
@@ -157,24 +159,44 @@ interface SeeAlsoProps {
   className?: string;
 }
 
+export function Chip({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  if (!children) return null;
+  return (
+    <span className={`inline-flex items-center rounded-full bg-gray-100 dark:bg-gray-700 px-2 py-0.5 text-xs font-medium text-gray-700 dark:text-gray-200 ${className}`}>
+      {children}
+    </span>
+  );
+}
+
+function TypeChip({ type }: { type?: string }) {
+  if (!type) return null;
+  return <Chip className="ml-2">{type}</Chip>;
+}
+
 export function SeeAlso({ seeAlso, className = '' }: SeeAlsoProps) {
   if (!seeAlso || !Array.isArray(seeAlso)) return null;
-  
+
   return (
     <div className={className}>
       {seeAlso.map((item, index) => (
-        <div key={index} className="mb-1">
+        <div key={index} className="mb-1 flex items-center flex-wrap">
           {typeof item === 'object' && item.id ? (
-            <a 
-              href={item.id} 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              <Label label={item.label || item.id} />
-            </a>
+            <>
+              <a
+                href={item.id}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                <Label label={item.label || item.id} />
+              </a>
+              {typeof item === 'object' && <TypeChip type={item.type} />}
+            </>
           ) : (
-            <Label label={typeof item === 'object' && item.label ? item.label : (item as string)} />
+            <>
+              <Label label={typeof item === 'object' && item.label ? item.label : (item as string)} />
+              {typeof item === 'object' && <TypeChip type={(item as SeeAlsoItem).type} />}
+            </>
           )}
         </div>
       ))}
@@ -187,4 +209,144 @@ export interface PrimitivesExternalWebResource {
   id: string;
   label?: IIIFLabel;
   type?: string;
+  format?: string;
+  language?: string | string[];
+}
+
+interface ProviderAgent {
+  id?: string;
+  type?: string;
+  label?: IIIFLabel;
+  homepage?: PrimitivesExternalWebResource[];
+  logo?: { id: string }[];
+}
+
+interface ProviderProps {
+  provider: ProviderAgent[];
+  className?: string;
+}
+
+export function Provider({ provider, className = '' }: ProviderProps) {
+  if (!provider || !Array.isArray(provider)) return null;
+
+  return (
+    <div className={className}>
+      {provider.map((agent, index) => (
+        <div key={index} className="mb-2 flex items-center gap-2">
+          {agent.logo?.[0]?.id && (
+            <img
+              src={agent.logo[0].id}
+              alt=""
+              className="h-6 w-auto object-contain"
+            />
+          )}
+          {agent.id ? (
+            <a
+              href={agent.id}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              <Label label={agent.label || agent.id} />
+            </a>
+          ) : (
+            <Label label={agent.label || ''} />
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export const ResourceList = SeeAlso;
+
+interface RequiredStatementProps {
+  requiredStatement: MetadataItem;
+  className?: string;
+}
+
+export function RequiredStatement({ requiredStatement, className = '' }: RequiredStatementProps) {
+  if (!requiredStatement) return null;
+  return (
+    <div className={className}>
+      <Metadata metadata={[requiredStatement]} />
+    </div>
+  );
+}
+
+interface ThumbnailItem {
+  id: string;
+  type?: string;
+  format?: string;
+  width?: number;
+  height?: number;
+  label?: IIIFLabel;
+}
+
+interface ThumbnailProps {
+  thumbnail: ThumbnailItem[];
+  className?: string;
+}
+
+export function Thumbnail({ thumbnail, className = '' }: ThumbnailProps) {
+  if (!thumbnail || !Array.isArray(thumbnail) || thumbnail.length === 0) return null;
+  return (
+    <div className={`flex flex-wrap gap-2 ${className}`}>
+      {thumbnail.map((item, index) => {
+        if (!item.id) return null;
+        const isImage = !item.type || item.type === 'Image' || (item.format || '').startsWith('image/');
+        if (!isImage) return null;
+        return (
+          <img
+            key={index}
+            src={item.id}
+            alt=""
+            className="max-h-32 w-auto rounded border border-gray-200 dark:border-gray-700 object-contain"
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+interface BehaviorProps {
+  behavior: string[];
+  className?: string;
+}
+
+export function Behavior({ behavior, className = '' }: BehaviorProps) {
+  if (!behavior || !Array.isArray(behavior) || behavior.length === 0) return null;
+  return (
+    <div className={`flex flex-wrap gap-2 ${className}`}>
+      {behavior.map((item, index) => (
+        <Chip key={index}>{item}</Chip>
+      ))}
+    </div>
+  );
+}
+
+interface RightsProps {
+  rights: string;
+  className?: string;
+}
+
+export function Rights({ rights, className = '' }: RightsProps) {
+  if (!rights) return null;
+
+  const isUrl = /^https?:\/\//i.test(rights);
+
+  if (!isUrl) {
+    return <div className={className}>{rights}</div>;
+  }
+
+  return (
+    <a
+      href={rights}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`text-blue-600 dark:text-blue-400 hover:underline ${className}`}
+    >
+      {rights}
+    </a>
+  );
 }
