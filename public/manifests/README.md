@@ -1,6 +1,11 @@
 # IIIF Manifests
 
-This directory contains IIIF Presentation API 3.0 manifests for the 3D viewer.
+This directory contains IIIF Presentation API 4.0 (3D TSG) manifests for the 3D viewer.
+
+Legacy Presentation 3.0 manifests with the project's custom `3DSelector` /
+`camPos` extension are accepted at runtime and converted to v4 in-memory by
+`src/lib/services/manifestConverter.ts`. New manifests should be authored in
+v4 form directly (Scene, PointSelector / WKTSelector, PerspectiveCamera).
 
 ## Sample Manifests
 

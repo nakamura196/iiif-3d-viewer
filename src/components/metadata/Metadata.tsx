@@ -44,6 +44,7 @@ const Metadata = () => {
     thumbnail?: PrimitivesExternalWebResource[];
     homepage?: PrimitivesExternalWebResource[];
     rendering?: PrimitivesExternalWebResource[];
+    seeAlso?: PrimitivesExternalWebResource[];
     partOf?: PrimitivesExternalWebResource[];
     provider?: Parameters<typeof Provider>[0]['provider'];
     rights?: string;

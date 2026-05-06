@@ -12,38 +12,9 @@ import CanvasComponent from '@/components/three/Canvas';
 import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import type { Annotation } from '@/types/main';
+import { convertToV4 } from '@/lib/services/manifestConverter';
+import { parseManifestV4 } from '@/lib/services/manifestParser';
 import { useTranslations } from 'next-intl';
-
-interface AnnotationPage {
-  type?: string;
-  items?: IIIFAnnotation[];
-}
-
-interface IIIFAnnotationLink {
-  id: string;
-  type?: string;
-  label?: string | string[] | Record<string, string | string[]>;
-  format?: string;
-}
-
-interface IIIFAnnotation {
-  id?: string;
-  type?: string;
-  body?: {
-    value?: string;
-    label?: string;
-  };
-  target?: {
-    selector?: {
-      type?: string;
-      value?: number[];
-      area?: number[];
-      camPos?: number[];
-    };
-  };
-  seeAlso?: IIIFAnnotationLink[];
-}
 
 const ViewerContent: NextPage = () => {
   const [manifestUrl, setManifestUrl] = useAtom(manifestUrlAtom);
@@ -65,56 +36,12 @@ const ViewerContent: NextPage = () => {
   useEffect(() => {
     if (!manifestUrl) return;
 
-    fetchManifest(manifestUrl).then((manifest) => {
-      setGlbUrl(manifest.items[0].items[0].items[0].body.id);
+    fetchManifest(manifestUrl).then((raw) => {
+      if (!raw) return;
+      const manifest = convertToV4(raw);
+      const { modelUrl, annotations } = parseManifestV4(manifest);
+      setGlbUrl(modelUrl);
       setManifest(manifest);
-      
-      // Extract annotations from manifest
-      const annotations: Annotation[] = [];
-      const canvas = manifest.items?.[0];
-      
-      // Check if annotations exist in different locations
-      if (canvas?.annotations) {
-        canvas.annotations.forEach((annotationPage: AnnotationPage) => {
-          if (annotationPage.items) {
-            annotationPage.items.forEach((annotation: IIIFAnnotation, index: number) => {
-              if (annotation.body && annotation.target?.selector) {
-                const selector = annotation.target.selector;
-                annotations.push({
-                  id: annotation.id || `annotation-${index}`,
-                  creator: '',
-                  title: annotation.body.label || '',
-                  description: annotation.body.value || '',
-                  media: [],
-                  wikidata: [],
-                  bibliography: [],
-                  position: {
-                    x: selector.value?.[0] || 0,
-                    y: selector.value?.[1] || 0,
-                    z: selector.value?.[2] || 0,
-                  },
-                  seeAlso: annotation.seeAlso,
-                  data: {
-                    body: {
-                      value: annotation.body.value || '',
-                      label: annotation.body.label || '',
-                    },
-                    target: {
-                      selector: {
-                        type: selector.type || '3DSelector',
-                        value: (selector.value || [0, 0, 0]) as [number, number, number],
-                        area: (selector.area || [0, 0, 0]) as [number, number, number],
-                        camPos: (selector.camPos || [0, 0, 0]) as [number, number, number],
-                      },
-                    },
-                  },
-                });
-              }
-            });
-          }
-        });
-      }
-      
       setAnnotations(annotations);
     });
   }, [manifestUrl, setManifest, setAnnotations]);

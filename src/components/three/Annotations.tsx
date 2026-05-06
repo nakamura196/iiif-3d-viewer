@@ -167,7 +167,7 @@ export default function Annotations({ model }: { model: GLTF }) {
         const selector = annotation.data?.target?.selector;
         const type = selector?.type;
 
-        return type === '3DSelector' ? (
+        return type === 'PointSelector' ? (
           <AnnotationMarker
             key={annotation.id}
             annotation={annotation}

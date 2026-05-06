@@ -11,75 +11,9 @@ import CanvasComponent from '@/components/three/Canvas';
 import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
 import MapView from '@/components/map/MapView';
-import type { Annotation } from '@/types/main';
+import { convertToV4 } from '@/lib/services/manifestConverter';
+import { parseManifestV4, type GeoFeature } from '@/lib/services/manifestParser';
 import { useTranslations, useLocale } from 'next-intl';
-
-interface AnnotationPage {
-  type?: string;
-  items?: IIIFAnnotation[];
-}
-
-interface IIIFAnnotationLink {
-  id: string;
-  type?: string;
-  label?: string | string[] | Record<string, string | string[]>;
-  format?: string;
-}
-
-interface IIIFAnnotation {
-  id?: string;
-  type?: string;
-  motivation?: string;
-  body?: {
-    value?: string;
-    label?: string;
-    type?: string;
-    features?: GeoFeature[];
-  };
-  target?: {
-    selector?: {
-      type?: string;
-      value?: number[];
-      area?: number[];
-      camPos?: number[];
-    };
-  };
-  seeAlso?: IIIFAnnotationLink[];
-}
-
-interface GeoFeatureName {
-  toponym: string;
-  lang: string;
-  citations?: {
-    label: string;
-    '@id': string;
-  }[];
-}
-
-interface GeoFeatureLink {
-  type: string;
-  identifier: string;
-}
-
-interface GeoFeatureDepiction {
-  '@id': string;
-}
-
-interface GeoFeature {
-  '@id': string;
-  type: 'Feature';
-  geometry: {
-    coordinates: [number, number];
-    type: 'Point';
-  };
-  properties: {
-    title: string;
-    resourceCoords: [number, number, number];
-  };
-  names?: GeoFeatureName[];
-  links?: GeoFeatureLink[];
-  depictions?: GeoFeatureDepiction[];
-}
 
 // マニフェストからattributionを取得するヘルパー関数
 const getAttribution = (manifest: Record<string, unknown>, locale: string): string | undefined => {
@@ -114,148 +48,15 @@ const GeoRefContent: NextPage = () => {
   useEffect(() => {
     if (!manifestUrl) return;
 
-    fetchManifest(manifestUrl).then((manifest) => {
-      setGlbUrl(manifest.items[0].items[0].items[0].body.id);
+    fetchManifest(manifestUrl).then((raw) => {
+      if (!raw) return;
+      const manifest = convertToV4(raw);
+      const { modelUrl, annotations, geoFeatures } = parseManifestV4(manifest);
+      setGlbUrl(modelUrl);
       setManifest(manifest);
       setAttribution(getAttribution(manifest as unknown as Record<string, unknown>, locale));
-
-      const annotations: Annotation[] = [];
-      const geoFeaturesTemp: GeoFeature[] = [];
-      const canvas = manifest.items?.[0];
-
-      // Check canvas.annotations
-      if (canvas?.annotations) {
-        canvas.annotations.forEach((annotationPage: AnnotationPage) => {
-          if (annotationPage.items) {
-            annotationPage.items.forEach((annotation: IIIFAnnotation, index: number) => {
-              // Handle georeferencing annotation
-              if (annotation.motivation === 'georeferencing' && annotation.body?.type === 'FeatureCollection') {
-                const features = annotation.body.features || [];
-                geoFeaturesTemp.push(...features);
-              }
-              // Handle regular annotations
-              else if (annotation.body && annotation.target?.selector) {
-                const selector = annotation.target.selector;
-                annotations.push({
-                  id: annotation.id || `annotation-${index}`,
-                  creator: '',
-                  title: annotation.body.label || '',
-                  description: annotation.body.value || '',
-                  media: [],
-                  wikidata: [],
-                  bibliography: [],
-                  position: {
-                    x: selector.value?.[0] || 0,
-                    y: selector.value?.[1] || 0,
-                    z: selector.value?.[2] || 0,
-                  },
-                  seeAlso: annotation.seeAlso,
-                  data: {
-                    body: {
-                      value: annotation.body.value || '',
-                      label: annotation.body.label || '',
-                    },
-                    target: {
-                      selector: {
-                        type: selector.type || '3DSelector',
-                        value: (selector.value || [0, 0, 0]) as [number, number, number],
-                        area: (selector.area || [0, 0, 0]) as [number, number, number],
-                        camPos: (selector.camPos || [0, 0, 0]) as [number, number, number],
-                      },
-                    },
-                  },
-                });
-              }
-            });
-          }
-        });
-      }
-
-      // Also check in items[0].items[0].annotations (alternative location per provided JSON)
-      const annotationPage = manifest.items?.[0]?.items?.[0];
-      if (annotationPage?.annotations) {
-        annotationPage.annotations.forEach((page: AnnotationPage) => {
-          if (page.items) {
-            page.items.forEach((annotation: IIIFAnnotation, index: number) => {
-              // Handle georeferencing annotation
-              if (annotation.motivation === 'georeferencing' && annotation.body?.type === 'FeatureCollection') {
-                const features = annotation.body.features || [];
-                geoFeaturesTemp.push(...features);
-              }
-              // Handle regular annotations with 3DSelector
-              else if (annotation.body && annotation.target?.selector) {
-                const selector = annotation.target.selector;
-                annotations.push({
-                  id: annotation.id || `annotation-${index}`,
-                  creator: '',
-                  title: annotation.body.label || '',
-                  description: annotation.body.value || '',
-                  media: [],
-                  wikidata: [],
-                  bibliography: [],
-                  position: {
-                    x: selector.value?.[0] || 0,
-                    y: selector.value?.[1] || 0,
-                    z: selector.value?.[2] || 0,
-                  },
-                  seeAlso: annotation.seeAlso,
-                  data: {
-                    body: {
-                      value: annotation.body.value || '',
-                      label: annotation.body.label || '',
-                    },
-                    target: {
-                      selector: {
-                        type: selector.type || '3DSelector',
-                        value: (selector.value || [0, 0, 0]) as [number, number, number],
-                        area: (selector.area || [0, 0, 0]) as [number, number, number],
-                        camPos: (selector.camPos || [0, 0, 0]) as [number, number, number],
-                      },
-                    },
-                  },
-                });
-              }
-            });
-          }
-        });
-      }
-
-      // Convert geoFeatures to annotations for 3D viewer
-      geoFeaturesTemp.forEach((feature, idx) => {
-        const coords = feature.properties.resourceCoords;
-        const title = feature.properties.title;
-        annotations.push({
-          id: feature['@id'] || `geo-feature-${idx}`,
-          creator: '',
-          title: title,
-          description: '',
-          media: [],
-          wikidata: [],
-          bibliography: [],
-          position: {
-            x: coords[0],
-            y: coords[1],
-            z: coords[2],
-          },
-          data: {
-            body: {
-              value: '',
-              label: title,
-            },
-            target: {
-              selector: {
-                type: '3DSelector',
-                value: coords as [number, number, number],
-                area: [0, 0, 0] as [number, number, number],
-                camPos: [coords[0] * 1.5, coords[1] * 1.5, coords[2] * 1.5] as [number, number, number],
-              },
-            },
-          },
-        });
-      });
-
       setAnnotations(annotations);
-      setGeoFeatures(geoFeaturesTemp);
+      setGeoFeatures(geoFeatures);
     });
   }, [manifestUrl, setManifest, setAnnotations, locale]);
 
