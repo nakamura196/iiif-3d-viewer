@@ -12,7 +12,7 @@ import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
 import MapView from '@/components/map/MapView';
 import { convertToV4 } from '@/lib/services/manifestConverter';
-import { parseManifestV4, type GeoFeature } from '@/lib/services/manifestParser';
+import { parseManifestV4, geoFeaturesToAnnotations, type GeoFeature } from '@/lib/services/manifestParser';
 import { useTranslations, useLocale } from 'next-intl';
 
 // マニフェストからattributionを取得するヘルパー関数
@@ -51,11 +51,11 @@ const GeoRefContent: NextPage = () => {
     fetchManifest(manifestUrl).then((raw) => {
       if (!raw) return;
       const manifest = convertToV4(raw);
-      const { modelUrl, annotations, geoFeatures } = parseManifestV4(manifest);
+      const { modelUrl, geoFeatures } = parseManifestV4(manifest);
       setGlbUrl(modelUrl);
       setManifest(manifest);
       setAttribution(getAttribution(manifest as unknown as Record<string, unknown>, locale));
-      setAnnotations(annotations);
+      setAnnotations(geoFeaturesToAnnotations(geoFeatures));
       setGeoFeatures(geoFeatures);
     });
   }, [manifestUrl, setManifest, setAnnotations, locale]);

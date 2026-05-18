@@ -230,10 +230,13 @@ export const parseManifestV4 = (manifest: ManifestV4): ParsedManifest => {
     i++;
   }
 
-  // Fold geo features into 3D markers as well, using their resourceCoords.
-  geoFeatures.forEach((feature, idx) => {
+  return { modelUrl, annotations: out, geoFeatures };
+};
+
+export const geoFeaturesToAnnotations = (features: GeoFeature[]): Annotation[] =>
+  features.map((feature, idx) => {
     const coords = feature.properties.resourceCoords;
-    out.push({
+    return {
       id: feature['@id'] || `geo-feature-${idx}`,
       creator: '',
       title: feature.properties.title,
@@ -253,8 +256,5 @@ export const parseManifestV4 = (manifest: ManifestV4): ParsedManifest => {
           },
         },
       },
-    });
+    };
   });
-
-  return { modelUrl, annotations: out, geoFeatures };
-};
