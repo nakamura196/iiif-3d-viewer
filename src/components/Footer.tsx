@@ -35,11 +35,18 @@ export default function Footer() {
                 {t('privacy')}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 dark:bg-blue-400 transition-all duration-200 group-hover:w-full"></span>
               </Link>
-              <Link 
-                href={`/${locale}/terms`} 
+              <Link
+                href={`/${locale}/terms`}
                 className="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 relative group"
               >
                 {t('terms')}
+                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 dark:bg-blue-400 transition-all duration-200 group-hover:w-full"></span>
+              </Link>
+              <Link
+                href={`/${locale}/references`}
+                className="text-sm text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 relative group"
+              >
+                {t('references')}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 dark:bg-blue-400 transition-all duration-200 group-hover:w-full"></span>
               </Link>
             </nav>

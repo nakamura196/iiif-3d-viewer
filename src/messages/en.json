@@ -12,6 +12,7 @@
     "help": "Help",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
+    "references": "References",
     "developedBy": "Developed by",
     "developers": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)"
   },
@@ -66,6 +67,13 @@
   },
   "Terms": {
     "title": "Terms of Service"
+  },
+  "References": {
+    "title": "References",
+    "intro": "Links to IIIF 3D specifications, articles, and sample manifests referenced in the development of this viewer.",
+    "sectionArticles": "Articles",
+    "sectionSpecs": "Specifications",
+    "sectionSamples": "Sample Manifests"
   },
   "GeoRef": {
     "map": "Map",
