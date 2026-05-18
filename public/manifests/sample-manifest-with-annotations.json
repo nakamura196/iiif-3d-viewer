@@ -19,7 +19,7 @@
       }
     }
   ],
-  "rights": "https://rightsstatements.org/vocab/CNE/1.0/",
+  "rights": "https://creativecommons.org/licenses/by-nc/4.0/deed.ja",
   "requiredStatement": {
     "label": {
       "ja": ["帰属表示"],
@@ -30,13 +30,6 @@
       "en": ["Modified from 'Ishibuchi Family Globe' (Kikuchi City Library Collection)"]
     }
   },
-  "provider": [
-    {
-      "id": "https://3d-iiif-viewer.vercel.app/",
-      "type": "Agent",
-      "label": { "none": ["Sukilam"] }
-    }
-  ],
   "items": [
     {
       "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#scene-p1",
