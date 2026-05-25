@@ -85,22 +85,22 @@ const ViewerContent: NextPage = () => {
                 {/* アノテーション表示切替ボタン */}
                 <button
                   onClick={() => setShowAnnotations(!showAnnotations)}
-                  className="absolute top-4 left-4 z-10 px-3 py-2 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-600"
+                  className="absolute top-4 left-4 z-10 px-3 py-2 bg-[var(--ds-surface)] rounded-lg shadow-md hover:bg-[var(--ds-surface-2)] transition-colors border border-[var(--ds-border)]"
                   title={showAnnotations ? t('hideAnnotations') : t('showAnnotations')}
                 >
-                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                  <span className="text-sm text-[var(--ds-fg)]">
                     {showAnnotations ? t('hideAnnotations') : t('showAnnotations')}
                   </span>
                 </button>
               </div>
-              <div className="flex-1 sm:w-[30%] bg-white dark:bg-gray-800 shadow-lg overflow-y-auto border-t sm:border-t-0 sm:border-l border-gray-200 dark:border-gray-700">
+              <div className="flex-1 sm:w-[30%] bg-[var(--ds-surface)] shadow-lg overflow-y-auto border-t sm:border-t-0 sm:border-l border-[var(--ds-border)]">
                 <Suspense
                   fallback={
                     <div className="p-6 animate-pulse">
-                      <div className="h-6 w-48 bg-gray-200 dark:bg-gray-700 rounded mb-6"></div>
+                      <div className="h-6 w-48 bg-[var(--ds-surface-2)] rounded mb-6"></div>
                       <div className="space-y-4">
                         {[...Array(3)].map((_, i) => (
-                          <div key={i} className="h-20 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                          <div key={i} className="h-20 bg-[var(--ds-surface-2)] rounded"></div>
                         ))}
                       </div>
                     </div>

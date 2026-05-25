@@ -6,6 +6,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 const nextConfig = {
   trailingSlash: true,
   output: 'export',
+  transpilePackages: ['@nakamura196/react-ui'],
 };
 
 export default withNextIntl(nextConfig);

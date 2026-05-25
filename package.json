@@ -3,13 +3,15 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3838",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3838",
     "lint": "next lint"
   },
   "dependencies": {
     "@iiif/presentation-3": "^2.1.0",
+    "@nakamura196/react-ui": "github:nakamura196/react-ui#v0.2.0",
+    "@next/third-parties": "^16.2.4",
     "@react-three/drei": "^10.6.0",
     "@react-three/fiber": "^9.2.0",
     "@tailwindcss/postcss": "^4.1.18",
@@ -25,14 +27,18 @@
     "three-stdlib": "^2.36.0"
   },
   "devDependencies": {
+    "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^25.2.0",
     "@types/react": "^19.2.10",
     "@types/react-dom": "^19.2.3",
     "@types/three": "^0.178.1",
     "eslint": "^9",
     "eslint-config-next": "^16.1.6",
-    "postcss": "^8.5.6",
+    "postcss": "^8.5.10",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.9.3"
+  },
+  "overrides": {
+    "postcss": "$postcss"
   }
 }

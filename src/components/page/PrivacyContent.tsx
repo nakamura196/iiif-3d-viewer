@@ -1,7 +1,7 @@
 'use client';
 
 import CommonLayout from '@/components/layout/Common';
-import MarkdownRenderer from '@/components/MarkdownRenderer';
+import { MarkdownContent } from '@nakamura196/react-ui';
 
 interface PrivacyContentProps {
   content: string;
@@ -10,10 +10,10 @@ interface PrivacyContentProps {
 export default function PrivacyContent({ content }: PrivacyContentProps) {
   return (
     <CommonLayout>
-      <div className="min-h-[60vh] p-8 bg-white dark:bg-gray-900">
+      <div className="min-h-[60vh] p-8 bg-[var(--ds-bg)]">
         <div className="max-w-3xl mx-auto">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-8">
-            <MarkdownRenderer content={content} />
+          <div className="bg-[var(--ds-surface)] rounded-lg shadow-sm border border-[var(--ds-border)] p-8">
+            <MarkdownContent content={content} />
           </div>
         </div>
       </div>

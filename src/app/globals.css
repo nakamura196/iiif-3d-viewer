@@ -1,6 +1,26 @@
 @import 'tailwindcss';
+@import '@nakamura196/react-ui/styles.css';
+
+/* DS の Prose / MarkdownContent が使う prose-* ユーティリティを生成する
+   （Tailwind v4 はconfigレスのため @plugin で登録）。 */
+@plugin "@tailwindcss/typography";
+
+/* Tailwind v4: scan the design-system source so its utility classes
+   (md:grid-cols-4 等) are generated. globals.css は src/app/ にあるので
+   node_modules までは 2 階層上。 */
+@source '../../node_modules/@nakamura196/react-ui/src';
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+/* DS の書体トークンをアプリの next/font (Noto) で上書きし、body に適用 */
+:root {
+  --ds-font-sans: var(--font-noto-sans), 'Noto Sans JP', ui-sans-serif, system-ui, sans-serif;
+  --ds-font-serif: var(--font-noto-serif), 'Noto Serif JP', ui-serif, Georgia, serif;
+}
+
+body {
+  font-family: var(--ds-font-sans);
+}
 
 :root {
   --background: #ffffff;
@@ -10,7 +30,7 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--ds-font-sans);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 

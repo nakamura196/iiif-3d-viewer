@@ -9,12 +9,26 @@
   },
   "Footer": {
     "title": "IIIF 3D Viewer",
+    "description": "IIIFマニフェストに基づく3Dモデルの表示・アノテーションビューアです。",
+    "guideHeading": "ヘルプ・規約",
     "help": "ヘルプ",
     "privacy": "プライバシーポリシー",
     "terms": "利用規約",
-    "references": "参考リンク",
-    "developedBy": "開発者",
+    "samplesHeading": "サンプル",
+    "sample1": "地球儀",
+    "sample2": "アノテーション付き",
+    "sample3": "地図連携ビューア",
+    "relatedHeading": "関連サイト",
+    "relatedArticle": "開発解説記事",
+    "relatedSpec": "IIIF 3D Extension",
+    "relatedSample": "IIIF 3D サンプル",
     "developers": "中村 覚・小川 潤（東京大学）"
+  },
+  "News": {
+    "heading": "お知らせ",
+    "empty": "お知らせはありません",
+    "item1Date": "2026-05-25",
+    "item1Title": "技術記事「IIIF 3D Viewer：Presentation API 4 コンバーターの実装」を公開しました"
   },
   "Input": {
     "title": "3Dモデルを表示",
@@ -67,13 +81,6 @@
   },
   "Terms": {
     "title": "利用規約"
-  },
-  "References": {
-    "title": "参考リンク",
-    "intro": "本ビューアの開発で参照した、IIIF 3D 関連の仕様・記事・サンプルマニフェストへのリンクをまとめています。",
-    "sectionArticles": "技術記事",
-    "sectionSpecs": "仕様",
-    "sectionSamples": "サンプルマニフェスト"
   },
   "GeoRef": {
     "map": "地図",

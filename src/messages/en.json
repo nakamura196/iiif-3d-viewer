@@ -9,12 +9,26 @@
   },
   "Footer": {
     "title": "IIIF 3D Viewer",
+    "description": "A 3D model viewer with annotation support, based on the IIIF Manifest.",
+    "guideHeading": "Help & Legal",
     "help": "Help",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
-    "references": "References",
-    "developedBy": "Developed by",
+    "samplesHeading": "Samples",
+    "sample1": "Globe",
+    "sample2": "With annotations",
+    "sample3": "Map viewer",
+    "relatedHeading": "Related Sites",
+    "relatedArticle": "Development article",
+    "relatedSpec": "IIIF 3D Extension",
+    "relatedSample": "IIIF 3D samples",
     "developers": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)"
+  },
+  "News": {
+    "heading": "News",
+    "empty": "No announcements",
+    "item1Date": "2026-05-25",
+    "item1Title": "Published the article \"IIIF 3D Viewer: Implementing a Presentation API 4 Converter\""
   },
   "Input": {
     "title": "3D Model Viewer",
@@ -67,13 +81,6 @@
   },
   "Terms": {
     "title": "Terms of Service"
-  },
-  "References": {
-    "title": "References",
-    "intro": "Links to IIIF 3D specifications, articles, and sample manifests referenced in the development of this viewer.",
-    "sectionArticles": "Articles",
-    "sectionSpecs": "Specifications",
-    "sectionSamples": "Sample Manifests"
   },
   "GeoRef": {
     "map": "Map",

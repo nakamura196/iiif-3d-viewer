@@ -1,11 +1,11 @@
 // 入力フォームコンポーネント
 import { useState } from 'react';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
+import { buttonClass } from '@nakamura196/react-ui';
 
 const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => void }) => {
   const t = useTranslations('Input');
-  const locale = useLocale();
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
 
@@ -27,9 +27,9 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
   return (
     <div className="max-w-md w-full mx-auto px-4">
       <div className="mb-8 text-center">
-        <div className="inline-block p-4 bg-blue-50 dark:bg-blue-900/30 rounded-full mb-4">
+        <div className="inline-block p-4 bg-[var(--ds-surface-2)] rounded-full mb-4">
           <svg
-            className="w-16 h-16 text-blue-500 dark:text-blue-400"
+            className="w-16 h-16 text-[var(--ds-primary)]"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -42,8 +42,13 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
             />
           </svg>
         </div>
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">{t('title')}</h2>
-        <p className="text-gray-600 dark:text-gray-300">{t('description')}</p>
+        <h2
+          className="text-2xl font-bold text-[var(--ds-fg)] mb-2"
+          style={{ fontFamily: 'var(--ds-font-serif)' }}
+        >
+          {t('title')}
+        </h2>
+        <p className="text-[var(--ds-fg-muted)]">{t('description')}</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -53,26 +58,23 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://example.com/manifest.json"
-            className="w-full px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+            className="w-full px-4 py-2 rounded-md border border-[var(--ds-border)] bg-[var(--ds-bg)] text-[var(--ds-fg)] placeholder-[var(--ds-fg-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--ds-ring)]"
           />
           {error && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>}
         </div>
 
-        <button
-          type="submit"
-          className="w-full px-4 py-2 text-white bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-colors"
-        >
+        <button type="submit" className={buttonClass('primary', 'md', 'w-full')}>
           {t('submit')}
         </button>
       </form>
 
-      <div className="mt-8 text-sm text-gray-500 dark:text-gray-400">
+      <div className="mt-8 text-sm text-[var(--ds-fg-muted)]">
         <h3 className="font-medium mb-2">{t('sampleManifest')}:</h3>
         <ul className="space-y-2 text-left">
           <li>
             <button
               onClick={() => onSubmit('/manifests/sample-manifest.json')}
-              className="text-left text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
+              className="text-left text-[var(--ds-primary)] hover:underline"
             >
               {t('sampleManifest1')}
             </button>
@@ -80,7 +82,7 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
           <li>
             <button
               onClick={() => onSubmit('/manifests/sample-manifest-with-annotations.json', 'annotations')}
-              className="text-left text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
+              className="text-left text-[var(--ds-primary)] hover:underline"
             >
               {t('sampleManifest2')}
             </button>
@@ -88,7 +90,7 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
           <li>
             <Link
               href={`/georef?manifest=${encodeURIComponent('/manifests/sample-manifest-with-annotations.json')}`}
-              className="text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300"
+              className="text-[var(--ds-primary)] hover:underline"
             >
               {t('sampleManifest3')}
             </Link>
