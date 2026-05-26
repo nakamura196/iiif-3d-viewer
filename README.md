@@ -101,19 +101,35 @@ src/
 
 ## Deployment
 
-This application can be deployed to any static hosting service:
+This application can be deployed to any static hosting service.
 
-### GitHub Pages
+### GitHub Pages (automated via Actions)
 
-1. Add `basePath` and `assetPrefix` to `next.config.mjs`
-2. Build and export the project
-3. Deploy the `out` directory to GitHub Pages
+The `.github/workflows/deploy-pages.yml` workflow builds the static export
+with `GITHUB_PAGES=true` and uploads it to GitHub Pages on every push to `main`.
+Enable it once by going to **Settings → Pages → Source: "GitHub Actions"**.
 
-### Netlify/Vercel
+### Netlify / Vercel
 
 1. Connect your repository
 2. Set build command: `npm run build`
 3. Set publish directory: `out`
+
+### Optional: Google Analytics
+
+This project does **not** ship with a baked-in Measurement ID — forks will not
+report analytics to anyone by default. To enable GA4 for your own deployment:
+
+1. Create a GA4 property and copy the Measurement ID (`G-XXXXXXXXXX`).
+2. **For GitHub Pages**: Repository → **Settings → Secrets and variables →
+   Actions → Variables** tab → New repository variable
+   `NEXT_PUBLIC_GA_ID` = your `G-XXXXXXXXXX`. The next push triggers a rebuild
+   with GA enabled.
+3. **For Vercel**: Project → **Settings → Environment Variables** →
+   `NEXT_PUBLIC_GA_ID` = your `G-XXXXXXXXXX` (Production scope).
+
+The app reads `process.env.NEXT_PUBLIC_GA_ID` at build time and only injects
+`@next/third-parties/google` when it is set.
 
 ## Development Team
 

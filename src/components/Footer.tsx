@@ -57,6 +57,12 @@ export default function Footer() {
               href: 'https://iiif.github.io/3d/manifests/9_commenting_annotations/',
               external: true,
             },
+            {
+              // nakamura196 が公開している他のツール一覧 (academicpages portfolio)
+              label: t('relatedOtherTools'),
+              href: 'https://nakamura196.github.io/portfolio/',
+              external: true,
+            },
           ],
         },
       ]}

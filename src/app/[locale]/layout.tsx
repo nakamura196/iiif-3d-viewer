@@ -12,7 +12,9 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const baseUrl = 'https://3d-iiif-viewer.vercel.app';
+  // SEO 統合: 配信先は GH Pages を canonical とする。Vercel の旧 URL
+  // (3d-iiif-viewer.vercel.app) は vercel.json で 301 redirect する。
+  const baseUrl = 'https://nakamura196.github.io/iiif-3d-viewer';
 
   const title = locale === 'ja' ? 'IIIF 3D ビューア' : 'IIIF 3D Viewer';
   const description =

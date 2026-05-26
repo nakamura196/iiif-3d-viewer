@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/:path*",
+      "destination": "https://nakamura196.github.io/iiif-3d-viewer/:path*",
+      "permanent": true
+    }
+  ]
+}
