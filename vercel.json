@@ -5,8 +5,8 @@
   "outputDirectory": "vercel-static",
   "redirects": [
     {
-      "source": "/:path*",
-      "destination": "https://nakamura196.github.io/iiif-3d-viewer/:path*",
+      "source": "/:rest(.*)",
+      "destination": "https://nakamura196.github.io/iiif-3d-viewer/:rest",
       "permanent": true
     }
   ]
