@@ -3,8 +3,20 @@
   <head>
     <meta charset="utf-8" />
     <title>Moved to nakamura196.github.io/iiif-3d-viewer/</title>
-    <meta http-equiv="refresh" content="0; url=https://nakamura196.github.io/iiif-3d-viewer/" />
     <link rel="canonical" href="https://nakamura196.github.io/iiif-3d-viewer/" />
+    <script>
+      // Preserve query string + hash fragment when redirecting from /.
+      // (Other paths are handled by the vercel.json 308 redirect rule, which
+      // forwards query strings automatically.)
+      (function () {
+        var target =
+          'https://nakamura196.github.io/iiif-3d-viewer/' +
+          window.location.search +
+          window.location.hash;
+        window.location.replace(target);
+      })();
+    </script>
+    <meta http-equiv="refresh" content="0; url=https://nakamura196.github.io/iiif-3d-viewer/" />
   </head>
   <body>
     Moved to <a href="https://nakamura196.github.io/iiif-3d-viewer/">nakamura196.github.io/iiif-3d-viewer/</a>.
