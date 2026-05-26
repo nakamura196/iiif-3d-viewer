@@ -1,5 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "mkdir -p out",
+  "outputDirectory": "out",
   "redirects": [
     {
       "source": "/:path*",
