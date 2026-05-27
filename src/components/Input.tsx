@@ -3,6 +3,10 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { buttonClass } from '@nakamura196/react-ui';
+import { withBasePath } from '@/lib/basePath';
+
+const SAMPLE = withBasePath('/manifests/sample-manifest.json');
+const SAMPLE_ANNOT = withBasePath('/manifests/sample-manifest-with-annotations.json');
 
 const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => void }) => {
   const t = useTranslations('Input');
@@ -73,7 +77,7 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
         <ul className="space-y-2 text-left">
           <li>
             <button
-              onClick={() => onSubmit('/manifests/sample-manifest.json')}
+              onClick={() => onSubmit(SAMPLE)}
               className="text-left text-[var(--ds-primary)] hover:underline"
             >
               {t('sampleManifest1')}
@@ -81,7 +85,7 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
           </li>
           <li>
             <button
-              onClick={() => onSubmit('/manifests/sample-manifest-with-annotations.json', 'annotations')}
+              onClick={() => onSubmit(SAMPLE_ANNOT, 'annotations')}
               className="text-left text-[var(--ds-primary)] hover:underline"
             >
               {t('sampleManifest2')}
@@ -89,7 +93,7 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
           </li>
           <li>
             <Link
-              href={`/georef?manifest=${encodeURIComponent('/manifests/sample-manifest-with-annotations.json')}`}
+              href={`/georef?manifest=${encodeURIComponent(SAMPLE_ANNOT)}`}
               className="text-[var(--ds-primary)] hover:underline"
             >
               {t('sampleManifest3')}

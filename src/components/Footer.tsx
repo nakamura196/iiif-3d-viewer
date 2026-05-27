@@ -3,12 +3,13 @@
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { Footer as DsFooter } from '@nakamura196/react-ui';
+import { withBasePath } from '@/lib/basePath';
 
 // 共有デザインシステム (@nakamura196/react-ui) の4列フッター。
 // 左ブロック (title + description) ＋ columns (最大3列) = 計4列。
 // next-intl の Link を LinkComponent に渡してロケール付きリンクを描画する。
-const SAMPLE = '/manifests/sample-manifest.json';
-const SAMPLE_ANNOT = '/manifests/sample-manifest-with-annotations.json';
+const SAMPLE = withBasePath('/manifests/sample-manifest.json');
+const SAMPLE_ANNOT = withBasePath('/manifests/sample-manifest-with-annotations.json');
 
 export default function Footer() {
   const t = useTranslations('Footer');

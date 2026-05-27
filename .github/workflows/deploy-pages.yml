@@ -31,6 +31,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Run unit tests
+        run: npm test
+
       - name: Build static export
         env:
           # Tells next.config.mjs to prepend the GH Pages basePath/assetPrefix.
@@ -41,6 +44,11 @@ jobs:
           # ビルドは成功するが GoogleAnalytics は描画されない。
           NEXT_PUBLIC_GA_ID: ${{ vars.NEXT_PUBLIC_GA_ID }}
         run: npm run build
+
+      - name: Verify basePath in build output
+        # Guards against the regression where sample manifest URLs miss the
+        # GH Pages basePath and 404 in production. See scripts/check-basepath.sh.
+        run: ./scripts/check-basepath.sh
 
       - name: Add .nojekyll
         # Prevents GitHub Pages from running Jekyll, which would strip files

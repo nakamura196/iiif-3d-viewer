@@ -6,7 +6,9 @@
     "dev": "next dev -p 3838",
     "build": "next build",
     "start": "next start -p 3838",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest run",
+    "test:basepath": "GITHUB_PAGES=true next build && ./scripts/check-basepath.sh"
   },
   "dependencies": {
     "@iiif/presentation-3": "^2.1.0",
@@ -36,7 +38,8 @@
     "eslint-config-next": "^16.1.6",
     "postcss": "^8.5.10",
     "tailwindcss": "^4.1.18",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.7"
   },
   "overrides": {
     "postcss": "$postcss"

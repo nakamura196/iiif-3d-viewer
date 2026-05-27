@@ -16,6 +16,12 @@ const nextConfig = {
   basePath,
   assetPrefix: isGhPages ? `${basePath}/` : '',
   transpilePackages: ['@nakamura196/react-ui'],
+  // Next.js は <Link href="/foo"> や next/router の URL に basePath を自動付与
+  // するが、クエリ文字列に乗せて後で fetch するパス (manifest URL など) は
+  // 対象外。クライアント側で参照できるよう public env として露出させる。
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath,
+  },
 };
 
 export default withNextIntl(nextConfig);
