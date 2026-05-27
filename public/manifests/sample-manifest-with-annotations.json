@@ -1,6 +1,6 @@
 {
   "@context": "http://iiif.io/api/presentation/4/context.json",
-  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json",
+  "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json",
   "type": "Manifest",
   "label": {
     "none": ["石淵家地球儀"]
@@ -32,20 +32,20 @@
   },
   "items": [
     {
-      "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#scene-p1",
+      "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#scene-p1",
       "type": "Scene",
       "label": { "none": ["1"] },
       "items": [
         {
-          "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-page-12",
+          "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-page-12",
           "type": "AnnotationPage",
           "items": [
             {
-              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-12",
+              "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-12",
               "type": "Annotation",
               "motivation": ["painting"],
               "body": {
-                "id": "https://3d-iiif-viewer.vercel.app/models/ishibuchi-globe.glb",
+                "id": "https://nakamura196.github.io/iiif-3d-viewer/models/ishibuchi-globe.glb",
                 "type": "Model",
                 "format": "model/gltf-binary"
               },
@@ -53,7 +53,7 @@
                 "type": "SpecificResource",
                 "source": [
                   {
-                    "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#scene-p1",
+                    "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#scene-p1",
                     "type": "Scene"
                   }
                 ],
@@ -67,18 +67,18 @@
       ],
       "annotations": [
         {
-          "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-page-georef",
+          "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-page-georef",
           "type": "AnnotationPage",
           "items": [
             {
-              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-georef",
+              "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-georef",
               "type": "Annotation",
               "motivation": ["georeferencing"],
               "target": {
                 "type": "SpecificResource",
                 "source": [
                   {
-                    "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#scene-p1",
+                    "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#scene-p1",
                     "type": "Scene"
                   }
                 ]
@@ -104,7 +104,7 @@
                         "citations": [
                           {
                             "label": "石淵家地球儀",
-                            "@id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json"
+                            "@id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest.json"
                           }
                         ]
                       },
@@ -142,7 +142,7 @@
                         "citations": [
                           {
                             "label": "石淵家地球儀",
-                            "@id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json"
+                            "@id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest.json"
                           }
                         ]
                       },
@@ -183,7 +183,7 @@
                         "citations": [
                           {
                             "label": "石淵家地球儀",
-                            "@id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json"
+                            "@id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest.json"
                           }
                         ]
                       },
@@ -212,11 +212,11 @@
           ]
         },
         {
-          "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-page-comments",
+          "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-page-comments",
           "type": "AnnotationPage",
           "items": [
             {
-              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-5PQUNskDnZwuoTmQrCUq",
+              "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-5PQUNskDnZwuoTmQrCUq",
               "type": "Annotation",
               "motivation": ["commenting"],
               "body": {
@@ -228,7 +228,7 @@
                 "type": "SpecificResource",
                 "source": [
                   {
-                    "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#scene-p1",
+                    "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#scene-p1",
                     "type": "Scene"
                   }
                 ],
@@ -241,10 +241,10 @@
                   }
                 ]
               },
-              "cameraAnnotation": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-5PQUNskDnZwuoTmQrCUq/camera"
+              "cameraAnnotation": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-5PQUNskDnZwuoTmQrCUq/camera"
             },
             {
-              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-9CdwCGrf1ZlWQqjxJhVT",
+              "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-9CdwCGrf1ZlWQqjxJhVT",
               "type": "Annotation",
               "motivation": ["commenting"],
               "body": {
@@ -256,7 +256,7 @@
                 "type": "SpecificResource",
                 "source": [
                   {
-                    "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#scene-p1",
+                    "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#scene-p1",
                     "type": "Scene"
                   }
                 ],
@@ -269,10 +269,10 @@
                   }
                 ]
               },
-              "cameraAnnotation": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-9CdwCGrf1ZlWQqjxJhVT/camera"
+              "cameraAnnotation": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-9CdwCGrf1ZlWQqjxJhVT/camera"
             },
             {
-              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-DAWUDcrCTQLfiBUMLDMc",
+              "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-DAWUDcrCTQLfiBUMLDMc",
               "type": "Annotation",
               "motivation": ["commenting"],
               "body": {
@@ -284,7 +284,7 @@
                 "type": "SpecificResource",
                 "source": [
                   {
-                    "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#scene-p1",
+                    "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#scene-p1",
                     "type": "Scene"
                   }
                 ],
@@ -297,16 +297,16 @@
                   }
                 ]
               },
-              "cameraAnnotation": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-DAWUDcrCTQLfiBUMLDMc/camera"
+              "cameraAnnotation": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-DAWUDcrCTQLfiBUMLDMc/camera"
             }
           ]
         },
         {
-          "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-page-cameras",
+          "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-page-cameras",
           "type": "AnnotationPage",
           "items": [
             {
-              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-5PQUNskDnZwuoTmQrCUq/camera",
+              "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-5PQUNskDnZwuoTmQrCUq/camera",
               "type": "Annotation",
               "motivation": ["painting"],
               "body": {
@@ -317,7 +317,7 @@
                 "type": "SpecificResource",
                 "source": [
                   {
-                    "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#scene-p1",
+                    "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#scene-p1",
                     "type": "Scene"
                   }
                 ],
@@ -332,7 +332,7 @@
               }
             },
             {
-              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-9CdwCGrf1ZlWQqjxJhVT/camera",
+              "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-9CdwCGrf1ZlWQqjxJhVT/camera",
               "type": "Annotation",
               "motivation": ["painting"],
               "body": {
@@ -343,7 +343,7 @@
                 "type": "SpecificResource",
                 "source": [
                   {
-                    "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#scene-p1",
+                    "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#scene-p1",
                     "type": "Scene"
                   }
                 ],
@@ -358,7 +358,7 @@
               }
             },
             {
-              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#annotation-DAWUDcrCTQLfiBUMLDMc/camera",
+              "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#annotation-DAWUDcrCTQLfiBUMLDMc/camera",
               "type": "Annotation",
               "motivation": ["painting"],
               "body": {
@@ -369,7 +369,7 @@
                 "type": "SpecificResource",
                 "source": [
                   {
-                    "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest-with-annotations.json#scene-p1",
+                    "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest-with-annotations.json#scene-p1",
                     "type": "Scene"
                   }
                 ],

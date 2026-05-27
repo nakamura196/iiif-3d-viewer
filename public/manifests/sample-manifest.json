@@ -1,6 +1,6 @@
 {
   "@context": "http://iiif.io/api/presentation/4/context.json",
-  "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json",
+  "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest.json",
   "type": "Manifest",
   "label": {
     "none": ["石淵家地球儀"]
@@ -32,20 +32,20 @@
   },
   "items": [
     {
-      "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json#scene-p1",
+      "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest.json#scene-p1",
       "type": "Scene",
       "label": { "none": ["1"] },
       "items": [
         {
-          "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json#annotation-page-12",
+          "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest.json#annotation-page-12",
           "type": "AnnotationPage",
           "items": [
             {
-              "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json#annotation-12",
+              "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest.json#annotation-12",
               "type": "Annotation",
               "motivation": ["painting"],
               "body": {
-                "id": "https://3d-iiif-viewer.vercel.app/models/ishibuchi-globe.glb",
+                "id": "https://nakamura196.github.io/iiif-3d-viewer/models/ishibuchi-globe.glb",
                 "type": "Model",
                 "format": "model/gltf-binary"
               },
@@ -53,7 +53,7 @@
                 "type": "SpecificResource",
                 "source": [
                   {
-                    "id": "https://3d-iiif-viewer.vercel.app/manifests/sample-manifest.json#scene-p1",
+                    "id": "https://nakamura196.github.io/iiif-3d-viewer/manifests/sample-manifest.json#scene-p1",
                     "type": "Scene"
                   }
                 ],
