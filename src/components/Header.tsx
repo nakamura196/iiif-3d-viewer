@@ -5,7 +5,6 @@ import { manifestUrlAtom } from '@/atoms/infoPanelAtom';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname } from 'next/navigation';
 import { Link } from '@/i18n/routing';
-import NextLink from 'next/link';
 import { ThemeToggle, LanguageSwitcher, buttonClass } from '@nakamura196/react-ui';
 
 const Header = () => {
@@ -75,14 +74,18 @@ const Header = () => {
         />
 
         {manifestUrl && (
-          <NextLink
+          // The manifest URL is a static asset / external URL already carrying
+          // the basePath, not an in-app route. Use a plain <a> so next/link
+          // does not prepend basePath a second time (which 404s on GH Pages).
+          <a
             href={manifestUrl}
             target="_blank"
+            rel="noopener noreferrer"
             className={buttonClass('primary', 'sm', 'whitespace-nowrap')}
           >
             <span className="hidden sm:inline">{t('download')}</span>
             <span className="sm:hidden">{t('downloadShort')}</span>
-          </NextLink>
+          </a>
         )}
       </div>
     </header>
