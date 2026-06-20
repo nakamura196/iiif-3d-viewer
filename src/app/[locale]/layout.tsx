@@ -5,7 +5,6 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
-import { withBasePath } from '@/lib/basePath';
 
 export async function generateMetadata({
   params,
@@ -81,11 +80,10 @@ export async function generateMetadata({
         'max-snippet': -1,
       },
     },
-    icons: {
-      // Metadata icon hrefs are NOT basePath-prefixed automatically, so on GH
-      // Pages a bare '/favicon.ico' resolves to the domain root and 404s.
-      icon: withBasePath('/favicon.ico'),
-    },
+    // No explicit `icons` here: that would override Next's file-based icon
+    // convention. We rely on src/app/icon.svg + apple-icon.png (the custom
+    // 3D-cube branding), which Next links automatically with the basePath
+    // applied. The stock public/favicon.ico is intentionally not referenced.
   };
 }
 
