@@ -25,9 +25,14 @@ type Triple = [number, number, number];
 
 interface LegacySelector {
   type?: string;
-  value?: number[];
+  // Legacy custom shape uses a number[] for a point and area; the standard
+  // IIIF 3D shape uses inline x/y/z (PointSelector) or a WKT string (Polygon).
+  value?: number[] | string;
   area?: number[];
   camPos?: number[];
+  x?: number;
+  y?: number;
+  z?: number;
 }
 
 interface LegacyTargetObject {
@@ -76,9 +81,33 @@ const isV4 = (manifest: LegacyManifest): boolean => {
   return list.some((c) => typeof c === 'string' && c.includes('/presentation/4/'));
 };
 
-const asTriple = (input: number[] | undefined): Triple | null => {
-  if (!input || input.length < 3) return null;
-  return [Number(input[0]), Number(input[1]), Number(input[2])];
+const asTriple = (input: unknown): Triple | null => {
+  // Only a genuine numeric array is a triple. A WKT string also has a
+  // `.length`, so guarding on Array.isArray avoids indexing it char-by-char
+  // (which previously produced [NaN, NaN, NaN]).
+  if (!Array.isArray(input) || input.length < 3) return null;
+  const triple: Triple = [Number(input[0]), Number(input[1]), Number(input[2])];
+  return triple.every((n) => Number.isFinite(n)) ? triple : null;
+};
+
+// A point may arrive as a legacy `value: [x, y, z]` array or as a standard
+// IIIF PointSelector with inline `x` / `y` / `z` properties.
+const pointFromSelector = (sel: LegacySelector): Triple | null => {
+  const fromValue = asTriple(sel.value);
+  if (fromValue) return fromValue;
+  const { x, y, z } = sel;
+  if ([x, y, z].every((n) => typeof n === 'number' && Number.isFinite(n))) {
+    return [x as number, y as number, z as number];
+  }
+  return null;
+};
+
+// A polygon may arrive as a legacy `area: [x, y, z, ...]` flat array or as a
+// standard WKT string (`POLYGON Z ((...))` / `POLYGONZ((...))`) in `value`.
+const wktFromSelector = (sel: LegacySelector): string | null => {
+  if (sel.area && sel.area.length >= 9) return buildWktPolygon(sel.area);
+  if (typeof sel.value === 'string' && /POLYGON/i.test(sel.value)) return sel.value;
+  return null;
 };
 
 const buildPointSelector = (xyz: Triple) => ({
@@ -112,12 +141,12 @@ const convertCommentingAnnotation = (
 ): { annotation: AnnotationV4; camera: AnnotationV4 | null } => {
   const target = (anno.target ?? {}) as LegacyTargetObject;
   const selector: LegacySelector = (typeof target === 'object' && target.selector) || {};
-  const value = asTriple(selector.value);
+  const wkt = wktFromSelector(selector);
+  const value = pointFromSelector(selector);
   const camPos = asTriple(selector.camPos);
-  const area = selector.area && selector.area.length >= 9 ? selector.area : null;
 
-  const v4Selector = area
-    ? { type: 'WKTSelector' as const, value: buildWktPolygon(area) }
+  const v4Selector = wkt
+    ? { type: 'WKTSelector' as const, value: wkt }
     : value
       ? buildPointSelector(value)
       : null;
