@@ -181,6 +181,7 @@ const CanvasComponent = ({ glbUrl, attribution }: CanvasComponentProps) => {
           <Scene glbUrl={glbUrl} />
           <OrbitControls
             ref={controlsRef}
+            makeDefault
             enableDamping={true}
             dampingFactor={0.1}
             rotateSpeed={0.5}
