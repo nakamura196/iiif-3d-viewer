@@ -1,5 +1,5 @@
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
-import { OrbitControls, Html } from '@react-three/drei';
+import { OrbitControls, Html, Environment } from '@react-three/drei';
 import { Suspense, useEffect, useState, useRef, useImperativeHandle, forwardRef, useCallback } from 'react';
 import Scene from '@/components/three/Scene';
 import { useProgress } from '@react-three/drei';
@@ -170,7 +170,12 @@ const CanvasComponent = ({ glbUrl, attribution }: CanvasComponentProps) => {
           width: '100%',
           height: '100%',
         }}
-        gl={{ antialias: true }}
+        gl={{
+          antialias: true,
+          // Voyager並みの質感に：物理ベースのフィルミックなトーンマッピング
+          toneMapping: THREE.ACESFilmicToneMapping,
+          toneMappingExposure: 1,
+        }}
         onCreated={({ scene }) => {
           setSceneRef(scene);
           // Set initial background color based on theme
@@ -192,8 +197,13 @@ const CanvasComponent = ({ glbUrl, attribution }: CanvasComponentProps) => {
           />
           <CameraController ref={cameraControllerRef} controlsRef={controlsRef} />
           <gridHelper args={[10, 10, isDark ? 0x374151 : 0x9ca3af, isDark ? 0x1f2937 : 0xe5e7eb]} />
-          <ambientLight intensity={isDark ? 0.3 : 0.5} />
-          <directionalLight position={[10, 10, 5]} intensity={isDark ? 0.8 : 1} />
+          {/* IBL(環境マップ)で PBR マテリアルに反射・陰影を与える＝Voyagerに近い質感の主因。
+              背景は差し替えず(テーマ色を維持)、ライティングのみ利用。 */}
+          <Environment preset="city" background={false} environmentIntensity={isDark ? 0.6 : 1} />
+          {/* フラットな環境光は最小限に(IBLと二重に効くと白飛びするため)、
+              directional は陰影の方向づけ用のキーライトとして残す。 */}
+          <ambientLight intensity={isDark ? 0.15 : 0.25} />
+          <directionalLight position={[10, 10, 5]} intensity={isDark ? 0.5 : 0.7} />
         </Suspense>
       </Canvas>
       {/* ズームボタン（MapLibre GL風） */}

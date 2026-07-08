@@ -9,7 +9,7 @@ import { useAtom } from 'jotai';
 import { annotationsAtom } from '@/atoms/infoPanelAtom';
 import { selectedAnnotationIdAtom } from '@/atoms/infoPanelAtom';
 import { useEffect } from 'react';
-import { Vector3, Mesh, Frustum, Matrix4, Raycaster } from 'three';
+import { Vector3, Mesh, Frustum, Matrix4, Raycaster, Box3, Sphere } from 'three';
 import { GLTF } from 'three-stdlib';
 
 // 再利用可能なオブジェクト
@@ -29,6 +29,10 @@ export default function Annotations({ model }: { model: GLTF }) {
   const [selectedAnnotationId, setSelectedAnnotationId] = useAtom(selectedAnnotationIdAtom);
   const [annotations] = useAtom(annotationsAtom);
   const { camera } = useThree();
+  // OrbitControls(makeDefault)。注視点(target)を動かすために取得する。
+  const controls = useThree((s) => s.controls) as unknown as
+    | { target: Vector3; update?: () => void }
+    | null;
   const [meshList, setMeshList] = useState<Mesh[]>([]);
   const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
   const idleFrameCountRef = useRef(0);
@@ -138,12 +142,38 @@ export default function Annotations({ model }: { model: GLTF }) {
     setVisibilityMap(newVisibilityMap);
   });
 
+  // モデルのバウンディング球半径（フォーカス時のカメラ距離の基準）
+  const focusRadius = useMemo(() => {
+    const sphere = new Sphere();
+    new Box3().setFromObject(model.scene).getBoundingSphere(sphere);
+    return sphere.radius || 1;
+  }, [model]);
+
   const focusOnAnnotation = useCallback((annotationId: string) => {
     const annotation = annotations.find((a) => a.id === annotationId);
     if (!annotation) return;
 
-    const rawEndPosition = annotation.data.target.selector.camPos;
-    const endPosition = new Vector3(rawEndPosition[0], rawEndPosition[1], rawEndPosition[2]);
+    const value = annotation.data?.target?.selector?.value;
+    if (!value) return;
+    const targetPos = new Vector3(value[0], value[1], value[2]);
+
+    // カメラ位置：マニフェストに camPos（Voyager由来の推奨視点）があればそれを使う。
+    // 無ければ「現在の視線方向を保ったままアノテーション点へ寄る」ヒューリスティック
+    // （フィーチャを画面中央に収める）。
+    const camPosRaw = annotation.data?.target?.selector?.camPos as
+      | number[]
+      | undefined;
+    let endPosition: Vector3;
+    if (Array.isArray(camPosRaw) && camPosRaw.length >= 3) {
+      endPosition = new Vector3(camPosRaw[0], camPosRaw[1], camPosRaw[2]);
+    } else {
+      const dir = new Vector3().subVectors(camera.position, targetPos);
+      if (dir.lengthSq() < 1e-6) dir.set(0, 0, 1);
+      dir.normalize();
+      endPosition = new Vector3()
+        .copy(targetPos)
+        .addScaledVector(dir, focusRadius * 1.1);
+    }
 
     gsap.to(camera.position, {
       x: endPosition.x,
@@ -152,7 +182,19 @@ export default function Annotations({ model }: { model: GLTF }) {
       duration: 1,
       ease: 'power2.inOut',
     });
-  }, [annotations, camera]);
+    // OrbitControls の注視点もアノテーション点へ移動＝フィーチャが中央に来る。
+    // これが無いとカメラだけ動いて注視点が原点のまま＝フィーチャが端に寄る。
+    if (controls?.target) {
+      gsap.to(controls.target, {
+        x: targetPos.x,
+        y: targetPos.y,
+        z: targetPos.z,
+        duration: 1,
+        ease: 'power2.inOut',
+        onUpdate: () => controls.update?.(),
+      });
+    }
+  }, [annotations, camera, controls, focusRadius]);
 
   useEffect(() => {
     if (selectedAnnotationId) {
