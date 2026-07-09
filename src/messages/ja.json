@@ -29,7 +29,9 @@
     "heading": "お知らせ",
     "empty": "お知らせはありません",
     "item1Date": "2026-05-25",
-    "item1Title": "技術記事「IIIF 3D Viewer：Presentation API 4 コンバーターの実装」を公開しました"
+    "item1Title": "技術記事「IIIF 3D Viewer：Presentation API 4 コンバーターの実装」を公開しました",
+    "item2Date": "2026-07-09",
+    "item2Title": "3Dモデルの表示を改善しました（IBL環境光による質感向上・アノテーションの正対フレーミング・初期表示の自動フィット）"
   },
   "Input": {
     "title": "3Dモデルを表示",

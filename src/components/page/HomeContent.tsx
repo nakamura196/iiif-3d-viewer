@@ -16,6 +16,10 @@ export default function HomeContent() {
 
   const newsItems = [
     {
+      date: tNews('item2Date'),
+      title: tNews('item2Title'),
+    },
+    {
       date: tNews('item1Date'),
       title: tNews('item1Title'),
       href: 'https://tech.ldas.jp/ja/posts/iiif-3d-viewer-presentation-api-4-converter/',

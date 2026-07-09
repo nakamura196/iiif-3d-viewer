@@ -29,7 +29,9 @@
     "heading": "News",
     "empty": "No announcements",
     "item1Date": "2026-05-25",
-    "item1Title": "Published the article \"IIIF 3D Viewer: Implementing a Presentation API 4 Converter\""
+    "item1Title": "Published the article \"IIIF 3D Viewer: Implementing a Presentation API 4 Converter\"",
+    "item2Date": "2026-07-09",
+    "item2Title": "Improved 3D model rendering: image-based lighting, head-on annotation framing, and auto-fit on load"
   },
   "Input": {
     "title": "3D Model Viewer",
