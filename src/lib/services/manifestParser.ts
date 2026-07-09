@@ -184,6 +184,12 @@ const buildAnnotation = (
   const cameraId = anno.cameraAnnotation ?? `${anno.id}/camera`;
   const camPos = cameras.get(cameraId) ?? ([...position] as [number, number, number]);
 
+  // Outward normal of the annotated feature (non-standard PointSelector field),
+  // used to frame the feature head-on when there is no explicit camera.
+  const normal = point && Array.isArray(point.normal) && point.normal.length >= 3
+    ? ([point.normal[0], point.normal[1], point.normal[2]] as [number, number, number])
+    : undefined;
+
   const { value, label } = stringifyBodyValue(anno);
 
   return {
@@ -204,6 +210,7 @@ const buildAnnotation = (
           value: position,
           area,
           camPos,
+          ...(normal ? { normal } : {}),
         },
       },
     },

@@ -10,6 +10,7 @@ import { annotationsAtom } from '@/atoms/infoPanelAtom';
 import { selectedAnnotationIdAtom } from '@/atoms/infoPanelAtom';
 import { useEffect } from 'react';
 import { Vector3, Mesh, Frustum, Matrix4, Raycaster, Box3, Sphere } from 'three';
+import { computeFocusCamera } from '@/lib/focusCamera';
 import { GLTF } from 'three-stdlib';
 
 // 再利用可能なオブジェクト
@@ -29,9 +30,9 @@ export default function Annotations({ model }: { model: GLTF }) {
   const [selectedAnnotationId, setSelectedAnnotationId] = useAtom(selectedAnnotationIdAtom);
   const [annotations] = useAtom(annotationsAtom);
   const { camera } = useThree();
-  // OrbitControls(makeDefault)。注視点(target)を動かすために取得する。
+  // OrbitControls(makeDefault)。注視点(target)を動かす・飛行中に無効化するために取得。
   const controls = useThree((s) => s.controls) as unknown as
-    | { target: Vector3; update?: () => void }
+    | { target: Vector3; update?: () => void; enabled?: boolean }
     | null;
   const [meshList, setMeshList] = useState<Mesh[]>([]);
   const [visibilityMap, setVisibilityMap] = useState<Record<string, boolean>>({});
@@ -153,46 +154,71 @@ export default function Annotations({ model }: { model: GLTF }) {
     const annotation = annotations.find((a) => a.id === annotationId);
     if (!annotation) return;
 
-    const value = annotation.data?.target?.selector?.value;
+    const selector = annotation.data?.target?.selector;
+    const value = selector?.value;
     if (!value) return;
-    const targetPos = new Vector3(value[0], value[1], value[2]);
+    const camPosRaw = selector?.camPos as number[] | undefined;
+    const normalRaw = selector?.normal as number[] | undefined;
 
-    // カメラ位置：マニフェストに camPos（Voyager由来の推奨視点）があればそれを使う。
-    // 無ければ「現在の視線方向を保ったままアノテーション点へ寄る」ヒューリスティック
-    // （フィーチャを画面中央に収める）。
-    const camPosRaw = annotation.data?.target?.selector?.camPos as
-      | number[]
-      | undefined;
-    let endPosition: Vector3;
-    if (Array.isArray(camPosRaw) && camPosRaw.length >= 3) {
-      endPosition = new Vector3(camPosRaw[0], camPosRaw[1], camPosRaw[2]);
-    } else {
-      const dir = new Vector3().subVectors(camera.position, targetPos);
-      if (dir.lengthSq() < 1e-6) dir.set(0, 0, 1);
-      dir.normalize();
-      endPosition = new Vector3()
-        .copy(targetPos)
-        .addScaledVector(dir, focusRadius * 1.1);
-    }
+    const { position, target } = computeFocusCamera({
+      target: [value[0], value[1], value[2]],
+      cameraPos: [camera.position.x, camera.position.y, camera.position.z],
+      radius: focusRadius,
+      // camPos は「点と異なる場合のみ」有効視点として扱われる（parser は
+      // カメラ注釈が無いと camPos=点 にフォールバックするため）。
+      camPos: Array.isArray(camPosRaw) && camPosRaw.length >= 3
+        ? [camPosRaw[0], camPosRaw[1], camPosRaw[2]]
+        : null,
+      // 注釈の法線（Voyager direction）で正面から見る。
+      normal: Array.isArray(normalRaw) && normalRaw.length >= 3
+        ? [normalRaw[0], normalRaw[1], normalRaw[2]]
+        : null,
+    });
+
+    // 進行中のトゥイーンを破棄（連続クリックで状態が壊れるのを防ぐ）。
+    gsap.killTweensOf(camera.position);
+    if (controls?.target) gsap.killTweensOf(controls.target);
+
+    // 飛行中は OrbitControls を無効化する。drei は `controls.enabled` の時だけ
+    // update() を回すので、無効化しておけば毎フレームの update() が gsap の
+    // カメラ移動と競合しない。完了後に再有効化＋update() で spherical を現在の
+    // position/target から再計算 → マウス操作が復活する。
+    // （これをしないと「一度移動するとドラッグできない」不具合になる）
+    const prevEnabled = controls?.enabled ?? true;
+    if (controls) controls.enabled = false;
+
+    const finish = () => {
+      if (controls) {
+        controls.enabled = prevEnabled;
+        controls.update?.();
+      }
+    };
 
     gsap.to(camera.position, {
-      x: endPosition.x,
-      y: endPosition.y,
-      z: endPosition.z,
+      x: position[0],
+      y: position[1],
+      z: position[2],
       duration: 1,
       ease: 'power2.inOut',
+      // 注視点が動く間もカメラをそこへ向け続ける。
+      onUpdate: () => camera.lookAt(target[0], target[1], target[2]),
     });
-    // OrbitControls の注視点もアノテーション点へ移動＝フィーチャが中央に来る。
-    // これが無いとカメラだけ動いて注視点が原点のまま＝フィーチャが端に寄る。
+
     if (controls?.target) {
       gsap.to(controls.target, {
-        x: targetPos.x,
-        y: targetPos.y,
-        z: targetPos.z,
+        x: target[0],
+        y: target[1],
+        z: target[2],
         duration: 1,
         ease: 'power2.inOut',
-        onUpdate: () => controls.update?.(),
+        onComplete: finish,
       });
+    } else {
+      // controls が取れないケースでもカメラ tween 完了で復帰させる。
+      gsap.to(
+        {},
+        { duration: 1, onComplete: finish },
+      );
     }
   }, [annotations, camera, controls, focusRadius]);
 

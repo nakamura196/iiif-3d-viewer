@@ -9,6 +9,9 @@ export interface PointSelectorV4 {
   x: number;
   y: number;
   z: number;
+  // Non-standard extension: outward normal of the annotated feature (from
+  // Voyager `direction`). Lets the viewer frame the feature head-on.
+  normal?: [number, number, number];
 }
 
 export interface WKTSelectorV4 {

@@ -33,6 +33,7 @@ export interface Annotation {
         value: [number, number, number];
         area: [number, number, number];
         camPos: [number, number, number];
+        normal?: [number, number, number];
       };
     };
   };
@@ -65,6 +66,7 @@ export interface NewAnnotation {
         value: [number, number, number];
         area: [number, number, number];
         camPos: [number, number, number];
+        normal?: [number, number, number];
       };
     };
   };
