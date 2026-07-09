@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { computeFocusCamera, FOCUS_DISTANCE_FACTOR, type Vec3 } from './focusCamera';
+import { describe, it, expect, vi } from 'vitest';
+import { computeFocusCamera, runFocusFlight, FOCUS_DISTANCE_FACTOR, type Vec3 } from './focusCamera';
 
 const dist = (a: Vec3, b: Vec3) =>
   Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
@@ -63,5 +63,63 @@ describe('computeFocusCamera', () => {
     const r = computeFocusCamera({ target: [5, 5, 5], cameraPos: [5, 5, 5], radius: 2 });
     expect(r.position.every((v) => Number.isFinite(v))).toBe(true);
     expect(r.position[2]).toBeCloseTo(5 + 2 * FOCUS_DISTANCE_FACTOR, 6);
+  });
+});
+
+// A fake gsap whose `to` runs onUpdate then onComplete synchronously, capturing
+// the tween targets and the controls.enabled state observed mid-flight.
+const makeHarness = () => {
+  const tweens: Array<{ target: unknown; vars: Record<string, unknown> }> = [];
+  const killed: unknown[] = [];
+  let enabledDuringFlight: boolean | undefined;
+  const camera = { position: { x: 0, y: 0, z: 0 }, lookAt: vi.fn() };
+  const controls = { target: { x: 0, y: 0, z: 0 }, update: vi.fn(), enabled: true };
+  const gsap = {
+    to: (target: unknown, vars: Record<string, unknown>) => {
+      tweens.push({ target, vars });
+      if (typeof vars.onUpdate === 'function') {
+        enabledDuringFlight = controls.enabled;
+        (vars.onUpdate as () => void)();
+      }
+      if (typeof vars.onComplete === 'function') (vars.onComplete as () => void)();
+    },
+    killTweensOf: (t: unknown) => killed.push(t),
+  };
+  return { camera, controls, gsap, tweens, killed, get enabledDuringFlight() { return enabledDuringFlight; } };
+};
+
+describe('runFocusFlight', () => {
+  it('disables OrbitControls during the flight and re-enables + update()s after', () => {
+    const h = makeHarness();
+    runFocusFlight({ camera: h.camera, controls: h.controls, gsap: h.gsap }, [1, 2, 3], [4, 5, 6]);
+    // The core "can't drag afterward" regression guard:
+    expect(h.enabledDuringFlight).toBe(false); // disabled mid-flight
+    expect(h.controls.enabled).toBe(true); // restored after
+    expect(h.controls.update).toHaveBeenCalled(); // re-synced spherical
+  });
+
+  it('kills prior tweens on both the camera and the pivot before starting', () => {
+    const h = makeHarness();
+    runFocusFlight({ camera: h.camera, controls: h.controls, gsap: h.gsap }, [1, 2, 3], [4, 5, 6]);
+    expect(h.killed).toContain(h.camera.position);
+    expect(h.killed).toContain(h.controls.target);
+  });
+
+  it('tweens the camera to `position` and the pivot to `target`', () => {
+    const h = makeHarness();
+    runFocusFlight({ camera: h.camera, controls: h.controls, gsap: h.gsap }, [1, 2, 3], [4, 5, 6]);
+    const camTween = h.tweens.find((t) => t.target === h.camera.position);
+    const pivotTween = h.tweens.find((t) => t.target === h.controls.target);
+    expect([camTween?.vars.x, camTween?.vars.y, camTween?.vars.z]).toEqual([1, 2, 3]);
+    expect([pivotTween?.vars.x, pivotTween?.vars.y, pivotTween?.vars.z]).toEqual([4, 5, 6]);
+    expect(h.camera.lookAt).toHaveBeenCalledWith(4, 5, 6); // keeps looking at the pivot
+  });
+
+  it('does not crash and still tweens the camera when controls is null', () => {
+    const h = makeHarness();
+    expect(() =>
+      runFocusFlight({ camera: h.camera, controls: null, gsap: h.gsap }, [1, 2, 3], [4, 5, 6]),
+    ).not.toThrow();
+    expect(h.tweens.some((t) => t.target === h.camera.position)).toBe(true);
   });
 });

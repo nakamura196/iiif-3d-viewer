@@ -10,7 +10,7 @@ import { annotationsAtom } from '@/atoms/infoPanelAtom';
 import { selectedAnnotationIdAtom } from '@/atoms/infoPanelAtom';
 import { useEffect } from 'react';
 import { Vector3, Mesh, Frustum, Matrix4, Raycaster, Box3, Sphere } from 'three';
-import { computeFocusCamera } from '@/lib/focusCamera';
+import { computeFocusCamera, runFocusFlight } from '@/lib/focusCamera';
 import { GLTF } from 'three-stdlib';
 
 // 再利用可能なオブジェクト
@@ -175,51 +175,9 @@ export default function Annotations({ model }: { model: GLTF }) {
         : null,
     });
 
-    // 進行中のトゥイーンを破棄（連続クリックで状態が壊れるのを防ぐ）。
-    gsap.killTweensOf(camera.position);
-    if (controls?.target) gsap.killTweensOf(controls.target);
-
-    // 飛行中は OrbitControls を無効化する。drei は `controls.enabled` の時だけ
-    // update() を回すので、無効化しておけば毎フレームの update() が gsap の
-    // カメラ移動と競合しない。完了後に再有効化＋update() で spherical を現在の
-    // position/target から再計算 → マウス操作が復活する。
-    // （これをしないと「一度移動するとドラッグできない」不具合になる）
-    const prevEnabled = controls?.enabled ?? true;
-    if (controls) controls.enabled = false;
-
-    const finish = () => {
-      if (controls) {
-        controls.enabled = prevEnabled;
-        controls.update?.();
-      }
-    };
-
-    gsap.to(camera.position, {
-      x: position[0],
-      y: position[1],
-      z: position[2],
-      duration: 1,
-      ease: 'power2.inOut',
-      // 注視点が動く間もカメラをそこへ向け続ける。
-      onUpdate: () => camera.lookAt(target[0], target[1], target[2]),
-    });
-
-    if (controls?.target) {
-      gsap.to(controls.target, {
-        x: target[0],
-        y: target[1],
-        z: target[2],
-        duration: 1,
-        ease: 'power2.inOut',
-        onComplete: finish,
-      });
-    } else {
-      // controls が取れないケースでもカメラ tween 完了で復帰させる。
-      gsap.to(
-        {},
-        { duration: 1, onComplete: finish },
-      );
-    }
+    // 飛行の実行（トゥイーン掃除・飛行中の controls 無効化・完了後の復帰）は
+    // runFocusFlight に集約（依存注入でユニットテスト可能）。
+    runFocusFlight({ camera, controls, gsap }, position, target);
   }, [annotations, camera, controls, focusRadius]);
 
   useEffect(() => {

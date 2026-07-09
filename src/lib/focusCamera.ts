@@ -87,3 +87,73 @@ export function computeFocusCamera(input: FocusInput): FocusResult {
     target: at,
   };
 }
+
+// --- flight orchestration (dependency-injected so it is unit-testable) -------
+
+interface Positioned { x: number; y: number; z: number }
+
+export interface FocusFlightDeps {
+  camera: { position: Positioned; lookAt: (x: number, y: number, z: number) => void };
+  controls: { target: Positioned; update?: () => void; enabled?: boolean } | null;
+  // Structural subset of gsap. Params are loose (`any`) because this is an
+  // injection seam: the real gsap.to accepts its own TweenTarget/TweenVars,
+  // while tests pass a synchronous fake — both must satisfy this shape.
+  gsap: {
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    to: (target: any, vars: any) => unknown;
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    killTweensOf: (target: any) => void;
+  };
+  duration?: number;
+}
+
+/**
+ * Animate the camera to `position` and the orbit pivot to `target`.
+ *
+ * Robustness rules encoded here (each guards a real bug):
+ *  - killTweensOf() first, so rapid successive clicks don't leave overlapping
+ *    tweens that corrupt the camera/pivot state.
+ *  - Disable OrbitControls for the flight, re-enable + update() on completion.
+ *    drei only runs controls.update() while enabled, so disabling avoids the
+ *    per-frame update() fighting the gsap tween; the final update() re-derives
+ *    the spherical from the new position/target so dragging works afterward
+ *    (fixes "can't move the model after focusing").
+ *  - Keep looking at the pivot as it moves (onUpdate lookAt).
+ */
+export function runFocusFlight(deps: FocusFlightDeps, position: Vec3, target: Vec3): void {
+  const { camera, controls, gsap, duration = 1 } = deps;
+
+  gsap.killTweensOf(camera.position);
+  if (controls?.target) gsap.killTweensOf(controls.target);
+
+  const prevEnabled = controls?.enabled ?? true;
+  if (controls) controls.enabled = false;
+  const finish = () => {
+    if (controls) {
+      controls.enabled = prevEnabled;
+      controls.update?.();
+    }
+  };
+
+  gsap.to(camera.position, {
+    x: position[0],
+    y: position[1],
+    z: position[2],
+    duration,
+    ease: 'power2.inOut',
+    onUpdate: () => camera.lookAt(target[0], target[1], target[2]),
+  });
+
+  if (controls?.target) {
+    gsap.to(controls.target, {
+      x: target[0],
+      y: target[1],
+      z: target[2],
+      duration,
+      ease: 'power2.inOut',
+      onComplete: finish,
+    });
+  } else {
+    gsap.to({}, { duration, onComplete: finish });
+  }
+}
