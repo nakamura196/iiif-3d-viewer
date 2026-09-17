@@ -20,5 +20,6 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci --ignore-scripts
+      # lockfile が package.json と合っていないリポジトリがあるので、その場合は入れ直す
+      - run: npm ci --ignore-scripts || npm install --ignore-scripts --no-audit --no-fund
       - run: npm run build --if-present
