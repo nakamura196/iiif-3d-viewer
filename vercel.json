@@ -6,7 +6,7 @@
   "redirects": [
     {
       "source": "/:rest(.*)",
-      "destination": "https://nakamura196.github.io/iiif-3d-viewer/:rest",
+      "destination": "https://3d.ldas.jp/:rest",
       "permanent": true
     }
   ]
