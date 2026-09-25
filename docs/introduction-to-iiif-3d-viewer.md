@@ -143,7 +143,7 @@ IIIF 3D Viewerは、デジタルヒューマニティーズにおける3D資料�
 
 ## 参考リンク
 
-- [IIIF 3D Viewer デモサイト](https://3d-iiif-viewer.vercel.app)
+- [IIIF 3D Viewer デモサイト](https://3d.ldas.jp)
 - [GitHubリポジトリ](https://github.com/nakamura196/iiif-3d-viewer)
 - [IIIF公式サイト](https://iiif.io/)
 

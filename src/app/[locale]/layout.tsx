@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import { SITE_URL, alternatesFor } from '@/lib/site';
 
 export async function generateMetadata({
   params,
@@ -12,9 +13,8 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  // SEO 統合: 配信先は GH Pages を canonical とする。Vercel の旧 URL
-  // (3d-iiif-viewer.vercel.app) は vercel.json で 301 redirect する。
-  const baseUrl = 'https://nakamura196.github.io/iiif-3d-viewer';
+  // 公開 URL は src/lib/site.ts。旧 github.io / vercel.app はそれぞれの設定で 3d.ldas.jp へ転送する。
+  const baseUrl = SITE_URL;
 
   const title = locale === 'ja' ? 'IIIF 3D ビューア' : 'IIIF 3D Viewer';
   const description =
@@ -38,17 +38,13 @@ export async function generateMetadata({
       telephone: false,
     },
     metadataBase: new URL(baseUrl),
-    alternates: {
-      canonical: '/',
-      languages: {
-        en: '/en',
-        ja: '/ja',
-      },
-    },
+    // 既定はロケールのトップ (/ja/, /en/)。下層ページは各 page.tsx の generateMetadata で上書きする。
+    // / はブラウザ側で /ja/ へ移るだけのページ
+    alternates: alternatesFor(locale, ''),
     openGraph: {
       title,
       description,
-      url: baseUrl,
+      url: `${baseUrl}/${locale}/`,
       siteName: title,
       images: [
         {

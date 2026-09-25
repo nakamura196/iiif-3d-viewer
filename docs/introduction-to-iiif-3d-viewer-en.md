@@ -143,7 +143,7 @@ As it is released as an open-source project, feedback and contributions from the
 
 ## Reference Links
 
-- [IIIF 3D Viewer Demo Site](https://3d-iiif-viewer.vercel.app)
+- [IIIF 3D Viewer Demo Site](https://3d.ldas.jp)
 - [GitHub Repository](https://github.com/nakamura196/iiif-3d-viewer)
 - [IIIF Official Website](https://iiif.io/)
 

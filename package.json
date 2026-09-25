@@ -8,7 +8,9 @@
     "start": "next start -p 3838",
     "lint": "next lint",
     "test": "vitest run",
-    "test:basepath": "GITHUB_PAGES=true next build && ./scripts/check-basepath.sh"
+    "test:basepath": "GITHUB_PAGES=true next build && ./scripts/check-basepath.sh",
+    "test:export": "node scripts/check-export.mjs",
+    "test:live": "node scripts/check-live.mjs"
   },
   "dependencies": {
     "@iiif/presentation-3": "^2.1.0",
