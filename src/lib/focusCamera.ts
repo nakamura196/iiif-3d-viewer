@@ -139,19 +139,31 @@ export interface FocusFlightDeps {
  *    per-frame update() fighting the gsap tween; the final update() re-derives
  *    the spherical from the new position/target so dragging works afterward
  *    (fixes "can't move the model after focusing").
+ *  - Overlapping flights restore the state from before the first one
+ *    (see preFlightEnabled).
  *  - Keep looking at the pivot as it moves (onUpdate lookAt).
  */
+// Pre-flight `enabled` state per controls, held while a flight is in progress.
+// A flight that interrupts another must restore the state from before the
+// FIRST flight: killTweensOf() drops the earlier onComplete, and reading
+// `controls.enabled` mid-flight would capture `false` and leave the controls
+// disabled for good ("can't zoom/rotate after clicking several annotations").
+const preFlightEnabled = new WeakMap<object, boolean>();
+
 export function runFocusFlight(deps: FocusFlightDeps, position: Vec3, target: Vec3): void {
   const { camera, controls, gsap, duration = 1 } = deps;
 
   gsap.killTweensOf(camera.position);
   if (controls?.target) gsap.killTweensOf(controls.target);
 
-  const prevEnabled = controls?.enabled ?? true;
-  if (controls) controls.enabled = false;
+  if (controls) {
+    if (!preFlightEnabled.has(controls)) preFlightEnabled.set(controls, controls.enabled ?? true);
+    controls.enabled = false;
+  }
   const finish = () => {
     if (controls) {
-      controls.enabled = prevEnabled;
+      controls.enabled = preFlightEnabled.get(controls) ?? true;
+      preFlightEnabled.delete(controls);
       controls.update?.();
     }
   };
