@@ -1,0 +1,296 @@
+{
+  "@context": [
+    "https://nakamura196.github.io/iiif-region-tag-extension/context.json",
+    "http://iiif.io/api/presentation/4/context.json"
+  ],
+  "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json",
+  "type": "Manifest",
+  "label": {
+    "en": [
+      "Shared Region and Keyed Tag Extension — example"
+    ],
+    "ja": [
+      "領域の共有とキー付きタグ拡張 — 例"
+    ]
+  },
+  "summary": {
+    "en": [
+      "Example annotations for the Shared Region and Keyed Tag Extension. The annotation texts are illustrative, not scholarly claims about the globe."
+    ],
+    "ja": [
+      "拡張の説明用の注釈です。注釈の文面は例であり、地球儀についての学術的な記述ではありません。"
+    ]
+  },
+  "rights": "https://creativecommons.org/licenses/by-nc/4.0/",
+  "requiredStatement": {
+    "label": {
+      "ja": [
+        "帰属表示"
+      ],
+      "en": [
+        "Attribution"
+      ]
+    },
+    "value": {
+      "ja": [
+        "『石淵家地球儀』（菊池市立図書館所蔵）を改変"
+      ],
+      "en": [
+        "Modified from 'Ishibuchi Family Globe' (Kikuchi City Library Collection)"
+      ]
+    }
+  },
+  "items": [
+    {
+      "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#scene-1",
+      "type": "Scene",
+      "label": {
+        "none": [
+          "1"
+        ]
+      },
+      "items": [
+        {
+          "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#page-painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#painting",
+              "type": "Annotation",
+              "motivation": [
+                "painting"
+              ],
+              "body": {
+                "id": "https://3d.ldas.jp/models/ishibuchi-globe.glb",
+                "type": "Model",
+                "format": "model/gltf-binary"
+              },
+              "target": {
+                "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#painting-target",
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#scene-1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#page-comments",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#anno-uk-1",
+              "type": "Annotation",
+              "motivation": [
+                "commenting"
+              ],
+              "creator": {
+                "id": "https://example.org/users/annotator-1",
+                "type": "Person",
+                "name": "Example Annotator 1"
+              },
+              "created": "2026-09-20T10:00:00Z",
+              "body": {
+                "type": "TextualBody",
+                "format": "text/html",
+                "value": "<p>Example: this point is identified as the United Kingdom.</p>",
+                "label": {
+                  "ja": [
+                    "イギリス"
+                  ],
+                  "en": [
+                    "United Kingdom"
+                  ]
+                }
+              },
+              "target": {
+                "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#region-uk",
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#scene-1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": -0.2056713368677782,
+                    "y": 0.7115841685636456,
+                    "z": -0.6593850997323897
+                  }
+                ]
+              }
+            },
+            {
+              "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#anno-uk-2",
+              "type": "Annotation",
+              "motivation": [
+                "commenting",
+                "tagging"
+              ],
+              "creator": {
+                "id": "https://example.org/users/annotator-2",
+                "type": "Person",
+                "name": "Example Annotator 2"
+              },
+              "created": "2026-09-25T15:30:00Z",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "format": "text/html",
+                  "value": "<p>Example: a second annotation on the same region, by another annotator, with keyed tags.</p>",
+                  "label": {
+                    "ja": [
+                      "イギリス（別の注釈者による例）"
+                    ],
+                    "en": [
+                      "United Kingdom (another annotator)"
+                    ]
+                  }
+                },
+                {
+                  "type": "TextualBody",
+                  "purpose": "tagging",
+                  "value": "Europe",
+                  "label": {
+                    "en": [
+                      "region"
+                    ]
+                  }
+                },
+                {
+                  "type": "TextualBody",
+                  "purpose": "tagging",
+                  "value": "country name",
+                  "label": {
+                    "en": [
+                      "place type"
+                    ]
+                  }
+                },
+                {
+                  "type": "TextualBody",
+                  "purpose": "tagging",
+                  "value": "example"
+                }
+              ],
+              "target": {
+                "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#region-uk",
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#scene-1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": -0.2056713368677782,
+                    "y": 0.7115841685636456,
+                    "z": -0.6593850997323897
+                  }
+                ]
+              }
+            },
+            {
+              "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#anno-area",
+              "type": "Annotation",
+              "motivation": [
+                "commenting"
+              ],
+              "creator": {
+                "id": "https://example.org/users/annotator-1",
+                "type": "Person",
+                "name": "Example Annotator 1"
+              },
+              "created": "2026-09-20T10:05:00Z",
+              "body": {
+                "type": "TextualBody",
+                "format": "text/html",
+                "value": "<p>Example: a polygon region spanning the North Sea, the United Kingdom and France.</p>",
+                "label": {
+                  "en": [
+                    "Polygon region example"
+                  ],
+                  "ja": [
+                    "多角形の範囲の例"
+                  ]
+                }
+              },
+              "target": {
+                "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#region-area",
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#scene-1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "WktSelector",
+                    "value": "POLYGON Z ((-0.2557678207152946 0.7615613040808595 -0.5854673025803923, -0.2056713368677782 0.7115841685636456 -0.6593850997323897, -0.2733104982705924 0.6521283770526259 -0.701585131297753, -0.2557678207152946 0.7615613040808595 -0.5854673025803923))"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#anno-north-sea",
+              "type": "Annotation",
+              "motivation": [
+                "commenting"
+              ],
+              "body": {
+                "type": "TextualBody",
+                "format": "text/html",
+                "value": "<p>Example: a plain annotation that uses no feature of this extension.</p>",
+                "label": {
+                  "ja": [
+                    "北海"
+                  ],
+                  "en": [
+                    "North Sea"
+                  ]
+                }
+              },
+              "target": {
+                "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#region-north-sea",
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://nakamura196.github.io/iiif-region-tag-extension/examples/manifest.json#scene-1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": -0.2557678207152946,
+                    "y": 0.7615613040808595,
+                    "z": -0.5854673025803923
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

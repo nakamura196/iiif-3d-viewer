@@ -6,11 +6,12 @@ import gsap from 'gsap';
 import AnnotationMarker from '@/components/three/AnnotationMarker';
 import AreaMarker from '@/components/three/AreaMarker';
 import { useAtom } from 'jotai';
-import { annotationsAtom } from '@/atoms/infoPanelAtom';
+import { annotationsAtom, visibleAnnotationsAtom } from '@/atoms/infoPanelAtom';
 import { selectedAnnotationIdAtom } from '@/atoms/infoPanelAtom';
 import { useEffect } from 'react';
 import { Vector3, Mesh, Frustum, Matrix4, Raycaster, Box3, Sphere } from 'three';
 import { computeFocusCamera, runFocusFlight } from '@/lib/focusCamera';
+import { groupByRegion } from '@/lib/regions';
 import { GLTF } from 'three-stdlib';
 
 // 再利用可能なオブジェクト
@@ -29,6 +30,7 @@ export default function Annotations({ model }: { model: GLTF }) {
   const [openAnnotationId, setOpenAnnotationId] = useState<string | null>(null);
   const [selectedAnnotationId, setSelectedAnnotationId] = useAtom(selectedAnnotationIdAtom);
   const [annotations] = useAtom(annotationsAtom);
+  const [visibleAnnotations] = useAtom(visibleAnnotationsAtom);
   const { camera } = useThree();
   // OrbitControls(makeDefault)。注視点(target)を動かす・飛行中に無効化するために取得。
   const controls = useThree((s) => s.controls) as unknown as
@@ -48,6 +50,15 @@ export default function Annotations({ model }: { model: GLTF }) {
     });
     setMeshList(meshes);
   }, [model]);
+
+  // 同じ場所（target.id が同じ）の注釈は、印を 1 つにまとめる
+  // 検索・絞り込みで外れた注釈の印は出さない
+  const regionGroups = useMemo(() => groupByRegion(visibleAnnotations), [visibleAnnotations]);
+  // 番号は一覧と同じく、全注釈の中での順番
+  const numberOf = useMemo(
+    () => new Map(annotations.map((a, i) => [a.id, i + 1])),
+    [annotations],
+  );
 
   // アノテーション位置をメモ化
   const annotationPositions = useMemo(() => {
@@ -143,11 +154,14 @@ export default function Annotations({ model }: { model: GLTF }) {
     setVisibilityMap(newVisibilityMap);
   });
 
-  // モデルのバウンディング球半径（フォーカス時のカメラ距離の基準）
-  const focusRadius = useMemo(() => {
+  // モデルのバウンディング球（半径はフォーカス時のカメラ距離の基準、中心は視点が無いときの向きの基準）
+  const { focusRadius, focusCenter } = useMemo(() => {
     const sphere = new Sphere();
     new Box3().setFromObject(model.scene).getBoundingSphere(sphere);
-    return sphere.radius || 1;
+    return {
+      focusRadius: sphere.radius || 1,
+      focusCenter: [sphere.center.x, sphere.center.y, sphere.center.z] as [number, number, number],
+    };
   }, [model]);
 
   const focusOnAnnotation = useCallback((annotationId: string) => {
@@ -173,12 +187,14 @@ export default function Annotations({ model }: { model: GLTF }) {
       normal: Array.isArray(normalRaw) && normalRaw.length >= 3
         ? [normalRaw[0], normalRaw[1], normalRaw[2]]
         : null,
+      // 視点も法線も無いときは、モデルの中心から点へ向かう外向きに見る
+      center: focusCenter,
     });
 
     // 飛行の実行（トゥイーン掃除・飛行中の controls 無効化・完了後の復帰）は
     // runFocusFlight に集約（依存注入でユニットテスト可能）。
     runFocusFlight({ camera, controls, gsap }, position, target);
-  }, [annotations, camera, controls, focusRadius]);
+  }, [annotations, camera, controls, focusRadius, focusCenter]);
 
   useEffect(() => {
     if (selectedAnnotationId) {
@@ -189,15 +205,21 @@ export default function Annotations({ model }: { model: GLTF }) {
 
   return (
     <>
-      {annotations.map((annotation, index) => {
-        const selector = annotation.data?.target?.selector;
-        const type = selector?.type;
+      {regionGroups.map((group) => {
+        // 形は先頭の注釈から取る（拡張の決まりで、同じ場所の注釈は同じ形を持つ）
+        const annotation = group.annotations[0];
+        const type = annotation.data?.target?.selector?.type;
+        const isOpen = group.annotations.some((a) => a.id === openAnnotationId);
+        const label = group.annotations.length > 1
+          ? group.annotations.map((a) => a.data.body.label).filter(Boolean).join(' / ')
+          : undefined;
 
         return type === 'PointSelector' ? (
           <AnnotationMarker
-            key={annotation.id}
+            key={group.key}
             annotation={annotation}
-            isOpen={openAnnotationId === annotation.id}
+            label={label}
+            isOpen={isOpen}
             onClick={() => {
               setSelectedAnnotationId(annotation.id);
             }}
@@ -205,10 +227,11 @@ export default function Annotations({ model }: { model: GLTF }) {
           />
         ) : (
           <AreaMarker
-            key={annotation.id}
-            number={(index + 1).toString()}
+            key={group.key}
+            number={String(numberOf.get(annotation.id) ?? '')}
             annotation={annotation}
-            isOpen={openAnnotationId === annotation.id}
+            label={label}
+            isOpen={isOpen}
             onClick={() => {
               setSelectedAnnotationId(annotation.id);
             }}

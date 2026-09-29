@@ -18,6 +18,7 @@
     "sample1": "地球儀",
     "sample2": "アノテーション付き",
     "sample3": "地図連携ビューア",
+    "sample4": "領域の共有・タグ拡張",
     "relatedHeading": "関連サイト",
     "relatedArticle": "開発解説記事",
     "relatedSpec": "IIIF 3D Extension",
@@ -31,7 +32,9 @@
     "item1Date": "2026-05-25",
     "item1Title": "技術記事「IIIF 3D Viewer：Presentation API 4 コンバーターの実装」を公開しました",
     "item2Date": "2026-07-09",
-    "item2Title": "3Dモデルの表示を改善しました（IBL環境光による質感向上・アノテーションの正対フレーミング・初期表示の自動フィット）"
+    "item2Title": "3Dモデルの表示を改善しました（IBL環境光による質感向上・アノテーションの正対フレーミング・初期表示の自動フィット）",
+    "item3Date": "2026-09-28",
+    "item3Title": "アノテーションの表示を拡充しました（同じ場所の注釈をまとめて表示、キー付きタグ・作成者の表示、検索と絞り込み、視点の情報が無い注釈への移動の修正）"
   },
   "Input": {
     "title": "3Dモデルを表示",
@@ -41,6 +44,7 @@
     "sampleManifest1": "石淵家地球儀（菊池市立図書館所蔵）",
     "sampleManifest2": "石淵家地球儀（菊池市立図書館所蔵） - アノテーション付き",
     "sampleManifest3": "石淵家地球儀（菊池市立図書館所蔵） - 地図連携ビューア",
+    "sampleManifest4": "石淵家地球儀（菊池市立図書館所蔵） - 領域の共有・タグ拡張の例",
     "requiredUrl": "マニフェストURLを入力してください",
     "invalidUrl": "有効なURLを入力してください"
   },
@@ -74,7 +78,13 @@
     "viewDetails": "詳細を見る",
     "edit": "編集",
     "newAnnotation": "新しいアノテーション",
-    "seeAlso": "参照"
+    "seeAlso": "参照",
+    "sameRegion": "同じ場所の注釈 {count}件",
+    "creator": "作成者",
+    "searchPlaceholder": "アノテーションを検索",
+    "tags": "タグ",
+    "filteredCount": "{total}件中 {shown}件",
+    "clearFilter": "絞り込みを解除"
   },
   "Help": {
     "title": "ヘルプ"
@@ -114,6 +124,15 @@
     "step1": "1. 下記のフォームにIIIF ManifestのURLを入力してください。",
     "step2": "2. 「ビューアを開く」ボタンをクリックすると、3Dモデルが表示されます。",
     "step3": "3. マウスやタッチ操作でモデルを回転・ズームして、詳細を確認できます。",
-    "step4": "4. アノテーションがある場合は、モデル上に表示され、クリックで詳細を確認できます。"
+    "step4": "4. アノテーションがある場合は、モデル上に表示され、クリックで詳細を確認できます。",
+    "specs": "対応している規格",
+    "specP4Title": "IIIF Presentation API 4.0（草案）",
+    "specP4Note": "3D のシーン、PointSelector・WktSelector による位置指定、カメラの注釈に対応しています。",
+    "specP3Title": "IIIF Presentation API 3.0",
+    "specP3Note": "読み込み時に 4.0 の形に変換して表示します。",
+    "specGeorefTitle": "IIIF Georeference Extension",
+    "specGeorefNote": "地図連携ビューアで使います。平面の画像向けの形式を、3 次元の座標に広げて使っています。",
+    "specRegionTagTitle": "Shared Region and Keyed Tag Extension（独自の拡張・草案）",
+    "specRegionTagNote": "同じ場所を指す注釈をまとめて表示し、タグの label をキーとして表示します。"
   }
 }

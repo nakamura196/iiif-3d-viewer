@@ -7,6 +7,11 @@ export interface AnnotationLink {
   format?: string;
 }
 
+export interface AnnotationTag {
+  key?: string;
+  value: string;
+}
+
 export interface Annotation {
   id: string;
   creator: string;
@@ -22,6 +27,12 @@ export interface Annotation {
   };
   target_manifest?: string;
   seeAlso?: AnnotationLink[];
+  // id of the target Specific Resource. Annotations with the same regionId
+  // annotate the same region (Shared Region extension).
+  regionId?: string;
+  // Tagging bodies. `key` comes from the body's label (Keyed Tag extension).
+  tags?: AnnotationTag[];
+  created?: string;
   data: {
     body: {
       value: string;

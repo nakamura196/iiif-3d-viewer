@@ -15,7 +15,12 @@
  *          (zero orbit radius → nothing to look at, orbiting does nothing).
  *       2. the annotation `normal` (Voyager `direction`): place the camera in
  *          front of the feature, along its outward normal → head-on framing.
- *       3. heuristic: keep the current viewing direction, pull in to a framing
+ *       3. outward from the model center through the point. Without a camera
+ *          or normal this is the best guess at "in front of" the feature, and
+ *          it works for points on the far side of the model. (Keeping the
+ *          current viewing direction there would push the camera through the
+ *          model and leave it inside the mesh.)
+ *       4. heuristic: keep the current viewing direction, pull in to a framing
  *          distance derived from the model radius.
  */
 export type Vec3 = [number, number, number];
@@ -36,6 +41,8 @@ export interface FocusInput {
   camPos?: Vec3 | null;
   /** Optional annotation outward normal (Voyager `direction`) for head-on view. */
   normal?: Vec3 | null;
+  /** Optional model bounding-sphere center, for the outward fallback. */
+  center?: Vec3 | null;
 }
 
 export interface FocusResult {
@@ -49,7 +56,7 @@ const finiteVec = (v: Vec3 | null | undefined): v is Vec3 =>
 const len = (x: number, y: number, z: number) => Math.hypot(x, y, z);
 
 export function computeFocusCamera(input: FocusInput): FocusResult {
-  const { target, cameraPos, radius, camPos, normal } = input;
+  const { target, cameraPos, radius, camPos, normal, center } = input;
   const dist = Math.max(radius, 1e-6) * FOCUS_DISTANCE_FACTOR;
   const at: Vec3 = [...target];
 
@@ -74,7 +81,21 @@ export function computeFocusCamera(input: FocusInput): FocusResult {
     }
   }
 
-  // 3. Keep the current viewing direction; recenter + adjust distance.
+  // 3. Outward from the model center through the point.
+  if (finiteVec(center)) {
+    const ox = target[0] - center[0];
+    const oy = target[1] - center[1];
+    const oz = target[2] - center[2];
+    const ol = len(ox, oy, oz);
+    if (ol > 1e-6) {
+      return {
+        position: [target[0] + (ox / ol) * dist, target[1] + (oy / ol) * dist, target[2] + (oz / ol) * dist],
+        target: at,
+      };
+    }
+  }
+
+  // 4. Keep the current viewing direction; recenter + adjust distance.
   let dx = cameraPos[0] - target[0];
   let dy = cameraPos[1] - target[1];
   let dz = cameraPos[2] - target[2];

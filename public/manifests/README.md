@@ -11,6 +11,9 @@ v4 form directly (Scene, PointSelector / WKTSelector, PerspectiveCamera).
 
 - `sample-manifest.json` - 石淵家地球儀 (Ishibuchi Family Globe)
 - `sample-manifest-with-annotations.json` - 石淵家地球儀 (Ishibuchi Family Globe) - With Annotations
+- `sample-manifest-region-tags.json` - 石淵家地球儀 - Shared Region and Keyed Tag Extension の例。
+  正本は [iiif-region-tag-extension](https://github.com/nakamura196/iiif-region-tag-extension) の
+  `examples/manifest.json`。拡張の例を変えたら、ここにも複製し直す（試験がこのファイルを読む）
 
 ## Adding New Manifests
 
