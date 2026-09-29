@@ -59,6 +59,28 @@ describe('computeFocusCamera', () => {
     expect(dist(r.position, [0, 0, 0])).toBeCloseTo(10 * FOCUS_DISTANCE_FACTOR, 6);
   });
 
+  it('looks outward from the model center when there is no camPos/normal', () => {
+    // A point on the far side of a sphere: the old fallback (current viewing
+    // direction) put the camera inside the model.
+    const target: Vec3 = [0, 0, -1];
+    const r = computeFocusCamera({ target, cameraPos: [0, 0, 3], radius: 1, center: [0, 0, 0] });
+    expect(r.position[0]).toBeCloseTo(0, 6);
+    expect(r.position[2]).toBeCloseTo(-1 - FOCUS_DISTANCE_FACTOR, 6);
+    expect(dist(r.position, [0, 0, 0])).toBeGreaterThan(1);
+  });
+
+  it('prefers the normal over the outward direction', () => {
+    const r = computeFocusCamera({
+      target: [0, 0, -1], cameraPos: [0, 0, 3], radius: 1, center: [0, 0, 0], normal: [1, 0, 0],
+    });
+    expect(r.position[0]).toBeCloseTo(FOCUS_DISTANCE_FACTOR, 6);
+  });
+
+  it('falls back to the viewing direction when the point is the center', () => {
+    const r = computeFocusCamera({ target: [0, 0, 0], cameraPos: [0, 0, 10], radius: 4, center: [0, 0, 0] });
+    expect(r.position[2]).toBeCloseTo(4 * FOCUS_DISTANCE_FACTOR, 6);
+  });
+
   it('never produces NaN when the camera sits on the point with no normal', () => {
     const r = computeFocusCamera({ target: [5, 5, 5], cameraPos: [5, 5, 5], radius: 2 });
     expect(r.position.every((v) => Number.isFinite(v))).toBe(true);
