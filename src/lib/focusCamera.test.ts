@@ -145,3 +145,25 @@ describe('runFocusFlight', () => {
     expect(h.tweens.some((t) => t.target === h.camera.position)).toBe(true);
   });
 });
+
+describe('runFocusFlight — overlapping flights', () => {
+  it('re-enables OrbitControls when a second flight interrupts the first', () => {
+    // gsap.killTweensOf() drops the first flight's onComplete, so only the
+    // second flight's finish runs. It must restore the pre-flight state
+    // (enabled), not the disabled state the first flight left behind.
+    const controls = { target: { x: 0, y: 0, z: 0 }, update: vi.fn(), enabled: true };
+    const camera = { position: { x: 0, y: 0, z: 0 }, lookAt: vi.fn() };
+    const pending: Array<() => void> = [];
+    const gsap = {
+      to: (_t: unknown, vars: Record<string, unknown>) => {
+        if (typeof vars.onComplete === 'function') pending.push(vars.onComplete as () => void);
+      },
+      killTweensOf: () => { pending.length = 0; },
+    };
+    runFocusFlight({ camera, controls, gsap }, [1, 2, 3], [4, 5, 6]);
+    runFocusFlight({ camera, controls, gsap }, [7, 8, 9], [1, 1, 1]);
+    expect(controls.enabled).toBe(false); // still flying
+    pending.forEach((f) => f());
+    expect(controls.enabled).toBe(true);
+  });
+});
