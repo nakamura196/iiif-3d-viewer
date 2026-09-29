@@ -2,7 +2,8 @@
 // 3DSelector / camPos extension into IIIF 3D TSG (Presentation 4) form.
 //
 // - Canvas       -> Scene
-// - 3DSelector   -> PointSelector { x, y, z } or WKTSelector POLYGON Z
+// - 3DSelector   -> PointSelector { x, y, z } or WktSelector POLYGON Z
+// - target.id    -> kept, so annotations sharing a region stay grouped
 // - target string-> SpecificResource { source:[Scene], selector:[...] }
 // - camPos       -> separate PerspectiveCamera Annotation,
 //                   id = `${annotation.id}/camera`
@@ -36,6 +37,7 @@ interface LegacySelector {
 }
 
 interface LegacyTargetObject {
+  id?: string;
   source?: string | { id?: string; type?: string };
   selector?: LegacySelector;
 }
@@ -146,7 +148,7 @@ const convertCommentingAnnotation = (
   const camPos = asTriple(selector.camPos);
 
   const v4Selector = wkt
-    ? { type: 'WKTSelector' as const, value: wkt }
+    ? { type: 'WktSelector' as const, value: wkt }
     : value
       ? buildPointSelector(value)
       : null;
@@ -154,6 +156,7 @@ const convertCommentingAnnotation = (
   const annotationId = anno.id ?? `${sceneId}/anno/${Math.random().toString(36).slice(2, 10)}`;
 
   const v4Target: SpecificResourceV4 = {
+    ...(typeof target === 'object' && typeof target.id === 'string' ? { id: target.id } : {}),
     type: 'SpecificResource',
     source: buildSceneSource(sceneId),
     ...(v4Selector ? { selector: [v4Selector] } : {}),
@@ -168,6 +171,8 @@ const convertCommentingAnnotation = (
     target: v4Target,
     ...(anno.body !== undefined ? { body: anno.body as AnnotationV4['body'] } : {}),
     ...(anno.bodyValue !== undefined ? { bodyValue: anno.bodyValue } : {}),
+    ...(anno.creator !== undefined ? { creator: anno.creator as AnnotationV4['creator'] } : {}),
+    ...(typeof anno.created === 'string' ? { created: anno.created } : {}),
     ...(anno.seeAlso !== undefined
       ? { seeAlso: anno.seeAlso as AnnotationV4['seeAlso'] }
       : {}),

@@ -1,4 +1,4 @@
-import { Html } from '@react-three/drei';
+import { Html, Line } from '@react-three/drei';
 import { useMemo, useRef, useEffect } from 'react';
 import { Annotation } from '@/types/main';
 import * as THREE from 'three';
@@ -9,13 +9,16 @@ export default function AreaMarker({
   number,
   isOpen,
   onClick,
+  label,
 }: {
   annotation: Annotation;
   number: string;
   isOpen: boolean;
   onClick: () => void;
+  // Overrides the popup text, e.g. to list every annotation on a shared region.
+  label?: string;
 }) {
-  const content = annotation.data.body.label;
+  const content = label ?? annotation.data.body.label;
   const selector = annotation.data.target.selector;
   const area = selector.area;
   const geometryRef = useRef<THREE.BufferGeometry>(null);
@@ -50,6 +53,14 @@ export default function AreaMarker({
     return new THREE.Vector3(sum[0] / (length / 3), sum[1] / (length / 3), sum[2] / (length / 3));
   }, [area]);
 
+  // 輪郭線の頂点（最初の頂点に戻って閉じる）
+  const outline = useMemo(() => {
+    const pts: [number, number, number][] = [];
+    for (let i = 0; i + 2 < (area?.length ?? 0); i += 3) pts.push([area[i], area[i + 1], area[i + 2]]);
+    if (pts.length > 0) pts.push(pts[0]);
+    return pts;
+  }, [area]);
+
   // ジオメトリにインデックスを設定
   useEffect(() => {
     if (geometryRef.current && indices.length > 0) {
@@ -72,6 +83,8 @@ export default function AreaMarker({
         />
       </bufferGeometry>
       <meshBasicMaterial color="#fbbf24" opacity={0.3} transparent side={THREE.DoubleSide} />
+      {/* 選択中は輪郭線で示す（塗りを濃くすると下の模型が隠れるため） */}
+      {isOpen && <Line points={outline} color="#f97316" lineWidth={3} />}
       {isOpen && (
         <Html position={center}>
           <Popup content={number + '. ' + content} />

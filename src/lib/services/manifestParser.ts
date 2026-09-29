@@ -13,7 +13,7 @@ import type {
   SpecificResourceV4,
   WKTSelectorV4,
 } from '@/types/iiif';
-import type { Annotation } from '@/types/main';
+import type { Annotation, AnnotationTag } from '@/types/main';
 
 export interface GeoFeatureName {
   toponym: string;
@@ -59,7 +59,7 @@ const isPointSelector = (s: SelectorV4): s is PointSelectorV4 =>
   s?.type === 'PointSelector';
 
 const isWktSelector = (s: SelectorV4): s is WKTSelectorV4 =>
-  s?.type === 'WKTSelector';
+  s?.type === 'WktSelector' || s?.type === 'WKTSelector';
 
 const targetSelectors = (anno: AnnotationV4): SelectorV4[] => {
   const t = anno.target as SpecificResourceV4 | undefined;
@@ -144,14 +144,59 @@ const extractGeoFeatures = (annos: AnnotationV4[]): GeoFeature[] => {
   return out;
 };
 
-const stringifyBodyValue = (anno: AnnotationV4): { value: string; label: string } => {
-  if (typeof anno.bodyValue === 'string') {
-    return { value: anno.bodyValue, label: anno.bodyValue };
+// A label may be a plain string or a IIIF language map.
+const localizedString = (label: unknown): string => {
+  if (typeof label === 'string') return label;
+  if (Array.isArray(label)) return label.map(String).join(' ');
+  if (label && typeof label === 'object') {
+    const map = label as Record<string, unknown>;
+    for (const lang of ['none', 'ja', 'en', ...Object.keys(map)]) {
+      const v = map[lang];
+      if (Array.isArray(v) && v.length > 0) return v.map(String).join(' ');
+      if (typeof v === 'string') return v;
+    }
   }
-  const body = anno.body as { value?: unknown; label?: unknown; type?: string } | undefined;
-  const value = typeof body?.value === 'string' ? body.value : '';
-  const label = typeof body?.label === 'string' ? body.label : '';
-  return { value, label };
+  return '';
+};
+
+const hasPurpose = (body: Record<string, unknown>, purpose: string): boolean => {
+  const p = body.purpose;
+  return Array.isArray(p) ? p.includes(purpose) : p === purpose;
+};
+
+// The first non-tagging body is the description. Tagging bodies become tags,
+// with the body's label as the tag's key (Keyed Tag extension).
+const parseBodies = (
+  anno: AnnotationV4,
+): { value: string; label: string; tags: AnnotationTag[] } => {
+  if (typeof anno.bodyValue === 'string') {
+    return { value: anno.bodyValue, label: anno.bodyValue, tags: [] };
+  }
+  const raw = anno.body;
+  const bodies = (Array.isArray(raw) ? raw : raw ? [raw] : []) as Record<string, unknown>[];
+  const tags: AnnotationTag[] = [];
+  let main: Record<string, unknown> | undefined;
+  for (const body of bodies) {
+    if (!body || typeof body !== 'object') continue;
+    if (hasPurpose(body, 'tagging')) {
+      if (typeof body.value !== 'string' || body.value === '') continue;
+      const key = localizedString(body.label);
+      tags.push(key ? { key, value: body.value } : { value: body.value });
+    } else if (!main) {
+      main = body;
+    }
+  }
+  const value = typeof main?.value === 'string' ? main.value : '';
+  const label = localizedString(main?.label);
+  return { value, label, tags };
+};
+
+const creatorName = (creator: AnnotationV4['creator']): string => {
+  const list = Array.isArray(creator) ? creator : creator ? [creator] : [];
+  return list
+    .map((c) => (typeof c === 'string' ? c : c.name ?? c.nickname ?? c.id ?? ''))
+    .filter(Boolean)
+    .join(', ');
 };
 
 const buildAnnotation = (
@@ -190,11 +235,12 @@ const buildAnnotation = (
     ? ([point.normal[0], point.normal[1], point.normal[2]] as [number, number, number])
     : undefined;
 
-  const { value, label } = stringifyBodyValue(anno);
+  const { value, label, tags } = parseBodies(anno);
+  const regionId = typeof anno.target === 'object' ? anno.target.id : undefined;
 
   return {
     id: anno.id || `annotation-${fallbackIndex}`,
-    creator: '',
+    creator: creatorName(anno.creator),
     title: label,
     description: value,
     media: [],
@@ -202,6 +248,9 @@ const buildAnnotation = (
     bibliography: [],
     position: { x: position[0], y: position[1], z: position[2] },
     seeAlso: anno.seeAlso as AnnotationLinkV4[] | undefined,
+    ...(regionId ? { regionId } : {}),
+    ...(tags.length > 0 ? { tags } : {}),
+    ...(anno.created ? { created: anno.created } : {}),
     data: {
       body: { value, label },
       target: {

@@ -16,6 +16,10 @@ export default function HomeContent() {
 
   const newsItems = [
     {
+      date: tNews('item3Date'),
+      title: tNews('item3Title'),
+    },
+    {
       date: tNews('item2Date'),
       title: tNews('item2Title'),
     },
@@ -28,6 +32,14 @@ export default function HomeContent() {
   ];
 
   const steps = ['step1', 'step2', 'step3', 'step4'] as const;
+
+  // 対応している規格。note は、どう対応しているかの補足
+  const specs = [
+    { key: 'specP4', href: 'https://iiif.io/api/presentation/4.0/' },
+    { key: 'specP3', href: 'https://iiif.io/api/presentation/3.0/' },
+    { key: 'specGeoref', href: 'https://iiif.io/api/extension/georef/' },
+    { key: 'specRegionTag', href: 'https://github.com/nakamura196/iiif-region-tag-extension' },
+  ] as const;
 
   // ロケール別のデモ動画（YouTube videoId）。日本語版 / 英語版を出し分ける。
   const demoVideoId = locale === 'en' ? 'Wbhqz5s6ahA' : '_thPJDU_hLA';
@@ -121,6 +133,28 @@ export default function HomeContent() {
                   </div>
                 ))}
               </div>
+            </section>
+
+            <section className="mb-16">
+              <SectionHeading>{t('specs')}</SectionHeading>
+              <ul className="space-y-3">
+                {specs.map((spec) => (
+                  <li
+                    key={spec.key}
+                    className="bg-[var(--ds-surface)] border border-[var(--ds-border)] p-4 rounded-lg"
+                  >
+                    <a
+                      href={spec.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-[var(--ds-primary)] hover:underline"
+                    >
+                      {t(`${spec.key}Title`)}
+                    </a>
+                    <p className="mt-1 text-sm text-[var(--ds-fg-muted)]">{t(`${spec.key}Note`)}</p>
+                  </li>
+                ))}
+              </ul>
             </section>
 
             <section className="mb-16">

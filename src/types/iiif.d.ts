@@ -14,14 +14,19 @@ export interface PointSelectorV4 {
   normal?: [number, number, number];
 }
 
+// Presentation 4 spells it `WktSelector`. `WKTSelector` is the spelling this
+// viewer's converter emitted before; both are accepted on input.
 export interface WKTSelectorV4 {
-  type: 'WKTSelector';
+  type: 'WktSelector' | 'WKTSelector';
   value: string;
 }
 
 export type SelectorV4 = PointSelectorV4 | WKTSelectorV4;
 
 export interface SpecificResourceV4 {
+  // Required by Presentation 4. Annotations whose targets share this id
+  // annotate the same region (Shared Region extension).
+  id?: string;
   type: 'SpecificResource';
   source: Array<{ id?: string; type?: string }>;
   selector?: SelectorV4[];
@@ -32,7 +37,10 @@ export interface AnnotationBodyTextual {
   value: string;
   format?: string;
   language?: string;
-  label?: string;
+  // Presentation 4 requires a language map; plain strings are tolerated.
+  label?: string | IIIFLocalized;
+  // `tagging` marks a tag; its `label` is the tag's key (Keyed Tag extension).
+  purpose?: string | string[];
 }
 
 export interface AnnotationBodyModel {
@@ -57,8 +65,11 @@ export interface AnnotationV4 {
   id: string;
   type: 'Annotation';
   motivation: IIIFMotivation;
-  body?: AnnotationBodyV4;
+  body?: AnnotationBodyV4 | AnnotationBodyV4[];
   bodyValue?: string;
+  // W3C Web Annotation provenance.
+  creator?: string | { id?: string; name?: string; nickname?: string } | Array<string | { id?: string; name?: string; nickname?: string }>;
+  created?: string;
   target: SpecificResourceV4 | string;
   seeAlso?: AnnotationLinkV4[];
   // Linkage to a PerspectiveCamera annotation that captures the

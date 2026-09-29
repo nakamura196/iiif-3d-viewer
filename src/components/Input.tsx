@@ -7,6 +7,8 @@ import { withBasePath } from '@/lib/basePath';
 
 const SAMPLE = withBasePath('/manifests/sample-manifest.json');
 const SAMPLE_ANNOT = withBasePath('/manifests/sample-manifest-with-annotations.json');
+// Shared Region and Keyed Tag Extension の例（正本は iiif-region-tag-extension の examples/manifest.json）
+const SAMPLE_REGION_TAGS = withBasePath('/manifests/sample-manifest-region-tags.json');
 
 const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => void }) => {
   const t = useTranslations('Input');
@@ -98,6 +100,14 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
             >
               {t('sampleManifest3')}
             </Link>
+          </li>
+          <li>
+            <button
+              onClick={() => onSubmit(SAMPLE_REGION_TAGS, 'annotations')}
+              className="text-left text-[var(--ds-primary)] hover:underline"
+            >
+              {t('sampleManifest4')}
+            </button>
           </li>
         </ul>
       </div>

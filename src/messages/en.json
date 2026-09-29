@@ -18,6 +18,7 @@
     "sample1": "Globe",
     "sample2": "With annotations",
     "sample3": "Map viewer",
+    "sample4": "Shared regions & tags",
     "relatedHeading": "Related Sites",
     "relatedArticle": "Development article",
     "relatedSpec": "IIIF 3D Extension",
@@ -31,7 +32,9 @@
     "item1Date": "2026-05-25",
     "item1Title": "Published the article \"IIIF 3D Viewer: Implementing a Presentation API 4 Converter\"",
     "item2Date": "2026-07-09",
-    "item2Title": "Improved 3D model rendering: image-based lighting, head-on annotation framing, and auto-fit on load"
+    "item2Title": "Improved 3D model rendering: image-based lighting, head-on annotation framing, and auto-fit on load",
+    "item3Date": "2026-09-28",
+    "item3Title": "Richer annotation display: grouping of annotations on the same region, keyed tags and creators, search and filters, and a fix for flying to annotations without a camera"
   },
   "Input": {
     "title": "3D Model Viewer",
@@ -41,6 +44,7 @@
     "sampleManifest1": "Ishibuchi Family Globe (Kikuchi City Library Collection)",
     "sampleManifest2": "Ishibuchi Family Globe (Kikuchi City Library Collection) - With Annotations",
     "sampleManifest3": "Ishibuchi Family Globe (Kikuchi City Library Collection) - Map Viewer",
+    "sampleManifest4": "Ishibuchi Family Globe (Kikuchi City Library Collection) - Shared Region and Keyed Tag example",
     "requiredUrl": "Enter the Manifest URL",
     "invalidUrl": "Enter a valid URL"
   },
@@ -74,7 +78,13 @@
     "viewDetails": "View Details",
     "edit": "Edit",
     "newAnnotation": "New Annotation",
-    "seeAlso": "See Also"
+    "seeAlso": "See Also",
+    "sameRegion": "{count} annotations on the same region",
+    "creator": "Creator",
+    "searchPlaceholder": "Search annotations",
+    "tags": "Tags",
+    "filteredCount": "{shown} of {total}",
+    "clearFilter": "Clear filters"
   },
   "Help": {
     "title": "Help"
@@ -114,6 +124,15 @@
     "step1": "1. Enter the URL of an IIIF Manifest in the form below.",
     "step2": "2. Click the \"Open Viewer\" button to display the 3D model.",
     "step3": "3. Rotate and zoom the model with mouse or touch controls to examine details.",
-    "step4": "4. If annotations are present, they will be displayed on the model and can be clicked for details."
+    "step4": "4. If annotations are present, they will be displayed on the model and can be clicked for details.",
+    "specs": "Supported specifications",
+    "specP4Title": "IIIF Presentation API 4.0 (draft)",
+    "specP4Note": "3D Scenes, PointSelector and WktSelector targets, and camera annotations.",
+    "specP3Title": "IIIF Presentation API 3.0",
+    "specP3Note": "Converted to the 4.0 form on load.",
+    "specGeorefTitle": "IIIF Georeference Extension",
+    "specGeorefNote": "Used by the map viewer. The format, defined for 2D images, is extended to 3D coordinates.",
+    "specRegionTagTitle": "Shared Region and Keyed Tag Extension (own extension, draft)",
+    "specRegionTagNote": "Groups annotations that target the same region, and shows the label of a tag as its key."
   }
 }
