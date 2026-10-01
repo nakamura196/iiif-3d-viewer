@@ -13,7 +13,7 @@ import type {
   SpecificResourceV4,
   WKTSelectorV4,
 } from '@/types/iiif';
-import type { Annotation, AnnotationTag } from '@/types/main';
+import type { Annotation, AnnotationImage, AnnotationTag } from '@/types/main';
 
 export interface GeoFeatureName {
   toponym: string;
@@ -164,17 +164,41 @@ const hasPurpose = (body: Record<string, unknown>, purpose: string): boolean => 
   return Array.isArray(p) ? p.includes(purpose) : p === purpose;
 };
 
-// The first non-tagging body is the description. Tagging bodies become tags,
-// with the body's label as the tag's key (Keyed Tag extension).
+const firstOf = (v: unknown): Record<string, unknown> | undefined => {
+  const item = Array.isArray(v) ? v[0] : v;
+  return item && typeof item === 'object' ? (item as Record<string, unknown>) : undefined;
+};
+
+// An Image body (§5 Images in an annotation, Region & Tag extension draft).
+const parseImage = (body: Record<string, unknown>): AnnotationImage | null => {
+  if (typeof body.id !== 'string') return null;
+  const service = firstOf(body.service);
+  const homepage = firstOf(body.homepage);
+  const serviceId = service?.id ?? service?.['@id'];
+  return {
+    id: body.id,
+    ...(body.label ? { label: localizedString(body.label) } : {}),
+    ...(typeof body.format === 'string' ? { format: body.format } : {}),
+    ...(hasPurpose(body, 'linking') ? { purpose: 'linking' } : hasPurpose(body, 'describing') ? { purpose: 'describing' } : {}),
+    ...(typeof serviceId === 'string' ? { service: serviceId.replace(/\/info\.json$/, '') } : {}),
+    ...(typeof homepage?.id === 'string' ? { homepage: homepage.id } : {}),
+    ...(homepage?.label ? { homepageLabel: localizedString(homepage.label) } : {}),
+  };
+};
+
+// The first non-tagging, non-Image body is the description. Tagging bodies become tags,
+// with the body's label as the tag's key (Keyed Tag extension). Image bodies are
+// pictures of the annotated place.
 const parseBodies = (
   anno: AnnotationV4,
-): { value: string; label: string; tags: AnnotationTag[] } => {
+): { value: string; label: string; tags: AnnotationTag[]; images: AnnotationImage[] } => {
   if (typeof anno.bodyValue === 'string') {
-    return { value: anno.bodyValue, label: anno.bodyValue, tags: [] };
+    return { value: anno.bodyValue, label: anno.bodyValue, tags: [], images: [] };
   }
   const raw = anno.body;
   const bodies = (Array.isArray(raw) ? raw : raw ? [raw] : []) as Record<string, unknown>[];
   const tags: AnnotationTag[] = [];
+  const images: AnnotationImage[] = [];
   let main: Record<string, unknown> | undefined;
   for (const body of bodies) {
     if (!body || typeof body !== 'object') continue;
@@ -182,13 +206,16 @@ const parseBodies = (
       if (typeof body.value !== 'string' || body.value === '') continue;
       const key = localizedString(body.label);
       tags.push(key ? { key, value: body.value } : { value: body.value });
+    } else if (body.type === 'Image') {
+      const image = parseImage(body);
+      if (image) images.push(image);
     } else if (!main) {
       main = body;
     }
   }
   const value = typeof main?.value === 'string' ? main.value : '';
   const label = localizedString(main?.label);
-  return { value, label, tags };
+  return { value, label, tags, images };
 };
 
 const creatorName = (creator: AnnotationV4['creator']): string => {
@@ -235,7 +262,7 @@ const buildAnnotation = (
     ? ([point.normal[0], point.normal[1], point.normal[2]] as [number, number, number])
     : undefined;
 
-  const { value, label, tags } = parseBodies(anno);
+  const { value, label, tags, images } = parseBodies(anno);
   const regionId = typeof anno.target === 'object' ? anno.target.id : undefined;
 
   return {
@@ -250,6 +277,7 @@ const buildAnnotation = (
     seeAlso: anno.seeAlso as AnnotationLinkV4[] | undefined,
     ...(regionId ? { regionId } : {}),
     ...(tags.length > 0 ? { tags } : {}),
+    ...(images.length > 0 ? { images } : {}),
     ...(anno.created ? { created: anno.created } : {}),
     data: {
       body: { value, label },
@@ -314,3 +342,67 @@ export const geoFeaturesToAnnotations = (features: GeoFeature[]): Annotation[] =
       },
     };
   });
+
+export interface DefaultCamera {
+  position: [number, number, number];
+  // null: look at the model (the client decides)
+  lookAt: [number, number, number] | null;
+  fieldOfView?: number;
+}
+
+const pointOf = (sel: unknown): [number, number, number] | null => {
+  const s = sel as { type?: string; x?: unknown; y?: unknown; z?: unknown } | undefined;
+  if (s?.type !== 'PointSelector') return null;
+  const v = [s.x ?? 0, s.y ?? 0, s.z ?? 0].map(Number);
+  return v.every(Number.isFinite) ? (v as [number, number, number]) : null;
+};
+
+// The default Camera of the first Scene (Presentation 4.0, Cameras): the first Camera
+// painted into the Scene (a painting Annotation in Scene.items) without the `hidden`
+// behavior. Position from the target's PointSelector, direction from `lookAt` (an
+// embedded PointSelector, or a reference to an Annotation that targets a point).
+export const defaultCameraOf = (manifest: ManifestV4 | null | undefined): DefaultCamera | null => {
+  const scene = manifest?.items?.[0];
+  const annos = (scene?.items ?? []).flatMap((page) => page.items ?? []);
+  for (const anno of annos) {
+    if (!motivationsOf(anno).includes('painting')) continue;
+    const raw = anno.body as unknown;
+    const body = (Array.isArray(raw) ? raw[0] : raw) as Record<string, unknown> | undefined;
+    if (typeof body?.type !== 'string' || !/Camera$/.test(body.type)) continue;
+    const behavior = [(anno as { behavior?: unknown }).behavior, body.behavior].flat().filter(Boolean) as string[];
+    if (behavior.includes('hidden')) continue;
+    const position = targetSelectors(anno).map(pointOf).find(Boolean) ?? [0, 0, 0];
+    let lookAt = pointOf(body.lookAt);
+    const ref = (body.lookAt as { id?: string } | undefined)?.id;
+    if (!lookAt && ref) {
+      const target = [...annos, ...flattenAllPages(scene?.annotations)].find((a) => a.id === ref);
+      lookAt = target ? targetSelectors(target).map(pointOf).find(Boolean) ?? null : null;
+    }
+    const fov = Number(body.fieldOfView);
+    return { position, lookAt, ...(Number.isFinite(fov) && fov > 0 ? { fieldOfView: fov } : {}) };
+  }
+  return null;
+};
+
+// The commenting Annotation that describes a georeferenced feature: the one whose id
+// is the feature's @id, or ends with "#<@id>" / "/<@id>" (as in the sample manifests,
+// where both are minted from the same key).
+const describes = (anno: Annotation, featureId: string) =>
+  anno.id === featureId || anno.id.endsWith(`#${featureId}`) || anno.id.endsWith(`/${featureId}`);
+
+// Annotations for the georeferencing page: one per feature, keyed by the feature's id
+// (the map selects by it). A feature takes the description, images, tags and camera of
+// its commenting Annotation when there is one; otherwise it is built from the feature
+// alone (geoFeaturesToAnnotations). Depictions become images.
+export const geoAnnotations = (features: GeoFeature[], annotations: Annotation[]): Annotation[] => {
+  const plain = geoFeaturesToAnnotations(features);
+  return features.map((feature, idx) => {
+    const id = plain[idx].id;
+    const match = annotations.find((a) => describes(a, id));
+    const base = match ? { ...match, id } : plain[idx];
+    const depictions = (feature.depictions ?? []).filter((d) => typeof d['@id'] === 'string');
+    return !base.images?.length && depictions.length > 0
+      ? { ...base, images: depictions.map((d) => ({ id: d['@id'] })) }
+      : base;
+  });
+};
