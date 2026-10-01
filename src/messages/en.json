@@ -34,6 +34,8 @@
     "item2Date": "2026-07-09",
     "item2Title": "Improved 3D model rendering: image-based lighting, head-on annotation framing, and auto-fit on load",
     "item3Date": "2026-09-28",
+    "item4Date": "2026-10-01",
+    "item4Title": "Pictures and initial viewpoints: pictures attached to annotations, opening at the viewpoint given in the manifest, fitting the map to all pins with a \"Show all\" button in the map-linked viewer, and the same annotation cards on every page",
     "item3Title": "Richer annotation display: grouping of annotations on the same region, keyed tags and creators, search and filters, and a fix for flying to annotations without a camera"
   },
   "Input": {

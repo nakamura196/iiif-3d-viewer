@@ -16,6 +16,10 @@ export default function HomeContent() {
 
   const newsItems = [
     {
+      date: tNews('item4Date'),
+      title: tNews('item4Title'),
+    },
+    {
       date: tNews('item3Date'),
       title: tNews('item3Title'),
     },
