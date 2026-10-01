@@ -28,7 +28,12 @@ export default function AnnotationCard({
   return (
     <div
       ref={cardRef}
-      onClick={() => onSelect(annotation.id)}
+      // カードのどこを押しても選ぶ。ただしリンク（写真・参照など）を押したときは、
+      // そのリンクを開くだけにして選ばない
+      onClick={(e) => {
+        if ((e.target as HTMLElement).closest('a')) return;
+        onSelect(annotation.id);
+      }}
       className={`group rounded-lg shadow-sm hover:shadow-md transition-all duration-200 
           cursor-pointer border overflow-hidden
           ${
@@ -76,10 +81,7 @@ export default function AnnotationCard({
         />
 
         {annotation.images && annotation.images.length > 0 && (
-          <div
-            className="mt-3 pl-9"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="mt-3 pl-9">
             <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
               {t('images')}
             </div>
@@ -107,10 +109,7 @@ export default function AnnotationCard({
         )}
 
         {annotation.seeAlso && annotation.seeAlso.length > 0 && (
-          <div
-            className="mt-3 pl-9 text-sm"
-            onClick={(e) => e.stopPropagation()}
-          >
+          <div className="mt-3 pl-9 text-sm">
             <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
               {t('seeAlso')}
             </div>
