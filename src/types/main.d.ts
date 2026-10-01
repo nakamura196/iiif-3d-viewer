@@ -7,6 +7,19 @@ export interface AnnotationLink {
   format?: string;
 }
 
+// An Image body of an Annotation: a picture of the annotated place
+// (W3C Web Annotation allows several bodies; IIIF image service optional).
+export interface AnnotationImage {
+  id: string;
+  label?: string;
+  format?: string;
+  // IIIF Image API service base URL, used to request a thumbnail
+  service?: string;
+  // Page that describes the image (the holding institution's record)
+  homepage?: string;
+  homepageLabel?: string;
+}
+
 export interface AnnotationTag {
   key?: string;
   value: string;
@@ -32,6 +45,8 @@ export interface Annotation {
   regionId?: string;
   // Tagging bodies. `key` comes from the body's label (Keyed Tag extension).
   tags?: AnnotationTag[];
+  // Image bodies (pictures of the annotated place)
+  images?: AnnotationImage[];
   created?: string;
   data: {
     body: {

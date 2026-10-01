@@ -84,6 +84,7 @@
     "searchPlaceholder": "アノテーションを検索",
     "tags": "タグ",
     "filteredCount": "{total}件中 {shown}件",
+    "images": "画像",
     "clearFilter": "絞り込みを解除"
   },
   "Help": {

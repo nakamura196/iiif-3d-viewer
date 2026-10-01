@@ -13,7 +13,7 @@ import type {
   SpecificResourceV4,
   WKTSelectorV4,
 } from '@/types/iiif';
-import type { Annotation, AnnotationTag } from '@/types/main';
+import type { Annotation, AnnotationImage, AnnotationTag } from '@/types/main';
 
 export interface GeoFeatureName {
   toponym: string;
@@ -164,17 +164,40 @@ const hasPurpose = (body: Record<string, unknown>, purpose: string): boolean => 
   return Array.isArray(p) ? p.includes(purpose) : p === purpose;
 };
 
-// The first non-tagging body is the description. Tagging bodies become tags,
-// with the body's label as the tag's key (Keyed Tag extension).
+const firstOf = (v: unknown): Record<string, unknown> | undefined => {
+  const item = Array.isArray(v) ? v[0] : v;
+  return item && typeof item === 'object' ? (item as Record<string, unknown>) : undefined;
+};
+
+// An Image body (Region Images, §5 of the Region & Tag extension draft).
+const parseImage = (body: Record<string, unknown>): AnnotationImage | null => {
+  if (typeof body.id !== 'string') return null;
+  const service = firstOf(body.service);
+  const homepage = firstOf(body.homepage);
+  const serviceId = service?.id ?? service?.['@id'];
+  return {
+    id: body.id,
+    ...(body.label ? { label: localizedString(body.label) } : {}),
+    ...(typeof body.format === 'string' ? { format: body.format } : {}),
+    ...(typeof serviceId === 'string' ? { service: serviceId.replace(/\/info\.json$/, '') } : {}),
+    ...(typeof homepage?.id === 'string' ? { homepage: homepage.id } : {}),
+    ...(homepage?.label ? { homepageLabel: localizedString(homepage.label) } : {}),
+  };
+};
+
+// The first non-tagging, non-Image body is the description. Tagging bodies become tags,
+// with the body's label as the tag's key (Keyed Tag extension). Image bodies are
+// pictures of the annotated place.
 const parseBodies = (
   anno: AnnotationV4,
-): { value: string; label: string; tags: AnnotationTag[] } => {
+): { value: string; label: string; tags: AnnotationTag[]; images: AnnotationImage[] } => {
   if (typeof anno.bodyValue === 'string') {
-    return { value: anno.bodyValue, label: anno.bodyValue, tags: [] };
+    return { value: anno.bodyValue, label: anno.bodyValue, tags: [], images: [] };
   }
   const raw = anno.body;
   const bodies = (Array.isArray(raw) ? raw : raw ? [raw] : []) as Record<string, unknown>[];
   const tags: AnnotationTag[] = [];
+  const images: AnnotationImage[] = [];
   let main: Record<string, unknown> | undefined;
   for (const body of bodies) {
     if (!body || typeof body !== 'object') continue;
@@ -182,13 +205,16 @@ const parseBodies = (
       if (typeof body.value !== 'string' || body.value === '') continue;
       const key = localizedString(body.label);
       tags.push(key ? { key, value: body.value } : { value: body.value });
+    } else if (body.type === 'Image') {
+      const image = parseImage(body);
+      if (image) images.push(image);
     } else if (!main) {
       main = body;
     }
   }
   const value = typeof main?.value === 'string' ? main.value : '';
   const label = localizedString(main?.label);
-  return { value, label, tags };
+  return { value, label, tags, images };
 };
 
 const creatorName = (creator: AnnotationV4['creator']): string => {
@@ -235,7 +261,7 @@ const buildAnnotation = (
     ? ([point.normal[0], point.normal[1], point.normal[2]] as [number, number, number])
     : undefined;
 
-  const { value, label, tags } = parseBodies(anno);
+  const { value, label, tags, images } = parseBodies(anno);
   const regionId = typeof anno.target === 'object' ? anno.target.id : undefined;
 
   return {
@@ -250,6 +276,7 @@ const buildAnnotation = (
     seeAlso: anno.seeAlso as AnnotationLinkV4[] | undefined,
     ...(regionId ? { regionId } : {}),
     ...(tags.length > 0 ? { tags } : {}),
+    ...(images.length > 0 ? { images } : {}),
     ...(anno.created ? { created: anno.created } : {}),
     data: {
       body: { value, label },

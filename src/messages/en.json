@@ -84,6 +84,7 @@
     "searchPlaceholder": "Search annotations",
     "tags": "Tags",
     "filteredCount": "{shown} of {total}",
+    "images": "Images",
     "clearFilter": "Clear filters"
   },
   "Help": {

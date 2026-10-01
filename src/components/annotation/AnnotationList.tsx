@@ -8,6 +8,7 @@ import { useAtom } from 'jotai';
 import { useEffect, useMemo, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { SeeAlso, type PrimitivesExternalWebResource } from '@/components/iiif/primitives';
+import AnnotationImages from '@/components/annotation/AnnotationImages';
 import { groupByRegion } from '@/lib/regions';
 import {
   EMPTY_FILTER,
@@ -138,6 +139,18 @@ export default function AnnotationList() {
           className="text-gray-700 dark:text-gray-300 text-sm pl-9"
           dangerouslySetInnerHTML={{ __html: annotation.data.body.value }}
         />
+
+        {annotation.images && annotation.images.length > 0 && (
+          <div
+            className="mt-3 pl-9"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+              {t('images')}
+            </div>
+            <AnnotationImages images={annotation.images} />
+          </div>
+        )}
 
         {annotation.tags && annotation.tags.length > 0 && (
           <div className="mt-3 pl-9 flex flex-wrap gap-1.5">
