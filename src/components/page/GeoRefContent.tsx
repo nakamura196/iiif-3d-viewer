@@ -12,7 +12,8 @@ import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
 import MapView from '@/components/map/MapView';
 import { convertToV4 } from '@/lib/services/manifestConverter';
-import { parseManifestV4, geoFeaturesToAnnotations, type GeoFeature } from '@/lib/services/manifestParser';
+import { parseManifestV4, geoAnnotations, type GeoFeature } from '@/lib/services/manifestParser';
+import AnnotationCard from '@/components/annotation/AnnotationCard';
 import { useTranslations, useLocale } from 'next-intl';
 
 // マニフェストからattributionを取得するヘルパー関数
@@ -32,7 +33,7 @@ const GeoRefContent: NextPage = () => {
   const [, setManifest] = useAtom(manifestAtom);
   const [glbUrl, setGlbUrl] = useState<string | null>(null);
   const [attribution, setAttribution] = useState<string | undefined>(undefined);
-  const [, setAnnotations] = useAtom(annotationsAtom);
+  const [annotations, setAnnotations] = useAtom(annotationsAtom);
   const [selectedAnnotationId, setSelectedAnnotationId] = useAtom(selectedAnnotationIdAtom);
   const [geoFeatures, setGeoFeatures] = useState<GeoFeature[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -51,11 +52,11 @@ const GeoRefContent: NextPage = () => {
     fetchManifest(manifestUrl).then((raw) => {
       if (!raw) return;
       const manifest = convertToV4(raw);
-      const { modelUrl, geoFeatures } = parseManifestV4(manifest);
+      const { modelUrl, geoFeatures, annotations } = parseManifestV4(manifest);
       setGlbUrl(modelUrl);
       setManifest(manifest);
       setAttribution(getAttribution(manifest as unknown as Record<string, unknown>, locale));
-      setAnnotations(geoFeaturesToAnnotations(geoFeatures));
+      setAnnotations(geoAnnotations(geoFeatures, annotations));
       setGeoFeatures(geoFeatures);
     });
   }, [manifestUrl, setManifest, setAnnotations, locale]);
@@ -113,7 +114,7 @@ const GeoRefContent: NextPage = () => {
               )}
             </div>
             {/* Annotations */}
-            <div className="h-[40%] lg:h-full lg:w-64 lg:flex-none relative bg-white dark:bg-gray-800 flex flex-col">
+            <div className="h-[40%] lg:h-full lg:w-96 lg:flex-none relative bg-white dark:bg-gray-800 flex flex-col">
               <div className="sticky top-0 bg-white dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700 z-10">
                 <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('annotations')} ({geoFeatures.length})
@@ -148,7 +149,8 @@ const GeoRefContent: NextPage = () => {
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-2">
                 {geoFeatures
-                  .filter((feature) => {
+                  .map((feature, index) => ({ feature, index })) // 番号と注記は絞り込む前の並びで引く
+                  .filter(({ feature }) => {
                     const query = searchQuery.toLowerCase();
                     // Search in title
                     if (feature.properties.title.toLowerCase().includes(query)) return true;
@@ -156,82 +158,43 @@ const GeoRefContent: NextPage = () => {
                     if (feature.names?.some(name => name.toponym.toLowerCase().includes(query))) return true;
                     return false;
                   })
-                  .map((feature, index) => {
-                    const thumbnail = feature.depictions?.[0]?.['@id'];
+                  .map(({ feature, index }) => {
+                    // 中身（説明・画像・タグ・参照）は 3D の画面の一覧と同じカードで出す
+                    const annotation = annotations[index];
+                    if (!annotation) return null;
                     const wikipediaLink = feature.links?.find(link => link.type === 'primaryTopicOf')?.identifier;
                     const altNames = feature.names?.filter(name => name.toponym !== feature.properties.title);
-
-                    const featureId = feature['@id'] || `geo-feature-${index}`;
                     return (
-                      <div
-                        key={featureId}
-                        ref={(el) => {
-                          if (el) {
-                            annotationRefs.current.set(featureId, el);
-                          }
+                      <AnnotationCard
+                        key={annotation.id}
+                        annotation={annotation}
+                        number={index + 1}
+                        selected={selectedAnnotationId === annotation.id}
+                        onSelect={handleFeatureClick}
+                        cardRef={(el) => {
+                          if (el) annotationRefs.current.set(annotation.id, el);
                         }}
-                        className={`
-                          w-full rounded-lg text-sm text-left transition-colors overflow-hidden
-                          ${selectedAnnotationId === featureId
-                            ? 'bg-blue-500 text-white'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                          }
-                        `}
                       >
-                        <button
-                          onClick={() => handleFeatureClick(featureId)}
-                          className="w-full px-4 py-3 text-left"
-                        >
-                          <div className="flex items-start">
-                            {thumbnail ? (
-                              <div className="w-10 h-10 flex-shrink-0 mr-3 rounded overflow-hidden bg-gray-200 dark:bg-gray-600">
-                                <img
-                                  src={thumbnail}
-                                  alt={feature.properties.title}
-                                  className="w-full h-full object-cover"
-                                  onError={(e) => {
-                                    (e.target as HTMLImageElement).style.display = 'none';
-                                  }}
-                                />
-                              </div>
-                            ) : (
-                              <span className="text-xs opacity-70 mr-2 mt-0.5">{index + 1}.</span>
-                            )}
-                            <div className="flex-1 min-w-0">
-                              <div className="font-medium">{feature.properties.title}</div>
-                              {altNames && altNames.length > 0 && (
-                                <div className={`text-xs mt-0.5 truncate ${
-                                  selectedAnnotationId === featureId
-                                    ? 'text-blue-100'
-                                    : 'text-gray-500 dark:text-gray-400'
-                                }`}>
-                                  {altNames.map(n => n.toponym).join(', ')}
-                                </div>
-                              )}
-                            </div>
+                        {/* 地名の別名と Wikipedia は、georef の地物（Linked Places 形式）だけが持つ */}
+                        {altNames && altNames.length > 0 && (
+                          <div className="mt-2 pl-9 text-xs text-gray-500 dark:text-gray-400">
+                            {altNames.map(n => n.toponym).join(', ')}
                           </div>
-                        </button>
+                        )}
                         {wikipediaLink && (
-                          <div className={`px-4 pb-2 ${thumbnail ? 'pl-[68px]' : 'pl-8'}`}>
+                          <div className="mt-1 pl-9">
                             <a
                               href={wikipediaLink}
                               target="_blank"
                               rel="noopener noreferrer"
                               onClick={(e) => e.stopPropagation()}
-                              className={`inline-flex items-center text-xs hover:underline ${
-                                selectedAnnotationId === featureId
-                                  ? 'text-blue-100 hover:text-white'
-                                  : 'text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300'
-                              }`}
+                              className="text-xs text-blue-500 dark:text-blue-400 hover:underline"
                             >
-                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                              </svg>
                               Wikipedia
                             </a>
                           </div>
                         )}
-                      </div>
+                      </AnnotationCard>
                     );
                   })}
                 {geoFeatures.length === 0 && (

@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useTheme } from 'next-themes';
-import { useLocale } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 interface GeoFeatureName {
   toponym: string;
@@ -46,6 +46,33 @@ interface MapViewProps {
   onFeatureClick: (id: string) => void;
 }
 
+// 「全体を表示」ボタン。手で拡大・移動したあと、すべてのピンが収まる縮尺に戻す。
+// 拡大・縮小のボタン（NavigationControl）と同じ見た目の枠に入れる
+class FitAllControl implements maplibregl.IControl {
+  private container?: HTMLDivElement;
+  constructor(private readonly label: string, private readonly onFit: () => void) {}
+  onAdd() {
+    const container = document.createElement('div');
+    container.className = 'maplibregl-ctrl maplibregl-ctrl-group';
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.title = this.label;
+    button.setAttribute('aria-label', this.label);
+    // 四隅の括弧（全体に合わせる）の印
+    button.innerHTML =
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+      'stroke-linecap="round" stroke-linejoin="round" style="margin:auto;display:block" aria-hidden="true">' +
+      '<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>';
+    button.addEventListener('click', this.onFit);
+    container.appendChild(button);
+    this.container = container;
+    return container;
+  }
+  onRemove() {
+    this.container?.remove();
+  }
+}
+
 export default function MapView({ features, selectedId, onFeatureClick }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
@@ -53,6 +80,7 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
   const activePopupRef = useRef<maplibregl.Popup | null>(null);
   const { resolvedTheme } = useTheme();
   const locale = useLocale();
+  const t = useTranslations('GeoRef');
   const mapReadyRef = useRef(false);
   const featuresRef = useRef(features);
   const selectedIdRef = useRef(selectedId);
@@ -158,13 +186,21 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
       markersRef.current.set(featureId, marker);
     });
 
-    // Fit bounds if there are features
-    if (currentFeatures.length > 0) {
-      const bounds = new maplibregl.LngLatBounds();
-      currentFeatures.forEach(f => bounds.extend(f.geometry.coordinates));
-      map.current.fitBounds(bounds, { padding: 50, maxZoom: 5 });
-    }
+    fitAll(0);
   };
+
+  // すべてのピンが収まるように合わせる（地球儀なら大陸の規模、街なら通りの規模になる）。
+  // ピンが 1 つ・ごく近いときに寄りすぎないよう、上限は建物が見える程度。
+  // 開いたときと、「全体を表示」ボタンを押したときに使う
+  const fitAll = (duration = 600) => {
+    const currentFeatures = featuresRef.current;
+    if (!map.current || currentFeatures.length === 0) return;
+    const bounds = new maplibregl.LngLatBounds();
+    currentFeatures.forEach(f => bounds.extend(f.geometry.coordinates));
+    map.current.fitBounds(bounds, { padding: 50, maxZoom: 17, duration });
+  };
+  const fitAllRef = useRef(fitAll);
+  fitAllRef.current = fitAll;
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -190,6 +226,7 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
     });
 
     map.current.addControl(new maplibregl.NavigationControl());
+    map.current.addControl(new FitAllControl(t('fitAll'), () => fitAllRef.current()));
 
     // スタイル読み込み後に言語を設定してマーカーを追加
     map.current.on('load', () => {
@@ -243,9 +280,10 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
     if (selectedId) {
       const feature = features.find((f, idx) => (f['@id'] || `geo-feature-${idx}`) === selectedId);
       if (feature && map.current) {
+        // 選んだピンへ移る。今より引かない（全体に合わせた拡大のまま、中心だけ動かす）
         map.current.flyTo({
           center: feature.geometry.coordinates,
-          zoom: 4,
+          zoom: Math.max(map.current.getZoom(), 4),
           duration: 1000
         });
       }
