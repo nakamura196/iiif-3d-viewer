@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import plainSample from '../../../public/manifests/sample-manifest-with-annotations.json';
 import { convertToV4 } from './manifestConverter';
-import { parseManifestV4 } from './manifestParser';
+import { parseManifestV4, geoAnnotations, defaultCameraOf, type GeoFeature } from './manifestParser';
 import { thumbnailOf } from '@/components/annotation/AnnotationImages';
 
 const load = (manifest: unknown) => parseManifestV4(convertToV4(manifest));
@@ -81,5 +81,54 @@ describe('Image bodies (pictures of the annotated place)', () => {
 
   it('leaves manifests without Image bodies unchanged', () => {
     for (const a of load(plainSample).annotations) expect(a.images).toBeUndefined();
+  });
+});
+
+describe('geoAnnotations (georeferencing page)', () => {
+  const feature = (id: string, depiction?: string): GeoFeature => ({
+    '@id': id,
+    type: 'Feature',
+    geometry: { type: 'Point', coordinates: [-123.1, 49.28] },
+    properties: { title: id, resourceCoords: [1, 2, 3] },
+    ...(depiction ? { depictions: [{ '@id': depiction }] } : {}),
+  });
+
+  it('takes the description, images and camera of the commenting annotation with the same key', () => {
+    const [a] = load(manifestWith([
+      { type: 'TextualBody', value: 'text', label: { none: ['label'] } },
+      { id: 'https://example.org/p.jpg', type: 'Image' },
+    ])).annotations; // id https://example.org/m#a1
+    const [g] = geoAnnotations([feature('a1')], [a]);
+    expect(g.id).toBe('a1'); // the map selects by the feature id
+    expect(g.description).toBe('text');
+    expect(g.images).toHaveLength(1);
+  });
+
+  it('falls back to the feature alone, with its depictions as images', () => {
+    const [g] = geoAnnotations([feature('x', 'https://example.org/d.jpg')], []);
+    expect(g.title).toBe('x');
+    expect(g.images).toEqual([{ id: 'https://example.org/d.jpg' }]);
+    expect(g.data.target.selector.camPos).toEqual([1.5, 3, 4.5]);
+  });
+});
+
+describe('defaultCameraOf (Presentation 4.0 default Camera)', () => {
+  const withCamera = (camera: Record<string, unknown>, extra: Record<string, unknown> = {}) => {
+    const m = manifestWith([]) as any;
+    m.items[0].items = [{ id: 'p', type: 'AnnotationPage', items: [{
+      id: 'cam', type: 'Annotation', motivation: ['painting'], body: camera, ...extra,
+      target: { type: 'SpecificResource', source: [{ id: scene, type: 'Scene' }], selector: [{ type: 'PointSelector', x: -800, y: 1000, z: 900 }] },
+    }] }];
+    return m;
+  };
+
+  it('reads the first Camera painted into the Scene, with lookAt and fieldOfView', () => {
+    expect(defaultCameraOf(convertToV4(withCamera({ type: 'PerspectiveCamera', lookAt: { type: 'PointSelector', x: 70, y: 0, z: 60 }, fieldOfView: 50 }))))
+      .toEqual({ position: [-800, 1000, 900], lookAt: [70, 0, 60], fieldOfView: 50 });
+  });
+
+  it('skips a hidden camera, and returns null when there is none', () => {
+    expect(defaultCameraOf(convertToV4(withCamera({ type: 'PerspectiveCamera' }, { behavior: ['hidden'] })))).toBeNull();
+    expect(defaultCameraOf(convertToV4(plainSample))).toBeNull();
   });
 });

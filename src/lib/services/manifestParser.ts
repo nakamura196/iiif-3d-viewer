@@ -341,3 +341,67 @@ export const geoFeaturesToAnnotations = (features: GeoFeature[]): Annotation[] =
       },
     };
   });
+
+export interface DefaultCamera {
+  position: [number, number, number];
+  // null: look at the model (the client decides)
+  lookAt: [number, number, number] | null;
+  fieldOfView?: number;
+}
+
+const pointOf = (sel: unknown): [number, number, number] | null => {
+  const s = sel as { type?: string; x?: unknown; y?: unknown; z?: unknown } | undefined;
+  if (s?.type !== 'PointSelector') return null;
+  const v = [s.x ?? 0, s.y ?? 0, s.z ?? 0].map(Number);
+  return v.every(Number.isFinite) ? (v as [number, number, number]) : null;
+};
+
+// The default Camera of the first Scene (Presentation 4.0, Cameras): the first Camera
+// painted into the Scene (a painting Annotation in Scene.items) without the `hidden`
+// behavior. Position from the target's PointSelector, direction from `lookAt` (an
+// embedded PointSelector, or a reference to an Annotation that targets a point).
+export const defaultCameraOf = (manifest: ManifestV4 | null | undefined): DefaultCamera | null => {
+  const scene = manifest?.items?.[0];
+  const annos = (scene?.items ?? []).flatMap((page) => page.items ?? []);
+  for (const anno of annos) {
+    if (!motivationsOf(anno).includes('painting')) continue;
+    const raw = anno.body as unknown;
+    const body = (Array.isArray(raw) ? raw[0] : raw) as Record<string, unknown> | undefined;
+    if (typeof body?.type !== 'string' || !/Camera$/.test(body.type)) continue;
+    const behavior = [(anno as { behavior?: unknown }).behavior, body.behavior].flat().filter(Boolean) as string[];
+    if (behavior.includes('hidden')) continue;
+    const position = targetSelectors(anno).map(pointOf).find(Boolean) ?? [0, 0, 0];
+    let lookAt = pointOf(body.lookAt);
+    const ref = (body.lookAt as { id?: string } | undefined)?.id;
+    if (!lookAt && ref) {
+      const target = [...annos, ...flattenAllPages(scene?.annotations)].find((a) => a.id === ref);
+      lookAt = target ? targetSelectors(target).map(pointOf).find(Boolean) ?? null : null;
+    }
+    const fov = Number(body.fieldOfView);
+    return { position, lookAt, ...(Number.isFinite(fov) && fov > 0 ? { fieldOfView: fov } : {}) };
+  }
+  return null;
+};
+
+// The commenting Annotation that describes a georeferenced feature: the one whose id
+// is the feature's @id, or ends with "#<@id>" / "/<@id>" (as in the sample manifests,
+// where both are minted from the same key).
+const describes = (anno: Annotation, featureId: string) =>
+  anno.id === featureId || anno.id.endsWith(`#${featureId}`) || anno.id.endsWith(`/${featureId}`);
+
+// Annotations for the georeferencing page: one per feature, keyed by the feature's id
+// (the map selects by it). A feature takes the description, images, tags and camera of
+// its commenting Annotation when there is one; otherwise it is built from the feature
+// alone (geoFeaturesToAnnotations). Depictions become images.
+export const geoAnnotations = (features: GeoFeature[], annotations: Annotation[]): Annotation[] => {
+  const plain = geoFeaturesToAnnotations(features);
+  return features.map((feature, idx) => {
+    const id = plain[idx].id;
+    const match = annotations.find((a) => describes(a, id));
+    const base = match ? { ...match, id } : plain[idx];
+    const depictions = (feature.depictions ?? []).filter((d) => typeof d['@id'] === 'string');
+    return !base.images?.length && depictions.length > 0
+      ? { ...base, images: depictions.map((d) => ({ id: d['@id'] })) }
+      : base;
+  });
+};

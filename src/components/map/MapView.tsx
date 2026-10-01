@@ -162,7 +162,9 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
     if (currentFeatures.length > 0) {
       const bounds = new maplibregl.LngLatBounds();
       currentFeatures.forEach(f => bounds.extend(f.geometry.coordinates));
-      map.current.fitBounds(bounds, { padding: 50, maxZoom: 5 });
+      // すべてのピンが収まるように合わせる（地球儀なら大陸の規模、街なら通りの規模になる）。
+      // ピンが 1 つ・ごく近いときに寄りすぎないよう、上限は建物が見える程度
+      map.current.fitBounds(bounds, { padding: 50, maxZoom: 17, duration: 0 });
     }
   };
 
@@ -243,9 +245,10 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
     if (selectedId) {
       const feature = features.find((f, idx) => (f['@id'] || `geo-feature-${idx}`) === selectedId);
       if (feature && map.current) {
+        // 選んだピンへ移る。今より引かない（全体に合わせた拡大のまま、中心だけ動かす）
         map.current.flyTo({
           center: feature.geometry.coordinates,
-          zoom: 4,
+          zoom: Math.max(map.current.getZoom(), 4),
           duration: 1000
         });
       }
