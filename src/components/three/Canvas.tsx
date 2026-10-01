@@ -1,7 +1,7 @@
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html, Environment } from '@react-three/drei';
 import { Suspense, useEffect, useState, useRef, useImperativeHandle, forwardRef, useCallback } from 'react';
-import Scene from '@/components/three/Scene';
+import Scene, { type PlacedModel } from '@/components/three/Scene';
 import { useProgress } from '@react-three/drei';
 import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
@@ -124,10 +124,12 @@ CameraController.displayName = 'CameraController';
 
 interface CanvasComponentProps {
   glbUrl: string;
+  // other models painted into the Scene, drawn alongside the main one
+  extraModels?: PlacedModel[];
   attribution?: string;
 }
 
-const CanvasComponent = ({ glbUrl, attribution }: CanvasComponentProps) => {
+const CanvasComponent = ({ glbUrl, extraModels, attribution }: CanvasComponentProps) => {
   const { resolvedTheme } = useTheme();
   const t = useTranslations('Viewer');
   const [mounted, setMounted] = useState(false);
@@ -183,7 +185,7 @@ const CanvasComponent = ({ glbUrl, attribution }: CanvasComponentProps) => {
         }}
       >
         <Suspense fallback={<LoadingScreen loadingText={t('loading')} />}>
-          <Scene glbUrl={glbUrl} />
+          <Scene glbUrl={glbUrl} extraModels={extraModels} />
           <OrbitControls
             ref={controlsRef}
             makeDefault

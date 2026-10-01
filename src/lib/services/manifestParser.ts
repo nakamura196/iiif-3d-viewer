@@ -14,6 +14,7 @@ import type {
   WKTSelectorV4,
 } from '@/types/iiif';
 import type { Annotation, AnnotationImage, AnnotationTag } from '@/types/main';
+import { paintedModelsOf } from '@/lib/services/paintedModels';
 
 export interface GeoFeatureName {
   toponym: string;
@@ -120,17 +121,10 @@ const cameraIndex = (annos: AnnotationV4[]): Map<string, [number, number, number
   return map;
 };
 
-const extractModelUrl = (scene: SceneV4 | undefined): string | null => {
-  if (!scene) return null;
-  for (const page of scene.items ?? []) {
-    for (const anno of page.items ?? []) {
-      if (!motivationsOf(anno).includes('painting')) continue;
-      const body = anno.body as { id?: string; type?: string } | undefined;
-      if (body?.type === 'Model' && typeof body.id === 'string') return body.id;
-    }
-  }
-  return null;
-};
+// The model shown when only one is used: the first painted Model (for a Choice,
+// its first item — the default).
+const extractModelUrl = (scene: SceneV4 | undefined): string | null =>
+  paintedModelsOf(scene)[0]?.options[0]?.url ?? null;
 
 const extractGeoFeatures = (annos: AnnotationV4[]): GeoFeature[] => {
   const out: GeoFeature[] = [];
