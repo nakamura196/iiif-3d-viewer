@@ -102,6 +102,7 @@
     "annotations": "Annotations",
     "searchPlaceholder": "Search...",
     "noAnnotations": "No annotations",
+    "fitAll": "Show all",
     "noResults": "No results found"
   },
   "Viewer": {

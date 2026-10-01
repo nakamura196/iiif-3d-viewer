@@ -102,6 +102,7 @@
     "annotations": "アノテーション",
     "searchPlaceholder": "検索...",
     "noAnnotations": "アノテーションがありません",
+    "fitAll": "全体を表示",
     "noResults": "結果が見つかりません"
   },
   "Viewer": {
