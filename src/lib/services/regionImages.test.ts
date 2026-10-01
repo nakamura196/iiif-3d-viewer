@@ -79,6 +79,16 @@ describe('Image bodies (pictures of the annotated place)', () => {
     expect(a.images).toHaveLength(1);
   });
 
+  it('keeps the W3C purpose: linking = a related resource, describing = the place', () => {
+    const [a] = load(manifestWith([
+      { type: 'TextualBody', value: 'text', label: { none: ['label'] } },
+      { id: 'https://example.org/place.jpg', type: 'Image', purpose: 'describing' },
+      { id: 'https://example.org/related.jpg', type: 'Image', purpose: ['linking'] },
+      { id: 'https://example.org/plain.jpg', type: 'Image' },
+    ])).annotations;
+    expect(a.images?.map((i) => i.purpose)).toEqual(['describing', 'linking', undefined]);
+  });
+
   it('leaves manifests without Image bodies unchanged', () => {
     for (const a of load(plainSample).annotations) expect(a.images).toBeUndefined();
   });

@@ -15,6 +15,9 @@ export interface AnnotationImage {
   format?: string;
   // IIIF Image API service base URL, used to request a thumbnail
   service?: string;
+  // W3C purpose of the body: 'linking' = a related resource; otherwise the image
+  // shows the annotated place ('describing' or none)
+  purpose?: string;
   // Page that describes the image (the holding institution's record)
   homepage?: string;
   homepageLabel?: string;

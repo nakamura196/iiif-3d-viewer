@@ -87,6 +87,7 @@
     "tags": "Tags",
     "filteredCount": "{shown} of {total}",
     "images": "Images",
+    "relatedImages": "Related resources",
     "clearFilter": "Clear filters"
   },
   "Help": {

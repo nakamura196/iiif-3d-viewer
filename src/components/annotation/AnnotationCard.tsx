@@ -80,13 +80,19 @@ export default function AnnotationCard({
           dangerouslySetInnerHTML={{ __html: annotation.data.body.value }}
         />
 
-        {annotation.images && annotation.images.length > 0 && (
-          <div className="mt-3 pl-9">
-            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
-              {t('images')}
+        {/* 画像は、場所そのものの写真と、関連する外部の資料（purpose: linking）を分けて見せる */}
+        {[
+          { key: 'images', items: annotation.images?.filter((i) => i.purpose !== 'linking') ?? [] },
+          { key: 'relatedImages', items: annotation.images?.filter((i) => i.purpose === 'linking') ?? [] },
+        ].map(({ key, items }) =>
+          items.length > 0 && (
+            <div key={key} className="mt-3 pl-9">
+              <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+                {t(key)}
+              </div>
+              <AnnotationImages images={items} />
             </div>
-            <AnnotationImages images={annotation.images} />
-          </div>
+          ),
         )}
 
         {annotation.tags && annotation.tags.length > 0 && (

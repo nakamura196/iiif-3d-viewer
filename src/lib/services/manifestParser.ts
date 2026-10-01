@@ -169,7 +169,7 @@ const firstOf = (v: unknown): Record<string, unknown> | undefined => {
   return item && typeof item === 'object' ? (item as Record<string, unknown>) : undefined;
 };
 
-// An Image body (Region Images, §5 of the Region & Tag extension draft).
+// An Image body (§5 Images in an annotation, Region & Tag extension draft).
 const parseImage = (body: Record<string, unknown>): AnnotationImage | null => {
   if (typeof body.id !== 'string') return null;
   const service = firstOf(body.service);
@@ -179,6 +179,7 @@ const parseImage = (body: Record<string, unknown>): AnnotationImage | null => {
     id: body.id,
     ...(body.label ? { label: localizedString(body.label) } : {}),
     ...(typeof body.format === 'string' ? { format: body.format } : {}),
+    ...(hasPurpose(body, 'linking') ? { purpose: 'linking' } : hasPurpose(body, 'describing') ? { purpose: 'describing' } : {}),
     ...(typeof serviceId === 'string' ? { service: serviceId.replace(/\/info\.json$/, '') } : {}),
     ...(typeof homepage?.id === 'string' ? { homepage: homepage.id } : {}),
     ...(homepage?.label ? { homepageLabel: localizedString(homepage.label) } : {}),
