@@ -1,10 +1,14 @@
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html, Environment } from '@react-three/drei';
-import { Suspense, useEffect, useState, useRef, useImperativeHandle, forwardRef, useCallback } from 'react';
-import Scene, { type PlacedModel } from '@/components/three/Scene';
+import { Suspense, useEffect, useState, useRef, useImperativeHandle, forwardRef, useCallback, useMemo } from 'react';
+import Scene, { type PlacedModel, type ViewHandle } from '@/components/three/Scene';
+import { useAtom } from 'jotai';
+import { manifestAtom } from '@/atoms/infoPanelAtom';
+import { sceneCamerasOf } from '@/lib/services/manifestParser';
+import { labelIn } from '@/lib/services/paintedModels';
 import { useProgress } from '@react-three/drei';
 import { useTheme } from 'next-themes';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import * as THREE from 'three';
 import type { OrbitControls as OrbitControlsType } from 'three-stdlib';
 
@@ -122,6 +126,10 @@ const CameraController = forwardRef<{ zoomIn: () => void; zoomOut: () => void },
 );
 CameraController.displayName = 'CameraController';
 
+const VIEW_BUTTON = 'min-h-[29px] px-2 text-xs transition-colors';
+const VIEW_BUTTON_IDLE =
+  'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700';
+
 interface CanvasComponentProps {
   glbUrl: string;
   // other models painted into the Scene, drawn alongside the main one
@@ -136,6 +144,12 @@ const CanvasComponent = ({ glbUrl, extraModels, attribution }: CanvasComponentPr
   const [sceneRef, setSceneRef] = useState<THREE.Scene | null>(null);
   const controlsRef = useRef<OrbitControlsType>(null);
   const cameraControllerRef = useRef<{ zoomIn: () => void; zoomOut: () => void }>(null);
+  const viewRef = useRef<ViewHandle>(null);
+  const [autoRotate, setAutoRotate] = useState(false);
+  const [manifest] = useAtom(manifestAtom);
+  const locale = useLocale();
+  // one button per Camera painted into the Scene (hidden ones belong to notes)
+  const cameras = useMemo(() => sceneCamerasOf(manifest), [manifest]);
 
   useEffect(() => {
     setMounted(true);
@@ -185,7 +199,7 @@ const CanvasComponent = ({ glbUrl, extraModels, attribution }: CanvasComponentPr
         }}
       >
         <Suspense fallback={<LoadingScreen loadingText={t('loading')} />}>
-          <Scene glbUrl={glbUrl} extraModels={extraModels} />
+          <Scene glbUrl={glbUrl} extraModels={extraModels} viewRef={viewRef} />
           <OrbitControls
             ref={controlsRef}
             makeDefault
@@ -196,6 +210,7 @@ const CanvasComponent = ({ glbUrl, extraModels, attribution }: CanvasComponentPr
             panSpeed={0.5}
             minPolarAngle={0}
             maxPolarAngle={Math.PI}
+            autoRotate={autoRotate}
           />
           <CameraController ref={cameraControllerRef} controlsRef={controlsRef} />
           <gridHelper args={[10, 10, isDark ? 0x374151 : 0x9ca3af, isDark ? 0x1f2937 : 0xe5e7eb]} />
@@ -228,6 +243,44 @@ const CanvasComponent = ({ glbUrl, extraModels, attribution }: CanvasComponentPr
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 12h12" />
           </svg>
         </button>
+      </div>
+      {/* 視点ボタン: ズームの下に、汎用の 3 つと、マニフェストのカメラごとに 1 つ */}
+      <div className="absolute top-[78px] right-4 z-10 flex flex-col items-end gap-2 max-w-[min(14rem,calc(100%-2rem))]">
+        <div className="flex flex-col rounded overflow-hidden shadow">
+          <button
+            onClick={() => setAutoRotate((v) => !v)}
+            aria-pressed={autoRotate}
+            className={`${VIEW_BUTTON} border-b border-gray-200 dark:border-gray-600 ${
+              autoRotate ? 'bg-blue-600 text-white hover:bg-blue-700' : VIEW_BUTTON_IDLE
+            }`}
+          >
+            {t('autoRotate')}
+          </button>
+          <button
+            onClick={() => viewRef.current?.fit()}
+            className={`${VIEW_BUTTON} ${VIEW_BUTTON_IDLE} border-b border-gray-200 dark:border-gray-600`}
+          >
+            {t('fitAll')}
+          </button>
+          <button onClick={() => viewRef.current?.top()} className={`${VIEW_BUTTON} ${VIEW_BUTTON_IDLE}`}>
+            {t('topView')}
+          </button>
+        </div>
+        {cameras.length > 0 && (
+          <div role="group" aria-label={t('cameras')} className="flex flex-col rounded overflow-hidden shadow">
+            {cameras.map((cam, i) => (
+              <button
+                key={cam.id}
+                onClick={() => viewRef.current?.goTo(cam)}
+                className={`${VIEW_BUTTON} ${VIEW_BUTTON_IDLE} text-right truncate ${
+                  i < cameras.length - 1 ? 'border-b border-gray-200 dark:border-gray-600' : ''
+                }`}
+              >
+                {labelIn(cam.label, locale) || `${t('camera')} ${i + 1}`}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
       {/* Attribution（MapLibre GL風） */}
       {attribution && (

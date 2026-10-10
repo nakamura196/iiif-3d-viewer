@@ -111,7 +111,12 @@
   "Viewer": {
     "showAnnotations": "アノテーションを表示",
     "hideAnnotations": "アノテーションを非表示",
-    "loading": "3Dモデルを読み込み中..."
+    "loading": "3Dモデルを読み込み中...",
+    "autoRotate": "回す",
+    "fitAll": "全体",
+    "topView": "上",
+    "cameras": "マニフェストの視点",
+    "camera": "視点"
   },
   "Home": {
     "developers": "開発者",

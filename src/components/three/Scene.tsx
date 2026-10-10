@@ -1,13 +1,16 @@
 'use client';
 
-import { Suspense, useEffect, useMemo } from 'react';
+import { Suspense, useEffect, useImperativeHandle, useMemo, type Ref } from 'react';
 import { Clone, useGLTF, Bounds } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { Box3, PerspectiveCamera, Sphere, Vector3 } from 'three';
+import gsap from 'gsap';
 import Annotations from '@/components/three/Annotations';
 import { useAtom } from 'jotai';
 import { manifestAtom, showAnnotationsAtom } from '@/atoms/infoPanelAtom';
 import { defaultCameraOf, type DefaultCamera } from '@/lib/services/manifestParser';
+import { runFocusFlight, type Vec3 } from '@/lib/focusCamera';
+import { fitView, topView } from '@/lib/viewCamera';
 
 // Place the camera where the manifest's default Camera says (Presentation 4.0:
 // the first Camera painted into the Scene). Without `lookAt`, look at the model's center.
@@ -32,6 +35,49 @@ function ManifestCamera({ cam, center, radius }: { cam: DefaultCamera; center: V
   return null;
 }
 
+// What the canvas view buttons ask of the scene.
+export interface ViewHandle {
+  fit: () => void; // 全体
+  top: () => void; // 上
+  goTo: (cam: DefaultCamera) => void; // a Camera from the manifest
+}
+
+// Flies the camera for the view buttons. Lives inside the Canvas (needs the camera and
+// the OrbitControls) and next to the model (needs its bounding sphere).
+function ViewController({ handle, center, radius }: { handle: Ref<ViewHandle>; center: Vector3; radius: number }) {
+  const { camera, controls, size } = useThree();
+  useImperativeHandle(handle, () => {
+    const c: Vec3 = [center.x, center.y, center.z];
+    // read at click time: the manifest's default Camera may have set the fov after mount
+    const fov = () => (camera instanceof PerspectiveCamera ? camera.fov : 50);
+    const aspect = size.height > 0 ? size.width / size.height : 1;
+    const fly = (position: Vec3, target: Vec3) => {
+      if (camera instanceof PerspectiveCamera) {
+        // keep the whole model inside the clipping range at the new distance
+        const reach = Math.hypot(position[0] - c[0], position[1] - c[1], position[2] - c[2]) + radius;
+        camera.near = Math.max(reach / 10000, 0.01);
+        camera.far = Math.max(camera.far, reach * 2);
+        camera.updateProjectionMatrix();
+      }
+      const orbit = controls as unknown as { target: Vector3; update?: () => void; enabled?: boolean } | null;
+      runFocusFlight({ camera, controls: orbit, gsap }, position, target);
+    };
+    const here: () => Vec3 = () => [camera.position.x, camera.position.y, camera.position.z];
+    return {
+      fit: () => {
+        const v = fitView(c, radius, here(), fov(), aspect);
+        fly(v.position, v.target);
+      },
+      top: () => {
+        const v = topView(c, radius, fov(), aspect);
+        fly(v.position, v.target);
+      },
+      goTo: (cam) => fly(cam.position, cam.lookAt ?? c),
+    };
+  }, [camera, controls, size, center, radius]);
+  return null;
+}
+
 export interface PlacedModel {
   url: string;
   position: [number, number, number];
@@ -48,7 +94,15 @@ function PlacedGLTF({ url, position }: PlacedModel) {
   );
 }
 
-export default function Scene({ glbUrl, extraModels = [] }: { glbUrl: string; extraModels?: PlacedModel[] }) {
+export default function Scene({
+  glbUrl,
+  extraModels = [],
+  viewRef,
+}: {
+  glbUrl: string;
+  extraModels?: PlacedModel[];
+  viewRef?: Ref<ViewHandle>;
+}) {
   const [showAnnotations] = useAtom(showAnnotationsAtom);
   const [manifest] = useAtom(manifestAtom);
   const model = useGLTF(glbUrl);
@@ -72,6 +126,7 @@ export default function Scene({ glbUrl, extraModels = [] }: { glbUrl: string; ex
           <Clone object={model.scene} />
         </Bounds>
       )}
+      {viewRef && <ViewController handle={viewRef} center={sphere.center} radius={sphere.radius} />}
       {extraModels.map((m, i) => (
         <Suspense key={i} fallback={null}>
           <PlacedGLTF url={m.url} position={m.position} />
