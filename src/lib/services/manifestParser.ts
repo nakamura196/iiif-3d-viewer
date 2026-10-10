@@ -106,19 +106,64 @@ const flattenAllPages = (pages: AnnotationPageV4[] | undefined): AnnotationV4[] 
   return out;
 };
 
-const cameraIndex = (annos: AnnotationV4[]): Map<string, [number, number, number]> => {
-  const map = new Map<string, [number, number, number]>();
+interface CameraView {
+  position: [number, number, number];
+  lookAt: [number, number, number] | null;
+}
+
+const pointOf = (sel: unknown): [number, number, number] | null => {
+  const s = sel as { type?: string; x?: unknown; y?: unknown; z?: unknown } | undefined;
+  if (s?.type !== 'PointSelector') return null;
+  const v = [s.x ?? 0, s.y ?? 0, s.z ?? 0].map(Number);
+  return v.every(Number.isFinite) ? (v as [number, number, number]) : null;
+};
+
+// The Camera body of a painting Annotation: Presentation 4.0 puts the Camera itself
+// in the body (body.type PerspectiveCamera); this viewer's own exporter wraps it in a
+// SpecificResource (body.source[].type PerspectiveCamera). Both are read.
+const cameraBodyOf = (anno: AnnotationV4): Record<string, unknown> | null => {
+  if (!motivationsOf(anno).includes('painting')) return null;
+  const raw = anno.body as unknown;
+  const body = (Array.isArray(raw) ? raw[0] : raw) as Record<string, unknown> | undefined;
+  if (!body || typeof body !== 'object') return null;
+  if (typeof body.type === 'string' && /Camera$/.test(body.type)) return body;
+  const source = body.source as Array<{ type?: string }> | undefined;
+  return Array.isArray(source) && source.some((s) => s?.type === 'PerspectiveCamera') ? body : null;
+};
+
+// Where a Camera looks: `lookAt` is an embedded PointSelector, or a reference to an
+// Annotation that targets a point.
+const lookAtOf = (body: Record<string, unknown>, annos: AnnotationV4[]): [number, number, number] | null => {
+  const direct = pointOf(body.lookAt);
+  if (direct) return direct;
+  const ref = (body.lookAt as { id?: string } | undefined)?.id;
+  const target = ref ? annos.find((a) => a.id === ref) : undefined;
+  return target ? targetSelectors(target).map(pointOf).find(Boolean) ?? null : null;
+};
+
+// Camera Annotations by id, from both Scene.items (where Presentation 4.0 paints
+// Cameras) and Scene.annotations (where this viewer's exporter puts them).
+const cameraIndex = (annos: AnnotationV4[]): Map<string, CameraView> => {
+  const map = new Map<string, CameraView>();
   for (const anno of annos) {
-    if (!motivationsOf(anno).includes('painting')) continue;
-    const body = anno.body as { source?: Array<{ type?: string }> } | undefined;
-    const isCamera = Array.isArray(body?.source)
-      && body!.source!.some((s) => s?.type === 'PerspectiveCamera');
-    if (!isCamera) continue;
-    const sel = targetSelectors(anno).find(isPointSelector);
-    if (!sel) continue;
-    map.set(anno.id, [sel.x, sel.y, sel.z]);
+    const body = cameraBodyOf(anno);
+    if (!body) continue;
+    const position = targetSelectors(anno).map(pointOf).find(Boolean);
+    if (!position) continue;
+    map.set(anno.id, { position, lookAt: lookAtOf(body, annos) });
   }
   return map;
+};
+
+// The Camera to view an Annotation with: the first of its `scope` that is a Camera,
+// then `cameraAnnotation`, then the `<id>/camera` naming convention.
+const cameraFor = (anno: AnnotationV4, cameras: Map<string, CameraView>): CameraView | undefined => {
+  const scope = [anno.scope ?? []].flat().map((s) => (typeof s === 'string' ? s : s?.id));
+  for (const id of [...scope, anno.cameraAnnotation, `${anno.id}/camera`]) {
+    const camera = id ? cameras.get(id) : undefined;
+    if (camera) return camera;
+  }
+  return undefined;
 };
 
 // The model shown when only one is used: the first painted Model (for a Choice,
@@ -222,7 +267,7 @@ const creatorName = (creator: AnnotationV4['creator']): string => {
 
 const buildAnnotation = (
   anno: AnnotationV4,
-  cameras: Map<string, [number, number, number]>,
+  cameras: Map<string, CameraView>,
   fallbackIndex: number,
 ): Annotation | null => {
   const selectors = targetSelectors(anno);
@@ -247,8 +292,9 @@ const buildAnnotation = (
     return null;
   }
 
-  const cameraId = anno.cameraAnnotation ?? `${anno.id}/camera`;
-  const camPos = cameras.get(cameraId) ?? ([...position] as [number, number, number]);
+  const camera = cameraFor(anno, cameras);
+  const camPos = camera?.position ?? ([...position] as [number, number, number]);
+  const camLookAt = camera?.lookAt ?? undefined;
 
   // Outward normal of the annotated feature (non-standard PointSelector field),
   // used to frame the feature head-on when there is no explicit camera.
@@ -256,7 +302,10 @@ const buildAnnotation = (
     ? ([point.normal[0], point.normal[1], point.normal[2]] as [number, number, number])
     : undefined;
 
-  const { value, label, tags, images } = parseBodies(anno);
+  const bodies = parseBodies(anno);
+  const { value, tags, images } = bodies;
+  // The Annotation's own label is the heading; a body label is the older convention.
+  const label = localizedString(anno.label) || bodies.label;
   const regionId = typeof anno.target === 'object' ? anno.target.id : undefined;
 
   return {
@@ -281,6 +330,7 @@ const buildAnnotation = (
           value: position,
           area,
           camPos,
+          ...(camLookAt ? { camLookAt } : {}),
           ...(normal ? { normal } : {}),
         },
       },
@@ -293,7 +343,7 @@ export const parseManifestV4 = (manifest: ManifestV4): ParsedManifest => {
   const modelUrl = extractModelUrl(scene);
 
   const sceneAnnotations = flattenAllPages(scene?.annotations);
-  const cameras = cameraIndex(sceneAnnotations);
+  const cameras = cameraIndex([...flattenAllPages(scene?.items), ...sceneAnnotations]);
   const geoFeatures = extractGeoFeatures(sceneAnnotations);
 
   const out: Annotation[] = [];
@@ -344,13 +394,6 @@ export interface DefaultCamera {
   fieldOfView?: number;
 }
 
-const pointOf = (sel: unknown): [number, number, number] | null => {
-  const s = sel as { type?: string; x?: unknown; y?: unknown; z?: unknown } | undefined;
-  if (s?.type !== 'PointSelector') return null;
-  const v = [s.x ?? 0, s.y ?? 0, s.z ?? 0].map(Number);
-  return v.every(Number.isFinite) ? (v as [number, number, number]) : null;
-};
-
 // The default Camera of the first Scene (Presentation 4.0, Cameras): the first Camera
 // painted into the Scene (a painting Annotation in Scene.items) without the `hidden`
 // behavior. Position from the target's PointSelector, direction from `lookAt` (an
@@ -359,19 +402,12 @@ export const defaultCameraOf = (manifest: ManifestV4 | null | undefined): Defaul
   const scene = manifest?.items?.[0];
   const annos = (scene?.items ?? []).flatMap((page) => page.items ?? []);
   for (const anno of annos) {
-    if (!motivationsOf(anno).includes('painting')) continue;
-    const raw = anno.body as unknown;
-    const body = (Array.isArray(raw) ? raw[0] : raw) as Record<string, unknown> | undefined;
+    const body = cameraBodyOf(anno);
     if (typeof body?.type !== 'string' || !/Camera$/.test(body.type)) continue;
     const behavior = [(anno as { behavior?: unknown }).behavior, body.behavior].flat().filter(Boolean) as string[];
     if (behavior.includes('hidden')) continue;
     const position = targetSelectors(anno).map(pointOf).find(Boolean) ?? [0, 0, 0];
-    let lookAt = pointOf(body.lookAt);
-    const ref = (body.lookAt as { id?: string } | undefined)?.id;
-    if (!lookAt && ref) {
-      const target = [...annos, ...flattenAllPages(scene?.annotations)].find((a) => a.id === ref);
-      lookAt = target ? targetSelectors(target).map(pointOf).find(Boolean) ?? null : null;
-    }
+    const lookAt = lookAtOf(body, [...annos, ...flattenAllPages(scene?.annotations)]);
     const fov = Number(body.fieldOfView);
     return { position, lookAt, ...(Number.isFinite(fov) && fov > 0 ? { fieldOfView: fov } : {}) };
   }

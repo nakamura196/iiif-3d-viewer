@@ -22,6 +22,12 @@ describe('computeFocusCamera', () => {
     expect(dist(r.position, target)).toBeGreaterThan(0.1);
   });
 
+  it('pivots on the manifest camera lookAt when it has one', () => {
+    const r = computeFocusCamera({ target: [1, 0, 0], cameraPos: [0, 0, 10], radius: 5, camPos: [0, 5, 5], camLookAt: [2, 0, 0] });
+    expect(r.position).toEqual([0, 5, 5]);
+    expect(r.target).toEqual([2, 0, 0]);
+  });
+
   it('frames head-on along the annotation normal', () => {
     const target: Vec3 = [0, 0, 0];
     const normal: Vec3 = [0, 0, 1]; // feature faces +Z

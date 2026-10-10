@@ -173,6 +173,7 @@ export default function Annotations({ model }: { model: GLTF }) {
     if (!value) return;
     const camPosRaw = selector?.camPos as number[] | undefined;
     const normalRaw = selector?.normal as number[] | undefined;
+    const lookAtRaw = selector?.camLookAt as number[] | undefined;
 
     const { position, target } = computeFocusCamera({
       target: [value[0], value[1], value[2]],
@@ -182,6 +183,10 @@ export default function Annotations({ model }: { model: GLTF }) {
       // カメラ注釈が無いと camPos=点 にフォールバックするため）。
       camPos: Array.isArray(camPosRaw) && camPosRaw.length >= 3
         ? [camPosRaw[0], camPosRaw[1], camPosRaw[2]]
+        : null,
+      // マニフェストのカメラが向く先（lookAt）。あれば回転の中心にする
+      camLookAt: Array.isArray(lookAtRaw) && lookAtRaw.length >= 3
+        ? [lookAtRaw[0], lookAtRaw[1], lookAtRaw[2]]
         : null,
       // 注釈の法線（Voyager direction）で正面から見る。
       normal: Array.isArray(normalRaw) && normalRaw.length >= 3

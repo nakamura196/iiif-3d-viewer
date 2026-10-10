@@ -76,6 +76,11 @@ export interface AnnotationV4 {
   // recommended viewing camera for this annotation. Convention used
   // by this viewer: `${annotation.id}/camera`.
   cameraAnnotation?: string;
+  // Presentation 4.0: the Annotation's own label (heading of a note), and `scope`,
+  // which links a commenting Annotation to the Camera Annotation(s) to view it with.
+  label?: string | string[] | IIIFLocalized;
+  scope?: string | { id: string; type?: string } | Array<string | { id: string; type?: string }>;
+  behavior?: string[];
 }
 
 export interface AnnotationPageV4 {
