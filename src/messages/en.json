@@ -111,7 +111,12 @@
   "Viewer": {
     "showAnnotations": "Show Annotations",
     "hideAnnotations": "Hide Annotations",
-    "loading": "Loading 3D model..."
+    "loading": "Loading 3D model...",
+    "autoRotate": "Rotate",
+    "fitAll": "Fit",
+    "topView": "Top",
+    "cameras": "Views from the manifest",
+    "camera": "View"
   },
   "Home": {
     "developers": "Developers",

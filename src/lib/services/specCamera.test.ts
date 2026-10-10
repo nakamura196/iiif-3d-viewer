@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { ManifestV4 } from '@/types/iiif';
-import { defaultCameraOf, parseManifestV4 } from './manifestParser';
+import { defaultCameraOf, parseManifestV4, sceneCamerasOf } from './manifestParser';
 
 // Presentation 4.0 style, as written by train-bodies: Cameras are painted into
 // Scene.items (body.type PerspectiveCamera, hidden ones for the notes), and each
@@ -87,5 +87,17 @@ describe('Presentation 4.0 cameras and labels', () => {
     const [a] = parseManifestV4(noScope).annotations;
     expect(a.data.target.selector.camPos).toEqual([19, 26, 0]);
     expect(a.data.target.selector.camLookAt).toBeUndefined();
+  });
+});
+
+describe('sceneCamerasOf', () => {
+  it('lists the Cameras painted into the Scene, leaving out hidden ones', () => {
+    const cams = sceneCamerasOf(manifest);
+    expect(cams.map((c) => c.id)).toEqual([`${S}/camera/default`]);
+    expect(cams[0]).toMatchObject({ position: [-110, 70, 150], lookAt: [60, 15, 0], label: { ja: ['カメラ'] } });
+  });
+
+  it('is empty without a manifest', () => {
+    expect(sceneCamerasOf(null)).toEqual([]);
   });
 });

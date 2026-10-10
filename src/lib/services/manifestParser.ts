@@ -394,24 +394,44 @@ export interface DefaultCamera {
   fieldOfView?: number;
 }
 
-// The default Camera of the first Scene (Presentation 4.0, Cameras): the first Camera
-// painted into the Scene (a painting Annotation in Scene.items) without the `hidden`
-// behavior. Position from the target's PointSelector, direction from `lookAt` (an
-// embedded PointSelector, or a reference to an Annotation that targets a point).
-export const defaultCameraOf = (manifest: ManifestV4 | null | undefined): DefaultCamera | null => {
+export interface SceneCamera extends DefaultCamera {
+  id: string;
+  label: unknown; // IIIF language map or string, as in the manifest
+}
+
+// The Cameras painted into the first Scene (painting Annotations in Scene.items) without
+// the `hidden` behavior, in order (Presentation 4.0, Cameras). Position from the target's
+// PointSelector, direction from `lookAt` (an embedded PointSelector, or a reference to an
+// Annotation that targets a point). Hidden Cameras are the ones notes link to by `scope`.
+export const sceneCamerasOf = (manifest: ManifestV4 | null | undefined): SceneCamera[] => {
   const scene = manifest?.items?.[0];
   const annos = (scene?.items ?? []).flatMap((page) => page.items ?? []);
+  const all = [...annos, ...flattenAllPages(scene?.annotations)];
+  const out: SceneCamera[] = [];
   for (const anno of annos) {
     const body = cameraBodyOf(anno);
     if (typeof body?.type !== 'string' || !/Camera$/.test(body.type)) continue;
     const behavior = [(anno as { behavior?: unknown }).behavior, body.behavior].flat().filter(Boolean) as string[];
     if (behavior.includes('hidden')) continue;
     const position = targetSelectors(anno).map(pointOf).find(Boolean) ?? [0, 0, 0];
-    const lookAt = lookAtOf(body, [...annos, ...flattenAllPages(scene?.annotations)]);
     const fov = Number(body.fieldOfView);
-    return { position, lookAt, ...(Number.isFinite(fov) && fov > 0 ? { fieldOfView: fov } : {}) };
+    out.push({
+      id: anno.id,
+      label: (anno as { label?: unknown }).label ?? body.label ?? '',
+      position,
+      lookAt: lookAtOf(body, all),
+      ...(Number.isFinite(fov) && fov > 0 ? { fieldOfView: fov } : {}),
+    });
   }
-  return null;
+  return out;
+};
+
+// The default Camera of the first Scene: the first Camera painted into it.
+export const defaultCameraOf = (manifest: ManifestV4 | null | undefined): DefaultCamera | null => {
+  const first = sceneCamerasOf(manifest)[0];
+  if (!first) return null;
+  const { position, lookAt, fieldOfView } = first;
+  return { position, lookAt, ...(fieldOfView ? { fieldOfView } : {}) };
 };
 
 // The commenting Annotation that describes a georeferenced feature: the one whose id
