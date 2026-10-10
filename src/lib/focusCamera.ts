@@ -20,6 +20,7 @@
  *          it works for points on the far side of the model. (Keeping the
  *          current viewing direction there would push the camera through the
  *          model and leave it inside the mesh.)
+ *   With 1., the pivot is the camera's own `camLookAt` when the manifest gives one.
  *       4. heuristic: keep the current viewing direction, pull in to a framing
  *          distance derived from the model radius.
  */
@@ -39,6 +40,8 @@ export interface FocusInput {
   radius: number;
   /** Optional manifest camera position — used only if distinct from `target`. */
   camPos?: Vec3 | null;
+  /** Optional manifest camera lookAt — the pivot when `camPos` is used. */
+  camLookAt?: Vec3 | null;
   /** Optional annotation outward normal (Voyager `direction`) for head-on view. */
   normal?: Vec3 | null;
   /** Optional model bounding-sphere center, for the outward fallback. */
@@ -56,14 +59,17 @@ const finiteVec = (v: Vec3 | null | undefined): v is Vec3 =>
 const len = (x: number, y: number, z: number) => Math.hypot(x, y, z);
 
 export function computeFocusCamera(input: FocusInput): FocusResult {
-  const { target, cameraPos, radius, camPos, normal, center } = input;
+  const { target, cameraPos, radius, camPos, camLookAt, normal, center } = input;
   const dist = Math.max(radius, 1e-6) * FOCUS_DISTANCE_FACTOR;
   const at: Vec3 = [...target];
 
   // 1. A real recommended viewpoint (distinct from the point).
   if (finiteVec(camPos)) {
     const d = len(camPos[0] - target[0], camPos[1] - target[1], camPos[2] - target[2]);
-    if (d > 1e-6) return { position: [camPos[0], camPos[1], camPos[2]], target: at };
+    if (d > 1e-6) {
+      const pivot: Vec3 = finiteVec(camLookAt) ? [camLookAt[0], camLookAt[1], camLookAt[2]] : at;
+      return { position: [camPos[0], camPos[1], camPos[2]], target: pivot };
+    }
   }
 
   // 2. Head-on along the annotation normal.

@@ -62,6 +62,8 @@ export interface Annotation {
         value: [number, number, number];
         area: [number, number, number];
         camPos: [number, number, number];
+        // Where the manifest camera looks (its lookAt), when it says so
+        camLookAt?: [number, number, number];
         normal?: [number, number, number];
       };
     };
