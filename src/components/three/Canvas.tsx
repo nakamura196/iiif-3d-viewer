@@ -10,6 +10,9 @@ import { useProgress } from '@react-three/drei';
 import { useTheme } from 'next-themes';
 import { useLocale, useTranslations } from 'next-intl';
 import * as THREE from 'three';
+import { useAtomValue } from 'jotai';
+import { modelRadiusAtom } from '@/atoms/infoPanelAtom';
+import { nextZoomDistance, zoomLimitsFor } from '@/lib/zoomDistance';
 import type { OrbitControls as OrbitControlsType } from 'three-stdlib';
 
 // MapLibre風のイージング関数
@@ -62,6 +65,7 @@ const CameraController = forwardRef<{ zoomIn: () => void; zoomOut: () => void },
     const { camera } = useThree();
     const zoomAnimationRef = useRef<ZoomAnimation | null>(null);
     const targetRef = useRef(new THREE.Vector3(0, 0, 0));
+    const modelRadius = useAtomValue(modelRadiusAtom);
 
     // アニメーションフレーム処理
     useFrame(() => {
@@ -99,22 +103,16 @@ const CameraController = forwardRef<{ zoomIn: () => void; zoomOut: () => void },
       const target = controlsRef.current.target;
       const currentDistance = camera.position.distanceTo(target);
 
-      // ズームイン/アウトに応じて目標距離を計算
-      const factor = zoomIn ? (1 - ZOOM_FACTOR) : (1 + ZOOM_FACTOR);
-      const targetDistance = currentDistance * factor;
-
-      // 最小/最大距離の制限
-      const minDistance = 0.5;
-      const maxDistance = 50;
-      const clampedTargetDistance = Math.max(minDistance, Math.min(maxDistance, targetDistance));
+      // 模型の大きさに合わせた距離の制限（単位が mm でも m でも効くように）
+      const targetDistance = nextZoomDistance(currentDistance, zoomIn, ZOOM_FACTOR, zoomLimitsFor(modelRadius ?? 1));
 
       zoomAnimationRef.current = {
         startTime: performance.now(),
         duration: ZOOM_DURATION,
         startDistance: currentDistance,
-        targetDistance: clampedTargetDistance,
+        targetDistance,
       };
-    }, [camera, controlsRef]);
+    }, [camera, controlsRef, modelRadius]);
 
     useImperativeHandle(ref, () => ({
       zoomIn: () => startZoomAnimation(true),
