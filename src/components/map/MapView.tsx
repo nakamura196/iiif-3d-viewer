@@ -1,8 +1,11 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import maplibregl from 'maplibre-gl';
+import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
+
+// The worker file is copied to public/ at build time (scripts/copy-maplibre-worker.mjs)
+maplibregl.setWorkerUrl(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/maplibre/maplibre-gl-worker.mjs`);
 import { useTheme } from 'next-themes';
 import { useLocale, useTranslations } from 'next-intl';
 

@@ -124,7 +124,7 @@ describe('geoAnnotations (georeferencing page)', () => {
 
 describe('defaultCameraOf (Presentation 4.0 default Camera)', () => {
   const withCamera = (camera: Record<string, unknown>, extra: Record<string, unknown> = {}) => {
-    const m = manifestWith([]) as any;
+    const m = manifestWith([]) as unknown as { items: { items: unknown[] }[] };
     m.items[0].items = [{ id: 'p', type: 'AnnotationPage', items: [{
       id: 'cam', type: 'Annotation', motivation: ['painting'], body: camera, ...extra,
       target: { type: 'SpecificResource', source: [{ id: scene, type: 'Scene' }], selector: [{ type: 'PointSelector', x: -800, y: 1000, z: 900 }] },
