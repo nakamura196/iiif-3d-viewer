@@ -24,6 +24,7 @@ import { parseManifestV4 } from '@/lib/services/manifestParser';
 import { chosenUrl, paintedModelsOf } from '@/lib/services/paintedModels';
 import ModelChoice from '@/components/three/ModelChoice';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 
 const ViewerContent: NextPage = () => {
   const [manifestUrl, setManifestUrl] = useAtom(manifestUrlAtom);
@@ -35,6 +36,7 @@ const ViewerContent: NextPage = () => {
   const [, setAnnotations] = useAtom(annotationsAtom);
   const [showAnnotations, setShowAnnotations] = useAtom(showAnnotationsAtom);
   const t = useTranslations('Viewer');
+  const tc = useTranslations('Compare');
   
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -101,7 +103,18 @@ const ViewerContent: NextPage = () => {
             <div className="flex flex-col sm:flex-row w-full">
               <div className="flex-1 min-h-0 min-w-0 sm:h-full relative bg-gray-100 dark:bg-gray-900">
                 {glbUrl && <CanvasComponent glbUrl={glbUrl} extraModels={extraModels} />}
-                <ModelChoice className="absolute bottom-4 left-4 z-10" />
+                <div className="absolute bottom-4 left-4 z-10 flex items-end gap-2">
+                  <ModelChoice />
+                  {/* 候補が 2 つ以上あれば、2 つを並べて見比べるページへ */}
+                  {paintedModels[0]?.options.length > 1 && (
+                    <Link
+                      href={`/compare?manifest=${encodeURIComponent(manifestUrl)}`}
+                      className="text-sm px-3 py-1.5 bg-[var(--ds-surface)] rounded-lg shadow-md border border-[var(--ds-border)] text-[var(--ds-fg)] hover:bg-[var(--ds-surface-2)]"
+                    >
+                      {tc('open')}
+                    </Link>
+                  )}
+                </div>
                 {/* アノテーション表示切替ボタン */}
                 <button
                   onClick={() => setShowAnnotations(!showAnnotations)}

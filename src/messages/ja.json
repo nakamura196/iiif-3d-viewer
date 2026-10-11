@@ -148,5 +148,19 @@
   "SidePanel": {
     "open": "説明を開く",
     "close": "説明を閉じる"
+  },
+  "Compare": {
+    "mode": "表示のしかた",
+    "modes": {
+      "side": "左右に並べる",
+      "swipe": "スワイプ",
+      "spyglass": "スパイグラス"
+    },
+    "swipeHandle": "境界線（左右に動かす）",
+    "spyglassHint": "丸い窓の中に B を表示",
+    "fitAll": "全体",
+    "topView": "上",
+    "noChoice": "この manifest には切り替えられる模型（Choice）がありません",
+    "open": "比較"
   }
 }

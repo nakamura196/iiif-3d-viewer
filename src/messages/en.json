@@ -148,5 +148,19 @@
   "SidePanel": {
     "open": "Show panel",
     "close": "Hide panel"
+  },
+  "Compare": {
+    "mode": "Mode",
+    "modes": {
+      "side": "Side by side",
+      "swipe": "Swipe",
+      "spyglass": "Spyglass"
+    },
+    "swipeHandle": "Divider (drag sideways)",
+    "spyglassHint": "B is shown inside the circle",
+    "fitAll": "Fit",
+    "topView": "Top",
+    "noChoice": "This manifest has no Choice of models to compare",
+    "open": "Compare"
   }
 }
