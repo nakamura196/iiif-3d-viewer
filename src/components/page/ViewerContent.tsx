@@ -12,6 +12,7 @@ import {
 import { useAtom } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import Info from '@/components/layout/panels/Info';
+import SidePanel from '@/components/layout/SidePanel';
 import { fetchManifest } from '@/lib/services/utils';
 import { manifestAtom } from '@/atoms/infoPanelAtom';
 import CanvasComponent from '@/components/three/Canvas';
@@ -98,7 +99,7 @@ const ViewerContent: NextPage = () => {
         <main className="flex-1 flex overflow-hidden">
           {manifestUrl ? (
             <div className="flex flex-col sm:flex-row w-full">
-              <div className="h-[50vh] sm:h-full sm:w-[70%] relative bg-gray-100 dark:bg-gray-900">
+              <div className="flex-1 min-h-0 min-w-0 sm:h-full relative bg-gray-100 dark:bg-gray-900">
                 {glbUrl && <CanvasComponent glbUrl={glbUrl} extraModels={extraModels} />}
                 <ModelChoice className="absolute bottom-4 left-4 z-10" />
                 {/* アノテーション表示切替ボタン */}
@@ -112,7 +113,7 @@ const ViewerContent: NextPage = () => {
                   </span>
                 </button>
               </div>
-              <div className="flex-1 sm:w-[30%] bg-[var(--ds-surface)] shadow-lg overflow-y-auto border-t sm:border-t-0 sm:border-l border-[var(--ds-border)]">
+              <SidePanel className="bg-[var(--ds-surface)] shadow-lg overflow-y-auto border-t sm:border-t-0 sm:border-l border-[var(--ds-border)]">
                 <Suspense
                   fallback={
                     <div className="p-6 animate-pulse">
@@ -127,7 +128,7 @@ const ViewerContent: NextPage = () => {
                 >
                   <Info />
                 </Suspense>
-              </div>
+              </SidePanel>
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center">

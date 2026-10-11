@@ -144,5 +144,9 @@
     "specGeorefNote": "Used by the map viewer. The format, defined for 2D images, is extended to 3D coordinates.",
     "specRegionTagTitle": "Shared Region and Keyed Tag Extension (own extension, draft)",
     "specRegionTagNote": "Groups annotations that target the same region, and shows the label of a tag as its key."
+  },
+  "SidePanel": {
+    "open": "Show panel",
+    "close": "Hide panel"
   }
 }

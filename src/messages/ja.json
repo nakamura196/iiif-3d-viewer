@@ -144,5 +144,9 @@
     "specGeorefNote": "地図連携ビューアで使います。平面の画像向けの形式を、3 次元の座標に広げて使っています。",
     "specRegionTagTitle": "Shared Region and Keyed Tag Extension（独自の拡張・草案）",
     "specRegionTagNote": "同じ場所を指す注釈をまとめて表示し、タグの label をキーとして表示します。"
+  },
+  "SidePanel": {
+    "open": "説明を開く",
+    "close": "説明を閉じる"
   }
 }
