@@ -3,12 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3838",
-    "build": "next build",
+    "dev": "node scripts/copy-maplibre-worker.mjs && next dev -p 3838",
+    "build": "node scripts/copy-maplibre-worker.mjs && next build",
     "start": "next start -p 3838",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "vitest run",
-    "test:basepath": "GITHUB_PAGES=true next build && ./scripts/check-basepath.sh",
+    "test:basepath": "GITHUB_PAGES=true npm run build && ./scripts/check-basepath.sh",
     "test:export": "node scripts/check-export.mjs",
     "test:live": "node scripts/check-live.mjs"
   },
@@ -21,7 +21,7 @@
     "@tailwindcss/postcss": "^4.1.18",
     "gsap": "^3.13.0",
     "jotai": "^2.12.5",
-    "maplibre-gl": "^5.13.0",
+    "maplibre-gl": "6.12.0",
     "next": "^16.1.6",
     "next-intl": "^4.8.2",
     "next-themes": "^0.4.6",
@@ -44,6 +44,7 @@
     "vitest": "^4.1.7"
   },
   "overrides": {
-    "postcss": "$postcss"
+    "postcss": "$postcss",
+    "postcss-selector-parser": "7.1.6"
   }
 }
