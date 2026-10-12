@@ -289,6 +289,23 @@ export function navigableTree(nodes: TocNode[]): TocNode[] {
   return out;
 }
 
+/**
+ * 目次の項目が「いま見ている所」か。Canvas が同じで、時間の範囲があるときは再生位置も範囲に入ること。
+ * 自分で Canvas を指さない項目（章のまとまり）は、子のどれかが当たっていれば当たりとする。
+ */
+export function isTocNodeActive(node: TocNode, canvasId: string | undefined, time = 0): boolean {
+  if (!canvasId) return false;
+  const hit = (ref: CanvasTarget): boolean => {
+    if (ref.canvasId !== canvasId) return false;
+    if (!ref.t) return true;
+    const [from, to] = ref.t;
+    return time >= from && (to === undefined || time < to);
+  };
+  if (node.canvases.length > 0) return node.canvases.some(hit);
+  if (node.children.length > 0) return node.children.some((c) => isTocNodeActive(c, canvasId, time));
+  return node.target ? hit(node.target) : false;
+}
+
 /** 目次に何か出るか。 */
 export function hasToc(manifest: unknown): boolean {
   return navigableTree(rangesOf(manifest)).length > 0;
