@@ -1,12 +1,9 @@
 import {
   Label,
-  Metadata as CloverMetadata,
   SeeAlso,
   ResourceList,
-  Summary,
   Provider,
   Rights,
-  RequiredStatement,
   Thumbnail,
   Behavior,
   Chip,
@@ -14,7 +11,9 @@ import {
   type IIIFLabel,
   type MetadataItem,
 } from '../iiif/primitives';
-import { useTranslations } from '../env';
+import { useLocale, useTranslations } from '../env';
+import { aboutOf } from '../../core';
+import { MetadataList, SafeHtml } from '../panels/SafeHtml';
 
 import { useAtomValue } from 'jotai';
 import { manifestAtom } from '../atoms';
@@ -28,6 +27,7 @@ const Section = ({ title, children }: { title: string; children: React.ReactNode
 
 const Metadata = () => {
   const t = useTranslations('Metadata');
+  const locale = useLocale();
   const manifest = useAtomValue(manifestAtom);
 
   if (!manifest) {
@@ -52,6 +52,9 @@ const Metadata = () => {
     behavior?: string[];
   };
 
+  // 説明・メタデータ・出典表記は、言語を選び、値の HTML を無害化して出す（core/features/about.ts）
+  const about = aboutOf(manifest, undefined, locale)?.manifest;
+
   return (
     <div className="p-6 bg-white dark:bg-gray-900">
       <h2 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-100">{t('metadata')}</h2>
@@ -66,21 +69,23 @@ const Metadata = () => {
           </Section>
         )}
 
-        {m.summary && (
+        {about && about.summary.length > 0 && (
           <Section title={t('description')}>
-            <Summary summary={m.summary as IIIFLabel} />
+            {about.summary.map((h, i) => (
+              <SafeHtml key={i} html={h} as="div" />
+            ))}
           </Section>
         )}
 
-        {m.metadata && (m.metadata as MetadataItem[]).length > 0 && (
+        {about && about.metadata.length > 0 && (
           <Section title={t('metadata')}>
-            <CloverMetadata metadata={(m.metadata || []) as MetadataItem[]} />
+            <MetadataList items={about.metadata} />
           </Section>
         )}
 
-        {m.requiredStatement && (
+        {about?.requiredStatement && (
           <Section title={t('requiredStatement')}>
-            <RequiredStatement requiredStatement={m.requiredStatement as MetadataItem} />
+            <MetadataList items={[{ ...about.requiredStatement, label: '' }]} />
           </Section>
         )}
 

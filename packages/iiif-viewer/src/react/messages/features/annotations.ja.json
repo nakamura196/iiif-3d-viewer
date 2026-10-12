@@ -1,1 +1,28 @@
-{}
+{
+  "Info": {
+    "canvasAnnotations": "注釈",
+    "canvasAnnotationsLoading": "注釈を読み込んでいます",
+    "canvasAnnotationsFailed": "一部の注釈を読み込めませんでした",
+    "canvasAnnotationsEmpty": "この画面には注釈がありません",
+    "canvasAnnotationsCount": "{count} 件",
+    "canvasAnnotationsAbout": "画像全体への注釈",
+    "canvasAnnotationsOpen": "リンクを開く",
+    "canvasAnnotationsCanvasLink": "この資料の別のページへのリンク",
+    "canvasAnnotationsPainted": "画像の上の文字",
+    "canvasAnnotationsPoint": "点",
+    "canvasAnnotationsRegion": "領域",
+    "canvasAnnotationsMotivation_commenting": "コメント",
+    "canvasAnnotationsMotivation_tagging": "タグ",
+    "canvasAnnotationsMotivation_linking": "リンク",
+    "canvasAnnotationsMotivation_describing": "説明",
+    "canvasAnnotationsMotivation_identifying": "識別",
+    "canvasAnnotationsMotivation_classifying": "分類",
+    "canvasAnnotationsMotivation_bookmarking": "しおり",
+    "canvasAnnotationsMotivation_highlighting": "強調",
+    "canvasAnnotationsMotivation_questioning": "質問",
+    "canvasAnnotationsMotivation_replying": "返信",
+    "canvasAnnotationsMotivation_editing": "修正",
+    "canvasAnnotationsMotivation_moderating": "管理",
+    "canvasAnnotationsMotivation_painting": "本文"
+  }
+}

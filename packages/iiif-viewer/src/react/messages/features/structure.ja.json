@@ -1,1 +1,29 @@
-{}
+{
+  "Info": {
+    "structure": "目次"
+  },
+  "Structure": {
+    "pager": "ページ送り",
+    "prev": "前へ",
+    "next": "次へ",
+    "page": "{current} / {total}",
+    "spread": "{from}・{to} / {total}",
+    "pages": "ページの一覧",
+    "pageLabel": "{index}ページ目",
+    "toc": "目次",
+    "order": "ページ順",
+    "orderDefault": "マニフェストの順",
+    "empty": "目次はありません",
+    "showHere": "表示中",
+    "collection": "コレクション",
+    "collectionEmpty": "このコレクションには、開ける項目がありません",
+    "manifest": "マニフェスト",
+    "subCollection": "コレクション",
+    "back": "ひとつ前のコレクションに戻る",
+    "opening": "開いています…",
+    "openError": "開けませんでした",
+    "dropHint": "iiif-content のリンクをここに落とすと開きます",
+    "region": "指定された場所",
+    "continuous": "つながったページ"
+  }
+}
