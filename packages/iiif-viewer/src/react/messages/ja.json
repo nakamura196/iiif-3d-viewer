@@ -61,6 +61,8 @@
     "unsupportedContent": "この形式の内容は表示できません",
     "containers": "表示する内容",
     "choice": "選択肢",
+    "layers": "レイヤー",
+    "layerN": "画像 {n}",
     "zoomHint": "ホイールで拡大縮小、ドラッグで移動、ダブルクリックでもとに戻す"
   },
   "Transcript": {
