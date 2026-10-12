@@ -13,3 +13,4 @@ export * from './vtt';
 export * from './types/iiif';
 export * from './types/main';
 export * from './contentState';
+export * from './transcript';
