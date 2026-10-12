@@ -18,7 +18,7 @@ type Props = {
 };
 
 const TAB_CLASS = (active: boolean) =>
-  `px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+  `shrink-0 whitespace-nowrap px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
     active
       ? 'border-blue-500 text-blue-600 dark:text-blue-400'
       : 'border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
@@ -39,9 +39,9 @@ const Info = ({ tab, onTabChange, container, manifest }: Props) => {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full min-w-0 flex flex-col">
       {/* タブヘッダー */}
-      <div className="flex border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+      <div className="flex overflow-x-auto border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
         {available.map((p) => (
           <button key={p.id} onClick={() => handleTabChange(p.id)} className={TAB_CLASS(active?.id === p.id)}>
             {t(p.id)}
