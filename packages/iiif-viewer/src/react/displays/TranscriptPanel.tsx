@@ -15,7 +15,7 @@ interface Props {
 
 type Loaded = { url: string; text: string } | { url: string; error: true };
 
-const fmt = (s: number) => {
+export const fmt = (s: number) => {
   const total = Math.floor(s);
   const h = Math.floor(total / 3600);
   const m = Math.floor((total % 3600) / 60);
@@ -23,32 +23,25 @@ const fmt = (s: number) => {
   return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${sec}` : `${m}:${sec}`;
 };
 
-// A transcript file: WebVTT as clickable cues (the playing one is highlighted),
-// anything else as preformatted text.
-export default function TranscriptPanel({ url, format, currentTime = 0, onSeek }: Props) {
-  const t = useTranslations('Transcript');
-  const [loaded, setLoaded] = useState<Loaded | null>(null);
+export interface Cue {
+  /** seconds */
+  start: number;
+  /** seconds */
+  end: number;
+  text: string;
+}
+
+// 時刻つきの行の一覧。いま再生中の行を強調し、押すとその時刻へ移る（VTT と、時刻つきの注釈で共通）。
+export function CueList({
+  cues,
+  currentTime = 0,
+  onSeek,
+}: {
+  cues: Cue[];
+  currentTime?: number;
+  onSeek?: (seconds: number) => void;
+}) {
   const listRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch(url)
-      .then((r) => {
-        if (!r.ok) throw new Error(String(r.status));
-        return r.text();
-      })
-      .then((text) => !cancelled && setLoaded({ url, text }))
-      .catch(() => !cancelled && setLoaded({ url, error: true }));
-    return () => {
-      cancelled = true;
-    };
-  }, [url]);
-
-  const current = loaded?.url === url ? loaded : null;
-  const failed = current !== null && 'error' in current;
-  const text = current && 'text' in current ? current.text : null;
-  const isVtt = format === 'text/vtt' || /\.vtt(\?|$)/i.test(url) || (text?.trimStart().startsWith('WEBVTT') ?? false);
-  const cues = useMemo(() => (text && isVtt ? parseVtt(text) : []), [text, isVtt]);
 
   // the cue being played: the last one that has started and not yet ended
   let active = -1;
@@ -65,17 +58,6 @@ export default function TranscriptPanel({ url, format, currentTime = 0, onSeek }
       box.scrollTop = top - box.clientHeight / 3;
     }
   }, [active]);
-
-  if (!current) return <div className="p-4 text-sm text-[var(--ds-fg)]">{t('loading')}</div>;
-  if (failed || text === null) return <div className="p-4 text-sm text-[var(--ds-fg)]" role="alert">{t('error')}</div>;
-
-  if (!isVtt || cues.length === 0) {
-    return text.trim() ? (
-      <pre className="p-4 text-sm whitespace-pre-wrap break-words text-[var(--ds-fg)] font-sans">{text}</pre>
-    ) : (
-      <div className="p-4 text-sm text-[var(--ds-fg)]">{t('empty')}</div>
-    );
-  }
 
   return (
     <div ref={listRef} className="relative h-full overflow-y-auto p-2">
@@ -96,4 +78,43 @@ export default function TranscriptPanel({ url, format, currentTime = 0, onSeek }
       ))}
     </div>
   );
+}
+
+// A transcript file: WebVTT as clickable cues (the playing one is highlighted),
+// anything else as preformatted text.
+export default function TranscriptPanel({ url, format, currentTime = 0, onSeek }: Props) {
+  const t = useTranslations('Transcript');
+  const [loaded, setLoaded] = useState<Loaded | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetch(url)
+      .then((r) => {
+        if (!r.ok) throw new Error(String(r.status));
+        return r.text();
+      })
+      .then((text) => !cancelled && setLoaded({ url, text }))
+      .catch(() => !cancelled && setLoaded({ url, error: true }));
+    return () => {
+      cancelled = true;
+    };
+  }, [url]);
+
+  const current = loaded?.url === url ? loaded : null;
+  const failed = current !== null && 'error' in current;
+  const text = current && 'text' in current ? current.text : null;
+  const isVtt = format === 'text/vtt' || /\.vtt(\?|$)/i.test(url) || (text?.trimStart().startsWith('WEBVTT') ?? false);
+  const cues = useMemo(() => (text && isVtt ? parseVtt(text) : []), [text, isVtt]);
+
+  if (!current) return <div className="p-4 text-sm text-[var(--ds-fg)]">{t('loading')}</div>;
+  if (failed || text === null) return <div className="p-4 text-sm text-[var(--ds-fg)]" role="alert">{t('error')}</div>;
+
+  if (!isVtt || cues.length === 0) {
+    return text.trim() ? (
+      <pre className="p-4 text-sm whitespace-pre-wrap break-words text-[var(--ds-fg)] font-sans">{text}</pre>
+    ) : (
+      <div className="p-4 text-sm text-[var(--ds-fg)]">{t('empty')}</div>
+    );
+  }
+
+  return <CueList cues={cues} currentTime={currentTime} onSeek={onSeek} />;
 }
