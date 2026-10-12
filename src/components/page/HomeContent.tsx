@@ -16,6 +16,12 @@ export default function HomeContent() {
 
   const newsItems = [
     {
+      date: tNews('item6Date'),
+      title: tNews('item6Title'),
+      href: `https://www.youtube.com/watch?v=${locale === 'en' ? 'wOh2JiaHkS8' : 'Sb7m0J6pRTM'}`,
+      external: true,
+    },
+    {
       date: tNews('item5Date'),
       title: tNews('item5Title'),
     },
