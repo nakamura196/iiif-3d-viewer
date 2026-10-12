@@ -1,35 +1,16 @@
 'use client';
 
-import { lazy, Suspense, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import { Provider, createStore, useAtom, useAtomValue, useSetAtom } from 'jotai';
-import {
-  chosenUrl,
-  containersOf,
-  isCaptions,
-  labelIn,
-  paintedModelsOf,
-  transcriptOf,
-  type ContainerInfo,
-  type MediaOption,
-  type SceneV4,
-  type SupplementingContent,
-} from '../core';
-import { manifestAtom, modelChoicesAtom, paintedModelsAtom, showAnnotationsAtom } from './atoms';
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { Provider, createStore, useAtomValue, useSetAtom } from 'jotai';
+import { containersOf, type ContainerInfo } from '../core';
+import { manifestAtom, modelChoicesAtom } from './atoms';
 import ContainerList from './ContainerList';
-import ImageView from './displays/ImageView';
-import MediaView, { type CaptionTrack } from './displays/MediaView';
-import TranscriptPanel from './displays/TranscriptPanel';
-import { ViewerEnv, useLocale, useTranslations, type ResolvedTheme } from './env';
+import { DISPLAYS } from './displays/registry';
+import { ViewerEnv, useTranslations, type ResolvedTheme } from './env';
 import Info, { type InfoTab } from './layout/panels/Info';
 import SidePanel from './layout/SidePanel';
-import ModelChoice from './three/ModelChoice';
+import { PlaybackContext, type Playback } from './playback';
 import { useManifest } from './useManifest';
-
-// three.js and react-three-fiber are only fetched when a Scene is shown.
-const CanvasComponent = lazy(() => import('./three/Canvas'));
-
-const optionLabel = (o: MediaOption, locale: string) =>
-  labelIn(o.label, locale) || decodeURIComponent(o.url.split('/').pop() ?? o.url);
 
 export interface ViewerActionsState {
   iiifContent: string;
@@ -74,162 +55,74 @@ function ViewerBody({
   dark: boolean;
 }) {
   const t = useTranslations('Viewer');
-  const locale = useLocale();
   const manifest = useAtomValue(manifestAtom);
-  const paintedModels = useAtomValue(paintedModelsAtom);
-  const setPaintedModels = useSetAtom(paintedModelsAtom);
-  const [modelChoices, setModelChoices] = useAtom(modelChoicesAtom);
-  const [showAnnotations, setShowAnnotations] = useAtom(showAnnotationsAtom);
+  const setModelChoices = useSetAtom(modelChoicesAtom);
   const { failed } = useManifest(iiifContent);
 
   const containers = useMemo(() => containersOf(manifest), [manifest]);
   const [picked, setPicked] = useState<{ content: string; index: number }>({ content: iiifContent, index: 0 });
   const selected = Math.min(picked.content === iiifContent ? picked.index : 0, Math.max(containers.length - 1, 0));
   const container: ContainerInfo | undefined = containers[selected];
-  const isScene = container?.kind === 'Scene';
 
-  // The 3D display reads the models of the Scene that is shown (not always the first one).
-  const sceneId = isScene ? container.id : null;
-  useEffect(() => {
-    if (!sceneId) return;
-    const scene = (manifest?.items ?? []).find((c) => (c as { id?: string }).id === sceneId);
-    setPaintedModels(paintedModelsOf(scene as unknown as SceneV4 | undefined));
-  }, [manifest, sceneId, setPaintedModels]);
-
+  // 動画・音声の再生位置。文字起こし（右パネル）と動画・音声の表示がこれで連動する。
   const mediaRef = useRef<HTMLMediaElement | null>(null);
   const [currentTime, setCurrentTime] = useState(0);
-
-  // The first painted model is the main one (framing, annotation occlusion);
-  // the others are drawn alongside. A Choice shows its chosen (default: first) Model.
-  const glbUrl = isScene && paintedModels[0] ? chosenUrl(paintedModels[0], modelChoices) : null;
-  const extraModels = useMemo(
-    () => paintedModels.slice(1).map((m) => ({ url: chosenUrl(m, modelChoices), position: m.position })),
-    [paintedModels, modelChoices],
+  const playback = useMemo<Playback>(
+    () => ({
+      mediaRef,
+      currentTime,
+      setCurrentTime,
+      seek: (seconds: number) => {
+        if (mediaRef.current) mediaRef.current.currentTime = seconds;
+        setCurrentTime(seconds);
+      },
+    }),
+    [currentTime],
   );
-  const hasChoices = isScene && (paintedModels[0]?.options.length ?? 0) > 1;
 
-  // Image / Video / Audio: the first painting that has something of those kinds.
-  const painting = container?.painting.find((p) => p.options.some((o) => o.kind !== 'Model'));
-  const optionIndex = painting ? Math.min(modelChoices[painting.id] ?? 0, painting.options.length - 1) : 0;
-  const option = painting?.options[optionIndex];
-
-  const captions: CaptionTrack[] = (container?.supplementing ?? []).filter(isCaptions).map((s) => ({
-    url: s.url,
-    language: s.language[0],
-    label: labelIn(s.label, locale) || s.language[0] || 'captions',
-  }));
-  const transcript = transcriptOf(container?.supplementing ?? []);
-
-  const seek = (seconds: number) => {
-    const el = mediaRef.current;
-    if (el) el.currentTime = seconds;
-    setCurrentTime(seconds);
+  const select = (index: number) => {
+    setPicked({ content: iiifContent, index });
+    setModelChoices({});
+    setCurrentTime(0);
   };
 
-  let display: ReactNode = null;
+  const display = container ? DISPLAYS.find((d) => d.match(container)) : undefined;
+
+  let view: ReactNode;
   if (failed) {
-    display = <div className="p-4 text-sm text-[var(--ds-fg)]" role="alert">{t('manifestError')}</div>;
+    view = <div className="p-4 text-sm text-[var(--ds-fg)]" role="alert">{t('manifestError')}</div>;
   } else if (!manifest) {
-    display = <div className="p-4 text-sm text-[var(--ds-fg)]">{t('loadingManifest')}</div>;
+    view = <div className="p-4 text-sm text-[var(--ds-fg)]">{t('loadingManifest')}</div>;
   } else if (!container) {
-    display = <div className="p-4 text-sm text-[var(--ds-fg)]">{t('empty')}</div>;
-  } else if (isScene) {
-    display = (
-      <>
-        {glbUrl && (
-          <Suspense fallback={<div className="p-4 text-sm text-[var(--ds-fg)]">{t('loading')}</div>}>
-            <CanvasComponent glbUrl={glbUrl} extraModels={extraModels} />
-          </Suspense>
-        )}
-        <div className="absolute bottom-4 left-4 z-10 flex items-end gap-2">
-          <ModelChoice />
-          {renderActions?.({ iiifContent, hasChoices })}
-        </div>
-        {/* アノテーション表示切替ボタン */}
-        <button
-          onClick={() => setShowAnnotations(!showAnnotations)}
-          className="absolute top-4 left-4 z-10 px-3 py-2 bg-[var(--ds-surface)] rounded-lg shadow-md hover:bg-[var(--ds-surface-2)] transition-colors border border-[var(--ds-border)]"
-          title={showAnnotations ? t('hideAnnotations') : t('showAnnotations')}
-        >
-          <span className="text-sm text-[var(--ds-fg)]">
-            {showAnnotations ? t('hideAnnotations') : t('showAnnotations')}
-          </span>
-        </button>
-      </>
-    );
-  } else if (option?.kind === 'Image') {
-    display = <ImageView key={option.url} src={option.url} alt={labelIn(container.label, locale)} />;
-  } else if (option?.kind === 'Video' || option?.kind === 'Audio') {
-    display = (
-      <MediaView
-        kind={option.kind}
-        src={option.url}
-        format={option.format}
-        width={option.width}
-        height={option.height}
-        tracks={captions}
-        mediaRef={mediaRef}
-        onTimeUpdate={setCurrentTime}
+    view = <div className="p-4 text-sm text-[var(--ds-fg)]">{t('empty')}</div>;
+  } else if (!display) {
+    view = <div className="p-4 text-sm text-[var(--ds-fg)]">{t('unsupportedContent')}</div>;
+  } else {
+    view = (
+      <display.Component
+        container={container}
+        manifest={manifest}
+        iiifContent={iiifContent}
+        containers={containers}
+        selectedIndex={selected}
+        select={select}
+        renderActions={renderActions}
       />
     );
-  } else {
-    display = <div className="p-4 text-sm text-[var(--ds-fg)]">{t('unsupportedContent')}</div>;
   }
 
-  const showChoiceSelect = !isScene && painting && painting.options.length > 1;
-
   return (
-    <div className={`flex flex-col sm:flex-row w-full ${dark ? 'dark' : ''} ${className}`.trim()}>
-      <div className="flex-1 min-h-0 min-w-0 sm:h-full flex flex-col bg-gray-100 dark:bg-gray-900">
-        <ContainerList
-          containers={containers}
-          selected={selected}
-          onSelect={(index) => {
-            setPicked({ content: iiifContent, index });
-            setModelChoices({});
-            setCurrentTime(0);
-          }}
-        />
-        {showChoiceSelect && (
-          <div className="flex items-center gap-2 p-1.5 bg-[var(--ds-surface)] border-b border-[var(--ds-border)]">
-            <label className="text-sm text-[var(--ds-fg)]" htmlFor="iiif-viewer-choice">
-              {t('choice')}
-            </label>
-            <select
-              id="iiif-viewer-choice"
-              value={optionIndex}
-              onChange={(e) => setModelChoices((c) => ({ ...c, [painting.id]: Number(e.target.value) }))}
-              className="text-sm rounded border border-[var(--ds-border)] bg-[var(--ds-surface)] text-[var(--ds-fg)] px-1 py-0.5 max-w-full"
-            >
-              {painting.options.map((o, i) => (
-                <option key={o.url} value={i}>
-                  {optionLabel(o, locale)}
-                </option>
-              ))}
-            </select>
-          </div>
-        )}
-        <div className="relative flex-1 min-h-0 min-w-0">{display}</div>
+    <PlaybackContext.Provider value={playback}>
+      <div className={`flex flex-col sm:flex-row w-full ${dark ? 'dark' : ''} ${className}`.trim()}>
+        <div className="flex-1 min-h-0 min-w-0 sm:h-full flex flex-col bg-gray-100 dark:bg-gray-900">
+          <ContainerList containers={containers} selected={selected} onSelect={select} />
+          {display && container ? view : <div className="relative flex-1 min-h-0 min-w-0">{view}</div>}
+        </div>
+        <SidePanel className="bg-[var(--ds-surface)] shadow-lg overflow-y-auto border-t sm:border-t-0 sm:border-l border-[var(--ds-border)]">
+          <Info tab={tab} onTabChange={onTabChange} container={container} manifest={manifest} />
+        </SidePanel>
       </div>
-      <SidePanel className="bg-[var(--ds-surface)] shadow-lg overflow-y-auto border-t sm:border-t-0 sm:border-l border-[var(--ds-border)]">
-        <Info
-          tab={tab}
-          onTabChange={onTabChange}
-          showAnnotations={isScene}
-          transcript={
-            transcript ? (
-              <TranscriptPanel
-                key={transcript.url}
-                url={transcript.url}
-                format={transcript.format}
-                currentTime={currentTime}
-                onSeek={seek}
-              />
-            ) : undefined
-          }
-        />
-      </SidePanel>
-    </div>
+    </PlaybackContext.Provider>
   );
 }
 
