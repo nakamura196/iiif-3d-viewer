@@ -52,6 +52,7 @@
     "sampleManifest2": "石淵家地球儀（菊池市立図書館所蔵） - アノテーション付き",
     "sampleManifest3": "石淵家地球儀（菊池市立図書館所蔵） - 地図連携ビューア",
     "sampleManifest4": "石淵家地球儀（菊池市立図書館所蔵） - 領域の共有・タグ拡張の例",
+    "sampleManifestAll": "画像・音声・動画・3D のサンプル一覧（IIIF Cookbook など）",
     "requiredUrl": "マニフェストURLを入力してください",
     "invalidUrl": "有効なURLを入力してください"
   },
