@@ -1,6 +1,27 @@
 import ja from './ja.json';
 import en from './en.json';
+import aboutJa from './features/about.ja.json';
+import aboutEn from './features/about.en.json';
+import imageJa from './features/image.ja.json';
+import imageEn from './features/image.en.json';
+import structureJa from './features/structure.ja.json';
+import structureEn from './features/structure.en.json';
+import temporalJa from './features/temporal.ja.json';
+import temporalEn from './features/temporal.en.json';
 
 export type ViewerMessages = Record<string, Record<string, string>>;
 
-export const messages: Record<'ja' | 'en', ViewerMessages> = { ja, en };
+// 名前空間（Info・Viewer など）ごとに、機能のファイルの文言を足し合わせる。
+// 機能の担当は、自分の features/<機能>.{ja,en}.json だけを書く。
+const merge = (...parts: ViewerMessages[]): ViewerMessages => {
+  const out: ViewerMessages = {};
+  for (const part of parts) {
+    for (const [ns, table] of Object.entries(part)) out[ns] = { ...out[ns], ...table };
+  }
+  return out;
+};
+
+export const messages: Record<'ja' | 'en', ViewerMessages> = {
+  ja: merge(ja, imageJa, structureJa, temporalJa, aboutJa),
+  en: merge(en, imageEn, structureEn, temporalEn, aboutEn),
+};
