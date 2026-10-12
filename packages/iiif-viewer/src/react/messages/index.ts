@@ -2,6 +2,8 @@ import ja from './ja.json';
 import en from './en.json';
 import aboutJa from './features/about.ja.json';
 import aboutEn from './features/about.en.json';
+import annotationsJa from './features/annotations.ja.json';
+import annotationsEn from './features/annotations.en.json';
 import imageJa from './features/image.ja.json';
 import imageEn from './features/image.en.json';
 import structureJa from './features/structure.ja.json';
@@ -22,6 +24,6 @@ const merge = (...parts: ViewerMessages[]): ViewerMessages => {
 };
 
 export const messages: Record<'ja' | 'en', ViewerMessages> = {
-  ja: merge(ja, imageJa, structureJa, temporalJa, aboutJa),
-  en: merge(en, imageEn, structureEn, temporalEn, aboutEn),
+  ja: merge(ja, imageJa, structureJa, temporalJa, aboutJa, annotationsJa),
+  en: merge(en, imageEn, structureEn, temporalEn, aboutEn, annotationsEn),
 };
