@@ -1,0 +1,20 @@
+{
+  "Info": {
+    "layers": "Layers"
+  },
+  "Layers": {
+    "loading": "Loading images...",
+    "hint": "Upper layers are drawn in front. Drag or use ▲▼ to change the order.",
+    "showAll": "Show all",
+    "reset": "Reset",
+    "layerN": "Image {n}",
+    "choiceOption": "One of a choice",
+    "drag": "Drag to change the order",
+    "show": "Show \"{name}\"",
+    "hide": "Hide \"{name}\"",
+    "up": "Move \"{name}\" forward",
+    "down": "Move \"{name}\" backward",
+    "opacity": "Opacity",
+    "opacityOf": "Opacity of \"{name}\" (%)"
+  }
+}

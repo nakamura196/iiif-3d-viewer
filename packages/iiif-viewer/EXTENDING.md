@@ -12,6 +12,15 @@
 
 機能の枠（用意済み）: `image`（画像・深いズーム・重ね表示）、`structure`（ページ送り・目次）、`temporal`（時間の指定・複数メディア）、`about`（来歴・権利・リンク）、`annotations`（Canvas 上の注釈）。
 
+## 操作をどこに置くか
+
+- **応用的な操作は、右パネルのタブとして足すのを基本とする**（例: レイヤーの表示・不透明度・重ね順、注釈の絞り込み、目次）。
+  画像の領域を狭めない。`available` で、使える Canvas のときだけタブが出る。埋め込み（`<iiif-viewer>`）でも同じ場所にある
+- 画像の上の帯に置くのは、その Canvas を見るのに欠かせない最小限の切り替えだけ（Choice の候補選び、ページ送り）
+- 同じものを帯とタブの両方で操作するときは、同じ状態（`atoms.ts`）を読み書きし、食い違わないようにする
+  （例: Choice の候補選びは、レイヤーの表示・非表示として持つ）
+- タブを足したら、サイトの `?tab=` の許可一覧（`src/components/page/ViewerContent.tsx` の `TABS`）にも足す
+
 ## 守ること
 
 - `core/containers.ts`・`Viewer.tsx`・`Info.tsx`・`messages/ja.json`・`messages/en.json` は書き換えない。足りないときは、担当に頼む（または別 PR で先に直す）

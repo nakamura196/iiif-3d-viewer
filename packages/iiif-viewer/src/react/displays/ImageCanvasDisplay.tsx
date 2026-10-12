@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useAtomValue } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import {
   canvasImagesOf,
   fetchManifest,
@@ -11,16 +11,18 @@ import {
   type CanvasImages,
   type CanvasPainting,
   type ImageAnnotation,
-  type ImageLayer,
+  isLayerVisible,
+  layerItemsOf,
+  layerOpacity,
+  orderLayers,
   type PaintingContent,
 } from '../../core';
-import { modelChoicesAtom } from '../atoms';
+import { canvasLayersAtom, layerOrderAtom, layerSettingsAtom } from '../atoms';
 import { useLocale, useTranslations } from '../env';
 import { usePlayback } from '../playback';
 import ChoiceBar from './ChoiceBar';
 import { AnnotationBoxes, MediaCover, ThumbnailStrip, type ThumbnailItem } from './ImageExtras';
 import ImageLayerView from './ImageTiles';
-import LayerBar from './LayerBar';
 import ImageView from './ImageView';
 import { DISPLAYS } from './registry';
 import type { Display, DisplayProps } from './types';
@@ -77,46 +79,62 @@ function ImageBody({
   images: CanvasImages;
   paintings: CanvasPainting[];
 }) {
-  const choices = useAtomValue(modelChoicesAtom);
   const { container } = props;
   const [failedBase, setFailedBase] = useState(false);
-  // paintings the reader switched off in the layer bar (by painting id)
-  const [hidden, setHidden] = useState<Record<string, boolean>>({});
+  const settings = useAtomValue(layerSettingsAtom);
+  const setSettings = useSetAtom(layerSettingsAtom);
+  const order = useAtomValue(layerOrderAtom)[container.id];
+  const setCanvasLayers = useSetAtom(canvasLayersAtom);
 
-  // one option per painting (the chosen one of a Choice), drawn in painting order
-  const shown = paintings.map((p) => {
-    const index = Math.min(choices[p.id] ?? 0, p.options.length - 1);
-    return p.options[index];
-  });
-  const layers = shown.map((o) => o.layer).filter((l): l is ImageLayer => !!l);
-  const visible = shown.map((o, i) => !!o.layer && !hidden[paintings[i].id]);
-  const annotations: ImageAnnotation[] = [
-    ...shown.flatMap((o, i) => (visible[i] && o.layer ? o.layer.annotations : [])),
-    ...images.annotations,
-  ];
+  // every image (each option of a Choice too) is a layer; the Layers tab changes how they are drawn
+  const items = useMemo(() => layerItemsOf(paintings), [paintings]);
+  useEffect(() => {
+    setCanvasLayers({ canvasId: container.id, items });
+  }, [container.id, items, setCanvasLayers]);
+  const drawn = orderLayers(items, order).filter((it) => isLayerVisible(it, settings));
+  const annotations: ImageAnnotation[] = [...drawn.flatMap((it) => it.layer.annotations), ...images.annotations];
 
-  const bars: PaintingContent[] = paintings
+  // a Choice also gets the quick switch above the image: showing one option hides the others
+  const choiceIndex = (p: CanvasPainting) =>
+    Math.max(
+      0,
+      items.filter((it) => it.paintingId === p.id).findIndex((it) => isLayerVisible(it, settings)),
+    );
+  const choose = (p: CanvasPainting, index: number) =>
+    setSettings((s) => {
+      const next = { ...s };
+      for (const it of items.filter((x) => x.paintingId === p.id)) {
+        next[it.id] = { ...next[it.id], visible: it.optionIndex === index };
+      }
+      return next;
+    });
+  const bars = paintings
     .filter((p) => p.options.length > 1)
     .map((p) => ({
-      id: p.id,
-      label: p.label,
-      options: p.options.map((o) => ({ url: o.url, kind: 'Image' as const, label: o.label })),
+      painting: p,
+      content: {
+        id: p.id,
+        label: p.label,
+        options: p.options.map((o) => ({ url: o.url, kind: 'Image' as const, label: o.label })),
+      } satisfies PaintingContent,
     }));
 
   const { width, height } = images;
-  const detail = Math.max(0, ...layers.map((l) => l.width ?? 0));
-  const key = layers.map((l) => l.url).join('|');
+  const detail = Math.max(0, ...items.map((it) => it.layer.width ?? 0));
+  // the same for every visibility and order, so switching layers keeps the zoom
+  const key = items.map((it) => it.layer.url).join('|');
+  const base = items[0]?.id;
 
   return (
     <>
       {bars.map((b) => (
-        <ChoiceBar key={b.id} painting={b} />
+        <ChoiceBar
+          key={b.content.id}
+          painting={b.content}
+          index={choiceIndex(b.painting)}
+          onChange={(i) => choose(b.painting, i)}
+        />
       ))}
-      <LayerBar
-        paintings={paintings}
-        hidden={hidden}
-        onToggle={(id) => setHidden((h) => ({ ...h, [id]: !h[id] }))}
-      />
       <div className="relative flex-1 min-h-0 min-w-0">
         {width && height ? (
           <ImageView
@@ -128,27 +146,24 @@ function ImageBody({
             extra={<AnnotationBoxes annotations={annotations} canvasWidth={width} canvasHeight={height} />}
           >
             {(stage) =>
-              shown.map(
-                (o, i) =>
-                  o.layer &&
-                  visible[i] && (
-                    <ImageLayerView
-                      key={`${i}:${o.layer.url}`}
-                      layer={o.layer}
-                      canvasWidth={width}
-                      canvasHeight={height}
-                      stage={stage}
-                      onFailed={i === 0 ? () => setFailedBase(true) : undefined}
-                    />
-                  ),
-              )
+              drawn.map((it) => (
+                <ImageLayerView
+                  key={it.id}
+                  layer={it.layer}
+                  canvasWidth={width}
+                  canvasHeight={height}
+                  stage={stage}
+                  opacity={layerOpacity(it, settings)}
+                  onFailed={it.id === base ? () => setFailedBase(true) : undefined}
+                />
+              ))
             }
           </ImageView>
         ) : (
           // neither the Canvas nor the image says how big it is: the plain image
-          layers[0] && <ImageView key={layers[0].url} src={layers[0].url} container={container} />
+          drawn[0] && <ImageView key={drawn[0].layer.url} src={drawn[0].layer.url} container={container} />
         )}
-        {failedBase && layers.length === 1 && <FailedHint />}
+        {failedBase && items.length === 1 && <FailedHint />}
       </div>
     </>
   );
@@ -277,6 +292,7 @@ function ImageCanvasDisplay(props: DisplayProps) {
     return items.find((c) => String(c.id ?? '') === container.id);
   }, [raw, props.manifest, container.id]);
   const images = useMemo(() => canvasImagesOf(source), [source]);
+  const imagePaintings = useMemo(() => images.paintings.filter((p) => hasKind(p, 'Image')), [images]);
 
   if (waiting) {
     return <div className="p-4 text-sm text-[var(--ds-fg)]">{t('imageLoading')}</div>;
@@ -290,7 +306,6 @@ function ImageCanvasDisplay(props: DisplayProps) {
   // a real 3D Scene (without a model yet), or a type this display does not read
   if (!source || source.type === 'Scene') return delegate();
 
-  const imagePaintings = images.paintings.filter((p) => hasKind(p, 'Image'));
   const mediaPainting = images.paintings.find((p) => hasKind(p, 'Video', 'Audio'));
 
   let body: React.ReactNode;
