@@ -69,6 +69,21 @@ interface LegacyContainer {
   [extra: string]: unknown;
 }
 
+const DESCRIPTIVE_KEYS = [
+  'metadata',
+  'summary',
+  'requiredStatement',
+  'rights',
+  'provider',
+  'homepage',
+  'seeAlso',
+  'rendering',
+  'navDate',
+  'navPlace',
+  'behavior',
+  'thumbnail',
+] as const;
+
 interface LegacyManifest {
   '@context'?: string | string[];
   id?: string;
@@ -289,9 +304,16 @@ const convertCanvasToScene = (canvas: LegacyContainer): SceneV4 => {
     });
   }
 
+  // Canvas の説明用の項目（メタデータ・要約・権利・提供者・日時・場所など）を Scene にも残す
+  const descriptive: Record<string, unknown> = {};
+  for (const key of DESCRIPTIVE_KEYS) {
+    if (canvas[key] !== undefined) descriptive[key] = canvas[key];
+  }
+
   return {
     id: sceneId,
     type: 'Scene',
+    ...(descriptive as Partial<SceneV4>),
     ...(canvas.label !== undefined ? { label: canvas.label as SceneV4['label'] } : {}),
     items: itemsPages,
     annotations: annotationsPages,
