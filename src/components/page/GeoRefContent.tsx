@@ -2,19 +2,19 @@
 
 import type { NextPage } from 'next';
 import { Suspense } from 'react';
-import { annotationsAtom, manifestUrlAtom, selectedAnnotationIdAtom } from '@/atoms/infoPanelAtom';
+import { annotationsAtom, manifestUrlAtom, selectedAnnotationIdAtom } from '@nakamura196/iiif-viewer';
 import { useAtom } from 'jotai';
 import { useEffect, useState, useRef } from 'react';
 import { fetchManifest } from '@nakamura196/iiif-viewer/core';
-import { manifestAtom } from '@/atoms/infoPanelAtom';
-import CanvasComponent from '@/components/three/Canvas';
+import { manifestAtom } from '@nakamura196/iiif-viewer';
+import { CanvasComponent } from '@nakamura196/iiif-viewer';
 import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
 import MapView from '@/components/map/MapView';
 import { convertToV4 } from '@nakamura196/iiif-viewer/core';
 import { parseManifestV4, geoAnnotations, type GeoFeature } from '@nakamura196/iiif-viewer/core';
-import AnnotationCard from '@/components/annotation/AnnotationCard';
-import SidePanel from '@/components/layout/SidePanel';
+import { AnnotationCard } from '@nakamura196/iiif-viewer';
+import { SidePanel } from '@nakamura196/iiif-viewer';
 import { useTranslations, useLocale } from 'next-intl';
 
 // マニフェストからattributionを取得するヘルパー関数

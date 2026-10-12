@@ -1,24 +1,20 @@
 'use client';
 
 import type { NextPage } from 'next';
-import { Suspense, useEffect, useMemo, useState } from 'react';
-import { useAtom } from 'jotai';
+import { useEffect, useMemo, useState } from 'react';
+import { useAtom, useAtomValue } from 'jotai';
 import { useLocale, useTranslations } from 'next-intl';
 import {
-  annotationsAtom,
-  manifestAtom,
+  Info,
+  SidePanel,
   manifestUrlAtom,
   paintedModelsAtom,
-} from '@/atoms/infoPanelAtom';
+  useManifest,
+} from '@nakamura196/iiif-viewer';
 import Header from '@/components/Header';
 import ManifestInput from '@/components/Input';
-import Info from '@/components/layout/panels/Info';
-import SidePanel from '@/components/layout/SidePanel';
 import CompareView, { type CompareMode } from '@/components/three/CompareView';
-import { fetchManifest } from '@nakamura196/iiif-viewer/core';
-import { convertToV4 } from '@nakamura196/iiif-viewer/core';
-import { parseManifestV4 } from '@nakamura196/iiif-viewer/core';
-import { firstSceneOf, labelIn, paintedModelsOf } from '@nakamura196/iiif-viewer/core';
+import { labelIn } from '@nakamura196/iiif-viewer/core';
 
 const MODES: CompareMode[] = ['side', 'swipe', 'spyglass'];
 
@@ -29,9 +25,7 @@ const CompareContent: NextPage = () => {
   const t = useTranslations('Compare');
   const locale = useLocale();
   const [manifestUrl, setManifestUrl] = useAtom(manifestUrlAtom);
-  const [, setManifest] = useAtom(manifestAtom);
-  const [, setAnnotations] = useAtom(annotationsAtom);
-  const [paintedModels, setPaintedModels] = useAtom(paintedModelsAtom);
+  const paintedModels = useAtomValue(paintedModelsAtom);
   const [mode, setMode] = useState<CompareMode>('side');
   const [pick, setPick] = useState<[number, number]>([0, 1]);
 
@@ -46,16 +40,7 @@ const CompareContent: NextPage = () => {
     if (Number.isInteger(a) && Number.isInteger(b)) setPick([a, b]);
   }, [setManifestUrl]);
 
-  useEffect(() => {
-    if (!manifestUrl) return;
-    fetchManifest(manifestUrl).then((raw) => {
-      if (!raw) return;
-      const manifest = convertToV4(raw);
-      setPaintedModels(paintedModelsOf(firstSceneOf(manifest)));
-      setManifest(manifest);
-      setAnnotations(parseManifestV4(manifest).annotations);
-    });
-  }, [manifestUrl, setManifest, setAnnotations, setPaintedModels]);
+  useManifest(manifestUrl);
 
   // keep the choice in the URL so that a comparison can be shared
   useEffect(() => {
@@ -134,9 +119,7 @@ const CompareContent: NextPage = () => {
               </div>
             </div>
             <SidePanel className="bg-[var(--ds-surface)] shadow-lg overflow-y-auto border-t sm:border-t-0 sm:border-l border-[var(--ds-border)]">
-              <Suspense fallback={null}>
-                <Info />
-              </Suspense>
+              <Info />
             </SidePanel>
           </div>
         ) : (

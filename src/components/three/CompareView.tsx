@@ -7,7 +7,7 @@ import { useTheme } from 'next-themes';
 import { useTranslations } from 'next-intl';
 import * as THREE from 'three';
 import type { OrbitControls as OrbitControlsType } from 'three-stdlib';
-import Scene, { type PlacedModel, type ViewHandle } from '@/components/three/Scene';
+import { Scene, type PlacedModel, type ViewHandle } from '@nakamura196/iiif-viewer';
 
 // Two models of one Scene, seen through one camera. Each side has its own canvas;
 // whichever the user is moving leads, and the other copies its camera every frame.

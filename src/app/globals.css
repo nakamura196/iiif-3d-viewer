@@ -9,6 +9,8 @@
    (md:grid-cols-4 等) are generated. globals.css は src/app/ にあるので
    node_modules までは 2 階層上。 */
 @source '../../node_modules/@nakamura196/react-ui/src';
+/* 3D ビューアの部品（packages/iiif-viewer）が使うクラスも生成する */
+@source '../../packages/iiif-viewer/src';
 
 @custom-variant dark (&:where(.dark, .dark *));
 

@@ -5,11 +5,18 @@
   "license": "MIT",
   "type": "module",
   "exports": {
+    ".": "./src/react/index.ts",
     "./core": "./src/core/index.ts"
   },
   "peerDependencies": {
     "react": "^19",
     "react-dom": "^19",
-    "three": "^0.178.0"
-  }
+    "three": "^0.178.0",
+    "@react-three/drei": "^10.6.0",
+    "@react-three/fiber": "^9.2.0",
+    "jotai": "^2.12.5",
+    "gsap": "^3.13.0",
+    "three-stdlib": "^2.36.0"
+  },
+  "sideEffects": false
 }

@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import ViewerEnvBridge from '@/components/ViewerEnvBridge';
 import { SITE_URL, alternatesFor } from '@/lib/site';
 
 export async function generateMetadata({
@@ -104,7 +105,9 @@ export default async function RootLayout({
 
   return (
     <Provider>
-      <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+      <NextIntlClientProvider messages={messages}>
+        <ViewerEnvBridge>{children}</ViewerEnvBridge>
+      </NextIntlClientProvider>
     </Provider>
   );
 }
