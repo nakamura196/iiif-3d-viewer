@@ -1,1 +1,9 @@
-{}
+{
+  "Viewer": {
+    "imageLoading": "Loading image...",
+    "missingImage": "This image is not available (it could not be fetched or does not exist)",
+    "playMedia": "Play",
+    "thumbnails": "Thumbnails",
+    "annotationImage": "Image in annotation"
+  }
+}
