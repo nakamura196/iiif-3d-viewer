@@ -24,7 +24,8 @@
     "relatedSpec": "IIIF 3D Extension",
     "relatedSample": "IIIF 3D samples",
     "relatedOtherTools": "Other tools by nakamura196",
-    "developers": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)"
+    "developers": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)",
+    "samplesAll": "All samples"
   },
   "News": {
     "heading": "News",
@@ -112,5 +113,19 @@
     "topView": "Top",
     "noChoice": "This manifest has no Choice of models to compare",
     "open": "Compare"
+  },
+  "Samples": {
+    "title": "Samples",
+    "lead": "Recipes from the IIIF Cookbook and this site's own test manifests. Use “Open in viewer” to check that each one displays.",
+    "media": {
+      "image": "Image",
+      "audio": "Audio",
+      "video": "Video",
+      "3d": "3D"
+    },
+    "open": "Open in viewer",
+    "manifest": "Manifest",
+    "recipe": "Recipe (Cookbook)",
+    "own": "Test manifest of this site"
   }
 }

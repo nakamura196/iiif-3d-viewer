@@ -41,6 +41,7 @@ export default function Footer() {
             { label: t('sample2'), href: `/viewer?${contentParam(SAMPLE_ANNOT)}&tab=annotations` },
             { label: t('sample3'), href: `/georef?${contentParam(SAMPLE_ANNOT)}` },
             { label: t('sample4'), href: `/viewer?${contentParam(SAMPLE_REGION_TAGS)}&tab=annotations` },
+            { label: t('samplesAll'), href: '/samples' },
           ],
         },
         // 4列目: 関連サイト（旧 References ページの外部リンク）
