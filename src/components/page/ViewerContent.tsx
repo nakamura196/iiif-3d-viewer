@@ -13,7 +13,7 @@ import Footer from '@/components/Footer';
 import { Link } from '@/i18n/routing';
 import { contentParam, manifestFromParams } from '@nakamura196/iiif-viewer/core';
 
-const TABS: InfoTab[] = ['metadata', 'annotations'];
+const TABS: InfoTab[] = ['metadata', 'structure', 'about', 'transcript', 'annotationTranscript', 'canvasAnnotations', 'annotations'];
 
 // /viewer?iiif-content=...&tab=...（?manifest=... も読む）: ビューア本体はパッケージの Viewer。
 // ここでは URL の読み書きと、ヘッダー・フッター・入力欄だけを持つ。

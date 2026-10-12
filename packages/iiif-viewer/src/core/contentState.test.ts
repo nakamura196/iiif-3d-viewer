@@ -23,6 +23,14 @@ describe('decodeContentState', () => {
     const json = { type: 'Annotation', target: { type: 'Canvas', id: 'c1', partOf: [{ id: M, type: 'Manifest' }] } };
     expect(decodeContentState(encodeURIComponent(JSON.stringify(json)))).toBe(M);
   });
+  it('Cookbook 形式（URI エンコードした JSON を base64url にしたもの）を取り出す', () => {
+    const json = { type: 'Annotation', target: { type: 'Canvas', id: 'c1', partOf: [{ id: M, type: 'Manifest' }] } };
+    const b64 = btoa(unescape(encodeURIComponent(encodeURIComponent(JSON.stringify(json)))))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
+    expect(decodeContentState(b64)).toBe(M);
+  });
   it('読めない値は null', () => {
     expect(decodeContentState('!!!')).toBeNull();
     expect(decodeContentState('')).toBeNull();

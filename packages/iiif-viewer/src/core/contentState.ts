@@ -56,7 +56,9 @@ export function decodeContentState(value: string | null | undefined): string | n
   if (/^https?:\/\//i.test(v)) return v;
   try {
     // 前後のどちらの書き方でも通るよう、URL エンコードされた JSON も受ける
-    const text = v.startsWith('{') || v.startsWith('%7B') ? decodeURIComponent(v) : fromBase64Url(v);
+    let text = v.startsWith('{') || v.startsWith('%7B') ? decodeURIComponent(v) : fromBase64Url(v);
+    // Cookbook 形式: URI エンコードした JSON を base64url にしたもの
+    if (text.startsWith('%')) text = decodeURIComponent(text);
     const json: unknown = JSON.parse(text);
     if (!isObject(json)) return null;
     if (json.type === 'Annotation') return manifestOf(json.target);
