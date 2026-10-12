@@ -18,7 +18,7 @@ import CompareView, { type CompareMode } from '@/components/three/CompareView';
 import { fetchManifest } from '@nakamura196/iiif-viewer/core';
 import { convertToV4 } from '@nakamura196/iiif-viewer/core';
 import { parseManifestV4 } from '@nakamura196/iiif-viewer/core';
-import { labelIn, paintedModelsOf } from '@nakamura196/iiif-viewer/core';
+import { firstSceneOf, labelIn, paintedModelsOf } from '@nakamura196/iiif-viewer/core';
 
 const MODES: CompareMode[] = ['side', 'swipe', 'spyglass'];
 
@@ -51,7 +51,7 @@ const CompareContent: NextPage = () => {
     fetchManifest(manifestUrl).then((raw) => {
       if (!raw) return;
       const manifest = convertToV4(raw);
-      setPaintedModels(paintedModelsOf(manifest.items?.[0]));
+      setPaintedModels(paintedModelsOf(firstSceneOf(manifest)));
       setManifest(manifest);
       setAnnotations(parseManifestV4(manifest).annotations);
     });
