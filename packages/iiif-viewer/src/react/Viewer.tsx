@@ -9,6 +9,7 @@ import { DISPLAYS } from './displays/registry';
 import { ViewerEnv, useTranslations, type ResolvedTheme } from './env';
 import Info, { type InfoTab } from './layout/panels/Info';
 import SidePanel from './layout/SidePanel';
+import { CanvasNavigationContext, indexOfCanvas, type CanvasNavigation } from './navigation';
 import { PlaybackContext, type Playback } from './playback';
 import { useManifest } from './useManifest';
 
@@ -86,6 +87,20 @@ function ViewerBody({
     setCurrentTime(0);
   };
 
+  const navigation = useMemo<CanvasNavigation>(
+    () => ({
+      goToCanvas: (canvasId: string) => {
+        const index = indexOfCanvas(containers, canvasId);
+        if (index < 0) return false;
+        setPicked({ content: iiifContent, index });
+        setModelChoices({});
+        setCurrentTime(0);
+        return true;
+      },
+    }),
+    [containers, iiifContent, setModelChoices],
+  );
+
   const display = container ? DISPLAYS.find((d) => d.match(container)) : undefined;
 
   let view: ReactNode;
@@ -113,6 +128,7 @@ function ViewerBody({
 
   return (
     <PlaybackContext.Provider value={playback}>
+      <CanvasNavigationContext.Provider value={navigation}>
       <div className={`flex flex-col sm:flex-row w-full ${dark ? 'dark' : ''} ${className}`.trim()}>
         <div className="flex-1 min-h-0 min-w-0 sm:h-full flex flex-col bg-gray-100 dark:bg-gray-900">
           <ContainerList containers={containers} selected={selected} onSelect={select} />
@@ -122,6 +138,7 @@ function ViewerBody({
           <Info tab={tab} onTabChange={onTabChange} container={container} manifest={manifest} />
         </SidePanel>
       </div>
+      </CanvasNavigationContext.Provider>
     </PlaybackContext.Provider>
   );
 }
