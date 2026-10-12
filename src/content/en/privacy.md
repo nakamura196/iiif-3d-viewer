@@ -1,6 +1,6 @@
 # Privacy Policy
 
-IIIF 3D Viewer ("the Service") respects the privacy of its users and handles information obtained through the provision of the Service as described below.
+IIIF Kasane ("the Service") respects the privacy of its users and handles information obtained through the provision of the Service as described below.
 
 Last updated: May 25, 2026
 

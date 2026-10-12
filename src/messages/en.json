@@ -1,6 +1,6 @@
 {
   "Header": {
-    "title": "IIIF 3D Viewer",
+    "title": "IIIF Kasane",
     "home": "Home",
     "download": "Download",
     "downloadShort": "DL",
@@ -8,8 +8,8 @@
     "japanese": "日本語"
   },
   "Footer": {
-    "title": "IIIF 3D Viewer",
-    "description": "A 3D model viewer with annotation support, based on the IIIF Manifest.",
+    "title": "IIIF Kasane",
+    "description": "A viewer that layers 3D models, images, audio, video and annotations, based on the IIIF Manifest.",
     "guideHeading": "Help & Legal",
     "help": "Help",
     "privacy": "Privacy Policy",
@@ -77,8 +77,8 @@
   "Home": {
     "developers": "Developers",
     "developerNames": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)",
-    "title": "IIIF 3D Viewer",
-    "subtitle": "A viewer application that provides 3D model display and annotation functionality based on IIIF Manifest.",
+    "title": "IIIF Kasane",
+    "subtitle": "A viewer application that layers 3D models, images, audio, video and annotations based on IIIF Manifest (formerly IIIF 3D Viewer).",
     "features": "Main Features",
     "feature1Title": "3D Model Display",
     "feature1Description": "Interactive display of 3D models in GLB format. Freely rotate and zoom with mouse or touch controls.",
