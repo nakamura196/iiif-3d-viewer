@@ -1,0 +1,200 @@
+'use client';
+
+import { useState } from 'react';
+import { useAtom, useAtomValue } from 'jotai';
+import {
+  imageLayerCount,
+  isLayerVisible,
+  labelIn,
+  layerOpacity,
+  layerThumbnailUrl,
+  moveLayer,
+  orderLayers,
+  type LayerItem,
+} from '../../core';
+import { canvasLayersAtom, layerOrderAtom, layerSettingsAtom } from '../atoms';
+import { useLocale, useTranslations } from '../env';
+import type { Panel, PanelContext } from './types';
+
+// 重なった画像（合成の画像・Choice の候補）を 1 枚ずつ、表示・非表示、不透明度、重ね順で操作する。
+// 一覧は上が手前（画像編集ソフトのレイヤーと同じ向き）。重ね順はドラッグか ▲▼ で変える。
+// Mirador の Layers パネルと同じ操作をそろえた。
+
+const BUTTON =
+  'shrink-0 grid place-items-center w-7 h-7 rounded text-[var(--ds-fg)] hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 disabled:hover:bg-transparent';
+
+function EyeIcon({ open }: { open: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z" />
+      <circle cx="12" cy="12" r="3" />
+      {!open && <path d="M3 3l18 18" />}
+    </svg>
+  );
+}
+
+function LayersTab({ container }: PanelContext) {
+  const t = useTranslations('Layers');
+  const locale = useLocale();
+  const current = useAtomValue(canvasLayersAtom);
+  const [settings, setSettings] = useAtom(layerSettingsAtom);
+  const [orders, setOrders] = useAtom(layerOrderAtom);
+  const [dragging, setDragging] = useState<string | null>(null);
+  const [over, setOver] = useState<string | null>(null);
+
+  if (!container || !current || current.canvasId !== container.id) {
+    return <div className="p-4 text-sm text-[var(--ds-fg)]">{t('loading')}</div>;
+  }
+  const canvasId = container.id;
+  const items = current.items;
+  const bottomFirst = orderLayers(items, orders[canvasId]);
+  const ids = bottomFirst.map((it) => it.id);
+  const topFirst = bottomFirst.slice().reverse();
+  const number = new Map(items.map((it, i) => [it.id, i + 1]));
+  const nameOf = (it: LayerItem) => labelIn(it.label, locale) || t('layerN', { n: number.get(it.id) ?? 0 });
+
+  const patch = (id: string, change: { visible?: boolean; opacity?: number }) =>
+    setSettings((s) => ({ ...s, [id]: { ...s[id], ...change } }));
+  const moveTo = (id: string, to: number) => setOrders((o) => ({ ...o, [canvasId]: moveLayer(ids, id, to) }));
+  const reset = () => {
+    setSettings((s) => Object.fromEntries(Object.entries(s).filter(([k]) => !items.some((it) => it.id === k))));
+    setOrders((o) => Object.fromEntries(Object.entries(o).filter(([k]) => k !== canvasId)));
+  };
+  const showAll = () =>
+    setSettings((s) => ({ ...s, ...Object.fromEntries(items.map((it) => [it.id, { ...s[it.id], visible: true }])) }));
+
+  return (
+    <div className="p-3 text-sm text-[var(--ds-fg)]">
+      <div className="flex flex-wrap items-center gap-2 mb-2">
+        <p className="flex-1 min-w-0 text-xs text-gray-500 dark:text-gray-400">{t('hint')}</p>
+        <button type="button" onClick={showAll} className="text-xs underline">
+          {t('showAll')}
+        </button>
+        <button type="button" onClick={reset} className="text-xs underline">
+          {t('reset')}
+        </button>
+      </div>
+      <ol className="space-y-2">
+        {topFirst.map((it) => {
+          const visible = isLayerVisible(it, settings);
+          const opacity = Math.round(layerOpacity(it, settings) * 100);
+          const pos = ids.indexOf(it.id);
+          const name = nameOf(it);
+          return (
+            <li
+              key={it.id}
+              draggable
+              onDragStart={(e) => {
+                setDragging(it.id);
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', it.id);
+              }}
+              onDragEnd={() => {
+                setDragging(null);
+                setOver(null);
+              }}
+              onDragOver={(e) => {
+                if (!dragging) return;
+                e.preventDefault();
+                setOver(it.id);
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                if (dragging && dragging !== it.id) moveTo(dragging, pos);
+                setDragging(null);
+                setOver(null);
+              }}
+              className={`rounded border p-2 bg-[var(--ds-surface)] ${
+                over === it.id && dragging !== it.id ? 'border-blue-500' : 'border-[var(--ds-border)]'
+              } ${dragging === it.id ? 'opacity-50' : ''}`}
+            >
+              <div className="flex items-center gap-2">
+                <span className="cursor-grab select-none text-gray-400" title={t('drag')} aria-hidden="true">
+                  ⠿
+                </span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={layerThumbnailUrl(it.layer, 96)}
+                  alt=""
+                  draggable={false}
+                  className={`w-12 h-12 object-contain shrink-0 bg-gray-100 dark:bg-gray-800 ${visible ? '' : 'opacity-40'}`}
+                />
+                <div className="flex-1 min-w-0">
+                  <div className="truncate" title={name}>
+                    {name}
+                  </div>
+                  {it.choice && <div className="text-xs text-gray-500 dark:text-gray-400">{t('choiceOption')}</div>}
+                </div>
+                <button
+                  type="button"
+                  className={BUTTON}
+                  onClick={() => patch(it.id, { visible: !visible })}
+                  aria-pressed={visible}
+                  aria-label={t(visible ? 'hide' : 'show', { name })}
+                  title={t(visible ? 'hide' : 'show', { name })}
+                >
+                  <EyeIcon open={visible} />
+                </button>
+                <button
+                  type="button"
+                  className={BUTTON}
+                  onClick={() => moveTo(it.id, pos + 1)}
+                  disabled={pos === ids.length - 1}
+                  aria-label={t('up', { name })}
+                  title={t('up', { name })}
+                >
+                  ▲
+                </button>
+                <button
+                  type="button"
+                  className={BUTTON}
+                  onClick={() => moveTo(it.id, pos - 1)}
+                  disabled={pos === 0}
+                  aria-label={t('down', { name })}
+                  title={t('down', { name })}
+                >
+                  ▼
+                </button>
+              </div>
+              <div className="flex items-center gap-2 mt-2">
+                <label className="text-xs text-gray-500 dark:text-gray-400 shrink-0" htmlFor={`layer-opacity-${it.id}`}>
+                  {t('opacity')}
+                </label>
+                <input
+                  id={`layer-opacity-${it.id}`}
+                  type="range"
+                  min={0}
+                  max={100}
+                  value={opacity}
+                  disabled={!visible}
+                  onChange={(e) => patch(it.id, { opacity: Number(e.target.value) / 100 })}
+                  className="flex-1 min-w-0"
+                />
+                <input
+                  type="number"
+                  min={0}
+                  max={100}
+                  value={opacity}
+                  disabled={!visible}
+                  aria-label={t('opacityOf', { name })}
+                  onChange={(e) => {
+                    const v = Number(e.target.value);
+                    if (Number.isFinite(v)) patch(it.id, { opacity: Math.min(100, Math.max(0, v)) / 100 });
+                  }}
+                  className="w-14 rounded border border-[var(--ds-border)] bg-[var(--ds-surface)] px-1 py-0.5 text-xs text-right"
+                />
+                <span className="text-xs">%</span>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
+    </div>
+  );
+}
+
+export const layersPanel: Panel = {
+  id: 'layers',
+  available: ({ container }) => imageLayerCount(container?.painting ?? []) > 1,
+  Component: LayersTab,
+};

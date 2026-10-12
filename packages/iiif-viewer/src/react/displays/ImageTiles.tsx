@@ -72,12 +72,15 @@ export default function ImageLayerView({
   canvasWidth,
   canvasHeight,
   stage,
+  opacity = 1,
   onFailed,
 }: {
   layer: ImageLayer;
   canvasWidth: number;
   canvasHeight: number;
   stage: StageInfo;
+  /** 0 to 1 (the Layers tab). */
+  opacity?: number;
   onFailed?: () => void;
 }) {
   const t = useTranslations('Viewer');
@@ -113,6 +116,7 @@ export default function ImageLayerView({
     width: pct(placedW / canvasWidth),
     height: pct(placedH / canvasHeight),
     overflow: 'hidden' as const,
+    ...(opacity < 1 ? { opacity } : {}),
     ...(turn ? { transform: turn, transformOrigin: 'center center' } : {}),
   };
 

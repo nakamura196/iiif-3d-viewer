@@ -3,6 +3,7 @@ import type { ManifestV4 } from '../core';
 import type { PaintedModel } from '../core';
 import type { Annotation, InfoPanelContent, Annotation3 } from '../core';
 import { EMPTY_FILTER, filterAnnotations, type AnnotationFilter } from '../core';
+import type { LayerItem, LayerSetting } from '../core';
 
 export const infoPanelAtom = atom<InfoPanelContent | null>(null);
 
@@ -13,6 +14,12 @@ export const annotationsAtom = atom<Annotation[]>([]);
 // Scene に置かれた 3D モデル（Choice は候補ごと）と、Choice で選ばれている候補の番号
 export const paintedModelsAtom = atom<PaintedModel[]>([]);
 export const modelChoicesAtom = atom<Record<string, number>>({});
+
+// 画像の Canvas に重なったレイヤー。表示中の Canvas の一覧（右パネルのタブが読む）と、
+// 読む人が変えた表示・不透明度（レイヤーの id ごと）と重ね順（Canvas の id ごと、下から）
+export const canvasLayersAtom = atom<{ canvasId: string; items: LayerItem[] } | null>(null);
+export const layerSettingsAtom = atom<Record<string, LayerSetting>>({});
+export const layerOrderAtom = atom<Record<string, string[]>>({});
 
 // 一覧の検索・絞り込みの条件。3D の印もこの結果だけを表示する
 export const annotationFilterAtom = atom<AnnotationFilter>(EMPTY_FILTER);

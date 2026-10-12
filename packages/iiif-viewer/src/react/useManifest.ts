@@ -11,6 +11,8 @@ import {
 } from '../core';
 import {
   annotationsAtom,
+  layerOrderAtom,
+  layerSettingsAtom,
   manifestAtom,
   manifestUrlAtom,
   modelChoicesAtom,
@@ -29,6 +31,8 @@ export function useManifest(iiifContent: string | null): { failed: boolean } {
   const setAnnotations = useSetAtom(annotationsAtom);
   const setPaintedModels = useSetAtom(paintedModelsAtom);
   const setModelChoices = useSetAtom(modelChoicesAtom);
+  const setLayerSettings = useSetAtom(layerSettingsAtom);
+  const setLayerOrder = useSetAtom(layerOrderAtom);
 
   useEffect(() => {
     if (!iiifContent) return;
@@ -45,6 +49,8 @@ export function useManifest(iiifContent: string | null): { failed: boolean } {
         const { annotations } = parseManifestV4(manifest);
         setPaintedModels(paintedModelsOf(firstSceneOf(manifest)));
         setModelChoices({});
+        setLayerSettings({});
+        setLayerOrder({});
         setManifest(manifest);
         setAnnotations(annotations);
       } catch (e) {
@@ -55,7 +61,7 @@ export function useManifest(iiifContent: string | null): { failed: boolean } {
     return () => {
       cancelled = true;
     };
-  }, [iiifContent, setManifestUrl, setManifest, setAnnotations, setPaintedModels, setModelChoices]);
+  }, [iiifContent, setManifestUrl, setManifest, setAnnotations, setPaintedModels, setModelChoices, setLayerSettings, setLayerOrder]);
 
   return { failed: iiifContent !== null && failedUrl === iiifContent };
 }

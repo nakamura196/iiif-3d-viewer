@@ -15,11 +15,20 @@ export function useChoiceIndex(painting: PaintingContent | undefined): number {
 }
 
 // A Choice between two or more candidates of an image / video / audio painting.
-export default function ChoiceBar({ painting }: { painting: PaintingContent }) {
+// `index` / `onChange` given: the caller keeps the choice (an image Canvas keeps it as layer visibility).
+export default function ChoiceBar({
+  painting,
+  index: controlled,
+  onChange,
+}: {
+  painting: PaintingContent;
+  index?: number;
+  onChange?: (index: number) => void;
+}) {
   const t = useTranslations('Viewer');
   const locale = useLocale();
   const [choices, setChoices] = useAtom(modelChoicesAtom);
-  const index = Math.min(choices[painting.id] ?? 0, painting.options.length - 1);
+  const index = controlled ?? Math.min(choices[painting.id] ?? 0, painting.options.length - 1);
   if (painting.options.length < 2) return null;
 
   return (
@@ -30,7 +39,11 @@ export default function ChoiceBar({ painting }: { painting: PaintingContent }) {
       <select
         id="iiif-viewer-choice"
         value={index}
-        onChange={(e) => setChoices((c) => ({ ...c, [painting.id]: Number(e.target.value) }))}
+        onChange={(e) => {
+          const next = Number(e.target.value);
+          if (onChange) onChange(next);
+          else setChoices((c) => ({ ...c, [painting.id]: next }));
+        }}
         className="text-sm rounded border border-[var(--ds-border)] bg-[var(--ds-surface)] text-[var(--ds-fg)] px-1 py-0.5 max-w-full"
       >
         {painting.options.map((o, i) => (
