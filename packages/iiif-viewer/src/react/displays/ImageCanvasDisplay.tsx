@@ -20,6 +20,7 @@ import { usePlayback } from '../playback';
 import ChoiceBar from './ChoiceBar';
 import { AnnotationBoxes, MediaCover, ThumbnailStrip, type ThumbnailItem } from './ImageExtras';
 import ImageLayerView from './ImageTiles';
+import LayerBar from './LayerBar';
 import ImageView from './ImageView';
 import { DISPLAYS } from './registry';
 import type { Display, DisplayProps } from './types';
@@ -79,6 +80,8 @@ function ImageBody({
   const choices = useAtomValue(modelChoicesAtom);
   const { container } = props;
   const [failedBase, setFailedBase] = useState(false);
+  // paintings the reader switched off in the layer bar (by painting id)
+  const [hidden, setHidden] = useState<Record<string, boolean>>({});
 
   // one option per painting (the chosen one of a Choice), drawn in painting order
   const shown = paintings.map((p) => {
@@ -86,7 +89,11 @@ function ImageBody({
     return p.options[index];
   });
   const layers = shown.map((o) => o.layer).filter((l): l is ImageLayer => !!l);
-  const annotations: ImageAnnotation[] = [...layers.flatMap((l) => l.annotations), ...images.annotations];
+  const visible = shown.map((o, i) => !!o.layer && !hidden[paintings[i].id]);
+  const annotations: ImageAnnotation[] = [
+    ...shown.flatMap((o, i) => (visible[i] && o.layer ? o.layer.annotations : [])),
+    ...images.annotations,
+  ];
 
   const bars: PaintingContent[] = paintings
     .filter((p) => p.options.length > 1)
@@ -105,6 +112,11 @@ function ImageBody({
       {bars.map((b) => (
         <ChoiceBar key={b.id} painting={b} />
       ))}
+      <LayerBar
+        paintings={paintings}
+        hidden={hidden}
+        onToggle={(id) => setHidden((h) => ({ ...h, [id]: !h[id] }))}
+      />
       <div className="relative flex-1 min-h-0 min-w-0">
         {width && height ? (
           <ImageView
@@ -116,16 +128,20 @@ function ImageBody({
             extra={<AnnotationBoxes annotations={annotations} canvasWidth={width} canvasHeight={height} />}
           >
             {(stage) =>
-              layers.map((l, i) => (
-                <ImageLayerView
-                  key={`${i}:${l.url}`}
-                  layer={l}
-                  canvasWidth={width}
-                  canvasHeight={height}
-                  stage={stage}
-                  onFailed={i === 0 ? () => setFailedBase(true) : undefined}
-                />
-              ))
+              shown.map(
+                (o, i) =>
+                  o.layer &&
+                  visible[i] && (
+                    <ImageLayerView
+                      key={`${i}:${o.layer.url}`}
+                      layer={o.layer}
+                      canvasWidth={width}
+                      canvasHeight={height}
+                      stage={stage}
+                      onFailed={i === 0 ? () => setFailedBase(true) : undefined}
+                    />
+                  ),
+              )
             }
           </ImageView>
         ) : (

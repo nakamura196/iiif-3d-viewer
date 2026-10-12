@@ -61,6 +61,8 @@
     "unsupportedContent": "This kind of content cannot be displayed",
     "containers": "Contents",
     "choice": "Choice",
+    "layers": "Layers",
+    "layerN": "Image {n}",
     "zoomHint": "Wheel to zoom, drag to move, double-click to reset"
   },
   "Transcript": {
