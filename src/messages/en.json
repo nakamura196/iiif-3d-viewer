@@ -52,6 +52,7 @@
     "sampleManifest2": "Ishibuchi Family Globe (Kikuchi City Library Collection) - With Annotations",
     "sampleManifest3": "Ishibuchi Family Globe (Kikuchi City Library Collection) - Map Viewer",
     "sampleManifest4": "Ishibuchi Family Globe (Kikuchi City Library Collection) - Shared Region and Keyed Tag example",
+    "sampleManifestAll": "All samples: image, audio, video and 3D (IIIF Cookbook and more)",
     "requiredUrl": "Enter the Manifest URL",
     "invalidUrl": "Enter a valid URL"
   },

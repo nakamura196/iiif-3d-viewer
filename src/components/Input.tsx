@@ -110,6 +110,11 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
               {t('sampleManifest4')}
             </button>
           </li>
+          <li>
+            <Link href="/samples" className="text-[var(--ds-primary)] hover:underline">
+              {t('sampleManifestAll')}
+            </Link>
+          </li>
         </ul>
       </div>
     </div>
