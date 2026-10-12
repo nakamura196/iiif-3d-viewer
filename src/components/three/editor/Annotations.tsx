@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { useThree } from '@react-three/fiber';
 import gsap from 'gsap';
 import AnnotationMarker from '@/components/three/editor/AnnotationMarker';
-import type { Annotation3 as Annotation } from '@/types/main';
+import type { Annotation3 as Annotation } from '@nakamura196/iiif-viewer/core';
 import { useAtom } from 'jotai';
 import { selectedAnnotationIdAtom } from '@/atoms/infoPanelAtom';
 import { useEffect } from 'react';

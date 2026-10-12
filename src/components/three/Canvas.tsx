@@ -4,8 +4,8 @@ import { Suspense, useEffect, useState, useRef, useImperativeHandle, forwardRef,
 import Scene, { type PlacedModel, type ViewHandle } from '@/components/three/Scene';
 import { useAtom } from 'jotai';
 import { manifestAtom } from '@/atoms/infoPanelAtom';
-import { sceneCamerasOf } from '@/lib/services/manifestParser';
-import { labelIn } from '@/lib/services/paintedModels';
+import { sceneCamerasOf } from '@nakamura196/iiif-viewer/core';
+import { labelIn } from '@nakamura196/iiif-viewer/core';
 import { useProgress } from '@react-three/drei';
 import { useTheme } from 'next-themes';
 import { useLocale, useTranslations } from 'next-intl';

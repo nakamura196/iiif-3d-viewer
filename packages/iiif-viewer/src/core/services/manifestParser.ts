@@ -12,9 +12,9 @@ import type {
   SelectorV4,
   SpecificResourceV4,
   WKTSelectorV4,
-} from '@/types/iiif';
-import type { Annotation, AnnotationImage, AnnotationTag } from '@/types/main';
-import { paintedModelsOf } from '@/lib/services/paintedModels';
+} from '../types/iiif';
+import type { Annotation, AnnotationImage, AnnotationTag } from '../types/main';
+import { paintedModelsOf } from './paintedModels';
 
 export interface GeoFeatureName {
   toponym: string;

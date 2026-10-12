@@ -2,6 +2,9 @@
   "name": "iiif-3d-viewer",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "dev": "node scripts/copy-maplibre-worker.mjs && next dev -p 3838",
     "build": "node scripts/copy-maplibre-worker.mjs && next build",
@@ -14,6 +17,7 @@
   },
   "dependencies": {
     "@iiif/presentation-3": "^2.1.0",
+    "@nakamura196/iiif-viewer": "*",
     "@nakamura196/react-ui": "github:nakamura196/react-ui#v0.2.0",
     "@next/third-parties": "^16.2.4",
     "@react-three/drei": "^10.6.0",

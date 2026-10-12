@@ -18,7 +18,7 @@ import type {
   ManifestV4,
   SceneV4,
   SpecificResourceV4,
-} from '@/types/iiif';
+} from '../types/iiif';
 
 const V4_CONTEXT = 'http://iiif.io/api/presentation/4/context.json';
 

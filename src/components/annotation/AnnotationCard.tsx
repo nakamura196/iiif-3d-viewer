@@ -2,8 +2,8 @@ import type { ReactNode, Ref } from 'react';
 import { useTranslations } from 'next-intl';
 import { SeeAlso, type PrimitivesExternalWebResource } from '@/components/iiif/primitives';
 import AnnotationImages from '@/components/annotation/AnnotationImages';
-import { tagKey } from '@/lib/annotationFilter';
-import type { Annotation } from '@/types/main';
+import { tagKey } from '@nakamura196/iiif-viewer/core';
+import type { Annotation } from '@nakamura196/iiif-viewer/core';
 
 // One annotation as a card: number, label, description, images, tags, creator, seeAlso.
 // Shared by the viewer's annotation list and the georeferencing page, so that what an

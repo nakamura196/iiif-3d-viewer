@@ -87,7 +87,7 @@ export interface NewAnnotation {
   target_canvas: string;
   data: {
     body: {
-      value: OutputData;
+      value: unknown; // formerly an unresolved `OutputData` (hidden by skipLibCheck in the .d.ts)
       label: string;
       type: string;
     };

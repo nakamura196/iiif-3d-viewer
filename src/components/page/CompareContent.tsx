@@ -15,10 +15,10 @@ import ManifestInput from '@/components/Input';
 import Info from '@/components/layout/panels/Info';
 import SidePanel from '@/components/layout/SidePanel';
 import CompareView, { type CompareMode } from '@/components/three/CompareView';
-import { fetchManifest } from '@/lib/services/utils';
-import { convertToV4 } from '@/lib/services/manifestConverter';
-import { parseManifestV4 } from '@/lib/services/manifestParser';
-import { labelIn, paintedModelsOf } from '@/lib/services/paintedModels';
+import { fetchManifest } from '@nakamura196/iiif-viewer/core';
+import { convertToV4 } from '@nakamura196/iiif-viewer/core';
+import { parseManifestV4 } from '@nakamura196/iiif-viewer/core';
+import { labelIn, paintedModelsOf } from '@nakamura196/iiif-viewer/core';
 
 const MODES: CompareMode[] = ['side', 'swipe', 'spyglass'];
 

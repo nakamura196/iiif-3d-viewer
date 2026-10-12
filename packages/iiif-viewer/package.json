@@ -1,0 +1,15 @@
+{
+  "name": "@nakamura196/iiif-viewer",
+  "version": "0.1.0",
+  "description": "IIIF viewer building blocks (Phase 1: framework-free core).",
+  "license": "MIT",
+  "type": "module",
+  "exports": {
+    "./core": "./src/core/index.ts"
+  },
+  "peerDependencies": {
+    "react": "^19",
+    "react-dom": "^19",
+    "three": "^0.178.0"
+  }
+}

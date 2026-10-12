@@ -1,6 +1,6 @@
 import { Html, Line } from '@react-three/drei';
 import { useMemo, useRef, useEffect } from 'react';
-import { Annotation } from '@/types/main';
+import { Annotation } from '@nakamura196/iiif-viewer/core';
 import * as THREE from 'three';
 import Popup from '@/components/three/Popup';
 

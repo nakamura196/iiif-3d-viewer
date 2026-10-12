@@ -10,8 +10,8 @@ import { annotationsAtom, visibleAnnotationsAtom } from '@/atoms/infoPanelAtom';
 import { selectedAnnotationIdAtom } from '@/atoms/infoPanelAtom';
 import { useEffect } from 'react';
 import { Vector3, Mesh, Frustum, Matrix4, Raycaster, Box3, Sphere } from 'three';
-import { computeFocusCamera, runFocusFlight } from '@/lib/focusCamera';
-import { groupByRegion } from '@/lib/regions';
+import { computeFocusCamera, runFocusFlight } from '@nakamura196/iiif-viewer/core';
+import { groupByRegion } from '@nakamura196/iiif-viewer/core';
 import { GLTF } from 'three-stdlib';
 
 // 再利用可能なオブジェクト

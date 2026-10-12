@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import plainSample from '../../../public/manifests/sample-manifest-with-annotations.json';
+import plainSample from '../../../../../public/manifests/sample-manifest-with-annotations.json';
 import { convertToV4 } from './manifestConverter';
 import { parseManifestV4, geoAnnotations, defaultCameraOf, type GeoFeature } from './manifestParser';
-import { thumbnailOf } from '@/components/annotation/AnnotationImages';
+import { thumbnailOf } from '../thumbnail';
 
 const load = (manifest: unknown) => parseManifestV4(convertToV4(manifest));
 

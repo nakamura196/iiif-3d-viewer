@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import plainSample from '../../../public/manifests/sample-manifest-with-annotations.json';
-import extensionSample from '../../../public/manifests/sample-manifest-region-tags.json';
+import plainSample from '../../../../../public/manifests/sample-manifest-with-annotations.json';
+import extensionSample from '../../../../../public/manifests/sample-manifest-region-tags.json';
 import { convertToV4 } from './manifestConverter';
 import { parseManifestV4 } from './manifestParser';
-import { groupByRegion } from '@/lib/regions';
+import { groupByRegion } from '../regions';
 
 const load = (manifest: unknown) => parseManifestV4(convertToV4(manifest));
 
