@@ -1,0 +1,71 @@
+{
+  "Annotation": {
+    "title": "Annotation List",
+    "annotations": "Annotations",
+    "annotationCount": "{count} items",
+    "type": "Type",
+    "unknown": "Unknown",
+    "annotationId": "Annotation {id}",
+    "viewDetails": "View Details",
+    "edit": "Edit",
+    "newAnnotation": "New Annotation",
+    "seeAlso": "See Also",
+    "sameRegion": "{count} annotations on the same region",
+    "creator": "Creator",
+    "searchPlaceholder": "Search annotations",
+    "tags": "Tags",
+    "filteredCount": "{shown} of {total}",
+    "images": "Images",
+    "relatedImages": "Related resources",
+    "clearFilter": "Clear filters"
+  },
+  "SidePanel": {
+    "open": "Show panel",
+    "close": "Hide panel"
+  },
+  "Info": {
+    "metadata": "Metadata",
+    "annotations": "Annotations",
+    "transcript": "Transcript"
+  },
+  "Metadata": {
+    "title": "Title",
+    "description": "Description",
+    "metadata": "Metadata",
+    "seeAlso": "See Also",
+    "provider": "Provider",
+    "homepage": "Homepage",
+    "rendering": "Rendering",
+    "rights": "Rights",
+    "requiredStatement": "Attribution",
+    "navDate": "Date",
+    "thumbnail": "Thumbnail",
+    "partOf": "Part Of",
+    "viewingDirection": "Viewing Direction",
+    "behavior": "Behavior"
+  },
+  "Viewer": {
+    "showAnnotations": "Show Annotations",
+    "hideAnnotations": "Hide Annotations",
+    "loading": "Loading 3D model...",
+    "autoRotate": "Rotate",
+    "fitAll": "Fit",
+    "topView": "Top",
+    "cameras": "Views from the manifest",
+    "camera": "View",
+    "loadingManifest": "Loading manifest...",
+    "manifestError": "Could not load the manifest",
+    "empty": "Nothing to display",
+    "imageError": "Could not load the image",
+    "mediaError": "Could not load the media",
+    "unsupportedContent": "This kind of content cannot be displayed",
+    "containers": "Contents",
+    "choice": "Choice",
+    "zoomHint": "Wheel to zoom, drag to move, double-click to reset"
+  },
+  "Transcript": {
+    "loading": "Loading transcript...",
+    "error": "Could not load the transcript",
+    "empty": "The transcript is empty"
+  }
+}

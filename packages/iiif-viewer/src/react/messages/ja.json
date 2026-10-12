@@ -1,0 +1,71 @@
+{
+  "Annotation": {
+    "title": "アノテーション一覧",
+    "annotations": "アノテーション",
+    "annotationCount": "{count}件",
+    "type": "タイプ",
+    "unknown": "不明",
+    "annotationId": "アノテーション {id}",
+    "viewDetails": "詳細を見る",
+    "edit": "編集",
+    "newAnnotation": "新しいアノテーション",
+    "seeAlso": "参照",
+    "sameRegion": "同じ場所の注釈 {count}件",
+    "creator": "作成者",
+    "searchPlaceholder": "アノテーションを検索",
+    "tags": "タグ",
+    "filteredCount": "{total}件中 {shown}件",
+    "images": "画像",
+    "relatedImages": "関連する資料",
+    "clearFilter": "絞り込みを解除"
+  },
+  "SidePanel": {
+    "open": "説明を開く",
+    "close": "説明を閉じる"
+  },
+  "Info": {
+    "metadata": "メタデータ",
+    "annotations": "アノテーション",
+    "transcript": "文字起こし"
+  },
+  "Metadata": {
+    "title": "タイトル",
+    "description": "説明",
+    "metadata": "メタデータ",
+    "seeAlso": "参照",
+    "provider": "提供者",
+    "homepage": "ホームページ",
+    "rendering": "関連リソース",
+    "rights": "権利",
+    "requiredStatement": "出典表記",
+    "navDate": "日付",
+    "thumbnail": "サムネイル",
+    "partOf": "親リソース",
+    "viewingDirection": "表示方向",
+    "behavior": "ビヘイビア"
+  },
+  "Viewer": {
+    "showAnnotations": "アノテーションを表示",
+    "hideAnnotations": "アノテーションを非表示",
+    "loading": "3Dモデルを読み込み中...",
+    "autoRotate": "回す",
+    "fitAll": "全体",
+    "topView": "上",
+    "cameras": "マニフェストの視点",
+    "camera": "視点",
+    "loadingManifest": "マニフェストを読み込み中...",
+    "manifestError": "マニフェストを読み込めませんでした",
+    "empty": "表示できる内容がありません",
+    "imageError": "画像を読み込めませんでした",
+    "mediaError": "メディアを読み込めませんでした",
+    "unsupportedContent": "この形式の内容は表示できません",
+    "containers": "表示する内容",
+    "choice": "選択肢",
+    "zoomHint": "ホイールで拡大縮小、ドラッグで移動、ダブルクリックでもとに戻す"
+  },
+  "Transcript": {
+    "loading": "文字起こしを読み込み中...",
+    "error": "文字起こしを読み込めませんでした",
+    "empty": "文字起こしの内容がありません"
+  }
+}

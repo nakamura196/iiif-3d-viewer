@@ -54,46 +54,6 @@
     "requiredUrl": "Enter the Manifest URL",
     "invalidUrl": "Enter a valid URL"
   },
-  "Metadata": {
-    "title": "Title",
-    "description": "Description",
-    "metadata": "Metadata",
-    "seeAlso": "See Also",
-    "provider": "Provider",
-    "homepage": "Homepage",
-    "rendering": "Rendering",
-    "rights": "Rights",
-    "requiredStatement": "Attribution",
-    "navDate": "Date",
-    "thumbnail": "Thumbnail",
-    "partOf": "Part Of",
-    "viewingDirection": "Viewing Direction",
-    "behavior": "Behavior"
-  },
-  "Info": {
-    "metadata": "Metadata",
-    "annotations": "Annotations"
-  },
-  "Annotation": {
-    "title": "Annotation List",
-    "annotations": "Annotations",
-    "annotationCount": "{count} items",
-    "type": "Type",
-    "unknown": "Unknown",
-    "annotationId": "Annotation {id}",
-    "viewDetails": "View Details",
-    "edit": "Edit",
-    "newAnnotation": "New Annotation",
-    "seeAlso": "See Also",
-    "sameRegion": "{count} annotations on the same region",
-    "creator": "Creator",
-    "searchPlaceholder": "Search annotations",
-    "tags": "Tags",
-    "filteredCount": "{shown} of {total}",
-    "images": "Images",
-    "relatedImages": "Related resources",
-    "clearFilter": "Clear filters"
-  },
   "Help": {
     "title": "Help"
   },
@@ -111,16 +71,6 @@
     "noAnnotations": "No annotations",
     "fitAll": "Show all",
     "noResults": "No results found"
-  },
-  "Viewer": {
-    "showAnnotations": "Show Annotations",
-    "hideAnnotations": "Hide Annotations",
-    "loading": "Loading 3D model...",
-    "autoRotate": "Rotate",
-    "fitAll": "Fit",
-    "topView": "Top",
-    "cameras": "Views from the manifest",
-    "camera": "View"
   },
   "Home": {
     "developers": "Developers",
@@ -148,10 +98,6 @@
     "specGeorefNote": "Used by the map viewer. The format, defined for 2D images, is extended to 3D coordinates.",
     "specRegionTagTitle": "Shared Region and Keyed Tag Extension (own extension, draft)",
     "specRegionTagNote": "Groups annotations that target the same region, and shows the label of a tag as its key."
-  },
-  "SidePanel": {
-    "open": "Show panel",
-    "close": "Hide panel"
   },
   "Compare": {
     "mode": "Mode",

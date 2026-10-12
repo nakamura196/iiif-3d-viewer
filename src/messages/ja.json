@@ -54,46 +54,6 @@
     "requiredUrl": "マニフェストURLを入力してください",
     "invalidUrl": "有効なURLを入力してください"
   },
-  "Metadata": {
-    "title": "タイトル",
-    "description": "説明",
-    "metadata": "メタデータ",
-    "seeAlso": "参照",
-    "provider": "提供者",
-    "homepage": "ホームページ",
-    "rendering": "関連リソース",
-    "rights": "権利",
-    "requiredStatement": "出典表記",
-    "navDate": "日付",
-    "thumbnail": "サムネイル",
-    "partOf": "親リソース",
-    "viewingDirection": "表示方向",
-    "behavior": "ビヘイビア"
-  },
-  "Info": {
-    "metadata": "メタデータ",
-    "annotations": "アノテーション"
-  },
-  "Annotation": {
-    "title": "アノテーション一覧",
-    "annotations": "アノテーション",
-    "annotationCount": "{count}件",
-    "type": "タイプ",
-    "unknown": "不明",
-    "annotationId": "アノテーション {id}",
-    "viewDetails": "詳細を見る",
-    "edit": "編集",
-    "newAnnotation": "新しいアノテーション",
-    "seeAlso": "参照",
-    "sameRegion": "同じ場所の注釈 {count}件",
-    "creator": "作成者",
-    "searchPlaceholder": "アノテーションを検索",
-    "tags": "タグ",
-    "filteredCount": "{total}件中 {shown}件",
-    "images": "画像",
-    "relatedImages": "関連する資料",
-    "clearFilter": "絞り込みを解除"
-  },
   "Help": {
     "title": "ヘルプ"
   },
@@ -111,16 +71,6 @@
     "noAnnotations": "アノテーションがありません",
     "fitAll": "全体を表示",
     "noResults": "結果が見つかりません"
-  },
-  "Viewer": {
-    "showAnnotations": "アノテーションを表示",
-    "hideAnnotations": "アノテーションを非表示",
-    "loading": "3Dモデルを読み込み中...",
-    "autoRotate": "回す",
-    "fitAll": "全体",
-    "topView": "上",
-    "cameras": "マニフェストの視点",
-    "camera": "視点"
   },
   "Home": {
     "developers": "開発者",
@@ -148,10 +98,6 @@
     "specGeorefNote": "地図連携ビューアで使います。平面の画像向けの形式を、3 次元の座標に広げて使っています。",
     "specRegionTagTitle": "Shared Region and Keyed Tag Extension（独自の拡張・草案）",
     "specRegionTagNote": "同じ場所を指す注釈をまとめて表示し、タグの label をキーとして表示します。"
-  },
-  "SidePanel": {
-    "open": "説明を開く",
-    "close": "説明を閉じる"
   },
   "Compare": {
     "mode": "表示のしかた",
