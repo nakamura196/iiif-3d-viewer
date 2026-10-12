@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ManifestInput from '@/components/Input';
 import { SectionHeading, News, VideoEmbed } from '@nakamura196/react-ui';
+import { contentParam } from '@nakamura196/iiif-viewer/core';
 
 export default function HomeContent() {
   const router = useRouter();
@@ -59,7 +60,7 @@ export default function HomeContent() {
   const demoVideoId = locale === 'en' ? 'Wbhqz5s6ahA' : '_thPJDU_hLA';
 
   const handleManifestSubmit = async (manifestUrl: string, tab?: string) => {
-    const url = `/${locale}/viewer?manifest=${encodeURIComponent(manifestUrl)}`;
+    const url = `/${locale}/viewer?${contentParam(manifestUrl)}`;
     router.push(tab ? `${url}&tab=${tab}` : url);
   };
 
