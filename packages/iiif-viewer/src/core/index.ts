@@ -1,4 +1,5 @@
 // Public API of @nakamura196/iiif-viewer/core: framework-free manifest reading.
+export * from './services/containers';
 export * from './services/manifestConverter';
 export * from './services/manifestParser';
 export * from './services/paintedModels';

@@ -21,7 +21,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { convertToV4 } from '@nakamura196/iiif-viewer/core';
 import { parseManifestV4 } from '@nakamura196/iiif-viewer/core';
-import { chosenUrl, paintedModelsOf } from '@nakamura196/iiif-viewer/core';
+import { chosenUrl, firstSceneOf, paintedModelsOf } from '@nakamura196/iiif-viewer/core';
 import ModelChoice from '@/components/three/ModelChoice';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
@@ -52,7 +52,7 @@ const ViewerContent: NextPage = () => {
       if (!raw) return;
       const manifest = convertToV4(raw);
       const { annotations } = parseManifestV4(manifest);
-      setPaintedModels(paintedModelsOf(manifest.items?.[0]));
+      setPaintedModels(paintedModelsOf(firstSceneOf(manifest)));
       setModelChoices({});
       setManifest(manifest);
       setAnnotations(annotations);
