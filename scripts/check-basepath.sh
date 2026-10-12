@@ -2,7 +2,7 @@
 # Verify that the static export under out/ contains sample manifest URLs that
 # include the GH Pages basePath. Without this, the top page's sample buttons
 # would point to `/manifests/...` and 404 when served from
-# https://nakamura196.github.io/iiif-3d-viewer/.
+# https://nakamura196.github.io/iiif-kasane/.
 #
 # Usage: GITHUB_PAGES=true npm run build && ./scripts/check-basepath.sh
 # (test:basepath script chains both.)
@@ -11,9 +11,9 @@
 set -euo pipefail
 
 OUT_DIR="out"
-BASE="/iiif-3d-viewer"
-# URL-encoded form of `/iiif-3d-viewer/manifests` (Footer links use encodeURIComponent).
-ENCODED="%2Fiiif-3d-viewer%2Fmanifests"
+BASE="/iiif-kasane"
+# URL-encoded form of `/iiif-kasane/manifests` (Footer links use encodeURIComponent).
+ENCODED="%2Fiiif-kasane%2Fmanifests"
 
 if [[ ! -d "$OUT_DIR" ]]; then
   echo "FAIL: $OUT_DIR not found. Run 'GITHUB_PAGES=true npm run build' first." >&2
@@ -37,7 +37,7 @@ fi
 
 # Bad pattern: bare encoded manifest path immediately after a `=` (URL param
 # boundary). Anchoring on `=` is required because the correct, basePath-prefixed
-# URL `%2Fiiif-3d-viewer%2Fmanifests%2F...` contains `%2Fmanifests%2F...` as a
+# URL `%2Fiiif-kasane%2Fmanifests%2F...` contains `%2Fmanifests%2F...` as a
 # substring; without the boundary the check matches the good URL.
 BAD_ENCODED='=%2Fmanifests%2Fsample-manifest'
 

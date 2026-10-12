@@ -54,4 +54,4 @@ The contents of this policy may be changed without notice as necessary. Any chan
 
 ## 8. Contact
 
-For inquiries regarding the Service or this policy, please use [GitHub Issues](https://github.com/nakamura196/iiif-3d-viewer/issues).
+For inquiries regarding the Service or this policy, please use [GitHub Issues](https://github.com/nakamura196/iiif-kasane/issues).

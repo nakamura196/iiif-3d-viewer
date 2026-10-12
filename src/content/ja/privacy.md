@@ -54,4 +54,4 @@ Cookie の利用を望まない場合は、ブラウザの設定で Cookie を�
 
 ## 8. お問い合わせ
 
-本サービスおよび本ポリシーに関するお問い合わせは、[GitHub Issues](https://github.com/nakamura196/iiif-3d-viewer/issues) よりお願いいたします。
+本サービスおよび本ポリシーに関するお問い合わせは、[GitHub Issues](https://github.com/nakamura196/iiif-kasane/issues) よりお願いいたします。

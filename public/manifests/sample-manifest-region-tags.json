@@ -61,7 +61,7 @@
                 "painting"
               ],
               "body": {
-                "id": "https://3d.ldas.jp/models/ishibuchi-globe.glb",
+                "id": "https://kasane.ldas.jp/models/ishibuchi-globe.glb",
                 "type": "Model",
                 "format": "model/gltf-binary"
               },

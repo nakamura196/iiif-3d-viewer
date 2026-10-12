@@ -1,6 +1,6 @@
 {
   "@context": "http://iiif.io/api/presentation/4/context.json",
-  "id": "https://3d.ldas.jp/manifests/sample-manifest-video-transcript.json",
+  "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json",
   "type": "Manifest",
   "label": { "en": ["Lunchroom Manners (timed transcript test)"] },
   "summary": {
@@ -8,18 +8,18 @@
   },
   "items": [
     {
-      "id": "https://3d.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas",
+      "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas",
       "type": "Canvas",
       "height": 360,
       "width": 480,
       "duration": 572.034,
       "items": [
         {
-          "id": "https://3d.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/page",
+          "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/page",
           "type": "AnnotationPage",
           "items": [
             {
-              "id": "https://3d.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/page/painting",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/page/painting",
               "type": "Annotation",
               "motivation": ["painting"],
               "body": {
@@ -31,7 +31,7 @@
                 "format": "video/mp4"
               },
               "target": {
-                "id": "https://3d.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas",
+                "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas",
                 "type": "Canvas"
               }
             }
@@ -40,11 +40,11 @@
       ],
       "annotations": [
         {
-          "id": "https://3d.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/supplementing",
+          "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/supplementing",
           "type": "AnnotationPage",
           "items": [
             {
-              "id": "https://3d.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/supplementing/captions",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/supplementing/captions",
               "type": "Annotation",
               "motivation": ["supplementing"],
               "provides": ["closedCaptions"],
@@ -56,12 +56,12 @@
                 "language": ["en"]
               },
               "target": {
-                "id": "https://3d.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas",
+                "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas",
                 "type": "Canvas"
               }
             },
             {
-              "id": "https://3d.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/supplementing/transcript",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/supplementing/transcript",
               "type": "Annotation",
               "motivation": ["supplementing"],
               "provides": ["transcript"],
@@ -73,7 +73,7 @@
                 "language": ["en"]
               },
               "target": {
-                "id": "https://3d.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas",
+                "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas",
                 "type": "Canvas"
               }
             }
