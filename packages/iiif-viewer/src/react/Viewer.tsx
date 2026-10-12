@@ -5,8 +5,10 @@ import { Provider, createStore, useAtom, useAtomValue, useSetAtom } from 'jotai'
 import {
   chosenUrl,
   containersOf,
+  isCaptions,
   labelIn,
   paintedModelsOf,
+  transcriptOf,
   type ContainerInfo,
   type MediaOption,
   type SceneV4,
@@ -26,12 +28,6 @@ import { useManifest } from './useManifest';
 // three.js and react-three-fiber are only fetched when a Scene is shown.
 const CanvasComponent = lazy(() => import('./three/Canvas'));
 
-const isVtt = (s: SupplementingContent) => s.format === 'text/vtt' || /\.vtt(\?|$)/i.test(s.url);
-const isCaptions = (s: SupplementingContent) =>
-  isVtt(s) && s.provides.some((p) => p === 'closedCaptions' || p === 'subtitles');
-const isTranscript = (s: SupplementingContent) =>
-  s.provides.includes('transcript') ||
-  (s.provides.length === 0 && (s.format === 'text/plain' || isVtt(s)));
 const optionLabel = (o: MediaOption, locale: string) =>
   labelIn(o.label, locale) || decodeURIComponent(o.url.split('/').pop() ?? o.url);
 
@@ -122,7 +118,7 @@ function ViewerBody({
     language: s.language[0],
     label: labelIn(s.label, locale) || s.language[0] || 'captions',
   }));
-  const transcript = (container?.supplementing ?? []).find(isTranscript);
+  const transcript = transcriptOf(container?.supplementing ?? []);
 
   const seek = (seconds: number) => {
     const el = mediaRef.current;
