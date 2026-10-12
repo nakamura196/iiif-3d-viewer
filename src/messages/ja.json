@@ -116,14 +116,19 @@
     "modes": {
       "side": "左右に並べる",
       "swipe": "スワイプ",
-      "spyglass": "スパイグラス"
+      "spyglass": "スパイグラス",
+      "overlay": "重ねる"
     },
     "swipeHandle": "境界線（左右に動かす）",
     "spyglassHint": "丸い窓の中に B を表示",
     "fitAll": "全体",
     "topView": "上",
     "noChoice": "この manifest には切り替えられる模型（Choice）がありません",
-    "open": "比較"
+    "open": "比較",
+    "zoom": "拡大",
+    "opacity": "B の濃さ",
+    "noImageChoice": "この Canvas には切り替えられる画像（Choice）がありません",
+    "canvas": "Canvas"
   },
   "Samples": {
     "title": "サンプル一覧",

@@ -62,11 +62,11 @@ const ViewerContent: NextPage = () => {
             theme={resolvedTheme === 'dark' ? 'dark' : 'light'}
             tab={tab}
             onTabChange={handleTabChange}
-            renderActions={({ iiifContent, hasChoices }) =>
-              // 候補が 2 つ以上あれば、2 つを並べて見比べるページへ
+            renderActions={({ iiifContent, hasChoices, selectedIndex }) =>
+              // 候補が 2 つ以上あれば、2 つを並べて見比べるページへ（画像は表示中の Canvas を渡す）
               hasChoices ? (
                 <Link
-                  href={`/compare?${contentParam(iiifContent)}`}
+                  href={`/compare?${contentParam(iiifContent)}${selectedIndex > 0 ? `&canvas=${selectedIndex}` : ''}`}
                   className="text-sm px-3 py-1.5 bg-[var(--ds-surface)] rounded-lg shadow-md border border-[var(--ds-border)] text-[var(--ds-fg)] hover:bg-[var(--ds-surface-2)]"
                 >
                   {tc('open')}

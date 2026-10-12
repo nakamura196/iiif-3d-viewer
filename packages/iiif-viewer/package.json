@@ -30,5 +30,8 @@
   },
   "scripts": {
     "build:element": "vite build"
+  },
+  "dependencies": {
+    "@iiif/parser": "4.0.3"
   }
 }

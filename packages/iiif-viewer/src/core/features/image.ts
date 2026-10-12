@@ -453,6 +453,23 @@ const companionOf = (raw: unknown): CompanionImage | undefined => {
   return undefined;
 };
 
+/** One of the candidates of the painting is an image. */
+export const paintsImage = (p: CanvasPainting): boolean => p.options.some((o) => o.kind === 'Image');
+
+/** The image painting a comparison uses (and the viewer links to): the first one with two or more candidates. */
+export const imageChoiceOf = (images: CanvasImages | undefined): CanvasPainting | undefined =>
+  images?.paintings.find((p) => paintsImage(p) && p.options.length > 1);
+
+/** The images drawn: one candidate per painting (`indexOf` picks it, clamped), in painting order. */
+export const chosenLayersOf = (paintings: CanvasPainting[], indexOf: (p: CanvasPainting) => number): ImageLayer[] =>
+  paintings
+    .map((p) => p.options[Math.min(Math.max(indexOf(p), 0), p.options.length - 1)]?.layer)
+    .filter((l): l is ImageLayer => !!l);
+
+/** Width of the sharpest source image; it decides how far one can zoom in. */
+export const detailWidthOf = (layers: ImageLayer[]): number | undefined =>
+  Math.max(0, ...layers.map((l) => l.width ?? 0)) || undefined;
+
 /** What a Canvas (as in the source manifest) paints and shows around its painting. */
 export const canvasImagesOf = (canvas: unknown): CanvasImages => {
   const c = (isObj(canvas) ? canvas : {}) as Json;

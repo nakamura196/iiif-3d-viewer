@@ -204,3 +204,29 @@ export default function ImageLayerView({
     </div>
   );
 }
+
+/** The images of a Canvas, drawn in painting order. `onBaseFailed`: the first (bottom) image could not be read. */
+export function ImageLayers({
+  layers,
+  canvasWidth,
+  canvasHeight,
+  stage,
+  onBaseFailed,
+}: {
+  layers: ImageLayer[];
+  canvasWidth: number;
+  canvasHeight: number;
+  stage: StageInfo;
+  onBaseFailed?: () => void;
+}) {
+  return layers.map((l, i) => (
+    <ImageLayerView
+      key={`${i}:${l.url}`}
+      layer={l}
+      canvasWidth={canvasWidth}
+      canvasHeight={canvasHeight}
+      stage={stage}
+      onFailed={i === 0 ? onBaseFailed : undefined}
+    />
+  ));
+}

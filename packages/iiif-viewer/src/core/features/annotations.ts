@@ -319,9 +319,15 @@ const collectionOf = (page: Json): AnnotationCollectionRef | undefined => {
   return undefined;
 };
 
+/** The Canvases (and other items) of a manifest: converted, or as served. */
+export const manifestItemsOf = (manifest: unknown): Json[] => {
+  const items = (manifest as { items?: unknown } | null | undefined)?.items;
+  return Array.isArray(items) ? (items as Json[]) : [];
+};
+
 /** The Canvas as written in the manifest (the converter keeps flat-media Canvases as they are). */
-export const rawCanvasOf = (manifest: ManifestV4 | null | undefined, canvasId: string): Json | undefined =>
-  (manifest?.items ?? []).map((c) => c as unknown as Json).find((c) => c?.id === canvasId);
+export const rawCanvasOf = (manifest: unknown, canvasId: string): Json | undefined =>
+  manifestItemsOf(manifest).find((c) => c?.id === canvasId);
 
 export interface CanvasAnnotationSources {
   /** Pages written into the manifest (with their annotations). */
