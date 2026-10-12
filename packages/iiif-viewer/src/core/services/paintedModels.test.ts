@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { SceneV4 } from '@/types/iiif';
+import type { SceneV4 } from '../types/iiif';
 import { chosenUrl, labelIn, paintedModelsOf } from './paintedModels';
 import { parseManifestV4 } from './manifestParser';
 

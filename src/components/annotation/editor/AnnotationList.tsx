@@ -1,7 +1,7 @@
 import { annotationsAtom3, selectedAnnotationIdAtom } from '@/atoms/infoPanelAtom';
 import { useAtom } from 'jotai';
 import { useTranslations } from 'next-intl';
-import type { Annotation3 } from '@/types/main';
+import type { Annotation3 } from '@nakamura196/iiif-viewer/core';
 
 export default function AnnotationList() {
   const t = useTranslations('Annotation');

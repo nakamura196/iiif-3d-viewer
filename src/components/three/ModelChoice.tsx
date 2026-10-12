@@ -4,7 +4,7 @@ import { startTransition } from 'react';
 import { useAtom } from 'jotai';
 import { useLocale } from 'next-intl';
 import { modelChoicesAtom, paintedModelsAtom } from '@/atoms/infoPanelAtom';
-import { labelIn } from '@/lib/services/paintedModels';
+import { labelIn } from '@nakamura196/iiif-viewer/core';
 
 // Buttons to switch each Choice of models (e.g. the ground: map / streets).
 // Shown only when the manifest paints a Choice with two or more Models.

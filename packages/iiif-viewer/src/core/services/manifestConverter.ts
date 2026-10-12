@@ -15,10 +15,11 @@
 import type {
   AnnotationPageV4,
   AnnotationV4,
+  ContainerV4,
   ManifestV4,
   SceneV4,
   SpecificResourceV4,
-} from '@/types/iiif';
+} from '../types/iiif';
 
 const V4_CONTEXT = 'http://iiif.io/api/presentation/4/context.json';
 
@@ -297,6 +298,29 @@ const convertCanvasToScene = (canvas: LegacyContainer): SceneV4 => {
   };
 };
 
+// Body types of media that are not 3D. A legacy Canvas that paints one of these (and no
+// Model) is a plain image / video / audio page, not a Scene.
+const FLAT_MEDIA = new Set(['Image', 'Video', 'Audio', 'Sound']);
+
+const paintsOnlyFlatMedia = (canvas: LegacyContainer): boolean => {
+  const types: unknown[] = [];
+  for (const page of canvas.items ?? []) {
+    for (const anno of page.items ?? []) {
+      if (!normalizeMotivation(anno.motivation).includes('painting')) continue;
+      const bodies = [anno.body].flat();
+      types.push(...bodies.map((b) => (b as { type?: unknown } | undefined)?.type));
+    }
+  }
+  return types.some((t) => FLAT_MEDIA.has(t as string)) && !types.includes('Model');
+};
+
+// Canvas -> Scene, except a Canvas / Timeline that holds only flat media, which is kept
+// as it is. Everything else (including an empty Canvas) stays a Scene, as before.
+const convertContainer = (c: LegacyContainer): SceneV4 | ContainerV4 =>
+  c.type === 'Timeline' || (c.type === 'Canvas' && paintsOnlyFlatMedia(c))
+    ? (c as unknown as ContainerV4)
+    : convertCanvasToScene(c);
+
 export const convertToV4 = (manifest: unknown): ManifestV4 => {
   const m = (manifest ?? {}) as LegacyManifest;
 
@@ -304,7 +328,7 @@ export const convertToV4 = (manifest: unknown): ManifestV4 => {
     return m as unknown as ManifestV4;
   }
 
-  const scenes: SceneV4[] = (m.items ?? []).map(convertCanvasToScene);
+  const scenes: ContainerV4[] = (m.items ?? []).map(convertContainer);
 
   const next: Record<string, unknown> = { ...m };
   next['@context'] = V4_CONTEXT;

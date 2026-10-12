@@ -5,7 +5,7 @@
  * sphere and the camera's vertical field of view, and return where the camera and
  * the orbit pivot (OrbitControls `target`) should end up.
  */
-import type { Vec3 } from '@/lib/focusCamera';
+import type { Vec3 } from './focusCamera';
 
 // Extra room around the bounding sphere, as in the initial Bounds fit (margin 1.2).
 export const FIT_MARGIN = 1.2;

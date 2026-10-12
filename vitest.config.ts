@@ -3,7 +3,11 @@ import path from 'node:path';
 
 export default defineConfig({
   test: {
-    include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+    include: [
+      'src/**/*.test.ts',
+      'src/**/*.test.tsx',
+      'packages/*/src/**/*.test.ts',
+    ],
   },
   resolve: {
     alias: {

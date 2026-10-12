@@ -8,15 +8,15 @@ import { useAtom } from 'jotai';
 import { useEffect, useMemo, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import AnnotationCard from '@/components/annotation/AnnotationCard';
-import { groupByRegion } from '@/lib/regions';
+import { groupByRegion } from '@nakamura196/iiif-viewer/core';
 import {
   EMPTY_FILTER,
   creatorFacets,
   isFilterActive,
   tagFacets,
   type Facet,
-} from '@/lib/annotationFilter';
-import type { Annotation } from '@/types/main';
+} from '@nakamura196/iiif-viewer/core';
+import type { Annotation } from '@nakamura196/iiif-viewer/core';
 
 export default function AnnotationList() {
   const t = useTranslations('Annotation');

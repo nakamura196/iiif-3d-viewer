@@ -2,7 +2,7 @@
 // an id annotate the same region, and are shown as one group.
 // Grouping is by id only — equal coordinates alone never merge annotations.
 
-import type { Annotation } from '@/types/main';
+import type { Annotation } from './types/main';
 
 export interface RegionGroup {
   // regionId when shared, otherwise the lone annotation's id.

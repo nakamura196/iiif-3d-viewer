@@ -99,6 +99,31 @@ export interface SceneV4 {
   annotations?: AnnotationPageV4[];
 }
 
+// A Canvas (images, video) or a Timeline (audio) in Presentation 4. Like a Scene it holds
+// painting Annotations in `items` and supplementing ones (captions, transcripts) in
+// `annotations`, so the same page type serves all three.
+export interface CanvasV4 {
+  id: string;
+  type: 'Canvas';
+  label?: string | string[] | IIIFLocalized;
+  width?: number;
+  height?: number;
+  duration?: number;
+  items?: AnnotationPageV4[];
+  annotations?: AnnotationPageV4[];
+}
+
+export interface TimelineV4 {
+  id: string;
+  type: 'Timeline';
+  label?: string | string[] | IIIFLocalized;
+  duration?: number;
+  items?: AnnotationPageV4[];
+  annotations?: AnnotationPageV4[];
+}
+
+export type ContainerV4 = SceneV4 | CanvasV4 | TimelineV4;
+
 export interface ManifestV4 {
   '@context': string | string[];
   id: string;
@@ -109,7 +134,7 @@ export interface ManifestV4 {
   rights?: string;
   requiredStatement?: { label: unknown; value: unknown };
   provider?: unknown[];
-  items: SceneV4[];
+  items: ContainerV4[];
   // Pass-through fields preserved as-is.
   [extra: string]: unknown;
 }

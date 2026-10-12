@@ -12,9 +12,10 @@ import type {
   SelectorV4,
   SpecificResourceV4,
   WKTSelectorV4,
-} from '@/types/iiif';
-import type { Annotation, AnnotationImage, AnnotationTag } from '@/types/main';
-import { paintedModelsOf } from '@/lib/services/paintedModels';
+} from '../types/iiif';
+import type { Annotation, AnnotationImage, AnnotationTag } from '../types/main';
+import { firstSceneOf } from './containers';
+import { paintedModelsOf } from './paintedModels';
 
 export interface GeoFeatureName {
   toponym: string;
@@ -339,7 +340,7 @@ const buildAnnotation = (
 };
 
 export const parseManifestV4 = (manifest: ManifestV4): ParsedManifest => {
-  const scene = manifest?.items?.[0];
+  const scene = firstSceneOf(manifest);
   const modelUrl = extractModelUrl(scene);
 
   const sceneAnnotations = flattenAllPages(scene?.annotations);
@@ -403,8 +404,10 @@ export interface SceneCamera extends DefaultCamera {
 // the `hidden` behavior, in order (Presentation 4.0, Cameras). Position from the target's
 // PointSelector, direction from `lookAt` (an embedded PointSelector, or a reference to an
 // Annotation that targets a point). Hidden Cameras are the ones notes link to by `scope`.
-export const sceneCamerasOf = (manifest: ManifestV4 | null | undefined): SceneCamera[] => {
-  const scene = manifest?.items?.[0];
+export const sceneCamerasOf = (manifest: ManifestV4 | null | undefined): SceneCamera[] =>
+  sceneCamerasInScene(firstSceneOf(manifest));
+
+export const sceneCamerasInScene = (scene: SceneV4 | undefined): SceneCamera[] => {
   const annos = (scene?.items ?? []).flatMap((page) => page.items ?? []);
   const all = [...annos, ...flattenAllPages(scene?.annotations)];
   const out: SceneCamera[] = [];

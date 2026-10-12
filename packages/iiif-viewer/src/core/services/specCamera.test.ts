@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { ManifestV4 } from '@/types/iiif';
+import type { ManifestV4 } from '../types/iiif';
 import { defaultCameraOf, parseManifestV4, sceneCamerasOf } from './manifestParser';
 
 // Presentation 4.0 style, as written by train-bodies: Cameras are painted into

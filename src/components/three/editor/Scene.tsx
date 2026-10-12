@@ -8,7 +8,7 @@ import Annotations from '@/components/three/editor/Annotations';
 import { Vector3 } from 'three';
 import { useRef } from 'react';
 import { useThree } from '@react-three/fiber';
-import type { Annotation3 as Annotation } from '@/types/main';
+import type { Annotation3 as Annotation } from '@nakamura196/iiif-viewer/core';
 import { useAtom } from 'jotai';
 import { annotationsAtom3 } from '@/atoms/infoPanelAtom';
 

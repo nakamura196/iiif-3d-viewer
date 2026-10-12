@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import extensionSample from '../../public/manifests/sample-manifest-region-tags.json';
-import { convertToV4 } from '@/lib/services/manifestConverter';
-import { parseManifestV4 } from '@/lib/services/manifestParser';
+import extensionSample from '../../../../public/manifests/sample-manifest-region-tags.json';
+import { convertToV4 } from './services/manifestConverter';
+import { parseManifestV4 } from './services/manifestParser';
 import {
   EMPTY_FILTER,
   creatorFacets,

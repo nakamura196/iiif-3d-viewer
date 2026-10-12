@@ -1,6 +1,6 @@
 import Popup from '@/components/three/Popup';
 import { Html } from '@react-three/drei';
-import { Annotation } from '@/types/main';
+import { Annotation } from '@nakamura196/iiif-viewer/core';
 
 export default function AnnotationMarker({
   annotation,

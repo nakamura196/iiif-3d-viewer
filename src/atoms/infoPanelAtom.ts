@@ -1,8 +1,8 @@
 import { atom } from 'jotai';
-import type { ManifestV4 } from '@/types/iiif';
-import type { PaintedModel } from '@/lib/services/paintedModels';
-import type { Annotation, InfoPanelContent, Annotation3 } from '@/types/main';
-import { EMPTY_FILTER, filterAnnotations, type AnnotationFilter } from '@/lib/annotationFilter';
+import type { ManifestV4 } from '@nakamura196/iiif-viewer/core';
+import type { PaintedModel } from '@nakamura196/iiif-viewer/core';
+import type { Annotation, InfoPanelContent, Annotation3 } from '@nakamura196/iiif-viewer/core';
+import { EMPTY_FILTER, filterAnnotations, type AnnotationFilter } from '@nakamura196/iiif-viewer/core';
 
 export const infoPanelAtom = atom<InfoPanelContent | null>(null);
 

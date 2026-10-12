@@ -8,9 +8,9 @@ import gsap from 'gsap';
 import Annotations from '@/components/three/Annotations';
 import { useAtom } from 'jotai';
 import { manifestAtom, showAnnotationsAtom } from '@/atoms/infoPanelAtom';
-import { defaultCameraOf, type DefaultCamera } from '@/lib/services/manifestParser';
-import { runFocusFlight, type Vec3 } from '@/lib/focusCamera';
-import { fitView, topView } from '@/lib/viewCamera';
+import { defaultCameraOf, type DefaultCamera } from '@nakamura196/iiif-viewer/core';
+import { runFocusFlight, type Vec3 } from '@nakamura196/iiif-viewer/core';
+import { fitView, topView } from '@nakamura196/iiif-viewer/core';
 
 // Place the camera where the manifest's default Camera says (Presentation 4.0:
 // the first Camera painted into the Scene). Without `lookAt`, look at the model's center.

@@ -2,7 +2,7 @@
 // Within one facet the selected values are OR-ed; across facets (and with the
 // text query) they are AND-ed.
 
-import type { Annotation, AnnotationTag } from '@/types/main';
+import type { Annotation, AnnotationTag } from './types/main';
 
 export interface AnnotationFilter {
   query: string;

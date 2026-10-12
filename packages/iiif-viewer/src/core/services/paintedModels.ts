@@ -3,7 +3,7 @@
 // (e.g. the same ground as a map or as a street surface); the client shows one
 // of them, the first by default, and may let the user switch.
 
-import type { SceneV4 } from '@/types/iiif';
+import type { SceneV4 } from '../types/iiif';
 
 export interface ModelOption {
   url: string;
