@@ -1,6 +1,6 @@
 {
   "Header": {
-    "title": "IIIF 3D Viewer",
+    "title": "IIIF Kasane",
     "home": "ホーム",
     "download": "ダウンロード",
     "downloadShort": "DL",
@@ -8,8 +8,8 @@
     "japanese": "日本語"
   },
   "Footer": {
-    "title": "IIIF 3D Viewer",
-    "description": "IIIFマニフェストに基づく3Dモデルの表示・アノテーションビューアです。",
+    "title": "IIIF Kasane",
+    "description": "IIIFマニフェストに基づき、3Dモデル・画像・音声・動画と注釈を重ねて表示するビューアです。",
     "guideHeading": "ヘルプ・規約",
     "help": "ヘルプ",
     "privacy": "プライバシーポリシー",
@@ -77,8 +77,8 @@
   "Home": {
     "developers": "開発者",
     "developerNames": "中村 覚・小川 潤（東京大学）",
-    "title": "IIIF 3D Viewer",
-    "subtitle": "IIIF Manifestに基づいた3Dモデルの表示とアノテーション機能を提供するビューアアプリケーションです。",
+    "title": "IIIF Kasane",
+    "subtitle": "IIIF Manifestに基づき、3Dモデル・画像・音声・動画とアノテーションを重ねて表示するビューアアプリケーションです（旧称 IIIF 3D Viewer）。",
     "features": "主な機能",
     "feature1Title": "3Dモデル表示",
     "feature1Description": "GLBフォーマットの3Dモデルをインタラクティブに表示。マウスやタッチ操作で自由に回転・ズームが可能。",

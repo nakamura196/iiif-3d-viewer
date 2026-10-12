@@ -17,11 +17,11 @@ export async function generateMetadata({
   // 公開 URL は src/lib/site.ts。旧 github.io / vercel.app はそれぞれの設定で 3d.ldas.jp へ転送する。
   const baseUrl = SITE_URL;
 
-  const title = locale === 'ja' ? 'IIIF 3D ビューア' : 'IIIF 3D Viewer';
+  const title = 'IIIF Kasane';
   const description =
     locale === 'ja'
-      ? 'IIIF Manifestに基づいた3Dモデルの表示とアノテーション機能を提供するビューアアプリケーション'
-      : 'A viewer application that provides 3D model display and annotation functionality based on IIIF Manifest';
+      ? 'IIIF Manifestに基づき、3Dモデル・画像・音声・動画とアノテーションを重ねて表示するビューアアプリケーション'
+      : 'A viewer application that layers 3D models, images, audio, video and annotations based on IIIF Manifest';
 
   return {
     title: {

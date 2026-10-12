@@ -1,6 +1,8 @@
-# IIIF 3D Viewer
+# IIIF Kasane
 
-A web application for viewing and annotating 3D models based on IIIF Manifest specifications.
+A web application for viewing and annotating IIIF resources — 3D models, images, audio and video — based on IIIF Manifest specifications.
+
+Formerly **IIIF 3D Viewer**. The project started as a 3D viewer and now handles other media as well. *Kasane* (重ね) is the Japanese word for "layering", as in *kasane no irome*, the layered colours of Heian-period court dress: the viewer layers models, images, media and annotations in one view.
 
 ## Features
 
@@ -141,7 +143,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contributing
 
-We welcome contributions to the IIIF 3D Viewer project! Here's how you can help:
+We welcome contributions to the IIIF Kasane project! Here's how you can help:
 
 ### Reporting Issues
 
