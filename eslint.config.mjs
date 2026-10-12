@@ -16,5 +16,5 @@ export default defineConfig([
       'react-hooks/immutability': 'warn',
     },
   },
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'vercel-static/**', 'next-env.d.ts']),
+  globalIgnores(['.next/**', 'out/**', 'packages/*/dist/**', 'build/**', 'vercel-static/**', 'next-env.d.ts']),
 ]);
