@@ -1,4 +1,4 @@
-// ドメイン移行 (github.io/iiif-3d-viewer・3d-iiif-viewer.vercel.app → 3d.ldas.jp) の設定を固定するテスト。
+// ドメイン移行 (github.io/iiif-3d-viewer・3d-iiif-viewer.vercel.app → 3d.ldas.jp → kasane.ldas.jp) の設定を固定するテスト。
 import { describe, expect, it } from 'vitest';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { join } from 'node:path';
@@ -10,8 +10,8 @@ const root = join(__dirname, '../..');
 const read = (p: string) => readFileSync(join(root, p), 'utf8');
 
 describe('公開 URL', () => {
-  it('3d.ldas.jp', () => {
-    expect(SITE_URL).toBe('https://3d.ldas.jp');
+  it('kasane.ldas.jp', () => {
+    expect(SITE_URL).toBe('https://kasane.ldas.jp');
   });
 
   it('canonical はページ自身、言語の組は同じパス', () => {
@@ -30,32 +30,32 @@ describe('公開 URL', () => {
   });
 
   it('robots は sitemap を新ホストで示す', () => {
-    expect(robots().sitemap).toBe('https://3d.ldas.jp/sitemap.xml');
+    expect(robots().sitemap).toBe('https://kasane.ldas.jp/sitemap.xml');
   });
 
   it('sitemap は全ロケール×全ページ、新ホストで、ページは実在する', () => {
     const urls = sitemap().map((e) => e.url);
     expect(urls).toHaveLength(LOCALES.length * PUBLIC_PATHS.length);
-    expect(urls).toContain('https://3d.ldas.jp/ja/');
-    expect(urls).toContain('https://3d.ldas.jp/en/viewer/');
+    expect(urls).toContain('https://kasane.ldas.jp/ja/');
+    expect(urls).toContain('https://kasane.ldas.jp/en/viewer/');
     for (const p of PUBLIC_PATHS) {
       expect(existsSync(join(root, 'src/app/[locale]', p, 'page.tsx'))).toBe(true);
     }
   });
 });
 
-describe('旧 vercel.app の転送', () => {
+describe('旧 3d.ldas.jp・vercel.app の転送', () => {
   const vercel = JSON.parse(read('vercel.json'));
-  it('全パス (トップを含む) を同じパスのまま 3d.ldas.jp へ恒久転送', () => {
+  it('全パス (トップを含む) を同じパスのまま kasane.ldas.jp へ恒久転送', () => {
     // `/:path*` だとトップ (/) に当たらない (kotenocr で実測)。`/:rest(.*)` を使う
     expect(vercel.redirects).toEqual([
-      { source: '/:rest(.*)', destination: 'https://3d.ldas.jp/:rest', permanent: true },
+      { source: '/:rest(.*)', destination: 'https://kasane.ldas.jp/:rest', permanent: true },
     ]);
   });
-  it('JS が動かないときの予備ページも 3d.ldas.jp を指す', () => {
+  it('JS が動かないときの予備ページも kasane.ldas.jp を指す', () => {
     const html = read('vercel-static/index.html');
-    expect(html).toContain("'https://3d.ldas.jp/'");
-    expect(html).toContain('url=https://3d.ldas.jp/');
+    expect(html).toContain("'https://kasane.ldas.jp/'");
+    expect(html).toContain('url=https://kasane.ldas.jp/');
   });
 });
 

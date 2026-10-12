@@ -14,14 +14,14 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  // 公開 URL は src/lib/site.ts。旧 github.io / vercel.app はそれぞれの設定で 3d.ldas.jp へ転送する。
+  // 公開 URL は src/lib/site.ts。旧ドメインと vercel.app は vercel.json で kasane.ldas.jp へ転送する。
   const baseUrl = SITE_URL;
 
   const title = 'IIIF Kasane';
   const description =
     locale === 'ja'
-      ? 'IIIF Manifestに基づき、3Dモデル・画像・音声・動画とアノテーションを重ねて表示するビューアアプリケーション'
-      : 'A viewer application that layers 3D models, images, audio, video and annotations based on IIIF Manifest';
+      ? 'IIIF のマニフェストを読み込み、3D モデル・画像・音声・動画と注釈を一つの画面に重ねて表示するビューア'
+      : 'A viewer that reads IIIF Manifests and layers 3D models, images, audio, video and annotations in a single view';
 
   return {
     title: {

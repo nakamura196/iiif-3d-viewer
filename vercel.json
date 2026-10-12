@@ -6,7 +6,7 @@
   "redirects": [
     {
       "source": "/:rest(.*)",
-      "destination": "https://3d.ldas.jp/:rest",
+      "destination": "https://kasane.ldas.jp/:rest",
       "permanent": true
     }
   ]
