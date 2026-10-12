@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * 本番 (3d.ldas.jp) と旧 URL の転送を、実際に HTTP で叩いて確かめる。
+ * 本番 (kasane.ldas.jp) と旧 URL の転送を、実際に HTTP で叩いて確かめる。
  * マージ (= Pages の配布) と独自ドメインの設定後に手元で実行する: npm run test:live
  *
  * 見ること:
@@ -8,11 +8,12 @@
  *   2. ページが読む /_next の資産、robots.txt・sitemap.xml、サンプルの manifest と 3D モデルが 200
  *      (manifest の id は新ホスト、manifest とモデルは他サイトのビューアからも読めるよう CORS *)
  *   3. 存在しないパスが 404、http は https へ転送
- *   4. 旧 github.io/iiif-3d-viewer/<path>?<query> が同じパス・クエリのまま 301 で新ホストへ
- *   5. 旧 3d-iiif-viewer.vercel.app/<path>?<query> が同じパス・クエリのまま 308 で新ホストへ
+ *   4. github.io/iiif-kasane/<path>?<query> が同じパス・クエリのまま 301 で新ホストへ
+ *   5. 旧 3d.ldas.jp と 3d-iiif-viewer.vercel.app の <path>?<query> が同じパス・クエリのまま 308 で新ホストへ
  */
-const NEW = 'https://3d.ldas.jp';
-const OLD_PAGES = 'https://nakamura196.github.io/iiif-3d-viewer';
+const NEW = 'https://kasane.ldas.jp';
+const OLD_PAGES = 'https://nakamura196.github.io/iiif-kasane';
+const OLD_3D = 'https://3d.ldas.jp';
 const OLD_VERCEL = 'https://3d-iiif-viewer.vercel.app';
 
 const errors = [];
@@ -28,7 +29,7 @@ for (const page of ['/ja/', '/en/', '/ja/viewer/', '/en/help/', '/ja/georef/', '
   const html = await r.text();
   const canonical = html.match(/<link rel="canonical" href="([^"]+)"/)?.[1];
   ok(canonical === NEW + page, `${page} の canonical が ${canonical}`);
-  ok(!html.includes('github.io/iiif-3d-viewer'), `${page} に旧ホストの文字列が残っている`);
+  for (const old of ['github.io/iiif-3d-viewer', '3d.ldas.jp']) ok(!html.includes(old), `${page} に旧ホスト ${old} の文字列が残っている`);
   for (const m of html.matchAll(/(?:href|src)="(\/_next\/[^"]+)"/g)) assets.add(m[1]);
 }
 {
@@ -69,7 +70,7 @@ for (const name of ['sample-manifest.json', 'sample-manifest-with-annotations.js
 {
   const r = await get(NEW + '/no-such-page/');
   ok(r.status === 404, `存在しないページが ${r.status} (404 のはず)`);
-  const h = await get('http://3d.ldas.jp/ja/help/?q=1');
+  const h = await get('http://kasane.ldas.jp/ja/help/?q=1');
   const loc = h.headers.get('location');
   ok([301, 308].includes(h.status) && loc === `${NEW}/ja/help/?q=1`, `http → ${h.status} ${loc}`);
 }
@@ -77,7 +78,7 @@ for (const name of ['sample-manifest.json', 'sample-manifest-with-annotations.js
 // 4, 5
 const viewer = `/ja/viewer/?manifest=${encodeURIComponent(NEW + '/manifests/sample-manifest.json')}`;
 const paths = ['/', '/ja/', '/en/help/', viewer, '/manifests/sample-manifest.json'];
-for (const [base, status] of [[OLD_PAGES, 301], [OLD_VERCEL, 308]]) {
+for (const [base, status] of [[OLD_PAGES, 301], [OLD_3D, 308], [OLD_VERCEL, 308]]) {
   for (const path of paths) {
     const r = await get(base + path);
     const loc = r.headers.get('location');

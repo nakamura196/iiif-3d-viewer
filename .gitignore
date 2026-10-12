@@ -16,6 +16,7 @@
 # next.js
 /.next/
 /out/
+/packages/*/dist/
 
 # production
 /build
@@ -40,3 +41,5 @@ yarn-error.log*
 next-env.d.ts
 
 .env
+# copied from node_modules at build time (scripts/copy-maplibre-worker.mjs)
+/public/maplibre/

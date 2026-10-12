@@ -4,6 +4,7 @@ import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { Footer as DsFooter } from '@nakamura196/react-ui';
 import { withBasePath } from '@/lib/basePath';
+import { contentParam } from '@nakamura196/iiif-viewer/core';
 
 // 共有デザインシステム (@nakamura196/react-ui) の4列フッター。
 // 左ブロック (title + description) ＋ columns (最大3列) = 計4列。
@@ -36,10 +37,11 @@ export default function Footer() {
         {
           heading: t('samplesHeading'),
           links: [
-            { label: t('sample1'), href: `/viewer?manifest=${encodeURIComponent(SAMPLE)}` },
-            { label: t('sample2'), href: `/viewer?manifest=${encodeURIComponent(SAMPLE_ANNOT)}&tab=annotations` },
-            { label: t('sample3'), href: `/georef?manifest=${encodeURIComponent(SAMPLE_ANNOT)}` },
-            { label: t('sample4'), href: `/viewer?manifest=${encodeURIComponent(SAMPLE_REGION_TAGS)}&tab=annotations` },
+            { label: t('sample1'), href: `/viewer?${contentParam(SAMPLE)}` },
+            { label: t('sample2'), href: `/viewer?${contentParam(SAMPLE_ANNOT)}&tab=annotations` },
+            { label: t('sample3'), href: `/georef?${contentParam(SAMPLE_ANNOT)}` },
+            { label: t('sample4'), href: `/viewer?${contentParam(SAMPLE_REGION_TAGS)}&tab=annotations` },
+            { label: t('samplesAll'), href: '/samples' },
           ],
         },
         // 4列目: 関連サイト（旧 References ページの外部リンク）

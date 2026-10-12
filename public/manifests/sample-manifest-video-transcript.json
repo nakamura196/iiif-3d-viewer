@@ -1,0 +1,85 @@
+{
+  "@context": "http://iiif.io/api/presentation/4/context.json",
+  "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json",
+  "type": "Manifest",
+  "label": { "en": ["Lunchroom Manners (timed transcript test)"] },
+  "summary": {
+    "en": ["Test manifest: a video with a WebVTT file given both as closed captions and as a timed transcript."]
+  },
+  "items": [
+    {
+      "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas",
+      "type": "Canvas",
+      "height": 360,
+      "width": 480,
+      "duration": 572.034,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/page/painting",
+              "type": "Annotation",
+              "motivation": ["painting"],
+              "body": {
+                "id": "https://fixtures.iiif.io/video/indiana/lunchroom_manners/high/lunchroom_manners_1024kb.mp4",
+                "type": "Video",
+                "height": 360,
+                "width": 480,
+                "duration": 572.034,
+                "format": "video/mp4"
+              },
+              "target": {
+                "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas",
+                "type": "Canvas"
+              }
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/supplementing",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/supplementing/captions",
+              "type": "Annotation",
+              "motivation": ["supplementing"],
+              "provides": ["closedCaptions"],
+              "body": {
+                "id": "https://fixtures.iiif.io/video/indiana/lunchroom_manners/lunchroom_manners.vtt",
+                "type": "Text",
+                "format": "text/vtt",
+                "label": { "en": ["Captions in WebVTT format"] },
+                "language": ["en"]
+              },
+              "target": {
+                "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas",
+                "type": "Canvas"
+              }
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas/supplementing/transcript",
+              "type": "Annotation",
+              "motivation": ["supplementing"],
+              "provides": ["transcript"],
+              "body": {
+                "id": "https://fixtures.iiif.io/video/indiana/lunchroom_manners/lunchroom_manners.vtt",
+                "type": "Text",
+                "format": "text/vtt",
+                "label": { "en": ["Timed transcript in WebVTT format"] },
+                "language": ["en"]
+              },
+              "target": {
+                "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-transcript.json/canvas",
+                "type": "Canvas"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

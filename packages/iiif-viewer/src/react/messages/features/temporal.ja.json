@@ -1,0 +1,13 @@
+{
+  "Info": {
+    "annotationTranscript": "注釈の文字起こし"
+  },
+  "Viewer": {
+    "compositePlay": "再生",
+    "compositePause": "一時停止",
+    "compositeSeek": "再生位置"
+  },
+  "Transcript": {
+    "language": "言語"
+  }
+}

@@ -143,8 +143,8 @@ As it is released as an open-source project, feedback and contributions from the
 
 ## Reference Links
 
-- [IIIF 3D Viewer Demo Site](https://3d.ldas.jp)
-- [GitHub Repository](https://github.com/nakamura196/iiif-3d-viewer)
+- [IIIF 3D Viewer Demo Site](https://kasane.ldas.jp)
+- [GitHub Repository](https://github.com/nakamura196/iiif-kasane)
 - [IIIF Official Website](https://iiif.io/)
 
 ---

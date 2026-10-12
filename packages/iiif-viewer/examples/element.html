@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>&lt;iiif-viewer&gt; example</title>
+    <style>
+      body { margin: 0; padding: 1rem; font-family: sans-serif; }
+      h2 { margin: 1.5rem 0 0.5rem; font-size: 1rem; }
+      /* The tag fills the height you give it. The default is 36rem. */
+      iiif-viewer { height: 28rem; border: 1px solid #ccc; }
+      /* Colors can be changed from outside with --iiif-viewer-* variables. */
+      #second { --iiif-viewer-primary: #b00020; }
+    </style>
+  </head>
+  <body>
+    <h1>&lt;iiif-viewer&gt;</h1>
+    <p>
+      Two independent tags on a plain HTML page. Serve the site root (so that
+      <code>/manifests/sample-manifest.json</code> exists) and the built
+      <code>dist/</code> next to this file, then open it.
+    </p>
+
+    <h2>1. 3D scene (sample manifest of this site)</h2>
+    <iiif-viewer id="first" locale="en" theme="light"></iiif-viewer>
+
+    <h2>2. Image (IIIF Cookbook recipe 0001, Presentation v4)</h2>
+    <iiif-viewer
+      id="second"
+      iiif-content="https://iiif.io/api/cookbook/recipe/0001-mvm-image/v4/manifest.json"
+      locale="en"
+      theme="auto"
+      options='{"tab":"metadata"}'
+    ></iiif-viewer>
+
+    <!-- The module registers the tag and loads style.css from its own directory. -->
+    <script type="module" src="../dist/iiif-viewer.js"></script>
+    <script>
+      // The first tag points at this site's sample manifest (absolute URL needed).
+      document
+        .getElementById('first')
+        .setAttribute('iiif-content', new URL('/manifests/sample-manifest.json', location.origin).href);
+    </script>
+  </body>
+</html>

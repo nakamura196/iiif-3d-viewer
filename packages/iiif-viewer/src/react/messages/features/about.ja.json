@@ -1,0 +1,27 @@
+{
+  "Info": {
+    "about": "資料情報"
+  },
+  "About": {
+    "thisResource": "この資料",
+    "thisPage": "この画面の対象",
+    "ranges": "目次の項目",
+    "rights": "権利",
+    "attribution": "出典表記",
+    "provider": "提供者",
+    "links": "リンク",
+    "homepage": "ホームページ",
+    "download": "ダウンロード・別の形式",
+    "seeAlso": "関連資料",
+    "partOf": "親のコレクション",
+    "date": "日時",
+    "place": "場所",
+    "region": "対象の領域",
+    "vertices": "{count} 点",
+    "openMap": "OpenStreetMap で開く",
+    "description": "説明",
+    "metadata": "メタデータ",
+    "thumbnail": "サムネイル",
+    "empty": "この資料についての追加情報はありません"
+  }
+}

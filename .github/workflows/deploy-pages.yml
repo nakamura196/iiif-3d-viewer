@@ -38,7 +38,7 @@ jobs:
         run: npm test
 
       # サブパス (basePath) 付きのビルドでも参照が壊れないことを先に確かめる。
-      # 3d.ldas.jp はホスト直下なので本番では使わないが、basePath の付け忘れは
+      # kasane.ldas.jp はホスト直下なので本番では使わないが、basePath の付け忘れは
       # ホスト直下では隠れるため、フォーク先の github.io 配信などに備えて検査を残す。
       - name: Verify subpath build (basePath)
         env:
@@ -46,10 +46,10 @@ jobs:
         run: |
           npm run build
           ./scripts/check-basepath.sh
-          NEXT_PUBLIC_BASE_PATH=/iiif-3d-viewer npm run test:export
+          NEXT_PUBLIC_BASE_PATH=/iiif-kasane npm run test:export
           rm -rf out .next
 
-      # 本番 (3d.ldas.jp) はホスト直下で配る。独自ドメインは Pages の設定 (gh api) で指定済み。
+      # 本番 (kasane.ldas.jp) はホスト直下で配る。独自ドメインは Pages の設定 (gh api) で指定済み。
       - name: Build static export
         env:
           # GA4 Measurement ID (公開値). Repo Variables に NEXT_PUBLIC_GA_ID を

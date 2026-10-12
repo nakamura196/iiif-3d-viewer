@@ -1,0 +1,27 @@
+{
+  "Info": {
+    "about": "About"
+  },
+  "About": {
+    "thisResource": "This resource",
+    "thisPage": "Shown now",
+    "ranges": "Table of contents entries",
+    "rights": "Rights",
+    "attribution": "Attribution",
+    "provider": "Provider",
+    "links": "Links",
+    "homepage": "Homepage",
+    "download": "Downloads and other formats",
+    "seeAlso": "Related resources",
+    "partOf": "Part of",
+    "date": "Date",
+    "place": "Place",
+    "region": "Region",
+    "vertices": "{count} points",
+    "openMap": "Open in OpenStreetMap",
+    "description": "Description",
+    "metadata": "Metadata",
+    "thumbnail": "Thumbnail",
+    "empty": "No further information about this resource"
+  }
+}

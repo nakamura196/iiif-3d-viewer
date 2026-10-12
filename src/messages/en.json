@@ -1,6 +1,6 @@
 {
   "Header": {
-    "title": "IIIF 3D Viewer",
+    "title": "IIIF Kasane",
     "home": "Home",
     "download": "Download",
     "downloadShort": "DL",
@@ -8,8 +8,8 @@
     "japanese": "日本語"
   },
   "Footer": {
-    "title": "IIIF 3D Viewer",
-    "description": "A 3D model viewer with annotation support, based on the IIIF Manifest.",
+    "title": "IIIF Kasane",
+    "description": "A viewer that layers 3D models, images, audio, video and annotations, based on the IIIF Manifest.",
     "guideHeading": "Help & Legal",
     "help": "Help",
     "privacy": "Privacy Policy",
@@ -24,7 +24,8 @@
     "relatedSpec": "IIIF 3D Extension",
     "relatedSample": "IIIF 3D samples",
     "relatedOtherTools": "Other tools by nakamura196",
-    "developers": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)"
+    "developers": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)",
+    "samplesAll": "All samples"
   },
   "News": {
     "heading": "News",
@@ -35,6 +36,10 @@
     "item2Title": "Improved 3D model rendering: image-based lighting, head-on annotation framing, and auto-fit on load",
     "item3Date": "2026-09-28",
     "item4Date": "2026-10-01",
+    "item5Date": "2026-10-11",
+    "item6Date": "2026-10-14",
+    "item6Title": "Published a video introducing the compare page (comparing two models side by side, with a swipe, or through a spyglass; sharing by URL; the collapsible side panel)",
+    "item5Title": "Comparing two models: a compare page (side by side, swipe, spyglass), switching between models placed in the same scene, a view toolbar (rotate, fit, top view, manifest cameras), and a collapsible side panel",
     "item4Title": "Pictures and initial viewpoints: pictures attached to annotations, opening at the viewpoint given in the manifest, fitting the map to all pins with a \"Show all\" button in the map-linked viewer, and the same annotation cards on every page",
     "item3Title": "Richer annotation display: grouping of annotations on the same region, keyed tags and creators, search and filters, and a fix for flying to annotations without a camera"
   },
@@ -47,48 +52,9 @@
     "sampleManifest2": "Ishibuchi Family Globe (Kikuchi City Library Collection) - With Annotations",
     "sampleManifest3": "Ishibuchi Family Globe (Kikuchi City Library Collection) - Map Viewer",
     "sampleManifest4": "Ishibuchi Family Globe (Kikuchi City Library Collection) - Shared Region and Keyed Tag example",
+    "sampleManifestAll": "All samples: image, audio, video and 3D (IIIF Cookbook and more)",
     "requiredUrl": "Enter the Manifest URL",
     "invalidUrl": "Enter a valid URL"
-  },
-  "Metadata": {
-    "title": "Title",
-    "description": "Description",
-    "metadata": "Metadata",
-    "seeAlso": "See Also",
-    "provider": "Provider",
-    "homepage": "Homepage",
-    "rendering": "Rendering",
-    "rights": "Rights",
-    "requiredStatement": "Attribution",
-    "navDate": "Date",
-    "thumbnail": "Thumbnail",
-    "partOf": "Part Of",
-    "viewingDirection": "Viewing Direction",
-    "behavior": "Behavior"
-  },
-  "Info": {
-    "metadata": "Metadata",
-    "annotations": "Annotations"
-  },
-  "Annotation": {
-    "title": "Annotation List",
-    "annotations": "Annotations",
-    "annotationCount": "{count} items",
-    "type": "Type",
-    "unknown": "Unknown",
-    "annotationId": "Annotation {id}",
-    "viewDetails": "View Details",
-    "edit": "Edit",
-    "newAnnotation": "New Annotation",
-    "seeAlso": "See Also",
-    "sameRegion": "{count} annotations on the same region",
-    "creator": "Creator",
-    "searchPlaceholder": "Search annotations",
-    "tags": "Tags",
-    "filteredCount": "{shown} of {total}",
-    "images": "Images",
-    "relatedImages": "Related resources",
-    "clearFilter": "Clear filters"
   },
   "Help": {
     "title": "Help"
@@ -108,41 +74,74 @@
     "fitAll": "Show all",
     "noResults": "No results found"
   },
-  "Viewer": {
-    "showAnnotations": "Show Annotations",
-    "hideAnnotations": "Hide Annotations",
-    "loading": "Loading 3D model...",
-    "autoRotate": "Rotate",
-    "fitAll": "Fit",
-    "topView": "Top",
-    "cameras": "Views from the manifest",
-    "camera": "View"
-  },
   "Home": {
     "developers": "Developers",
     "developerNames": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)",
-    "title": "IIIF 3D Viewer",
-    "subtitle": "A viewer application that provides 3D model display and annotation functionality based on IIIF Manifest.",
+    "title": "IIIF Kasane",
+    "subtitle": "A viewer that reads IIIF Manifests and layers 3D models, images, audio, video and their annotations in a single view. It started as a 3D viewer and now handles IIIF resources in general (formerly IIIF 3D Viewer).",
     "features": "Main Features",
-    "feature1Title": "3D Model Display",
-    "feature1Description": "Interactive display of 3D models in GLB format. Freely rotate and zoom with mouse or touch controls.",
-    "feature2Title": "Annotations",
-    "feature2Description": "Add annotations to specific positions on 3D models. Manage detailed information and comments in association.",
-    "feature3Title": "IIIF Support",
-    "feature3Description": "Compliant with IIIF Manifest format. Share and display digital content in a standardized way.",
+    "feature1Title": "3D Models",
+    "feature1Description": "Rotate and zoom GLB models and point clouds with mouse or touch. Supports the initial view set in the manifest and switching between models placed at the same position.",
+    "feature2Title": "Images",
+    "feature2Description": "Deep zoom into IIIF Image API images. Rotated images and Canvases composed from multiple images are displayed as well.",
+    "feature3Title": "Audio and Video",
+    "feature3Description": "Play audio and video with captions and a time-aligned transcript alongside. Canvases that combine multiple media can also be played.",
+    "feature4Title": "Annotations",
+    "feature4Description": "Annotations on points of 3D models, regions of images and times in audio or video are layered over the resource. Annotations on the same region are grouped, with tags, search and filtering.",
+    "feature5Title": "Comparison and Maps",
+    "feature5Description": "Compare two models side by side, or overlaid with swipe and spyglass. Resources with location data are shown together with a map.",
+    "feature6Title": "Structure, Sharing and Embedding",
+    "feature6Description": "Supports tables of contents, paging, two-page spreads and Collections. Share the open resource and position by URL, and embed the viewer in other sites with the iiif-viewer custom element.",
     "howToUse": "How to Use",
     "step1": "1. Enter the URL of an IIIF Manifest in the form below.",
-    "step2": "2. Click the \"Open Viewer\" button to display the 3D model.",
-    "step3": "3. Rotate and zoom the model with mouse or touch controls to examine details.",
-    "step4": "4. If annotations are present, they will be displayed on the model and can be clicked for details.",
+    "step2": "2. Click the \"Open Viewer\" button to display the resource.",
+    "step3": "3. Rotate and zoom 3D models and images, or play audio and video, with mouse or touch controls.",
+    "step4": "4. Annotations, if any, are layered over the resource; click one to see its details.",
     "specs": "Supported specifications",
     "specP4Title": "IIIF Presentation API 4.0 (draft)",
     "specP4Note": "3D Scenes, PointSelector and WktSelector targets, and camera annotations.",
     "specP3Title": "IIIF Presentation API 3.0",
     "specP3Note": "Converted to the 4.0 form on load.",
+    "specImageTitle": "IIIF Image API 3.0",
+    "specImageNote": "Used for deep zoom, rotation and thumbnails.",
+    "specContentStateTitle": "IIIF Content State API 1.0",
+    "specContentStateNote": "The iiif-content parameter selects the resource, Canvas and region to open.",
     "specGeorefTitle": "IIIF Georeference Extension",
     "specGeorefNote": "Used by the map viewer. The format, defined for 2D images, is extended to 3D coordinates.",
     "specRegionTagTitle": "Shared Region and Keyed Tag Extension (own extension, draft)",
     "specRegionTagNote": "Groups annotations that target the same region, and shows the label of a tag as its key."
+  },
+  "Compare": {
+    "mode": "Mode",
+    "modes": {
+      "side": "Side by side",
+      "swipe": "Swipe",
+      "spyglass": "Spyglass",
+      "overlay": "Overlay"
+    },
+    "swipeHandle": "Divider (drag sideways)",
+    "spyglassHint": "B is shown inside the circle",
+    "fitAll": "Fit",
+    "topView": "Top",
+    "noChoice": "This manifest has no Choice of models to compare",
+    "open": "Compare",
+    "zoom": "Zoom",
+    "opacity": "Opacity of B",
+    "noImageChoice": "This Canvas has no Choice of images to compare",
+    "canvas": "Canvas"
+  },
+  "Samples": {
+    "title": "Samples",
+    "lead": "Recipes from the IIIF Cookbook and this site's own test manifests. Use “Open in viewer” to check that each one displays.",
+    "media": {
+      "image": "Image",
+      "audio": "Audio",
+      "video": "Video",
+      "3d": "3D"
+    },
+    "open": "Open in viewer",
+    "manifest": "Manifest",
+    "recipe": "Recipe (Cookbook)",
+    "own": "Test manifest of this site"
   }
 }

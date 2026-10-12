@@ -1,6 +1,6 @@
 {
   "Header": {
-    "title": "IIIF 3D Viewer",
+    "title": "IIIF Kasane",
     "home": "ホーム",
     "download": "ダウンロード",
     "downloadShort": "DL",
@@ -8,8 +8,8 @@
     "japanese": "日本語"
   },
   "Footer": {
-    "title": "IIIF 3D Viewer",
-    "description": "IIIFマニフェストに基づく3Dモデルの表示・アノテーションビューアです。",
+    "title": "IIIF Kasane",
+    "description": "IIIFマニフェストに基づき、3Dモデル・画像・音声・動画と注釈を重ねて表示するビューアです。",
     "guideHeading": "ヘルプ・規約",
     "help": "ヘルプ",
     "privacy": "プライバシーポリシー",
@@ -24,7 +24,8 @@
     "relatedSpec": "IIIF 3D Extension",
     "relatedSample": "IIIF 3D サンプル",
     "relatedOtherTools": "nakamura196 の他のツール",
-    "developers": "中村 覚・小川 潤（東京大学）"
+    "developers": "中村 覚・小川 潤（東京大学）",
+    "samplesAll": "サンプル一覧を見る"
   },
   "News": {
     "heading": "お知らせ",
@@ -35,6 +36,10 @@
     "item2Title": "3Dモデルの表示を改善しました（IBL環境光による質感向上・アノテーションの正対フレーミング・初期表示の自動フィット）",
     "item3Date": "2026-09-28",
     "item4Date": "2026-10-01",
+    "item5Date": "2026-10-11",
+    "item6Date": "2026-10-13",
+    "item6Title": "比較ページの紹介動画を公開しました（2 つのモデルを左右・スワイプ・スパイグラスで見比べる、URL での共有、説明欄の開閉）",
+    "item5Title": "2 つのモデルを見比べられるようにしました（左右に並べる・スワイプ・スパイグラスの比較ページ、同じ場所に置いた複数のモデルの切り替え、回転・全体表示・真上からの視点などの操作ボタン、説明欄の開閉）",
     "item4Title": "写真の表示と初期の視点に対応しました（アノテーションに添えた写真の表示、マニフェストで指定した初期の視点での表示、地図連携ビューアでの全ピンへの自動フィットと「全体を表示」ボタン、注釈カードの表示の統一）",
     "item3Title": "アノテーションの表示を拡充しました（同じ場所の注釈をまとめて表示、キー付きタグ・作成者の表示、検索と絞り込み、視点の情報が無い注釈への移動の修正）"
   },
@@ -47,48 +52,9 @@
     "sampleManifest2": "石淵家地球儀（菊池市立図書館所蔵） - アノテーション付き",
     "sampleManifest3": "石淵家地球儀（菊池市立図書館所蔵） - 地図連携ビューア",
     "sampleManifest4": "石淵家地球儀（菊池市立図書館所蔵） - 領域の共有・タグ拡張の例",
+    "sampleManifestAll": "画像・音声・動画・3D のサンプル一覧（IIIF Cookbook など）",
     "requiredUrl": "マニフェストURLを入力してください",
     "invalidUrl": "有効なURLを入力してください"
-  },
-  "Metadata": {
-    "title": "タイトル",
-    "description": "説明",
-    "metadata": "メタデータ",
-    "seeAlso": "参照",
-    "provider": "提供者",
-    "homepage": "ホームページ",
-    "rendering": "関連リソース",
-    "rights": "権利",
-    "requiredStatement": "出典表記",
-    "navDate": "日付",
-    "thumbnail": "サムネイル",
-    "partOf": "親リソース",
-    "viewingDirection": "表示方向",
-    "behavior": "ビヘイビア"
-  },
-  "Info": {
-    "metadata": "メタデータ",
-    "annotations": "アノテーション"
-  },
-  "Annotation": {
-    "title": "アノテーション一覧",
-    "annotations": "アノテーション",
-    "annotationCount": "{count}件",
-    "type": "タイプ",
-    "unknown": "不明",
-    "annotationId": "アノテーション {id}",
-    "viewDetails": "詳細を見る",
-    "edit": "編集",
-    "newAnnotation": "新しいアノテーション",
-    "seeAlso": "参照",
-    "sameRegion": "同じ場所の注釈 {count}件",
-    "creator": "作成者",
-    "searchPlaceholder": "アノテーションを検索",
-    "tags": "タグ",
-    "filteredCount": "{total}件中 {shown}件",
-    "images": "画像",
-    "relatedImages": "関連する資料",
-    "clearFilter": "絞り込みを解除"
   },
   "Help": {
     "title": "ヘルプ"
@@ -108,41 +74,74 @@
     "fitAll": "全体を表示",
     "noResults": "結果が見つかりません"
   },
-  "Viewer": {
-    "showAnnotations": "アノテーションを表示",
-    "hideAnnotations": "アノテーションを非表示",
-    "loading": "3Dモデルを読み込み中...",
-    "autoRotate": "回す",
-    "fitAll": "全体",
-    "topView": "上",
-    "cameras": "マニフェストの視点",
-    "camera": "視点"
-  },
   "Home": {
     "developers": "開発者",
     "developerNames": "中村 覚・小川 潤（東京大学）",
-    "title": "IIIF 3D Viewer",
-    "subtitle": "IIIF Manifestに基づいた3Dモデルの表示とアノテーション機能を提供するビューアアプリケーションです。",
+    "title": "IIIF Kasane",
+    "subtitle": "IIIF のマニフェストを読み込み、3D モデル・画像・音声・動画と、それに付いた注釈を一つの画面に重ねて表示するビューアです。3D 資料の表示から始まり、いまは IIIF の資料全般を扱います（旧称 IIIF 3D Viewer）。",
     "features": "主な機能",
-    "feature1Title": "3Dモデル表示",
-    "feature1Description": "GLBフォーマットの3Dモデルをインタラクティブに表示。マウスやタッチ操作で自由に回転・ズームが可能。",
-    "feature2Title": "アノテーション",
-    "feature2Description": "3Dモデル上の特定位置にアノテーションを追加。詳細情報やコメントを関連付けて管理。",
-    "feature3Title": "IIIF対応",
-    "feature3Description": "IIIF Manifestフォーマットに準拠。標準化された方法でデジタルコンテンツを共有・表示。",
+    "feature1Title": "3D モデル",
+    "feature1Description": "GLB 形式の 3D モデルや点群を、マウスやタッチで回転・拡大して見られます。マニフェストで指定した初期の視点や、同じ場所に置いた複数のモデルの切り替えにも対応しています。",
+    "feature2Title": "画像",
+    "feature2Description": "IIIF Image API の画像を深く拡大して見られます。回転した画像や、複数の画像を 1 枚に合成した Canvas も表示します。",
+    "feature3Title": "音声・動画",
+    "feature3Description": "音声と動画を再生し、字幕や時刻つきの文字起こしを並べて表示します。複数のメディアを組み合わせた Canvas も再生できます。",
+    "feature4Title": "アノテーション",
+    "feature4Description": "3D モデル上の位置、画像の領域、音声・動画の時刻に付いた注釈を、資料に重ねて表示します。同じ場所の注釈のまとめ表示、タグ、検索と絞り込みに対応しています。",
+    "feature5Title": "比較と地図",
+    "feature5Description": "2 つのモデルを左右に並べたり、スワイプやスパイグラスで重ねたりして見比べられます。位置情報を持つ資料は、地図と連携して表示します。",
+    "feature6Title": "構造・共有・埋め込み",
+    "feature6Description": "目次・ページ送り・見開き・Collection に対応しています。開いている資料と場所を URL で共有でき、独自タグ（iiif-viewer）で他のサイトにも埋め込めます。",
     "howToUse": "使い方",
     "step1": "1. 下記のフォームにIIIF ManifestのURLを入力してください。",
-    "step2": "2. 「ビューアを開く」ボタンをクリックすると、3Dモデルが表示されます。",
-    "step3": "3. マウスやタッチ操作でモデルを回転・ズームして、詳細を確認できます。",
-    "step4": "4. アノテーションがある場合は、モデル上に表示され、クリックで詳細を確認できます。",
+    "step2": "2. 「ビューアを開く」ボタンを押すと、資料が表示されます。",
+    "step3": "3. マウスやタッチで、3D モデルや画像を回転・拡大したり、音声・動画を再生したりできます。",
+    "step4": "4. アノテーションがある場合は資料に重ねて表示され、押すと詳しい内容を確認できます。",
     "specs": "対応している規格",
     "specP4Title": "IIIF Presentation API 4.0（草案）",
     "specP4Note": "3D のシーン、PointSelector・WktSelector による位置指定、カメラの注釈に対応しています。",
     "specP3Title": "IIIF Presentation API 3.0",
     "specP3Note": "読み込み時に 4.0 の形に変換して表示します。",
+    "specImageTitle": "IIIF Image API 3.0",
+    "specImageNote": "画像の深い拡大、回転、サムネイルに使います。",
+    "specContentStateTitle": "IIIF Content State API 1.0",
+    "specContentStateNote": "iiif-content パラメータで、開く資料・Canvas・場所を指定できます。",
     "specGeorefTitle": "IIIF Georeference Extension",
     "specGeorefNote": "地図連携ビューアで使います。平面の画像向けの形式を、3 次元の座標に広げて使っています。",
     "specRegionTagTitle": "Shared Region and Keyed Tag Extension（独自の拡張・草案）",
     "specRegionTagNote": "同じ場所を指す注釈をまとめて表示し、タグの label をキーとして表示します。"
+  },
+  "Compare": {
+    "mode": "表示のしかた",
+    "modes": {
+      "side": "左右に並べる",
+      "swipe": "スワイプ",
+      "spyglass": "スパイグラス",
+      "overlay": "重ねる"
+    },
+    "swipeHandle": "境界線（左右に動かす）",
+    "spyglassHint": "丸い窓の中に B を表示",
+    "fitAll": "全体",
+    "topView": "上",
+    "noChoice": "この manifest には切り替えられる模型（Choice）がありません",
+    "open": "比較",
+    "zoom": "拡大",
+    "opacity": "B の濃さ",
+    "noImageChoice": "この Canvas には切り替えられる画像（Choice）がありません",
+    "canvas": "Canvas"
+  },
+  "Samples": {
+    "title": "サンプル一覧",
+    "lead": "IIIF Cookbook のレシピと、このサイトの検査用マニフェストです。「ビューアで開く」で、表示できるかを確かめられます。",
+    "media": {
+      "image": "画像",
+      "audio": "音声",
+      "video": "動画",
+      "3d": "3D"
+    },
+    "open": "ビューアで開く",
+    "manifest": "マニフェスト",
+    "recipe": "レシピ（Cookbook）",
+    "own": "このサイトの検査用"
   }
 }

@@ -1,0 +1,150 @@
+import {
+  Label,
+  SeeAlso,
+  ResourceList,
+  Provider,
+  Rights,
+  Thumbnail,
+  Behavior,
+  Chip,
+  PrimitivesExternalWebResource,
+  type IIIFLabel,
+  type MetadataItem,
+} from '../iiif/primitives';
+import { useLocale, useTranslations } from '../env';
+import { aboutOf } from '../../core';
+import { MetadataList, SafeHtml } from '../panels/SafeHtml';
+
+import { useAtomValue } from 'jotai';
+import { manifestAtom } from '../atoms';
+
+const Section = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  <div className="border-b pb-2 border-gray-200 dark:border-gray-700">
+    <div className="text-sm text-gray-500 dark:text-gray-400">{title}</div>
+    <div className="text-gray-900 dark:text-gray-100">{children}</div>
+  </div>
+);
+
+const Metadata = () => {
+  const t = useTranslations('Metadata');
+  const locale = useLocale();
+  const manifest = useAtomValue(manifestAtom);
+
+  if (!manifest) {
+    return (
+      <div className="p-6 bg-white dark:bg-gray-900">
+        <h2 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-100">{t('metadata')}</h2>
+      </div>
+    );
+  }
+
+  const m = manifest as typeof manifest & {
+    requiredStatement?: MetadataItem;
+    navDate?: string;
+    thumbnail?: PrimitivesExternalWebResource[];
+    homepage?: PrimitivesExternalWebResource[];
+    rendering?: PrimitivesExternalWebResource[];
+    seeAlso?: PrimitivesExternalWebResource[];
+    partOf?: PrimitivesExternalWebResource[];
+    provider?: Parameters<typeof Provider>[0]['provider'];
+    rights?: string;
+    viewingDirection?: string;
+    behavior?: string[];
+  };
+
+  // 説明・メタデータ・出典表記は、言語を選び、値の HTML を無害化して出す（core/features/about.ts）
+  const about = aboutOf(manifest, undefined, locale)?.manifest;
+
+  return (
+    <div className="p-6 bg-white dark:bg-gray-900">
+      <h2 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-100">{t('metadata')}</h2>
+      <div className="space-y-4">
+        <Section title={t('title')}>
+          <Label label={m.label as IIIFLabel} as="span" />
+        </Section>
+
+        {m.thumbnail && m.thumbnail.length > 0 && (
+          <Section title={t('thumbnail')}>
+            <Thumbnail thumbnail={m.thumbnail as Parameters<typeof Thumbnail>[0]['thumbnail']} />
+          </Section>
+        )}
+
+        {about && about.summary.length > 0 && (
+          <Section title={t('description')}>
+            {about.summary.map((h, i) => (
+              <SafeHtml key={i} html={h} as="div" />
+            ))}
+          </Section>
+        )}
+
+        {about && about.metadata.length > 0 && (
+          <Section title={t('metadata')}>
+            <MetadataList items={about.metadata} />
+          </Section>
+        )}
+
+        {about?.requiredStatement && (
+          <Section title={t('requiredStatement')}>
+            <MetadataList items={[{ ...about.requiredStatement, label: '' }]} />
+          </Section>
+        )}
+
+        {m.rights && (
+          <Section title={t('rights')}>
+            <Rights rights={m.rights} />
+          </Section>
+        )}
+
+        {m.navDate && (
+          <Section title={t('navDate')}>
+            <span>{m.navDate}</span>
+          </Section>
+        )}
+
+        {m.provider && m.provider.length > 0 && (
+          <Section title={t('provider')}>
+            <Provider provider={m.provider} />
+          </Section>
+        )}
+
+        {m.homepage && m.homepage.length > 0 && (
+          <Section title={t('homepage')}>
+            <ResourceList seeAlso={m.homepage as PrimitivesExternalWebResource[]} />
+          </Section>
+        )}
+
+        {m.rendering && m.rendering.length > 0 && (
+          <Section title={t('rendering')}>
+            <ResourceList seeAlso={m.rendering as PrimitivesExternalWebResource[]} />
+          </Section>
+        )}
+
+        {m.seeAlso && (m.seeAlso as PrimitivesExternalWebResource[]).length > 0 && (
+          <Section title={t('seeAlso')}>
+            <SeeAlso seeAlso={m.seeAlso as unknown as PrimitivesExternalWebResource[]} />
+          </Section>
+        )}
+
+        {m.partOf && m.partOf.length > 0 && (
+          <Section title={t('partOf')}>
+            <ResourceList seeAlso={m.partOf as PrimitivesExternalWebResource[]} />
+          </Section>
+        )}
+
+        {m.viewingDirection && (
+          <Section title={t('viewingDirection')}>
+            <Chip>{m.viewingDirection}</Chip>
+          </Section>
+        )}
+
+        {m.behavior && m.behavior.length > 0 && (
+          <Section title={t('behavior')}>
+            <Behavior behavior={m.behavior} />
+          </Section>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default Metadata;

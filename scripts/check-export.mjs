@@ -3,13 +3,13 @@
  * 静的書き出し (out/) の中のリンクと資産の参照が、すべて実在するファイルを指しているか確かめる。
  *
  * 使い方: npm run build のあとに npm run test:export
- *   basePath 付き (GITHUB_PAGES=true) でビルドしたときは NEXT_PUBLIC_BASE_PATH=/iiif-3d-viewer を付けて実行する。
+ *   basePath 付き (GITHUB_PAGES=true) でビルドしたときは NEXT_PUBLIC_BASE_PATH=/iiif-kasane を付けて実行する。
  *
  * 見ること:
  *   1. HTML の href / src / srcset / content と CSS の url() のうち、サイト内を指すもの
  *      (/ で始まる参照・相対参照・サイトの絶対 URL) が out/ のファイルに解決できる
  *   2. / で始まる参照が basePath から始まっている (basePath の付け忘れ・二重付け)
- *   3. 旧ホスト (github.io/iiif-3d-viewer, 3d-iiif-viewer.vercel.app) を指す文字列が残っていない
+ *   3. 旧ホスト (github.io/iiif-3d-viewer, 3d-iiif-viewer.vercel.app, 3d.ldas.jp) を指す文字列が残っていない
  *   4. robots.txt の Sitemap と sitemap.xml の各 URL が実在するページを指す
  *   5. トップ (index.html) と 404.html がある
  */
@@ -18,9 +18,9 @@ import { join, relative, posix } from 'node:path';
 
 const OUT = new URL('../out/', import.meta.url).pathname;
 const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || '').replace(/\/+$/, '');
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://3d.ldas.jp').replace(/\/+$/, '');
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://kasane.ldas.jp').replace(/\/+$/, '');
 
-const FORBIDDEN = ['nakamura196.github.io/iiif-3d-viewer', '3d-iiif-viewer.vercel.app'];
+const FORBIDDEN = ['nakamura196.github.io/iiif-3d-viewer', '3d-iiif-viewer.vercel.app', '//3d.ldas.jp'];
 
 const errors = [];
 const fail = (msg) => errors.push(msg);

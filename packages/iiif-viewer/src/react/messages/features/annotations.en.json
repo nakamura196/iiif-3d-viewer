@@ -1,0 +1,28 @@
+{
+  "Info": {
+    "canvasAnnotations": "Annotations",
+    "canvasAnnotationsLoading": "Loading annotations",
+    "canvasAnnotationsFailed": "Some annotations could not be loaded",
+    "canvasAnnotationsEmpty": "There are no annotations on this page",
+    "canvasAnnotationsCount": "{count}",
+    "canvasAnnotationsAbout": "About the whole image",
+    "canvasAnnotationsOpen": "Open link",
+    "canvasAnnotationsCanvasLink": "Link to another page of this item",
+    "canvasAnnotationsPainted": "Text on the image",
+    "canvasAnnotationsPoint": "Point",
+    "canvasAnnotationsRegion": "Region",
+    "canvasAnnotationsMotivation_commenting": "Comment",
+    "canvasAnnotationsMotivation_tagging": "Tag",
+    "canvasAnnotationsMotivation_linking": "Link",
+    "canvasAnnotationsMotivation_describing": "Description",
+    "canvasAnnotationsMotivation_identifying": "Identifying",
+    "canvasAnnotationsMotivation_classifying": "Classifying",
+    "canvasAnnotationsMotivation_bookmarking": "Bookmark",
+    "canvasAnnotationsMotivation_highlighting": "Highlight",
+    "canvasAnnotationsMotivation_questioning": "Question",
+    "canvasAnnotationsMotivation_replying": "Reply",
+    "canvasAnnotationsMotivation_editing": "Edit",
+    "canvasAnnotationsMotivation_moderating": "Moderation",
+    "canvasAnnotationsMotivation_painting": "Text"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "Info": {
+    "annotationTranscript": "Annotation transcript"
+  },
+  "Viewer": {
+    "compositePlay": "Play",
+    "compositePause": "Pause",
+    "compositeSeek": "Position"
+  },
+  "Transcript": {
+    "language": "Language"
+  }
+}

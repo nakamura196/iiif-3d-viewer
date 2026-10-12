@@ -2,19 +2,21 @@
 
 import type { NextPage } from 'next';
 import { Suspense } from 'react';
-import { annotationsAtom, manifestUrlAtom, selectedAnnotationIdAtom } from '@/atoms/infoPanelAtom';
+import { annotationsAtom, manifestUrlAtom, selectedAnnotationIdAtom } from '@nakamura196/iiif-viewer';
 import { useAtom } from 'jotai';
 import { useEffect, useState, useRef } from 'react';
-import { fetchManifest } from '@/lib/services/utils';
-import { manifestAtom } from '@/atoms/infoPanelAtom';
-import CanvasComponent from '@/components/three/Canvas';
+import { fetchManifest } from '@nakamura196/iiif-viewer/core';
+import { manifestAtom } from '@nakamura196/iiif-viewer';
+import { CanvasComponent } from '@nakamura196/iiif-viewer';
 import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
 import MapView from '@/components/map/MapView';
-import { convertToV4 } from '@/lib/services/manifestConverter';
-import { parseManifestV4, geoAnnotations, type GeoFeature } from '@/lib/services/manifestParser';
-import AnnotationCard from '@/components/annotation/AnnotationCard';
+import { convertToV4 } from '@nakamura196/iiif-viewer/core';
+import { parseManifestV4, geoAnnotations, type GeoFeature } from '@nakamura196/iiif-viewer/core';
+import { AnnotationCard } from '@nakamura196/iiif-viewer';
+import { SidePanel } from '@nakamura196/iiif-viewer';
 import { useTranslations, useLocale } from 'next-intl';
+import { manifestFromParams } from '@nakamura196/iiif-viewer/core';
 
 // マニフェストからattributionを取得するヘルパー関数
 const getAttribution = (manifest: Record<string, unknown>, locale: string): string | undefined => {
@@ -41,7 +43,7 @@ const GeoRefContent: NextPage = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const manifestParam = params.get('manifest');
+    const manifestParam = manifestFromParams(params);
     if (!manifestParam) return;
     setManifestUrl(manifestParam);
   }, [setManifestUrl]);
@@ -86,7 +88,7 @@ const GeoRefContent: NextPage = () => {
         {manifestUrl ? (
           <div className="flex flex-col lg:flex-row w-full h-full">
             {/* Map */}
-            <div className="h-[30%] lg:h-full lg:flex-[2] relative border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700">
+            <div className="flex-1 min-h-0 lg:h-full lg:flex-[2] relative border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700">
               <div className="absolute top-4 left-4 z-10 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow text-sm font-medium text-gray-700 dark:text-gray-300">
                 {t('map')}
               </div>
@@ -97,7 +99,7 @@ const GeoRefContent: NextPage = () => {
               />
             </div>
             {/* 3D Viewer */}
-            <div className="h-[30%] lg:h-full lg:flex-[2] relative bg-gray-100 dark:bg-gray-900 border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700">
+            <div className="flex-1 min-h-0 lg:h-full lg:flex-[2] relative bg-gray-100 dark:bg-gray-900 border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700">
               <div className="absolute top-4 left-4 z-10 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow text-sm font-medium text-gray-700 dark:text-gray-300">
                 {t('viewer3d')}
               </div>
@@ -114,7 +116,7 @@ const GeoRefContent: NextPage = () => {
               )}
             </div>
             {/* Annotations */}
-            <div className="h-[40%] lg:h-full lg:w-96 lg:flex-none relative bg-white dark:bg-gray-800 flex flex-col">
+            <SidePanel breakpoint="lg" className="bg-white dark:bg-gray-800 flex flex-col">
               <div className="sticky top-0 bg-white dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700 z-10">
                 <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   {t('annotations')} ({geoFeatures.length})
@@ -213,7 +215,7 @@ const GeoRefContent: NextPage = () => {
                   </p>
                 )}
               </div>
-            </div>
+            </SidePanel>
           </div>
         ) : (
           <div className="w-full h-full flex items-center justify-center">

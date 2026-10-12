@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
+import ViewerEnvBridge from '@/components/ViewerEnvBridge';
 import { SITE_URL, alternatesFor } from '@/lib/site';
 
 export async function generateMetadata({
@@ -13,14 +14,14 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  // 公開 URL は src/lib/site.ts。旧 github.io / vercel.app はそれぞれの設定で 3d.ldas.jp へ転送する。
+  // 公開 URL は src/lib/site.ts。旧ドメインと vercel.app は vercel.json で kasane.ldas.jp へ転送する。
   const baseUrl = SITE_URL;
 
-  const title = locale === 'ja' ? 'IIIF 3D ビューア' : 'IIIF 3D Viewer';
+  const title = 'IIIF Kasane';
   const description =
     locale === 'ja'
-      ? 'IIIF Manifestに基づいた3Dモデルの表示とアノテーション機能を提供するビューアアプリケーション'
-      : 'A viewer application that provides 3D model display and annotation functionality based on IIIF Manifest';
+      ? 'IIIF のマニフェストを読み込み、3D モデル・画像・音声・動画と注釈を一つの画面に重ねて表示するビューア'
+      : 'A viewer that reads IIIF Manifests and layers 3D models, images, audio, video and annotations in a single view';
 
   return {
     title: {
@@ -104,7 +105,9 @@ export default async function RootLayout({
 
   return (
     <Provider>
-      <NextIntlClientProvider messages={messages}>{children}</NextIntlClientProvider>
+      <NextIntlClientProvider messages={messages}>
+        <ViewerEnvBridge>{children}</ViewerEnvBridge>
+      </NextIntlClientProvider>
     </Provider>
   );
 }

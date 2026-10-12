@@ -7,6 +7,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ManifestInput from '@/components/Input';
 import { SectionHeading, News, VideoEmbed } from '@nakamura196/react-ui';
+import { contentParam } from '@nakamura196/iiif-viewer/core';
 
 export default function HomeContent() {
   const router = useRouter();
@@ -15,6 +16,16 @@ export default function HomeContent() {
   const locale = useLocale();
 
   const newsItems = [
+    {
+      date: tNews('item6Date'),
+      title: tNews('item6Title'),
+      href: `https://www.youtube.com/watch?v=${locale === 'en' ? 'wOh2JiaHkS8' : 'Sb7m0J6pRTM'}`,
+      external: true,
+    },
+    {
+      date: tNews('item5Date'),
+      title: tNews('item5Title'),
+    },
     {
       date: tNews('item4Date'),
       title: tNews('item4Title'),
@@ -41,6 +52,8 @@ export default function HomeContent() {
   const specs = [
     { key: 'specP4', href: 'https://iiif.io/api/presentation/4.0/' },
     { key: 'specP3', href: 'https://iiif.io/api/presentation/3.0/' },
+    { key: 'specImage', href: 'https://iiif.io/api/image/3.0/' },
+    { key: 'specContentState', href: 'https://iiif.io/api/content-state/1.0/' },
     { key: 'specGeoref', href: 'https://iiif.io/api/extension/georef/' },
     { key: 'specRegionTag', href: 'https://github.com/nakamura196/iiif-region-tag-extension' },
   ] as const;
@@ -49,25 +62,47 @@ export default function HomeContent() {
   const demoVideoId = locale === 'en' ? 'Wbhqz5s6ahA' : '_thPJDU_hLA';
 
   const handleManifestSubmit = async (manifestUrl: string, tab?: string) => {
-    const url = `/${locale}/viewer?manifest=${encodeURIComponent(manifestUrl)}`;
+    const url = `/${locale}/viewer?${contentParam(manifestUrl)}`;
     router.push(tab ? `${url}&tab=${tab}` : url);
   };
 
+  // アイコンは Heroicons (outline) のパス
   const featureCards = [
     {
+      // 3D モデル (cube)
       titleKey: 'feature1Title',
       descKey: 'feature1Description',
+      path: 'M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4',
+    },
+    {
+      // 画像 (photo)
+      titleKey: 'feature2Title',
+      descKey: 'feature2Description',
       path: 'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z',
     },
     {
-      titleKey: 'feature2Title',
-      descKey: 'feature2Description',
+      // 音声・動画 (film)
+      titleKey: 'feature3Title',
+      descKey: 'feature3Description',
+      path: 'M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z',
+    },
+    {
+      // アノテーション (chat)
+      titleKey: 'feature4Title',
+      descKey: 'feature4Description',
       path: 'M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z',
     },
     {
-      titleKey: 'feature3Title',
-      descKey: 'feature3Description',
-      path: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+      // 比較と地図 (map)
+      titleKey: 'feature5Title',
+      descKey: 'feature5Description',
+      path: 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7',
+    },
+    {
+      // 構造・共有・埋め込み (code)
+      titleKey: 'feature6Title',
+      descKey: 'feature6Description',
+      path: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
     },
   ] as const;
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useAtom } from 'jotai';
-import { manifestUrlAtom } from '@/atoms/infoPanelAtom';
+import { manifestUrlAtom } from '@nakamura196/iiif-viewer';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter, usePathname } from 'next/navigation';
 import { Link } from '@/i18n/routing';

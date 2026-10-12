@@ -1,19 +1,24 @@
 {
-  "name": "iiif-3d-viewer",
+  "name": "iiif-kasane",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev -p 3838",
-    "build": "next build",
+    "dev": "node scripts/copy-maplibre-worker.mjs && next dev -p 3838",
+    "build:element": "npm run build:element -w @nakamura196/iiif-viewer",
+    "build": "node scripts/copy-maplibre-worker.mjs && npm run build:element && next build && node scripts/copy-element.mjs",
     "start": "next start -p 3838",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "vitest run",
-    "test:basepath": "GITHUB_PAGES=true next build && ./scripts/check-basepath.sh",
+    "test:basepath": "GITHUB_PAGES=true npm run build && ./scripts/check-basepath.sh",
     "test:export": "node scripts/check-export.mjs",
     "test:live": "node scripts/check-live.mjs"
   },
   "dependencies": {
     "@iiif/presentation-3": "^2.1.0",
+    "@nakamura196/iiif-viewer": "*",
     "@nakamura196/react-ui": "github:nakamura196/react-ui#v0.2.0",
     "@next/third-parties": "^16.2.4",
     "@react-three/drei": "^10.6.0",
@@ -21,7 +26,7 @@
     "@tailwindcss/postcss": "^4.1.18",
     "gsap": "^3.13.0",
     "jotai": "^2.12.5",
-    "maplibre-gl": "^5.13.0",
+    "maplibre-gl": "6.12.0",
     "next": "^16.1.6",
     "next-intl": "^4.8.2",
     "next-themes": "^0.4.6",
@@ -44,6 +49,7 @@
     "vitest": "^4.1.7"
   },
   "overrides": {
-    "postcss": "$postcss"
+    "postcss": "$postcss",
+    "postcss-selector-parser": "7.1.6"
   }
 }

@@ -1,0 +1,94 @@
+// IIIF Content State API 1.0 の `iiif-content` 引数。
+// 値は「マニフェスト URL そのもの」か「base64url の JSON」（Annotation で target がマニフェスト）。
+
+const toBase64Url = (s: string): string => {
+  const bytes = new TextEncoder().encode(s);
+  let bin = '';
+  bytes.forEach((b) => (bin += String.fromCharCode(b)));
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+};
+
+const fromBase64Url = (s: string): string => {
+  const b64 = s.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = b64 + '='.repeat((4 - (b64.length % 4)) % 4);
+  const bin = atob(padded);
+  const bytes = Uint8Array.from(bin, (c) => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+};
+
+type Json = Record<string, unknown>;
+
+const isObject = (v: unknown): v is Json => typeof v === 'object' && v !== null;
+
+// target（文字列・オブジェクト・SpecificResource・配列）から、マニフェストの URL を取り出す。
+const manifestOf = (target: unknown): string | null => {
+  if (typeof target === 'string') return target;
+  if (Array.isArray(target)) {
+    for (const t of target) {
+      const found = manifestOf(t);
+      if (found) return found;
+    }
+    return null;
+  }
+  if (!isObject(target)) return null;
+  if (target.type === 'Manifest' && typeof target.id === 'string') return target.id;
+  const fromPartOf = (r: Json): string | null => {
+    // Canvas などの partOf に、親のマニフェストが書かれる
+    if (!Array.isArray(r.partOf)) return null;
+    for (const p of r.partOf) {
+      if (isObject(p) && p.type === 'Manifest' && typeof p.id === 'string') return p.id;
+    }
+    return null;
+  };
+  const source = target.source;
+  if (typeof source === 'string') return source;
+  if (isObject(source)) {
+    if (source.type === 'Manifest' && typeof source.id === 'string') return source.id;
+    return fromPartOf(source);
+  }
+  return fromPartOf(target);
+};
+
+/** `iiif-content` の値から、マニフェストの URL を取り出す。読めなければ null。 */
+export function decodeContentState(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const v = value.trim();
+  if (/^https?:\/\//i.test(v)) return v;
+  try {
+    // 前後のどちらの書き方でも通るよう、URL エンコードされた JSON も受ける
+    let text = v.startsWith('{') || v.startsWith('%7B') ? decodeURIComponent(v) : fromBase64Url(v);
+    // Cookbook 形式: URI エンコードした JSON を base64url にしたもの
+    if (text.startsWith('%')) text = decodeURIComponent(text);
+    const json: unknown = JSON.parse(text);
+    if (!isObject(json)) return null;
+    if (json.type === 'Annotation') return manifestOf(json.target);
+    return manifestOf(json);
+  } catch {
+    return null;
+  }
+}
+
+/** マニフェスト URL を、base64url の content state（Annotation）にする。 */
+export function encodeContentState(manifestUrl: string): string {
+  return toBase64Url(
+    JSON.stringify({
+      '@context': 'http://iiif.io/api/presentation/3/context.json',
+      type: 'Annotation',
+      motivation: ['contentState'],
+      target: { id: manifestUrl, type: 'Manifest' },
+    })
+  );
+}
+
+/**
+ * URL の引数から、表示するマニフェストの URL を決める。
+ * `iiif-content` を優先し、無ければ従来の `manifest` を使う（既存リンクの互換）。
+ */
+export function manifestFromParams(params: URLSearchParams): string | null {
+  return decodeContentState(params.get('iiif-content')) ?? params.get('manifest') ?? null;
+}
+
+/** サイトが出すリンクの引数。マニフェスト URL そのものを `iiif-content` に入れる。 */
+export function contentParam(manifestUrl: string): string {
+  return `iiif-content=${encodeURIComponent(manifestUrl)}`;
+}

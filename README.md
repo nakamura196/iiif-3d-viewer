@@ -1,11 +1,17 @@
-# IIIF 3D Viewer
+# IIIF Kasane
 
-A web application for viewing and annotating 3D models based on IIIF Manifest specifications.
+A web application for viewing and annotating IIIF resources — 3D models, images, audio and video — based on IIIF Manifest specifications.
+
+Formerly **IIIF 3D Viewer**. The project started as a 3D viewer and now handles other media as well. *Kasane* (重ね) is the Japanese word for "layering", as in *kasane no irome*, the layered colours of Heian-period court dress: the viewer layers models, images, media and annotations in one view.
 
 ## Features
 
-- **3D Model Visualization**: Display GLB/GLTF 3D models from IIIF Manifests
-- **Annotation Support**: Create and manage annotations on 3D models
+- **3D Models**: GLB/GLTF models and point clouds, initial views, and switching between models placed at the same position
+- **Images**: Deep zoom via the IIIF Image API, rotation, and Canvases composed from multiple images
+- **Audio and Video**: Playback with captions and time-aligned transcripts, including Canvases that combine multiple media
+- **Annotations**: Points on 3D models, image regions and media times, with grouping, tags, search and filtering
+- **Comparison and Maps**: Side-by-side, swipe and spyglass comparison of two models; a map view for georeferenced resources
+- **Structure, Sharing and Embedding**: Tables of contents, paging, two-page spreads, Collections, IIIF Content State links, and the `<iiif-viewer>` custom element
 - **Multi-language Support**: Available in English and Japanese
 - **Static Export**: Deployable as a static site to any hosting service
 - **Responsive Design**: Works on desktop and mobile devices
@@ -21,10 +27,10 @@ A web application for viewing and annotating 3D models based on IIIF Manifest sp
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/3D-annotation-viewer.git
+git clone https://github.com/nakamura196/iiif-kasane.git
 
 # Navigate to project directory
-cd 3D-annotation-viewer
+cd iiif-kasane
 
 # Install dependencies
 npm install
@@ -141,11 +147,11 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contributing
 
-We welcome contributions to the IIIF 3D Viewer project! Here's how you can help:
+We welcome contributions to the IIIF Kasane project! Here's how you can help:
 
 ### Reporting Issues
 
-- Use the [GitHub Issues](https://github.com/nakamura196/iiif-3d-viewer/issues) page to report bugs
+- Use the [GitHub Issues](https://github.com/nakamura196/iiif-kasane/issues) page to report bugs
 - Clearly describe the issue including steps to reproduce
 - Include browser version, OS, and any error messages
 

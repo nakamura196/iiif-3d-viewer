@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { buttonClass } from '@nakamura196/react-ui';
 import { withBasePath } from '@/lib/basePath';
+import { contentParam } from '@nakamura196/iiif-viewer/core';
 
 const SAMPLE = withBasePath('/manifests/sample-manifest.json');
 const SAMPLE_ANNOT = withBasePath('/manifests/sample-manifest-with-annotations.json');
@@ -95,7 +96,7 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
           </li>
           <li>
             <Link
-              href={`/georef?manifest=${encodeURIComponent(SAMPLE_ANNOT)}`}
+              href={`/georef?${contentParam(SAMPLE_ANNOT)}`}
               className="text-[var(--ds-primary)] hover:underline"
             >
               {t('sampleManifest3')}
@@ -108,6 +109,11 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
             >
               {t('sampleManifest4')}
             </button>
+          </li>
+          <li>
+            <Link href="/samples" className="text-[var(--ds-primary)] hover:underline">
+              {t('sampleManifestAll')}
+            </Link>
           </li>
         </ul>
       </div>
