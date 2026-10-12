@@ -4,9 +4,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import {
   canvasImagesOf,
-  fetchManifest,
+  detailWidthOf,
+  imageChoiceOf,
   labelIn,
   layerThumbnailUrl,
+  manifestItemsOf,
+  paintsImage,
+  rawCanvasOf,
   thumbnailUrlOf,
   type CanvasImages,
   type CanvasPainting,
@@ -24,6 +28,7 @@ import ChoiceBar from './ChoiceBar';
 import { AnnotationBoxes, MediaCover, ThumbnailStrip, type ThumbnailItem } from './ImageExtras';
 import ImageLayerView from './ImageTiles';
 import ImageView from './ImageView';
+import { useRawManifest } from './rawManifest';
 import { DISPLAYS } from './registry';
 import type { Display, DisplayProps } from './types';
 
@@ -36,30 +41,6 @@ import type { Display, DisplayProps } from './types';
 // 取り直しはブラウザのキャッシュに当たる。取れなかったときは、変換後の manifest で続ける。
 
 type Json = Record<string, unknown>;
-
-const rawCache = new Map<string, Promise<unknown>>();
-
-function useRawManifest(url: string): unknown | null | undefined {
-  const [res, setRes] = useState<{ url: string; raw: unknown } | null>(null);
-  useEffect(() => {
-    let cancelled = false;
-    let p = rawCache.get(url);
-    if (!p) {
-      p = fetchManifest(url);
-      rawCache.set(url, p);
-    }
-    p.then((raw) => {
-      if (!cancelled) setRes({ url, raw });
-    });
-    return () => {
-      cancelled = true;
-    };
-  }, [url]);
-  return res?.url === url ? res.raw : undefined;
-}
-
-const itemsOf = (manifest: unknown): Json[] =>
-  Array.isArray((manifest as Json | null)?.items) ? ((manifest as Json).items as Json[]) : [];
 
 const hasKind = (p: CanvasPainting, ...kinds: string[]) => p.options.some((o) => kinds.includes(o.kind));
 
@@ -120,10 +101,10 @@ function ImageBody({
     }));
 
   const { width, height } = images;
-  const detail = Math.max(0, ...items.map((it) => it.layer.width ?? 0));
   // the same for every visibility and order, so switching layers keeps the zoom
   const key = items.map((it) => it.layer.url).join('|');
   const base = items[0]?.id;
+  const compared = imageChoiceOf(images);
 
   return (
     <>
@@ -133,7 +114,11 @@ function ImageBody({
           painting={b.content}
           index={choiceIndex(b.painting)}
           onChange={(i) => choose(b.painting, i)}
-        />
+        >
+          {/* the Choice the comparison page compares */}
+          {b.content.id === compared?.id &&
+            props.renderActions?.({ iiifContent: props.iiifContent, hasChoices: true, selectedIndex: props.selectedIndex })}
+        </ChoiceBar>
       ))}
       <div className="relative flex-1 min-h-0 min-w-0">
         {width && height ? (
@@ -141,7 +126,7 @@ function ImageBody({
             key={key}
             canvasWidth={width}
             canvasHeight={height}
-            detailWidth={detail || undefined}
+            detailWidth={detailWidthOf(items.map((it) => it.layer))}
             container={container}
             extra={<AnnotationBoxes annotations={annotations} canvasWidth={width} canvasHeight={height} />}
           >
@@ -255,7 +240,7 @@ function useThumbnails(props: DisplayProps, rawManifest: unknown): ThumbnailItem
   const { containers } = props;
   return useMemo(() => {
     const byId = new Map<string, Json>();
-    for (const c of itemsOf(rawManifest ?? props.manifest)) byId.set(String(c.id ?? ''), c);
+    for (const c of manifestItemsOf(rawManifest ?? props.manifest)) byId.set(String(c.id ?? ''), c);
     const manifestThumb = thumbnailUrlOf((rawManifest as Json | null)?.thumbnail);
     let declared = false;
     const items = containers.map((c, i) => {
@@ -287,12 +272,9 @@ function ImageCanvasDisplay(props: DisplayProps) {
 
   // before the source manifest arrives, a converted Canvas (a Scene) is not yet known to be flat
   const waiting = raw === undefined && container.kind === 'Scene';
-  const source = useMemo(() => {
-    const items = itemsOf(raw ?? props.manifest);
-    return items.find((c) => String(c.id ?? '') === container.id);
-  }, [raw, props.manifest, container.id]);
+  const source = useMemo(() => rawCanvasOf(raw ?? props.manifest, container.id), [raw, props.manifest, container.id]);
   const images = useMemo(() => canvasImagesOf(source), [source]);
-  const imagePaintings = useMemo(() => images.paintings.filter((p) => hasKind(p, 'Image')), [images]);
+  const imagePaintings = useMemo(() => images.paintings.filter(paintsImage), [images]);
 
   if (waiting) {
     return <div className="p-4 text-sm text-[var(--ds-fg)]">{t('imageLoading')}</div>;

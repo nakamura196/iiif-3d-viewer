@@ -1,5 +1,6 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import { useAtom } from 'jotai';
 import { labelIn, type MediaOption, type PaintingContent } from '../../core';
 import { modelChoicesAtom } from '../atoms';
@@ -16,14 +17,17 @@ export function useChoiceIndex(painting: PaintingContent | undefined): number {
 
 // A Choice between two or more candidates of an image / video / audio painting.
 // `index` / `onChange` given: the caller keeps the choice (an image Canvas keeps it as layer visibility).
+// `children` (e.g. a link to the comparison page) go at the right end of the bar.
 export default function ChoiceBar({
   painting,
   index: controlled,
   onChange,
+  children,
 }: {
   painting: PaintingContent;
   index?: number;
   onChange?: (index: number) => void;
+  children?: ReactNode;
 }) {
   const t = useTranslations('Viewer');
   const locale = useLocale();
@@ -52,6 +56,7 @@ export default function ChoiceBar({
           </option>
         ))}
       </select>
+      {children && <div className="ml-auto flex items-center gap-2">{children}</div>}
     </div>
   );
 }

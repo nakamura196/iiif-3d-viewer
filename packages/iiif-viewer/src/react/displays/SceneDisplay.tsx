@@ -11,7 +11,7 @@ import type { Display, DisplayProps } from './types';
 // three.js and react-three-fiber are only fetched when a Scene is shown.
 const CanvasComponent = lazy(() => import('../three/Canvas'));
 
-function SceneDisplay({ container, manifest, iiifContent, renderActions }: DisplayProps) {
+function SceneDisplay({ container, manifest, iiifContent, renderActions, selectedIndex }: DisplayProps) {
   const t = useTranslations('Viewer');
   const paintedModels = useAtomValue(paintedModelsAtom);
   const setPaintedModels = useSetAtom(paintedModelsAtom);
@@ -43,7 +43,7 @@ function SceneDisplay({ container, manifest, iiifContent, renderActions }: Displ
       )}
       <div className="absolute bottom-4 left-4 z-10 flex items-end gap-2">
         <ModelChoice />
-        {renderActions?.({ iiifContent, hasChoices })}
+        {renderActions?.({ iiifContent, hasChoices, selectedIndex })}
       </div>
       {/* アノテーション表示切替ボタン */}
       <button

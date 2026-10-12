@@ -20,3 +20,9 @@ export { default as Info, type InfoTab } from './layout/panels/Info';
 export { default as AnnotationList } from './annotation/AnnotationList';
 export { default as AnnotationCard } from './annotation/AnnotationCard';
 export { default as Metadata } from './metadata/Metadata';
+export {
+  default as ImageCompareView,
+  useCanvasImages,
+  type ImageCompareViewProps,
+} from './displays/ImageCompareView';
+export * from './compare/CompareParts';

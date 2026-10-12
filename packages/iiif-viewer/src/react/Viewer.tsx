@@ -15,8 +15,10 @@ import { useManifest } from './useManifest';
 
 export interface ViewerActionsState {
   iiifContent: string;
-  /** The main model has two or more candidates (a Choice). */
+  /** The main model (or, on an image Canvas, an image) has two or more candidates (a Choice). */
   hasChoices: boolean;
+  /** Index of the shown Canvas / Scene in the manifest. */
+  selectedIndex: number;
 }
 
 export interface ViewerProps {

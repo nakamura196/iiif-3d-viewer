@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
 import type { ContainerInfo } from '../../core';
 import { useTranslations } from '../env';
 import { OVERLAYS } from '../overlays/registry';
@@ -21,6 +21,37 @@ export interface StageInfo {
   boxH: number;
 }
 
+/** Zoom and move of the view (`tx`, `ty`: CSS pixels from the box centre). */
+export interface ViewState {
+  scale: number;
+  tx: number;
+  ty: number;
+}
+
+export const INITIAL_VIEW: ViewState = { scale: 1, tx: 0, ty: 0 };
+
+/** The CSS that places a stage in its box (the same for a second stage drawn over the first). */
+export const stageStyleOf = (s: StageInfo): CSSProperties => ({
+  position: 'absolute',
+  left: (s.boxW - s.stageW) / 2,
+  top: (s.boxH - s.stageH) / 2,
+  width: s.stageW,
+  height: s.stageH,
+  transform: `translate(${s.tx}px, ${s.ty}px) scale(${s.scale})`,
+  transformOrigin: 'center center',
+  ['--image-scale' as string]: s.scale,
+});
+
+/**
+ * The same stage magnified `zoom` times around a point of the box (CSS pixels from its top left),
+ * so that the point shows the same place of the Canvas.
+ */
+export const zoomStageAt = (s: StageInfo, zoom: number, x: number, y: number): StageInfo => {
+  const px = x - s.boxW / 2;
+  const py = y - s.boxH / 2;
+  return { ...s, scale: s.scale * zoom, tx: px - (px - s.tx) * zoom, ty: py - (py - s.ty) * zoom };
+};
+
 interface Props {
   /** A single plain image (no layers). */
   src?: string;
@@ -37,6 +68,11 @@ interface Props {
   /** Drawn over the picture, under the overlays. */
   extra?: ReactNode;
   onFailed?: () => void;
+  /** Controlled view (to move two views together). Without it the view keeps its own. */
+  view?: ViewState;
+  onViewChange?: (view: ViewState) => void;
+  /** Drawn over the stage, in box coordinates (e.g. a second stage cut by a clip-path). */
+  over?: (stage: StageInfo) => ReactNode;
 }
 
 // 画像と同じ大きさの透明な層に、重ね表示（OVERLAYS）を載せる。
@@ -78,11 +114,28 @@ export default function ImageView({
   children,
   extra,
   onFailed,
+  view: controlledView,
+  onViewChange,
+  over,
 }: Props) {
   const t = useTranslations('Viewer');
   const box = useRef<HTMLDivElement>(null);
   const drag = useRef<{ x: number; y: number; tx: number; ty: number } | null>(null);
-  const [view, setView] = useState({ scale: 1, tx: 0, ty: 0 });
+  const [ownView, setOwnView] = useState<ViewState>(INITIAL_VIEW);
+  const view = controlledView ?? ownView;
+  // the latest view and change handler, for the wheel listener and functional updates
+  const viewRef = useRef(view);
+  const changeRef = useRef(onViewChange);
+  useEffect(() => {
+    viewRef.current = view;
+    changeRef.current = onViewChange;
+  });
+  const setView = useCallback((next: ViewState | ((v: ViewState) => ViewState)) => {
+    const v = typeof next === 'function' ? next(viewRef.current) : next;
+    viewRef.current = v;
+    if (changeRef.current) changeRef.current(v);
+    else setOwnView(v);
+  }, []);
   const [size, setSize] = useState({ w: 0, h: 0 });
   const [natural, setNatural] = useState<{ src: string; w: number; h: number } | null>(null);
   const [failed, setFailed] = useState<string | null>(null);
@@ -130,7 +183,7 @@ export default function ImageView({
     };
     el.addEventListener('wheel', onWheel, { passive: false });
     return () => el.removeEventListener('wheel', onWheel);
-  }, []);
+  }, [setView]);
 
   if (src !== undefined && failed === src) {
     return <div className="p-4 text-sm text-[var(--ds-fg)]" role="alert">{t('imageError')}</div>;
@@ -145,16 +198,7 @@ export default function ImageView({
     boxW: size.w,
     boxH: size.h,
   };
-  const stageStyle: CSSProperties = {
-    position: 'absolute',
-    left: (size.w - stageW) / 2,
-    top: (size.h - stageH) / 2,
-    width: stageW,
-    height: stageH,
-    transform: `translate(${view.tx}px, ${view.ty}px) scale(${view.scale})`,
-    transformOrigin: 'center center',
-    ['--image-scale' as string]: view.scale,
-  };
+  const stageStyle = stageStyleOf(stage);
 
   return (
     <div
@@ -176,7 +220,7 @@ export default function ImageView({
       onPointerCancel={() => {
         drag.current = null;
       }}
-      onDoubleClick={() => setView({ scale: 1, tx: 0, ty: 0 })}
+      onDoubleClick={() => setView(INITIAL_VIEW)}
     >
       {src !== undefined && !nat && !canvasWidth && (
         // only to learn the natural size (the Canvas has none)
@@ -209,6 +253,7 @@ export default function ImageView({
           {container && <OverlayLayer container={container} canvasWidth={cw} canvasHeight={ch} />}
         </div>
       )}
+      {stageW > 0 && cw && ch && over?.(stage)}
     </div>
   );
 }
