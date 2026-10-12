@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import { useAtom, useSetAtom } from 'jotai';
 import {
   hasToc,
+  isTocNodeActive,
   labelIn,
   navigableTree,
   rangesOf,
@@ -12,6 +13,7 @@ import {
 } from '../../core';
 import { navRequestAtom, nextSeq, sequenceIdAtom } from '../displays/structureState';
 import { useLocale, useTranslations } from '../env';
+import { usePlayback } from '../playback';
 import type { Panel, PanelContext } from './types';
 
 const formatTime = (s: number): string => {
@@ -27,10 +29,12 @@ function Tree({
   nodes,
   activeId,
   onOpen,
+  time,
   depth,
 }: {
   nodes: TocNode[];
   activeId: string | undefined;
+  time: number;
   onOpen: (node: TocNode) => void;
   depth: number;
 }) {
@@ -40,7 +44,7 @@ function Tree({
   const row = (n: TocNode) => {
     const label = labelIn(n.label, locale) || n.id.split('/').pop() || n.id;
     const t0 = n.target?.t?.[0];
-    const active = !!n.target && n.target.canvasId === activeId;
+    const active = isTocNodeActive(n, activeId, time);
     return (
       <button
         type="button"
@@ -87,7 +91,7 @@ function Tree({
                   ))}
                 </ul>
               ) : (
-                <Tree nodes={n.children} activeId={activeId} onOpen={onOpen} depth={depth + 1} />
+                <Tree nodes={n.children} activeId={activeId} time={time} onOpen={onOpen} depth={depth + 1} />
               ))}
           </li>
         );
@@ -102,6 +106,7 @@ function StructurePanel({ container, manifest }: PanelContext) {
   const locale = useLocale();
   const [sequenceId, setSequenceId] = useAtom(sequenceIdAtom);
   const setRequest = useSetAtom(navRequestAtom);
+  const { currentTime } = usePlayback();
   const tree = useMemo(() => navigableTree(rangesOf(manifest)), [manifest]);
   const sequences = useMemo(() => sequencesOf(manifest), [manifest]);
 
@@ -133,7 +138,7 @@ function StructurePanel({ container, manifest }: PanelContext) {
       )}
       {tree.length > 0 ? (
         <nav aria-label={t('toc')}>
-          <Tree nodes={tree} activeId={container?.id} onOpen={open} depth={0} />
+          <Tree nodes={tree} activeId={container?.id} time={currentTime} onOpen={open} depth={0} />
         </nav>
       ) : sequences.length <= 1 ? (
         <p className="text-sm text-[var(--ds-fg)] opacity-70">{t('empty')}</p>

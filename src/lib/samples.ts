@@ -17,6 +17,8 @@ export interface Sample {
 
 // recipe はフォルダ名（番号-名前）。番号だけの URL は 404 になる
 const cookbook = (recipe: string) => `https://iiif.io/api/cookbook/recipe/${recipe}/v4/manifest.json`;
+// v3 の版しか無いレシピ（v4/ は転送されるだけで実体が無い）
+const cookbookV3 = (recipe: string) => `https://iiif.io/api/cookbook/recipe/${recipe}/manifest.json`;
 const recipePage = (recipe: string) => `https://iiif.io/api/cookbook/recipe/${recipe}/`;
 
 // IIIF Cookbook のレシピ（Presentation API 4.0 の版）と、このサイトの検査用マニフェスト。
@@ -56,6 +58,60 @@ export const SAMPLES: Sample[] = [
     title: { ja: '3D モデル', en: '3D model' },
     note: { ja: '宇宙服の 3D モデル（読み込みに 15〜20 秒かかります）', en: 'A 3D model of a spacesuit (takes 15–20 seconds to load)' },
     manifest: cookbook('0608-mvm-3d'), source: recipePage('0608-mvm-3d'),
+  },
+  {
+    id: '0015', kind: 'cookbook', media: 'image',
+    title: { ja: '開始位置', en: 'Start canvas' },
+    note: { ja: '最初に開く Canvas を指定する（start）', en: 'Opens on a chosen canvas (start)' },
+    manifest: cookbookV3('0015-start'), source: recipePage('0015-start'),
+  },
+  {
+    id: '0022', kind: 'cookbook', media: 'image',
+    title: { ja: '画像内のリンク', en: 'Linking with a hotspot' },
+    note: { ja: '画像の一部を押すと別のページへ移る', en: 'A region of the image links to another page' },
+    manifest: cookbookV3('0022-linking-with-a-hotspot'), source: recipePage('0022-linking-with-a-hotspot'),
+  },
+  {
+    id: '0024', kind: 'cookbook', media: 'image',
+    title: { ja: '目次つきの本', en: 'Book with table of contents' },
+    note: { ja: '目次（structure）から各ページへ移る', en: 'Jump to pages from the table of contents' },
+    manifest: cookbookV3('0024-book-4-toc'), source: recipePage('0024-book-4-toc'),
+  },
+  {
+    id: '0017', kind: 'cookbook', media: 'video',
+    title: { ja: '動画と文字起こし（時刻つき）', en: 'Timed transcription of video' },
+    note: { ja: '動画に時刻つきの文字起こしがつく', en: 'A video with a timed transcription' },
+    manifest: cookbookV3('0017-transcription-av'), tab: 'transcript', source: recipePage('0017-transcription-av'),
+  },
+  {
+    id: '0021', kind: 'cookbook', media: 'image',
+    title: { ja: 'タグづけ', en: 'Tagging' },
+    note: { ja: '画像の一部にタグをつける', en: 'Tags attached to image regions' },
+    manifest: cookbookV3('0021-tagging'), tab: 'annotations', source: recipePage('0021-tagging'),
+  },
+  {
+    id: '0036', kind: 'cookbook', media: 'image',
+    title: { ja: '複数の画像の合成', en: 'Composition from multiple images' },
+    note: { ja: '複数の画像を 1 枚の Canvas に並べる', en: 'Several images placed on one canvas' },
+    manifest: cookbookV3('0036-composition-from-multiple-images'), source: recipePage('0036-composition-from-multiple-images'),
+  },
+  {
+    id: '0065', kind: 'cookbook', media: 'image',
+    title: { ja: 'オペラの楽譜（複数 Canvas）', en: 'Opera on multiple canvases' },
+    note: { ja: '複数の Canvas に分けた目次つきの資料', en: 'A multi-canvas item with ranges' },
+    manifest: cookbookV3('0065-opera-multiple-canvases'), source: recipePage('0065-opera-multiple-canvases'),
+  },
+  {
+    id: '0074', kind: 'cookbook', media: 'video',
+    title: { ja: '多言語の字幕', en: 'Multiple-language captions' },
+    note: { ja: '言語ごとの字幕を切り替える', en: 'Switch between captions in several languages' },
+    manifest: cookbookV3('0074-multiple-language-captions'), source: recipePage('0074-multiple-language-captions'),
+  },
+  {
+    id: '0103', kind: 'cookbook', media: 'audio',
+    title: { ja: '音声とアノテーション', en: 'Poetry reading with annotations' },
+    note: { ja: '朗読にアノテーションがつく', en: 'A reading with annotations' },
+    manifest: cookbookV3('0103-poetry-reading-annotations'), tab: 'annotations', source: recipePage('0103-poetry-reading-annotations'),
   },
   {
     id: 'video-transcript', kind: 'own', media: 'video',

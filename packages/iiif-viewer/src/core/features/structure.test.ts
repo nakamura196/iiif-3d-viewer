@@ -9,6 +9,7 @@ import {
   contentStateOf,
   groupSpreads,
   hasToc,
+  isTocNodeActive,
   matchTarget,
   navigableTree,
   orderOf,
@@ -242,5 +243,50 @@ describe('サムネイル', () => {
   it('Canvas の thumbnail を優先する', () => {
     const { containers } = load('0009');
     expect(pageThumbnailUrl(containers[0], { thumbnail: [{ id: 'https://ex.org/t.jpg' }] })).toBe('https://ex.org/t.jpg');
+  });
+});
+
+describe('目次の「いま見ている所」（時間つき）', () => {
+  const canvas = 'https://example.org/c1';
+  const range = (id: string, t: string) => ({
+    id,
+    type: 'Range',
+    label: { en: [id] },
+    items: [{ type: 'SpecificResource', source: canvas, selector: { type: 'FragmentSelector', value: `t=${t}` } }],
+  });
+  const manifest = {
+    structures: [
+      { id: 'all', type: 'Range', items: [range('intro', '0,8'), range('middle', '8,14'), range('end', '14')] },
+    ],
+  };
+  const tree = rangesOf(manifest);
+  const active = (time: number) => {
+    const out: string[] = [];
+    const walk = (nodes: typeof tree) =>
+      nodes.forEach((n) => {
+        if (isTocNodeActive(n, canvas, time)) out.push(n.id);
+        walk(n.children);
+      });
+    walk(tree);
+    return out;
+  };
+
+  it('再生位置が入る範囲の項目だけが当たる（親は子に当たれば当たる）', () => {
+    expect(active(0)).toEqual(['all', 'intro']);
+    expect(active(7.99)).toEqual(['all', 'intro']);
+    expect(active(8)).toEqual(['all', 'middle']);
+    expect(active(100)).toEqual(['all', 'end']);
+  });
+
+  it('別の Canvas では当たらない', () => {
+    expect(isTocNodeActive(tree[0].children[0], 'https://example.org/other', 1)).toBe(false);
+    expect(isTocNodeActive(tree[0].children[0], undefined, 1)).toBe(false);
+  });
+
+  it('時間の無い項目は Canvas が同じなら当たる', () => {
+    const plain = rangesOf({
+      structures: [{ id: 'p', type: 'Range', items: [{ id: canvas, type: 'Canvas' }] }],
+    });
+    expect(isTocNodeActive(plain[0], canvas, 999)).toBe(true);
   });
 });

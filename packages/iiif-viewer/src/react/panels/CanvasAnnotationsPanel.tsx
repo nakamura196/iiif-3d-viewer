@@ -14,6 +14,7 @@ import {
   type CanvasAnnotation,
 } from '../../core';
 import { useLocale, useTranslations } from '../env';
+import { useCanvasNavigation } from '../navigation';
 import { selectedCanvasAnnotationAtom } from '../overlays/canvasAnnotationState';
 import { useCanvasAnnotations } from '../overlays/useCanvasAnnotations';
 import type { Panel, PanelContext } from './types';
@@ -25,9 +26,10 @@ const KNOWN_MOTIVATIONS = new Set([
 
 const isHtml = (b: AnnotationBodyItem) => /html/i.test(b.format ?? '');
 
-function Body({ body, canvasLabels }: { body: AnnotationBodyItem; canvasLabels: Map<string, string> }) {
+export function Body({ body, canvasLabels }: { body: AnnotationBodyItem; canvasLabels: Map<string, string> }) {
   const t = useTranslations('Info');
   const locale = useLocale();
+  const { goToCanvas } = useCanvasNavigation();
   if (body.kind === 'text') {
     if (isHtml(body)) {
       // サニタイズ済み（許可したタグ・属性だけ）
@@ -50,11 +52,19 @@ function Body({ body, canvasLabels }: { body: AnnotationBodyItem; canvasLabels: 
   const own = canvasLabels.get(url);
   const label = labelIn(body.label, locale) || own || url;
   if (own !== undefined) {
-    // a Canvas of this item (no page navigation is available to a panel)
+    // a Canvas of this item: the button moves the viewer there
     return (
-      <p className="text-xs text-gray-500 dark:text-gray-300 break-words" title={t('canvasAnnotationsCanvasLink')}>
-        {t('canvasAnnotationsCanvasLink')}: {label}
-      </p>
+      <button
+        type="button"
+        className="text-xs text-blue-600 dark:text-blue-400 underline break-words text-left"
+        title={t('canvasAnnotationsCanvasLink')}
+        onClick={(e) => {
+          e.stopPropagation();
+          goToCanvas(url);
+        }}
+      >
+        {label}
+      </button>
     );
   }
   if (!isWeb) return <p className="text-xs text-gray-500 dark:text-gray-300 break-all">{label}</p>;

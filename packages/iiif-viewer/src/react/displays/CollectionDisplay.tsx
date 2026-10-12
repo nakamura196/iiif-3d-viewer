@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { collectionEntriesOf, fetchManifest, labelIn, type CollectionEntry } from '../../core';
 import { useLocale, useTranslations } from '../env';
-import { sceneDisplay } from './SceneDisplay';
+import { displayAfter } from './registry';
 import { useManifestSwitch } from './structureState';
 import type { Display, DisplayProps } from './types';
 
@@ -30,8 +30,12 @@ function CollectionDisplay(props: DisplayProps) {
     };
   }, [isCollection, manifest.id]);
 
-  // not a Collection: an empty Scene is still a Scene
-  if (!isCollection) return <sceneDisplay.Component {...props} />;
+  // not a Collection: an empty Scene is a Canvas that the converter turned into a Scene (a rotated image,
+  // a Choice, a missing image). The displays after this one decide how it looks (imageCanvas, then scene).
+  if (!isCollection) {
+    const next = displayAfter(collectionDisplay.id, props.container);
+    return next ? <next.Component {...props} /> : null;
+  }
 
   const fromContainers: CollectionEntry[] = containers.map((c) => ({
     id: c.id,
