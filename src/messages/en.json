@@ -36,6 +36,8 @@
     "item3Date": "2026-09-28",
     "item4Date": "2026-10-01",
     "item5Date": "2026-10-11",
+    "item6Date": "2026-10-14",
+    "item6Title": "Published a video introducing the compare page (comparing two models side by side, with a swipe, or through a spyglass; sharing by URL; the collapsible side panel)",
     "item5Title": "Comparing two models: a compare page (side by side, swipe, spyglass), switching between models placed in the same scene, a view toolbar (rotate, fit, top view, manifest cameras), and a collapsible side panel",
     "item4Title": "Pictures and initial viewpoints: pictures attached to annotations, opening at the viewpoint given in the manifest, fitting the map to all pins with a \"Show all\" button in the map-linked viewer, and the same annotation cards on every page",
     "item3Title": "Richer annotation display: grouping of annotations on the same region, keyed tags and creators, search and filters, and a fix for flying to annotations without a camera"
