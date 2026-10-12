@@ -16,6 +16,7 @@ import { parseManifestV4, geoAnnotations, type GeoFeature } from '@nakamura196/i
 import { AnnotationCard } from '@nakamura196/iiif-viewer';
 import { SidePanel } from '@nakamura196/iiif-viewer';
 import { useTranslations, useLocale } from 'next-intl';
+import { manifestFromParams } from '@nakamura196/iiif-viewer/core';
 
 // マニフェストからattributionを取得するヘルパー関数
 const getAttribution = (manifest: Record<string, unknown>, locale: string): string | undefined => {
@@ -42,7 +43,7 @@ const GeoRefContent: NextPage = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const manifestParam = params.get('manifest');
+    const manifestParam = manifestFromParams(params);
     if (!manifestParam) return;
     setManifestUrl(manifestParam);
   }, [setManifestUrl]);

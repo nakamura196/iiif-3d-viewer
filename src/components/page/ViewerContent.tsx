@@ -11,10 +11,11 @@ import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Link } from '@/i18n/routing';
+import { contentParam, manifestFromParams } from '@nakamura196/iiif-viewer/core';
 
 const TABS: InfoTab[] = ['metadata', 'annotations'];
 
-// /viewer?manifest=...&tab=...: ビューア本体はパッケージの Viewer。
+// /viewer?iiif-content=...&tab=...（?manifest=... も読む）: ビューア本体はパッケージの Viewer。
 // ここでは URL の読み書きと、ヘッダー・フッター・入力欄だけを持つ。
 const ViewerContent: NextPage = () => {
   // Header も同じ値（ダウンロードのリンクなど）を読むので、サイト側の store に持つ
@@ -26,7 +27,7 @@ const ViewerContent: NextPage = () => {
   const tc = useTranslations('Compare');
 
   useEffect(() => {
-    const manifestParam = new URLSearchParams(window.location.search).get('manifest');
+    const manifestParam = manifestFromParams(new URLSearchParams(window.location.search));
     if (manifestParam) setManifestUrl(manifestParam);
   }, [setManifestUrl]);
 
@@ -65,7 +66,7 @@ const ViewerContent: NextPage = () => {
               // 候補が 2 つ以上あれば、2 つを並べて見比べるページへ
               hasChoices ? (
                 <Link
-                  href={`/compare?manifest=${encodeURIComponent(iiifContent)}`}
+                  href={`/compare?${contentParam(iiifContent)}`}
                   className="text-sm px-3 py-1.5 bg-[var(--ds-surface)] rounded-lg shadow-md border border-[var(--ds-border)] text-[var(--ds-fg)] hover:bg-[var(--ds-surface-2)]"
                 >
                   {tc('open')}

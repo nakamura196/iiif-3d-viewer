@@ -15,12 +15,13 @@ import Header from '@/components/Header';
 import ManifestInput from '@/components/Input';
 import CompareView, { type CompareMode } from '@/components/three/CompareView';
 import { labelIn } from '@nakamura196/iiif-viewer/core';
+import { manifestFromParams } from '@nakamura196/iiif-viewer/core';
 
 const MODES: CompareMode[] = ['side', 'swipe', 'spyglass'];
 
 // Compare two models of the first painted Choice (e.g. LiDAR points and textured
 // buildings of the same area). Other painted models are drawn on both sides.
-// The URL keeps what is shown: ?manifest=...&a=0&b=1&mode=swipe
+// The URL keeps what is shown: ?iiif-content=...&a=0&b=1&mode=swipe
 const CompareContent: NextPage = () => {
   const t = useTranslations('Compare');
   const locale = useLocale();
@@ -31,7 +32,7 @@ const CompareContent: NextPage = () => {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const m = params.get('manifest');
+    const m = manifestFromParams(params);
     if (m) setManifestUrl(m);
     const mo = params.get('mode') as CompareMode | null;
     if (mo && MODES.includes(mo)) setMode(mo);
