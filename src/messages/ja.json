@@ -24,7 +24,8 @@
     "relatedSpec": "IIIF 3D Extension",
     "relatedSample": "IIIF 3D サンプル",
     "relatedOtherTools": "nakamura196 の他のツール",
-    "developers": "中村 覚・小川 潤（東京大学）"
+    "developers": "中村 覚・小川 潤（東京大学）",
+    "samplesAll": "サンプル一覧を見る"
   },
   "News": {
     "heading": "お知らせ",
@@ -112,5 +113,19 @@
     "topView": "上",
     "noChoice": "この manifest には切り替えられる模型（Choice）がありません",
     "open": "比較"
+  },
+  "Samples": {
+    "title": "サンプル一覧",
+    "lead": "IIIF Cookbook のレシピと、このサイトの検査用マニフェストです。「ビューアで開く」で、表示できるかを確かめられます。",
+    "media": {
+      "image": "画像",
+      "audio": "音声",
+      "video": "動画",
+      "3d": "3D"
+    },
+    "open": "ビューアで開く",
+    "manifest": "マニフェスト",
+    "recipe": "レシピ（Cookbook）",
+    "own": "このサイトの検査用"
   }
 }
