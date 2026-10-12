@@ -1,0 +1,110 @@
+/*
+ * Styles of @nakamura196/iiif-viewer (built to dist/style.css).
+ * Preflight is left out on purpose: the viewer sits in the host page's DOM,
+ * so a global reset would change the host page.
+ *
+ * Colors: set --iiif-viewer-* on <iiif-viewer> (or any ancestor) to change them.
+ * Dark mode values are --iiif-viewer-dark-*.
+ */
+@layer theme, base, components, utilities;
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' layer(utilities);
+
+@source './';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+iiif-viewer {
+  display: block;
+  /* The viewer fills the tag. Give the tag a height with CSS, or use --iiif-viewer-height. */
+  height: var(--iiif-viewer-height, 36rem);
+  min-width: 0;
+}
+
+iiif-viewer .iiif-viewer-host {
+  height: 100%;
+}
+
+:is(iiif-viewer, .iiif-viewer) {
+  --ds-bg: var(--iiif-viewer-bg, #ffffff);
+  --ds-surface: var(--iiif-viewer-surface, #f7f9fb);
+  --ds-surface-2: var(--iiif-viewer-surface-2, #eef2f7);
+  --ds-border: var(--iiif-viewer-border, #e2e8f0);
+  --ds-fg: var(--iiif-viewer-fg, #1a1a1a);
+  --ds-fg-muted: var(--iiif-viewer-fg-muted, #51607a);
+  --ds-primary: var(--iiif-viewer-primary, #0b8bee);
+  --ds-primary-hover: var(--iiif-viewer-primary-hover, #096fbe);
+  --ds-primary-fg: var(--iiif-viewer-primary-fg, #ffffff);
+  --ds-accent: var(--iiif-viewer-accent, #ffcd00);
+  --ds-ring: var(--iiif-viewer-ring, #3ca2f1);
+  --ds-radius: var(--iiif-viewer-radius, 0.5rem);
+  font-family: var(
+    --iiif-viewer-font,
+    'Noto Sans JP',
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    'Hiragino Sans',
+    'Hiragino Kaku Gothic ProN',
+    Meiryo,
+    sans-serif
+  );
+  color: var(--ds-fg);
+  line-height: 1.5;
+}
+
+:is(iiif-viewer, .iiif-viewer) *,
+:is(iiif-viewer, .iiif-viewer) *::before,
+:is(iiif-viewer, .iiif-viewer) *::after {
+  box-sizing: border-box;
+}
+
+:is(iiif-viewer, .iiif-viewer) .dark,
+:is(iiif-viewer, .iiif-viewer).dark {
+  --ds-bg: var(--iiif-viewer-dark-bg, #010e18);
+  --ds-surface: var(--iiif-viewer-dark-surface, #021c30);
+  --ds-surface-2: var(--iiif-viewer-dark-surface-2, #032a47);
+  --ds-border: var(--iiif-viewer-dark-border, #04385f);
+  --ds-fg: var(--iiif-viewer-dark-fg, #e7f3fd);
+  --ds-fg-muted: var(--iiif-viewer-dark-fg-muted, #9dd1f8);
+  --ds-primary: var(--iiif-viewer-dark-primary, #3ca2f1);
+  --ds-primary-hover: var(--iiif-viewer-dark-primary-hover, #6db9f5);
+  --ds-primary-fg: var(--iiif-viewer-dark-primary-fg, #010e18);
+  --ds-accent: var(--iiif-viewer-dark-accent, #ffd733);
+  --ds-ring: var(--iiif-viewer-dark-ring, #6db9f5);
+}
+
+/* Elements Tailwind's preflight would normally reset, limited to the viewer. */
+:is(iiif-viewer, .iiif-viewer) button {
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  background: transparent;
+  border: 0 solid;
+}
+:is(iiif-viewer, .iiif-viewer) img,
+:is(iiif-viewer, .iiif-viewer) video,
+:is(iiif-viewer, .iiif-viewer) canvas,
+:is(iiif-viewer, .iiif-viewer) svg {
+  display: block;
+  max-width: 100%;
+}
+:is(iiif-viewer, .iiif-viewer) h1,
+:is(iiif-viewer, .iiif-viewer) h2,
+:is(iiif-viewer, .iiif-viewer) h3,
+:is(iiif-viewer, .iiif-viewer) p,
+:is(iiif-viewer, .iiif-viewer) ul,
+:is(iiif-viewer, .iiif-viewer) dl,
+:is(iiif-viewer, .iiif-viewer) dd {
+  margin: 0;
+}
+:is(iiif-viewer, .iiif-viewer) ul {
+  list-style: none;
+  padding: 0;
+}
+:is(iiif-viewer, .iiif-viewer) *,
+:is(iiif-viewer, .iiif-viewer) *::before,
+:is(iiif-viewer, .iiif-viewer) *::after {
+  border-style: solid;
+  border-width: 0;
+}
