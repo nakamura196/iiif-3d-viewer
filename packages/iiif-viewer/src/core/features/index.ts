@@ -3,3 +3,4 @@ export * from './image';
 export * from './structure';
 export * from './temporal';
 export * from './about';
+export * from './annotations';

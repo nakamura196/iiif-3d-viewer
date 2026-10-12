@@ -6,10 +6,11 @@
 | --- | --- | --- |
 | 表示（ページ送り・合成など） | `src/react/displays/<名前>Display.tsx`（型は `displays/types.ts`） | `displays/registry.ts` に 1 行 |
 | 右パネルのタブ | `src/react/panels/<名前>Panel.tsx`（型は `panels/types.ts`） | `panels/registry.ts` に 1 行 |
+| 画像の上に重ねる表示 | `src/react/overlays/<名前>Overlay.tsx`（型は `overlays/types.ts`） | `overlays/registry.ts` に 1 行 |
 | 読み取り（React に依存しない） | `src/core/features/<機能>.ts` と `<機能>.test.ts` | 無し（`features/index.ts` に用意済み） |
 | 文言 | `src/react/messages/features/<機能>.{ja,en}.json` | 無し（`messages/index.ts` が足し合わせる） |
 
-機能の枠（用意済み）: `image`（画像・深いズーム・重ね表示）、`structure`（ページ送り・目次）、`temporal`（時間の指定・複数メディア）、`about`（来歴・権利・リンク）。
+機能の枠（用意済み）: `image`（画像・深いズーム・重ね表示）、`structure`（ページ送り・目次）、`temporal`（時間の指定・複数メディア）、`about`（来歴・権利・リンク）、`annotations`（Canvas 上の注釈）。
 
 ## 守ること
 
