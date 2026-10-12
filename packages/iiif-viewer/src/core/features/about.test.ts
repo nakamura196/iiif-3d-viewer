@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { convertToV4 } from '../services/manifestConverter';
-import { aboutHasContent, aboutOf, htmlToText, safeUrl, sanitizeHtml, valuesIn } from './about';
+import { aboutHasContent, aboutOf, htmlToText, safeAboutUrl, sanitizeAboutHtml, valuesIn } from './about';
 
 const load = (name: string) =>
   convertToV4(JSON.parse(readFileSync(new URL(`./__fixtures__/about/${name}.json`, import.meta.url), 'utf8')));
@@ -12,26 +12,26 @@ const aboutFor = (name: string, locale = 'en', canvas?: string) => {
   return aboutOf(m, id, locale)!;
 };
 
-describe('sanitizeHtml', () => {
+describe('sanitizeAboutHtml', () => {
   it('keeps the HTML subset that Presentation 3 allows', () => {
     const html = '<p>Picture by <a href="https://example.org/x">Glen</a><br/><b>bold</b> <i>it</i></p>';
-    expect(sanitizeHtml(html)).toBe(
+    expect(sanitizeAboutHtml(html)).toBe(
       '<p>Picture by <a href="https://example.org/x" target="_blank" rel="noopener noreferrer">Glen</a><br><b>bold</b> <i>it</i></p>',
     );
   });
 
   it('removes script elements with their content', () => {
-    expect(sanitizeHtml('a<script>alert(1)</script>b')).toBe('ab');
-    expect(sanitizeHtml('a<SCRIPT src="x.js"></SCRIPT>b')).toBe('ab');
-    expect(sanitizeHtml('<style>body{display:none}</style>ok')).toBe('ok');
-    expect(sanitizeHtml('<iframe src="https://evil"></iframe>ok')).toBe('ok');
+    expect(sanitizeAboutHtml('a<script>alert(1)</script>b')).toBe('ab');
+    expect(sanitizeAboutHtml('a<SCRIPT src="x.js"></SCRIPT>b')).toBe('ab');
+    expect(sanitizeAboutHtml('<style>body{display:none}</style>ok')).toBe('ok');
+    expect(sanitizeAboutHtml('<iframe src="https://evil"></iframe>ok')).toBe('ok');
   });
 
   it('removes event handler attributes', () => {
-    const out = sanitizeHtml('<img src="https://example.org/a.png" onerror="alert(1)" onload=alert(2)>');
+    const out = sanitizeAboutHtml('<img src="https://example.org/a.png" onerror="alert(1)" onload=alert(2)>');
     expect(out).toBe('<img src="https://example.org/a.png">');
-    expect(sanitizeHtml('<span onclick="x()" style="color:red" class="c">t</span>')).toBe('<span>t</span>');
-    expect(sanitizeHtml('<a href="https://e.org" onmouseover="x()">t</a>')).not.toMatch(/onmouseover/);
+    expect(sanitizeAboutHtml('<span onclick="x()" style="color:red" class="c">t</span>')).toBe('<span>t</span>');
+    expect(sanitizeAboutHtml('<a href="https://e.org" onmouseover="x()">t</a>')).not.toMatch(/onmouseover/);
   });
 
   it('removes javascript: and other unsafe URLs, even when hidden', () => {
@@ -45,46 +45,46 @@ describe('sanitizeHtml', () => {
       'data:text/html;base64,PHNjcmlwdD4=',
       'vbscript:msgbox(1)',
     ]) {
-      const out = sanitizeHtml(`<a href="${bad}">x</a>`);
+      const out = sanitizeAboutHtml(`<a href="${bad}">x</a>`);
       expect(out, bad).not.toMatch(/href/i);
       expect(out, bad).not.toMatch(/javascript/i);
-      expect(sanitizeHtml(`<img src="${bad}">`), bad).toBe('<img>');
+      expect(sanitizeAboutHtml(`<img src="${bad}">`), bad).toBe('<img>');
     }
   });
 
   it('does not let a quote or > inside an attribute break out of the tag', () => {
-    const out = sanitizeHtml('<a href="https://e.org/?q=\'><script>alert(1)</script>">x</a>');
+    const out = sanitizeAboutHtml('<a href="https://e.org/?q=\'><script>alert(1)</script>">x</a>');
     expect(out).not.toMatch(/<script/i);
-    const out2 = sanitizeHtml('<a title="a>b" href="https://e.org">x</a>');
+    const out2 = sanitizeAboutHtml('<a title="a>b" href="https://e.org">x</a>');
     expect(out2).toBe('<a href="https://e.org" target="_blank" rel="noopener noreferrer">x</a>');
-    expect(sanitizeHtml('<a href="https://e.org/&quot; onclick=&quot;x()">x</a>')).not.toMatch(/ onclick=/);
+    expect(sanitizeAboutHtml('<a href="https://e.org/&quot; onclick=&quot;x()">x</a>')).not.toMatch(/ onclick=/);
   });
 
   it('turns unknown tags into their text and escapes stray < and &', () => {
-    expect(sanitizeHtml('<div><h1>a</h1></div>')).toBe('a');
-    expect(sanitizeHtml('1 < 2 & 3 > 2')).toBe('1 &lt; 2 &amp; 3 &gt; 2');
-    expect(sanitizeHtml('&lt;script&gt; &amp; &#169;')).toBe('&lt;script&gt; &amp; &#169;');
-    expect(sanitizeHtml('<!-- <script>x</script> -->t')).toBe('t');
+    expect(sanitizeAboutHtml('<div><h1>a</h1></div>')).toBe('a');
+    expect(sanitizeAboutHtml('1 < 2 & 3 > 2')).toBe('1 &lt; 2 &amp; 3 &gt; 2');
+    expect(sanitizeAboutHtml('&lt;script&gt; &amp; &#169;')).toBe('&lt;script&gt; &amp; &#169;');
+    expect(sanitizeAboutHtml('<!-- <script>x</script> -->t')).toBe('t');
   });
 
   it('closes open tags and ignores stray closing tags', () => {
-    expect(sanitizeHtml('<b>a</i>c')).toBe('<b>ac</b>');
+    expect(sanitizeAboutHtml('<b>a</i>c')).toBe('<b>ac</b>');
   });
 
   it('handles non-string input', () => {
-    expect(sanitizeHtml(undefined)).toBe('');
-    expect(sanitizeHtml(42)).toBe('');
+    expect(sanitizeAboutHtml(undefined)).toBe('');
+    expect(sanitizeAboutHtml(42)).toBe('');
   });
 
   it('htmlToText', () => {
     expect(htmlToText('<span>A &amp; <b>B</b></span><script>x</script>')).toBe('A & B');
   });
 
-  it('safeUrl', () => {
-    expect(safeUrl('https://example.org/a')).toBe('https://example.org/a');
-    expect(safeUrl('mailto:a@example.org')).toBe('mailto:a@example.org');
-    expect(safeUrl('/relative/path')).toBe('/relative/path');
-    expect(safeUrl('javascript:alert(1)')).toBe('');
+  it('safeAboutUrl', () => {
+    expect(safeAboutUrl('https://example.org/a')).toBe('https://example.org/a');
+    expect(safeAboutUrl('mailto:a@example.org')).toBe('mailto:a@example.org');
+    expect(safeAboutUrl('/relative/path')).toBe('/relative/path');
+    expect(safeAboutUrl('javascript:alert(1)')).toBe('');
   });
 });
 

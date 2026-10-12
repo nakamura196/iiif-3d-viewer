@@ -18,7 +18,7 @@ import {
   plainText,
   rawContainerOf,
   renderingTranscriptOf,
-  sanitizeHtml,
+  sanitizeTemporalHtml,
   targetRegionOf,
   targetTimeOf,
   timedTextsOf,
@@ -168,20 +168,20 @@ describe('captionFilesOf（0074）と renderingTranscriptOf（0017）', () => {
   });
 });
 
-describe('sanitizeHtml / plainText', () => {
+describe('sanitizeTemporalHtml / plainText', () => {
   it('script・イベント属性・画像を落とし、見た目の指定だけ残す', () => {
-    const out = sanitizeHtml(
+    const out = sanitizeTemporalHtml(
       `<p style='font-size:2000px;background:url(x)' onclick="x()">Hi<script>alert(1)</script><img src=x></p>`
     );
     expect(out).toBe('<p style="font-size:2000px">Hialert(1)</p>');
   });
   it('リンクは http(s) だけ', () => {
-    expect(sanitizeHtml('<a href="javascript:x">a</a>')).toBe('<a>a</a>');
-    expect(sanitizeHtml('<a href="https://e.org">a</a>')).toContain('href="https://e.org"');
+    expect(sanitizeTemporalHtml('<a href="javascript:x">a</a>')).toBe('<a>a</a>');
+    expect(sanitizeTemporalHtml('<a href="https://e.org">a</a>')).toContain('href="https://e.org"');
   });
   it('閉じ忘れを閉じ、< をエスケープする', () => {
-    expect(sanitizeHtml('<b>x')).toBe('<b>x</b>');
-    expect(sanitizeHtml('1 < 2')).toBe('1 &lt; 2');
+    expect(sanitizeTemporalHtml('<b>x')).toBe('<b>x</b>');
+    expect(sanitizeTemporalHtml('1 < 2')).toBe('1 &lt; 2');
   });
   it('plainText', () => {
     expect(plainText('<p>a</p><p>b &amp; c</p>', true)).toBe('a\nb & c');

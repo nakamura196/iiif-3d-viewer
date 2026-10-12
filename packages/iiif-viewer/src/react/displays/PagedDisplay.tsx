@@ -7,6 +7,7 @@ import { labelIn } from '../../core';
 import { useLocale } from '../env';
 import { usePlayback } from '../playback';
 import { flatDisplay } from './FlatDisplay';
+import { imageCanvasDisplay } from './ImageCanvasDisplay';
 import { focusAtom, usePageOrder } from './structureState';
 import type { Display, DisplayProps } from './types';
 
@@ -213,7 +214,8 @@ function PagedDisplay(props: DisplayProps) {
   } else if (allImages) {
     body = <Spread pages={pages} direction={viewing.direction} />;
   } else {
-    body = <flatDisplay.Component {...props} />;
+    // 1 ページだけのとき: 画像の深いズーム・重ね表示などは imageCanvas、画像以外はそこから次の表示へ
+    body = <imageCanvasDisplay.Component {...props} />;
   }
 
   return (

@@ -160,7 +160,7 @@ export interface TimelineItem {
   label?: unknown;
   /** Text: the value of the TextualBody. */
   text?: string;
-  /** Text: the value is HTML (it has to go through sanitizeHtml before it is shown). */
+  /** Text: the value is HTML (it has to go through sanitizeTemporalHtml before it is shown). */
   isHtml?: boolean;
   /** seconds on the container's timeline */
   start: number;
@@ -413,7 +413,7 @@ const cleanAttrs = (tag: string, rawAttrs: string): string => {
 };
 
 /** A small allow-list HTML cleaner for TextualBody values (no scripts, no event handlers, no images). */
-export const sanitizeHtml = (html: string): string => {
+export const sanitizeTemporalHtml = (html: string): string => {
   const open: string[] = [];
   let out = '';
   const re = /<(\/?)([a-zA-Z][a-zA-Z0-9]*)([^>]*)>|<!--[\s\S]*?-->|([^<]+|<)/g;

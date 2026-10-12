@@ -41,7 +41,7 @@ const escapeText = (s: string): string => s.replace(/&/g, '&amp;').replace(/</g,
 const escapeAttr = (s: string): string => escapeText(s).replace(/"/g, '&quot;');
 
 /** A URL that is safe to put in href / src: http, https, mailto, or relative. Else ''. */
-export const safeUrl = (raw: string): string => {
+export const safeAboutUrl = (raw: string): string => {
   // 実体参照や制御文字で scheme を隠す手口（&#106;avascript: / java\tscript:）を先に外す
   const url = decodeEntities(raw).replace(/[\u0000- \u007f-\u009f]+/g, '');
   if (!url) return '';
@@ -66,11 +66,11 @@ const attributesFor = (tag: string, attrs: Record<string, string>): string => {
   let out = '';
   if (attrs.lang && /^[a-zA-Z]{1,8}(-[a-zA-Z0-9]{1,8})*$/.test(attrs.lang)) out += ` lang="${escapeAttr(attrs.lang)}"`;
   if (tag === 'a') {
-    const href = safeUrl(attrs.href ?? '');
+    const href = safeAboutUrl(attrs.href ?? '');
     if (href) out += ` href="${escapeAttr(href)}" target="_blank" rel="noopener noreferrer"`;
   }
   if (tag === 'img') {
-    const src = safeUrl(attrs.src ?? '');
+    const src = safeAboutUrl(attrs.src ?? '');
     if (src && !/^mailto:/i.test(src)) out += ` src="${escapeAttr(src)}"`;
     if (attrs.alt !== undefined) out += ` alt="${escapeAttr(attrs.alt)}"`;
     for (const k of ['width', 'height']) {
@@ -81,7 +81,7 @@ const attributesFor = (tag: string, attrs: Record<string, string>): string => {
 };
 
 /** Reduce an HTML string from a manifest to the safe subset. The result is HTML. */
-export const sanitizeHtml = (html: unknown): string => {
+export const sanitizeAboutHtml = (html: unknown): string => {
   if (typeof html !== 'string' || !html) return '';
   const src = html;
   const out: string[] = [];
@@ -162,7 +162,7 @@ const escapeTextKeepEntities = (s: string): string =>
 
 /** HTML to plain text (for tooltips, titles and tests). */
 export const htmlToText = (html: unknown): string =>
-  decodeEntities(sanitizeHtml(html).replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '')).trim();
+  decodeEntities(sanitizeAboutHtml(html).replace(/<br\s*\/?>/gi, '\n').replace(/<[^>]*>/g, '')).trim();
 
 // ---------------------------------------------------------------------------
 // 多言語の文字列
@@ -196,7 +196,7 @@ export interface AboutMetadataItem {
   label: string;
   /** Plain text. */
   values: string[];
-  /** The same values as safe HTML (see sanitizeHtml). */
+  /** The same values as safe HTML (see sanitizeAboutHtml). */
   html: string[];
 }
 
@@ -273,7 +273,7 @@ const metadataItem = (raw: unknown, locale: string): AboutMetadataItem | null =>
   const values = valuesIn(raw.value, locale);
   const label = valuesIn(raw.label, locale).join(' ');
   if (!label && values.length === 0) return null;
-  return { label, values: values.map(htmlToText), html: values.map(sanitizeHtml) };
+  return { label, values: values.map(htmlToText), html: values.map(sanitizeAboutHtml) };
 };
 
 const linkOf = (raw: unknown, locale: string): AboutLink | null => {
@@ -294,7 +294,7 @@ const agentOf = (raw: unknown, locale: string): AboutAgent | null => {
   if (!isObj(raw)) return null;
   const logos = asList(raw.logo)
     .map((l) => str(isObj(l) ? l.id : l))
-    .filter((l): l is string => !!l && !!safeUrl(l));
+    .filter((l): l is string => !!l && !!safeAboutUrl(l));
   const label = htmlToText(labelIn(raw.label, locale));
   const id = str(raw.id);
   if (!label && !id && logos.length === 0) return null;
@@ -420,7 +420,7 @@ const scopeOf = (raw: Json, locale: string, withAnnotations: boolean): AboutScop
   if (!requiredStatement && raw.attribution) {
     // Presentation 2
     const values = valuesIn(raw.attribution, locale);
-    if (values.length) requiredStatement = { label: '', values: values.map(htmlToText), html: values.map(sanitizeHtml) };
+    if (values.length) requiredStatement = { label: '', values: values.map(htmlToText), html: values.map(sanitizeAboutHtml) };
   }
 
   const rightsRaw = str(raw.rights) ?? str(raw.license);
@@ -432,12 +432,12 @@ const scopeOf = (raw: Json, locale: string, withAnnotations: boolean): AboutScop
   // Presentation 2: a logo on the resource itself
   const v2Logos = asList(raw.logo)
     .map((l) => str(isObj(l) ? (l.id ?? l['@id']) : l))
-    .filter((l): l is string => !!l && !!safeUrl(l));
+    .filter((l): l is string => !!l && !!safeAboutUrl(l));
   if (providers.length === 0 && v2Logos.length) providers.push({ label: '', homepage: [], logos: v2Logos });
 
   const thumbnails = asList(raw.thumbnail)
     .map((t) => str(isObj(t) ? (t.id ?? t['@id']) : t))
-    .filter((t): t is string => !!t && /^https?:\/\//i.test(safeUrl(t)));
+    .filter((t): t is string => !!t && /^https?:\/\//i.test(safeAboutUrl(t)));
 
   const navDateRaw = str(raw.navDate);
   const places = featuresOf(raw.navPlace)
@@ -452,7 +452,7 @@ const scopeOf = (raw: Json, locale: string, withAnnotations: boolean): AboutScop
     id: str(raw.id) ?? str(raw['@id']) ?? '',
     type: str(raw.type) ?? str(raw['@type']) ?? '',
     label: htmlToText(labelIn(raw.label, locale)) || valuesIn(raw.label, locale).map(htmlToText).join(' '),
-    summary: description.map(sanitizeHtml),
+    summary: description.map(sanitizeAboutHtml),
     metadata,
     requiredStatement,
     rights,

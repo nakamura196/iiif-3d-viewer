@@ -17,11 +17,11 @@ const strings = (v: unknown): string[] => asList(v).filter((x): x is string => t
 /** Canvas 上の領域 [x, y, width, height]（Canvas 座標）。 */
 export type Xywh = [number, number, number, number];
 /** 時間の範囲 [開始, 終了]（秒）。終了が無いときは undefined。 */
-export type TimeRange = [number, number | undefined];
+export type TocTimeRange = [number, number | undefined];
 
 export interface Fragment {
   xywh?: Xywh;
-  t?: TimeRange;
+  t?: TocTimeRange;
 }
 
 const nums = (s: string): number[] => s.split(',').map((x) => Number(x.trim()));
@@ -501,7 +501,7 @@ export function collectionEntriesOf(raw: unknown): CollectionEntry[] {
  * ページ送りの小さな画像の URL。Canvas の thumbnail があればそれを使う。
  * 無ければ、IIIF Image API の画像 URL（…/full/<size>/0/default.jpg）を小さい指定に直す。
  */
-export function thumbnailUrlOf(container: ContainerInfo, rawCanvas?: unknown, height = 96): string | undefined {
+export function pageThumbnailUrl(container: ContainerInfo, rawCanvas?: unknown, height = 96): string | undefined {
   if (isObject(rawCanvas)) {
     const t = firstThumbnail(rawCanvas.thumbnail);
     if (t) return t;

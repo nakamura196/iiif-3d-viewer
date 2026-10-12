@@ -1,11 +1,11 @@
 'use client';
 
-import { sanitizeHtml, type AboutMetadataItem } from '../../core';
+import { sanitizeAboutHtml, type AboutMetadataItem } from '../../core';
 
 // 資料の側が書いた HTML は、必ずここを通して出す。
-// sanitizeHtml が許可リスト以外のタグ・属性・URL を取り除いた結果だけを使う。
+// sanitizeAboutHtml が許可リスト以外のタグ・属性・URL を取り除いた結果だけを使う。
 export function SafeHtml({ html, as: Tag = 'span', className }: { html: string; as?: 'span' | 'div'; className?: string }) {
-  return <Tag className={className} dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }} />;
+  return <Tag className={className} dangerouslySetInnerHTML={{ __html: sanitizeAboutHtml(html) }} />;
 }
 
 // ラベルと値（値は複数でもよい）の一覧。値の HTML は無害化して出す。

@@ -13,7 +13,7 @@ import {
   rawCanvasOf,
   readCanvasAnnotations,
   regionBoxPercent,
-  sanitizeHtml,
+  sanitizeAnnotationHtml,
   svgRings,
 } from './annotations';
 
@@ -152,27 +152,27 @@ describe('Cookbook のレシピ', () => {
   });
 });
 
-describe('sanitizeHtml', () => {
+describe('sanitizeAnnotationHtml', () => {
   it('許可したタグと https のリンクは残す', () => {
-    const out = sanitizeHtml("<p>a <a href='https://e.org/x?a=1&b=2'>link</a> <b>b</b></p>");
+    const out = sanitizeAnnotationHtml("<p>a <a href='https://e.org/x?a=1&b=2'>link</a> <b>b</b></p>");
     expect(out).toContain('<p>a <a href="https://e.org/x?a=1&amp;b=2"');
     expect(out).toContain('rel="noopener noreferrer nofollow"');
     expect(out).toContain('<b>b</b>');
   });
   it('script・イベント属性・javascript: を除く', () => {
-    expect(sanitizeHtml('<p>x</p><script>alert(1)</script>')).toBe('<p>x</p>');
-    expect(sanitizeHtml('<img src="https://e.org/a.png" onerror="alert(1)">')).not.toMatch(/onerror/i);
-    expect(sanitizeHtml('<a href="javascript:alert(1)">x</a>')).not.toMatch(/javascript/i);
-    expect(sanitizeHtml('<a href="  JaVa\nScript:alert(1)">x</a>')).not.toMatch(/script/i);
-    expect(sanitizeHtml('<a href="&#106;avascript:alert(1)">x</a>')).not.toMatch(/javascript/i);
-    expect(sanitizeHtml('<img src="data:text/html;base64,AAAA">')).not.toMatch(/data:/);
-    expect(sanitizeHtml('<iframe src="https://e.org"></iframe>after')).toBe('after');
-    expect(sanitizeHtml('<svg onload=alert(1)><circle/></svg>ok')).toBe('ok');
-    expect(sanitizeHtml('<p style="background:url(x)" class="c">t</p>')).toBe('<p>t</p>');
+    expect(sanitizeAnnotationHtml('<p>x</p><script>alert(1)</script>')).toBe('<p>x</p>');
+    expect(sanitizeAnnotationHtml('<img src="https://e.org/a.png" onerror="alert(1)">')).not.toMatch(/onerror/i);
+    expect(sanitizeAnnotationHtml('<a href="javascript:alert(1)">x</a>')).not.toMatch(/javascript/i);
+    expect(sanitizeAnnotationHtml('<a href="  JaVa\nScript:alert(1)">x</a>')).not.toMatch(/script/i);
+    expect(sanitizeAnnotationHtml('<a href="&#106;avascript:alert(1)">x</a>')).not.toMatch(/javascript/i);
+    expect(sanitizeAnnotationHtml('<img src="data:text/html;base64,AAAA">')).not.toMatch(/data:/);
+    expect(sanitizeAnnotationHtml('<iframe src="https://e.org"></iframe>after')).toBe('after');
+    expect(sanitizeAnnotationHtml('<svg onload=alert(1)><circle/></svg>ok')).toBe('ok');
+    expect(sanitizeAnnotationHtml('<p style="background:url(x)" class="c">t</p>')).toBe('<p>t</p>');
   });
   it('閉じていないタグを閉じ、壊れた入れ子で外に出さない', () => {
-    expect(sanitizeHtml('<p><b>x')).toBe('<p><b>x</b></p>');
-    expect(sanitizeHtml('</div>x')).toBe('x');
-    expect(sanitizeHtml('a < b & c')).toContain('&amp;');
+    expect(sanitizeAnnotationHtml('<p><b>x')).toBe('<p><b>x</b></p>');
+    expect(sanitizeAnnotationHtml('</div>x')).toBe('x');
+    expect(sanitizeAnnotationHtml('a < b & c')).toContain('&amp;');
   });
 });

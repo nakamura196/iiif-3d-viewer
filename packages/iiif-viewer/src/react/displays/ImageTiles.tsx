@@ -16,7 +16,7 @@ import {
   type ImageInfo,
   type ImageLayer,
   type ImageServiceRef,
-  type Region,
+  type ImageRegion,
 } from '../../core';
 import { useTranslations } from '../env';
 import type { StageInfo } from './ImageView';
@@ -93,11 +93,11 @@ export default function ImageLayerView({
   const info = state.status === 'ready' ? state.info : null;
   const srcW = info?.width ?? layer.width;
   const srcH = info?.height ?? layer.height;
-  const target: Region = layer.target ?? { x: 0, y: 0, w: canvasWidth, h: canvasHeight };
+  const target: ImageRegion = layer.target ?? { x: 0, y: 0, w: canvasWidth, h: canvasHeight };
 
   // the shown part of the source image, and where it sits on the Canvas
   const quarter = layer.rotation % 180 !== 0;
-  const region: Region =
+  const region: ImageRegion =
     srcW && srcH
       ? resolveRegion(layer.regionSpec, srcW, srcH)
       : { x: 0, y: 0, w: quarter ? target.h : target.w, h: quarter ? target.w : target.h };
@@ -157,7 +157,7 @@ export default function ImageLayerView({
     const x1 = (stage.boxW / 2 - stage.tx) / stage.scale + stage.stageW / 2;
     const y0 = (-stage.boxH / 2 - stage.ty) / stage.scale + stage.stageH / 2;
     const y1 = (stage.boxH / 2 - stage.ty) / stage.scale + stage.stageH / 2;
-    const visibleCanvas: Region = { x: x0 * toCanvas, y: y0 * toCanvas, w: (x1 - x0) * toCanvas, h: (y1 - y0) * toCanvas };
+    const visibleCanvas: ImageRegion = { x: x0 * toCanvas, y: y0 * toCanvas, w: (x1 - x0) * toCanvas, h: (y1 - y0) * toCanvas };
     const local = canvasRectToLayer(place, visibleCanvas);
     const visible = intersect({ x: local.x + region.x, y: local.y + region.y, w: local.w, h: local.h }, region);
     if (visible) {

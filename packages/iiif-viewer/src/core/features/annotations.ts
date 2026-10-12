@@ -6,7 +6,7 @@
 
 import type { ManifestV4 } from '../types/iiif';
 
-export { sanitizeHtml, safeUrl } from './annotationHtml';
+export { sanitizeAnnotationHtml, safeAnnotationUrl } from './annotationHtml';
 
 type Json = Record<string, unknown>;
 type Point = [number, number];

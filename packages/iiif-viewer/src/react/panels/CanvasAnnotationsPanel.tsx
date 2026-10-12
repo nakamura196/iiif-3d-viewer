@@ -9,7 +9,7 @@ import {
   rawCanvasOf,
   labelIn,
   pickBodies,
-  sanitizeHtml,
+  sanitizeAnnotationHtml,
   type AnnotationBodyItem,
   type CanvasAnnotation,
 } from '../../core';
@@ -35,7 +35,7 @@ function Body({ body, canvasLabels }: { body: AnnotationBodyItem; canvasLabels: 
         <div
           className="text-sm text-gray-800 dark:text-gray-100 break-words [&_a]:text-blue-600 [&_a]:underline [&_img]:max-w-full [&_img]:inline [&_img]:h-5 [&_p]:my-1"
           lang={body.language}
-          dangerouslySetInnerHTML={{ __html: sanitizeHtml(body.value ?? '') }}
+          dangerouslySetInnerHTML={{ __html: sanitizeAnnotationHtml(body.value ?? '') }}
         />
       );
     }

@@ -7,7 +7,7 @@ import {
   imageRequestUrl,
   parseImageInfo,
   parseRotation,
-  parseXywh,
+  parseImageXywh,
   pickScaleFactor,
   placementOf,
   resolveRegion,
@@ -123,10 +123,10 @@ describe('canvasImagesOf: Cookbook recipes', () => {
 });
 
 describe('small readers', () => {
-  it('parseXywh', () => {
-    expect(parseXywh('https://x/c#xywh=1,2,3,4')).toEqual({ x: 1, y: 2, w: 3, h: 4 });
-    expect(parseXywh('xywh=percent:10,10,50,50', { width: 200, height: 100 })).toEqual({ x: 20, y: 10, w: 100, h: 50 });
-    expect(parseXywh('https://x/c')).toBeUndefined();
+  it('parseImageXywh', () => {
+    expect(parseImageXywh('https://x/c#xywh=1,2,3,4')).toEqual({ x: 1, y: 2, w: 3, h: 4 });
+    expect(parseImageXywh('xywh=percent:10,10,50,50', { width: 200, height: 100 })).toEqual({ x: 20, y: 10, w: 100, h: 50 });
+    expect(parseImageXywh('https://x/c')).toBeUndefined();
   });
   it('parseRotation', () => {
     expect(parseRotation('!90')).toEqual({ rotation: 90, mirror: true });

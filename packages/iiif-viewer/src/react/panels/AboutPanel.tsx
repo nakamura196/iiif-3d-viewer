@@ -6,7 +6,7 @@ import {
   aboutHasContent,
   aboutScopeHasContent,
   aboutOf,
-  safeUrl,
+  safeAboutUrl,
   type AboutAgent,
   type AboutLink,
   type AboutPlace,
@@ -29,7 +29,7 @@ const Section = ({ title, children }: { title: string; children: ReactNode }) =>
 const Links = ({ links }: { links: AboutLink[] }) => (
   <>
     {links.map((l, i) => {
-      const href = safeUrl(l.id);
+      const href = safeAboutUrl(l.id);
       return (
         <div key={i}>
           {href ? (
@@ -49,8 +49,8 @@ const Links = ({ links }: { links: AboutLink[] }) => (
 );
 
 const Agent = ({ agent }: { agent: AboutAgent }) => {
-  const href = safeUrl(agent.homepage[0]?.id ?? agent.id ?? '');
-  const logos = agent.logos.map((src) => safeUrl(src)).filter(Boolean);
+  const href = safeAboutUrl(agent.homepage[0]?.id ?? agent.id ?? '');
+  const logos = agent.logos.map((src) => safeAboutUrl(src)).filter(Boolean);
   return (
     <div className="space-y-1">
       <div className="flex items-center gap-2 flex-wrap">
@@ -120,8 +120,8 @@ function ScopeView({ scope, full }: { scope: AboutScope; full: boolean }) {
         <Section title={t('rights')}>
           {scope.requiredStatement && <MetadataList items={[scope.requiredStatement]} />}
           {scope.rights &&
-            (safeUrl(scope.rights.url) ? (
-              <a href={safeUrl(scope.rights.url)} target="_blank" rel="noopener noreferrer" className={LINK_CLASS}>
+            (safeAboutUrl(scope.rights.url) ? (
+              <a href={safeAboutUrl(scope.rights.url)} target="_blank" rel="noopener noreferrer" className={LINK_CLASS}>
                 {scope.rights.label}
               </a>
             ) : (
@@ -162,7 +162,7 @@ function ScopeView({ scope, full }: { scope: AboutScope; full: boolean }) {
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 key={src}
-                src={safeUrl(src)}
+                src={safeAboutUrl(src)}
                 alt=""
                 className="max-h-32 w-auto rounded border border-gray-200 dark:border-gray-700 object-contain"
               />

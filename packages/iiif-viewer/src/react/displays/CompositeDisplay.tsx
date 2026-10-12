@@ -7,7 +7,7 @@ import {
   isComposite,
   mediaTimeAt,
   rawContainerOf,
-  sanitizeHtml,
+  sanitizeTemporalHtml,
   timelineImageUrl,
   timelineOf,
   type ContainerInfo,
@@ -89,7 +89,7 @@ function ItemView({ item, time, playing }: { item: TimelineItem; time: number; p
     }
     case 'Text':
       return item.isHtml ? (
-        <div className="w-full h-full overflow-hidden" dangerouslySetInnerHTML={{ __html: sanitizeHtml(item.text ?? '') }} />
+        <div className="w-full h-full overflow-hidden" dangerouslySetInnerHTML={{ __html: sanitizeTemporalHtml(item.text ?? '') }} />
       ) : (
         <div className="w-full h-full overflow-hidden whitespace-pre-line">{item.text}</div>
       );

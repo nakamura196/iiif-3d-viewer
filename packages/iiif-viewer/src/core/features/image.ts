@@ -15,7 +15,7 @@ const num = (v: unknown): number | undefined => {
   return v != null && v !== '' && Number.isFinite(n) ? n : undefined;
 };
 
-export interface Region {
+export interface ImageRegion {
   x: number;
   y: number;
   w: number;
@@ -38,7 +38,7 @@ export interface ImageLayer {
   /** Sub-rectangle of the source image (Image API `region`: "x,y,w,h", "pct:...", "square"). */
   regionSpec?: string;
   /** Where the image goes on the Canvas, in Canvas units. Absent: the whole Canvas. */
-  target?: Region;
+  target?: ImageRegion;
   /** Clockwise degrees (Image API `rotation`), and whether it is mirrored first. */
   rotation: number;
   mirror: boolean;
@@ -53,7 +53,7 @@ export interface ImageAnnotation {
   /** URLs of Image bodies (a picture put in an annotation). */
   images: string[];
   /** Canvas units. */
-  region: Region;
+  region: ImageRegion;
 }
 
 export type PaintingKind = 'Image' | 'Video' | 'Audio' | 'Model';
@@ -125,7 +125,7 @@ export const serviceFromImageUrl = (url: string): string | undefined => {
 // ---------------------------------------------------------------- regions
 
 /** "xywh=10,20,30,40" (also "xywh=pixel:..."); the numbers only when the unit is pixels. */
-export const parseXywh = (value: string, canvas?: { width?: number; height?: number }): Region | undefined => {
+export const parseImageXywh = (value: string, canvas?: { width?: number; height?: number }): ImageRegion | undefined => {
   const m = /xywh=(pixel:|percent:)?\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)/.exec(value);
   if (!m) return undefined;
   const [x, y, w, h] = [m[2], m[3], m[4], m[5]].map(Number);
@@ -137,7 +137,7 @@ export const parseXywh = (value: string, canvas?: { width?: number; height?: num
 };
 
 /** Resolve an Image API `region` against the source image size. */
-export const resolveRegion = (spec: string | undefined, width: number, height: number): Region => {
+export const resolveRegion = (spec: string | undefined, width: number, height: number): ImageRegion => {
   const full = { x: 0, y: 0, w: width, h: height };
   if (!spec || spec === 'full' || spec === 'max') return full;
   if (spec === 'square') {
@@ -185,7 +185,7 @@ export const rotationFromCss = (css: string, styleClass: string | undefined): nu
 // ---------------------------------------------------------------- targets
 
 interface Target {
-  region?: Region;
+  region?: ImageRegion;
   /** The id of the thing targeted (a Canvas, or an image service). */
   source?: string;
   selector?: Json;
@@ -194,7 +194,7 @@ interface Target {
 const targetOf = (raw: unknown, canvas: { width?: number; height?: number }): Target => {
   if (typeof raw === 'string') {
     const [source] = raw.split('#');
-    return { source, region: parseXywh(raw, canvas) };
+    return { source, region: parseImageXywh(raw, canvas) };
   }
   if (!isObj(raw)) return {};
   const src = raw.source;
@@ -204,10 +204,10 @@ const targetOf = (raw: unknown, canvas: { width?: number; height?: number }): Ta
   if (selector) {
     out.selector = selector;
     const value = str(selector.value);
-    if (value) out.region = parseXywh(value, canvas);
+    if (value) out.region = parseImageXywh(value, canvas);
   }
   const id = str(raw.id);
-  if (!out.region && id) out.region = parseXywh(id, canvas);
+  if (!out.region && id) out.region = parseImageXywh(id, canvas);
   if (!out.source && id) out.source = id.split('#')[0];
   return out;
 };
@@ -241,7 +241,7 @@ const textOf = (body: Json): string => {
 const annotationsOn = (
   pages: unknown,
   canvas: { width?: number; height?: number },
-  place: (target: Target) => Region | undefined,
+  place: (target: Target) => ImageRegion | undefined,
   needImage: boolean,
 ): ImageAnnotation[] => {
   const out: ImageAnnotation[] = [];
@@ -339,7 +339,7 @@ const layerOf = (
   return layer;
 };
 
-const parseSelectorRegion = (selector: Json | undefined): Region | undefined => {
+const parseSelectorRegion = (selector: Json | undefined): ImageRegion | undefined => {
   if (!selector || selector.type !== 'ImageApiSelector') return undefined;
   const m = /^(\d+(?:\.\d+)?),(\d+(?:\.\d+)?),(\d+(?:\.\d+)?),(\d+(?:\.\d+)?)$/.exec(str(selector.region) ?? '');
   return m ? { x: Number(m[1]), y: Number(m[2]), w: Number(m[3]), h: Number(m[4]) } : undefined;
@@ -553,7 +553,7 @@ const quality = (version: 1 | 2 | 3) => (version === 1 ? 'native' : 'default');
 /** `{id}/{region}/{size}/0/default.jpg` for a region of the source in source pixels. */
 export const imageRequestUrl = (
   service: ImageServiceRef,
-  region: Region | 'full',
+  region: ImageRegion | 'full',
   outWidth: number,
   outHeight?: number,
 ): string => {
@@ -588,7 +588,7 @@ export const tilesCovering = (
   info: ImageInfo,
   scheme: { width: number; height: number },
   scaleFactor: number,
-  visible: Region,
+  visible: ImageRegion,
   limit = 150,
 ): Tile[] => {
   const spanW = scheme.width * scaleFactor;
@@ -655,8 +655,8 @@ export interface Placement {
 
 /** Where a layer's (rotated) region goes on the Canvas: fitted into its target, or the whole Canvas. */
 export const placementOf = (
-  region: Region,
-  target: Region,
+  region: ImageRegion,
+  target: ImageRegion,
   rotation: number,
   mirror: boolean,
 ): Placement => {
@@ -666,7 +666,7 @@ export const placementOf = (
 };
 
 /** A rectangle on the Canvas, as source pixels of the layer's region (the bounding box of its corners). */
-export const canvasRectToLayer = (p: Placement, rect: Region): Region => {
+export const canvasRectToLayer = (p: Placement, rect: ImageRegion): ImageRegion => {
   const r = (p.rotation * Math.PI) / 180;
   const cos = Math.cos(r);
   const sin = Math.sin(r);
@@ -692,7 +692,7 @@ export const canvasRectToLayer = (p: Placement, rect: Region): Region => {
 };
 
 /** The part of `a` that is inside `b`; null when they do not meet. */
-export const intersect = (a: Region, b: Region): Region | null => {
+export const intersect = (a: ImageRegion, b: ImageRegion): ImageRegion | null => {
   const x = Math.max(a.x, b.x);
   const y = Math.max(a.y, b.y);
   const x2 = Math.min(a.x + a.w, b.x + b.w);

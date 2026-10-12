@@ -6,7 +6,7 @@ import {
   pickBodies,
   pointPercent,
   regionBoxPercent,
-  sanitizeHtml,
+  sanitizeAnnotationHtml,
   type CanvasAnnotation,
 } from '../../core';
 import { manifestAtom } from '../atoms';
@@ -137,7 +137,7 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
                 <div
                   className="text-white bg-black/50 w-full h-full break-words"
                   style={{ fontSize: '12cqh', lineHeight: 1.2 }}
-                  dangerouslySetInnerHTML={{ __html: sanitizeHtml(html) }}
+                  dangerouslySetInnerHTML={{ __html: sanitizeAnnotationHtml(html) }}
                 />
               ) : null}
             </div>

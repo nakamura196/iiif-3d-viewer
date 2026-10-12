@@ -19,7 +19,7 @@ import {
   sequencesOf,
   splitId,
   startOf,
-  thumbnailUrlOf,
+  pageThumbnailUrl,
   viewingOf,
 } from './structure';
 
@@ -236,11 +236,11 @@ describe('0464 他のマニフェストの Canvas を再利用', () => {
 describe('サムネイル', () => {
   it('IIIF Image API の URL を小さくする', () => {
     const { containers } = load('0009');
-    const url = thumbnailUrlOf(containers[0]);
+    const url = pageThumbnailUrl(containers[0]);
     expect(url).toBeDefined();
   });
   it('Canvas の thumbnail を優先する', () => {
     const { containers } = load('0009');
-    expect(thumbnailUrlOf(containers[0], { thumbnail: [{ id: 'https://ex.org/t.jpg' }] })).toBe('https://ex.org/t.jpg');
+    expect(pageThumbnailUrl(containers[0], { thumbnail: [{ id: 'https://ex.org/t.jpg' }] })).toBe('https://ex.org/t.jpg');
   });
 });

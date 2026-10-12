@@ -9,7 +9,7 @@ import {
   parseContentState,
   parseDroppedText,
   startOf,
-  thumbnailUrlOf,
+  pageThumbnailUrl,
   type CanvasTarget,
   type ContainerInfo,
 } from '../core';
@@ -290,7 +290,7 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
             {order.map((i) => {
               const c = containers[i];
               if (!c) return null;
-              const thumb = thumbnailUrlOf(c, rawItems.get(c.id));
+              const thumb = pageThumbnailUrl(c, rawItems.get(c.id));
               const active = i === selected;
               return (
                 <button

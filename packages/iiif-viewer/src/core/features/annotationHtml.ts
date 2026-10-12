@@ -44,7 +44,7 @@ const escapeText = (s: string): string =>
   s.replace(/&(?!#?[a-z0-9]+;)/gi, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 // http / https / mailto だけを通す。相対 URL と、制御文字・空白を挟んだ偽装は通さない。
-export const safeUrl = (raw: string): string | null => {
+export const safeAnnotationUrl = (raw: string): string | null => {
   const url = decodeEntities(raw).replace(/[\u0000- \u007f-\u009f]/g, '');
   if (!url) return null;
   return /^(https?:\/\/|mailto:)/i.test(url) ? decodeEntities(raw).trim() : null;
@@ -61,7 +61,7 @@ const attrsOf = (tag: string, raw: string): string => {
     if (!allowed.has(name) || seen.has(name)) continue;
     const value = m[2] ?? m[3] ?? m[4] ?? '';
     if (name === 'href' || name === 'src' || name === 'cite') {
-      const url = safeUrl(value);
+      const url = safeAnnotationUrl(value);
       if (!url) continue;
       seen.add(name);
       out.push(`${name}="${escapeAttr(url)}"`);
@@ -77,7 +77,7 @@ const attrsOf = (tag: string, raw: string): string => {
 
 const TOKEN_RE = /<!--[\s\S]*?(?:-->|$)|<(\/?)([a-zA-Z][a-zA-Z0-9-]*)((?:"[^"]*"|'[^']*'|[^'">])*)>|<[^>]*>|[^<]+|</g;
 
-export const sanitizeHtml = (html: string): string => {
+export const sanitizeAnnotationHtml = (html: string): string => {
   let out = '';
   const stack: string[] = [];
   let dropping: string | null = null;
