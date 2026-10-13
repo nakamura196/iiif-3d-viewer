@@ -54,6 +54,8 @@ export function decodeContentState(value: string | null | undefined): string | n
   if (!value) return null;
   const v = value.trim();
   if (/^https?:\/\//i.test(v)) return v;
+  // サイト内の場所（/manifests/... など。サンプルのボタンがこの形で渡す）。// で始まるものは別のサイトになるので受けない
+  if (/^\/(?!\/)/.test(v)) return v;
   try {
     // 前後のどちらの書き方でも通るよう、URL エンコードされた JSON も受ける
     let text = v.startsWith('{') || v.startsWith('%7B') ? decodeURIComponent(v) : fromBase64Url(v);
