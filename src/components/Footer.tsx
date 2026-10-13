@@ -12,7 +12,8 @@ import { contentParam } from '@nakamura196/iiif-viewer/core';
 const SAMPLE = withBasePath('/manifests/sample-manifest.json');
 const SAMPLE_ANNOT = withBasePath('/manifests/sample-manifest-with-annotations.json');
 // Shared Region and Keyed Tag Extension の例（正本は iiif-region-tag-extension の examples/manifest.json）
-const SAMPLE_REGION_TAGS = withBasePath('/manifests/sample-manifest-region-tags.json');
+// 研究段階のため公開ページには出さない（掲載の了承が得られたら戻す）
+// const SAMPLE_REGION_TAGS = withBasePath('/manifests/sample-manifest-region-tags.json');
 
 export default function Footer() {
   const t = useTranslations('Footer');
@@ -40,7 +41,7 @@ export default function Footer() {
             { label: t('sample1'), href: `/viewer?${contentParam(SAMPLE)}` },
             { label: t('sample2'), href: `/viewer?${contentParam(SAMPLE_ANNOT)}&tab=annotations` },
             { label: t('sample3'), href: `/georef?${contentParam(SAMPLE_ANNOT)}` },
-            { label: t('sample4'), href: `/viewer?${contentParam(SAMPLE_REGION_TAGS)}&tab=annotations` },
+            // { label: t('sample4'), href: `/viewer?${contentParam(SAMPLE_REGION_TAGS)}&tab=annotations` },
             { label: t('samplesAll'), href: '/samples' },
           ],
         },

@@ -9,7 +9,8 @@ import { contentParam } from '@nakamura196/iiif-viewer/core';
 const SAMPLE = withBasePath('/manifests/sample-manifest.json');
 const SAMPLE_ANNOT = withBasePath('/manifests/sample-manifest-with-annotations.json');
 // Shared Region and Keyed Tag Extension の例（正本は iiif-region-tag-extension の examples/manifest.json）
-const SAMPLE_REGION_TAGS = withBasePath('/manifests/sample-manifest-region-tags.json');
+// 研究段階のため公開ページには出さない（掲載の了承が得られたら戻す）
+// const SAMPLE_REGION_TAGS = withBasePath('/manifests/sample-manifest-region-tags.json');
 
 const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => void }) => {
   const t = useTranslations('Input');
@@ -102,6 +103,7 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
               {t('sampleManifest3')}
             </Link>
           </li>
+          {/* 研究段階のため公開ページには出さない（掲載の了承が得られたら戻す）
           <li>
             <button
               onClick={() => onSubmit(SAMPLE_REGION_TAGS, 'annotations')}
@@ -110,6 +112,7 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
               {t('sampleManifest4')}
             </button>
           </li>
+          */}
           <li>
             <Link href="/samples" className="text-[var(--ds-primary)] hover:underline">
               {t('sampleManifestAll')}
