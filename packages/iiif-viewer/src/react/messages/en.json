@@ -49,6 +49,8 @@
     "hideAnnotations": "Hide Annotations",
     "loading": "Loading 3D model...",
     "autoRotate": "Rotate",
+    "playAnimation": "Play",
+    "pauseAnimation": "Pause",
     "fitAll": "Fit",
     "topView": "Top",
     "cameras": "Views from the manifest",

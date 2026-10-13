@@ -14,7 +14,7 @@ import type {
   WKTSelectorV4,
 } from '../types/iiif';
 import type { Annotation, AnnotationImage, AnnotationTag } from '../types/main';
-import { firstSceneOf } from './containers';
+import { sceneOf } from './containers';
 import { paintedModelsOf } from './paintedModels';
 
 export interface GeoFeatureName {
@@ -339,8 +339,9 @@ const buildAnnotation = (
   };
 };
 
-export const parseManifestV4 = (manifest: ManifestV4): ParsedManifest => {
-  const scene = firstSceneOf(manifest);
+// Reads the Scene `sceneId` (default: the first Scene).
+export const parseManifestV4 = (manifest: ManifestV4, sceneId?: string | null): ParsedManifest => {
+  const scene = sceneOf(manifest, sceneId);
   const modelUrl = extractModelUrl(scene);
 
   const sceneAnnotations = flattenAllPages(scene?.annotations);
@@ -400,12 +401,12 @@ export interface SceneCamera extends DefaultCamera {
   label: unknown; // IIIF language map or string, as in the manifest
 }
 
-// The Cameras painted into the first Scene (painting Annotations in Scene.items) without
+// The Cameras painted into the Scene `sceneId` (default: the first Scene) (painting Annotations in Scene.items) without
 // the `hidden` behavior, in order (Presentation 4.0, Cameras). Position from the target's
 // PointSelector, direction from `lookAt` (an embedded PointSelector, or a reference to an
 // Annotation that targets a point). Hidden Cameras are the ones notes link to by `scope`.
-export const sceneCamerasOf = (manifest: ManifestV4 | null | undefined): SceneCamera[] =>
-  sceneCamerasInScene(firstSceneOf(manifest));
+export const sceneCamerasOf = (manifest: ManifestV4 | null | undefined, sceneId?: string | null): SceneCamera[] =>
+  sceneCamerasInScene(sceneOf(manifest, sceneId));
 
 export const sceneCamerasInScene = (scene: SceneV4 | undefined): SceneCamera[] => {
   const annos = (scene?.items ?? []).flatMap((page) => page.items ?? []);
@@ -429,9 +430,12 @@ export const sceneCamerasInScene = (scene: SceneV4 | undefined): SceneCamera[] =
   return out;
 };
 
-// The default Camera of the first Scene: the first Camera painted into it.
-export const defaultCameraOf = (manifest: ManifestV4 | null | undefined): DefaultCamera | null => {
-  const first = sceneCamerasOf(manifest)[0];
+// The default Camera of the Scene `sceneId` (default: the first Scene): the first Camera painted into it.
+export const defaultCameraOf = (
+  manifest: ManifestV4 | null | undefined,
+  sceneId?: string | null,
+): DefaultCamera | null => {
+  const first = sceneCamerasOf(manifest, sceneId)[0];
   if (!first) return null;
   const { position, lookAt, fieldOfView } = first;
   return { position, lookAt, ...(fieldOfView ? { fieldOfView } : {}) };

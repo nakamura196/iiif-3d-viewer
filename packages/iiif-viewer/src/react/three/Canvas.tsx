@@ -2,8 +2,8 @@ import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html, Environment } from '@react-three/drei';
 import { Suspense, useEffect, useState, useRef, useImperativeHandle, forwardRef, useCallback, useMemo } from 'react';
 import Scene, { type PlacedModel, type ViewHandle } from '../three/Scene';
-import { useAtom } from 'jotai';
-import { manifestAtom } from '../atoms';
+import { useAtom, useAtomValue } from 'jotai';
+import { manifestAtom, modelAnimationAtom, sceneIdAtom } from '../atoms';
 import { sceneCamerasOf } from '../../core';
 import { labelIn } from '../../core';
 import { useProgress } from '@react-three/drei';
@@ -147,9 +147,11 @@ const CanvasComponent = ({ glbUrl, extraModels, attribution }: CanvasComponentPr
   const viewRef = useRef<ViewHandle>(null);
   const [autoRotate, setAutoRotate] = useState(false);
   const [manifest] = useAtom(manifestAtom);
+  const sceneId = useAtomValue(sceneIdAtom);
+  const [animation, setAnimation] = useAtom(modelAnimationAtom);
   const locale = useLocale();
   // one button per Camera painted into the Scene (hidden ones belong to notes)
-  const cameras = useMemo(() => sceneCamerasOf(manifest), [manifest]);
+  const cameras = useMemo(() => sceneCamerasOf(manifest, sceneId), [manifest, sceneId]);
 
   useEffect(() => {
     setMounted(true);
@@ -266,6 +268,19 @@ const CanvasComponent = ({ glbUrl, extraModels, attribution }: CanvasComponentPr
             {t('topView')}
           </button>
         </div>
+        {animation.clips > 0 && (
+          <div className="flex flex-col rounded overflow-hidden shadow">
+            <button
+              onClick={() => setAnimation((a) => ({ ...a, playing: !a.playing }))}
+              aria-pressed={animation.playing}
+              className={`${VIEW_BUTTON} ${
+                animation.playing ? 'bg-blue-600 text-white hover:bg-blue-700' : VIEW_BUTTON_IDLE
+              }`}
+            >
+              {animation.playing ? t('pauseAnimation') : t('playAnimation')}
+            </button>
+          </div>
+        )}
         {cameras.length > 0 && (
           <div role="group" aria-label={t('cameras')} className="flex flex-col rounded overflow-hidden shadow">
             {cameras.map((cam, i) => (
