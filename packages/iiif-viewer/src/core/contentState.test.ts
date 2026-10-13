@@ -39,6 +39,13 @@ describe('decodeContentState', () => {
 });
 
 describe('manifestFromParams', () => {
+  it('/ で始まるサイト内の場所もそのまま読む', () => {
+    const p = new URLSearchParams({ 'iiif-content': '/manifests/sample-manifest.json' });
+    expect(manifestFromParams(p)).toBe('/manifests/sample-manifest.json');
+  });
+  it('// で始まるものはサイト内の場所として扱わない', () => {
+    expect(decodeContentState('//evil.example/m.json')).toBeNull();
+  });
   it('iiif-content を manifest より優先する', () => {
     const p = new URLSearchParams({ 'iiif-content': 'https://a/m.json', manifest: 'https://b/m.json' });
     expect(manifestFromParams(p)).toBe('https://a/m.json');
