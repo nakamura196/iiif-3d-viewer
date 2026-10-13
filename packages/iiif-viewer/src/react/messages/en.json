@@ -23,7 +23,8 @@
   "SidePanel": {
     "open": "Show panel",
     "close": "Hide panel",
-    "resize": "Drag to resize (double-click to reset)"
+    "resize": "Drag to resize (double-click to reset)",
+    "resizeHeight": "Drag to change the height (double-click to reset)"
   },
   "Info": {
     "metadata": "About",
