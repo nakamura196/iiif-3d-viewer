@@ -166,6 +166,12 @@ export const containersOf = (manifest: ManifestV4 | null | undefined): Container
   return out;
 };
 
-// The first Scene of a manifest (the one the 3D display uses).
+// The first Scene of a manifest (the one shown when none is picked).
 export const firstSceneOf = (manifest: ManifestV4 | null | undefined): SceneV4 | undefined =>
   (manifest?.items ?? []).find((c): c is SceneV4 => (c as ContainerV4)?.type === 'Scene');
+
+// The Scene with this id, or the first Scene when the id is not given (or not a Scene of the manifest).
+export const sceneOf = (manifest: ManifestV4 | null | undefined, sceneId?: string | null): SceneV4 | undefined =>
+  (sceneId
+    ? (manifest?.items ?? []).find((c): c is SceneV4 => (c as ContainerV4)?.type === 'Scene' && c.id === sceneId)
+    : undefined) ?? firstSceneOf(manifest);

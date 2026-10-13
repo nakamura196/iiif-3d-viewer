@@ -15,6 +15,12 @@ export const annotationsAtom = atom<Annotation[]>([]);
 export const paintedModelsAtom = atom<PaintedModel[]>([]);
 export const modelChoicesAtom = atom<Record<string, number>>({});
 
+// 表示中の Scene の id（null は最初の Scene）。注釈・初めの視点・カメラのボタンはこの Scene から読む
+export const sceneIdAtom = atom<string | null>(null);
+
+// 主のモデル（GLB）に入っているアニメーション。clips はクリップの数（0 なら再生ボタンを出さない）
+export const modelAnimationAtom = atom<{ clips: number; playing: boolean }>({ clips: 0, playing: true });
+
 // 画像の Canvas に重なったレイヤー。表示中の Canvas の一覧（右パネルのタブが読む）と、
 // 読む人が変えた表示・不透明度（レイヤーの id ごと）と重ね順（Canvas の id ごと、下から）
 export const canvasLayersAtom = atom<{ canvasId: string; items: LayerItem[] } | null>(null);

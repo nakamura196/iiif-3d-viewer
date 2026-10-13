@@ -49,6 +49,8 @@
     "hideAnnotations": "アノテーションを非表示",
     "loading": "3Dモデルを読み込み中...",
     "autoRotate": "回す",
+    "playAnimation": "動かす",
+    "pauseAnimation": "止める",
     "fitAll": "全体",
     "topView": "上",
     "cameras": "マニフェストの視点",

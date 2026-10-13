@@ -101,3 +101,40 @@ describe('sceneCamerasOf', () => {
     expect(sceneCamerasOf(null)).toEqual([]);
   });
 });
+
+describe('a Scene other than the first', () => {
+  // a second Scene with its own model and Camera, and no notes (like the light animation of mokkan-rti)
+  const S2 = 'https://example.org/iiif/car/scene-2';
+  const two = {
+    ...manifest,
+    items: [
+      ...manifest.items,
+      {
+        id: S2,
+        type: 'Scene',
+        items: [{
+          type: 'AnnotationPage',
+          items: [
+            { id: `${S2}/model`, type: 'Annotation', motivation: ['painting'], body: { id: 'https://example.org/car-anim.glb', type: 'Model' }, target: S2 },
+            camera(`${S2}/camera`, [1, 2, 3], [0, 0, 0]),
+          ],
+        }],
+      },
+    ],
+  } as unknown as ManifestV4;
+
+  it('reads the Scene that is asked for', () => {
+    const parsed = parseManifestV4(two, S2);
+    expect(parsed.modelUrl).toBe('https://example.org/car-anim.glb');
+    expect(parsed.annotations).toEqual([]);
+    expect(sceneCamerasOf(two, S2).map((c) => c.id)).toEqual([`${S2}/camera`]);
+    expect(defaultCameraOf(two, S2)?.position).toEqual([1, 2, 3]);
+  });
+
+  it('reads the first Scene without an id, or with one that is not a Scene of the manifest', () => {
+    for (const id of [undefined, null, 'https://example.org/none']) {
+      expect(parseManifestV4(two, id).modelUrl).toBe('https://example.org/car.glb');
+      expect(defaultCameraOf(two, id)?.position).toEqual([-110, 70, 150]);
+    }
+  });
+});
