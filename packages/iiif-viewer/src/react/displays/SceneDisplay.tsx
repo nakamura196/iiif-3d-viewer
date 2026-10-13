@@ -2,8 +2,14 @@
 
 import { lazy, Suspense, useEffect, useMemo } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { chosenUrl, paintedModelsOf, type SceneV4 } from '../../core';
-import { modelChoicesAtom, paintedModelsAtom } from '../atoms';
+import { chosenUrl, paintedModelsOf, parseManifestV4, sceneOf } from '../../core';
+import {
+  annotationsAtom,
+  modelChoicesAtom,
+  paintedModelsAtom,
+  sceneIdAtom,
+  selectedAnnotationIdAtom,
+} from '../atoms';
 import { useTranslations } from '../env';
 import ModelChoice from '../three/ModelChoice';
 import type { Display, DisplayProps } from './types';
@@ -15,14 +21,20 @@ function SceneDisplay({ container, manifest, iiifContent, renderActions, selecte
   const t = useTranslations('Viewer');
   const paintedModels = useAtomValue(paintedModelsAtom);
   const setPaintedModels = useSetAtom(paintedModelsAtom);
+  const setAnnotations = useSetAtom(annotationsAtom);
+  const setSceneId = useSetAtom(sceneIdAtom);
+  const setSelectedAnnotation = useSetAtom(selectedAnnotationIdAtom);
   const modelChoices = useAtomValue(modelChoicesAtom);
 
-  // The 3D display reads the models of the Scene that is shown (not always the first one).
+  // The 3D display reads the Scene that is shown (not always the first one): its models,
+  // its notes, and (through sceneIdAtom) its default Camera and Camera buttons.
   const sceneId = container.id;
   useEffect(() => {
-    const scene = (manifest.items ?? []).find((c) => (c as { id?: string }).id === sceneId);
-    setPaintedModels(paintedModelsOf(scene as unknown as SceneV4 | undefined));
-  }, [manifest, sceneId, setPaintedModels]);
+    setSceneId(sceneId);
+    setPaintedModels(paintedModelsOf(sceneOf(manifest, sceneId)));
+    setAnnotations(parseManifestV4(manifest, sceneId).annotations);
+    setSelectedAnnotation(null);
+  }, [manifest, sceneId, setSceneId, setPaintedModels, setAnnotations, setSelectedAnnotation]);
 
   // The first painted model is the main one (framing, annotation occlusion);
   // the others are drawn alongside. A Choice shows its chosen (default: first) Model.
@@ -37,7 +49,8 @@ function SceneDisplay({ container, manifest, iiifContent, renderActions, selecte
     <div className="relative flex-1 min-h-0 min-w-0">
       {glbUrl && (
         <Suspense fallback={<div className="p-4 text-sm text-[var(--ds-fg)]">{t('loading')}</div>}>
-          <CanvasComponent glbUrl={glbUrl} extraModels={extraModels} />
+          {/* a new 3D view per Scene, so that the camera starts again from that Scene's view */}
+          <CanvasComponent key={sceneId} glbUrl={glbUrl} extraModels={extraModels} />
         </Suspense>
       )}
       <div className="absolute bottom-4 left-4 z-10 flex items-end gap-2">

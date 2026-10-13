@@ -146,7 +146,7 @@ const CompareContent: NextPage = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <Header />
+      <Header compact />
       <main className="flex-1 flex overflow-hidden">
         {manifestUrl ? (
           <div className="flex flex-col sm:flex-row w-full">

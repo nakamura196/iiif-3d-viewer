@@ -1,13 +1,13 @@
 'use client';
 
-import { Suspense, useEffect, useImperativeHandle, useMemo, type Ref } from 'react';
-import { Clone, useGLTF, Bounds } from '@react-three/drei';
+import { Suspense, useEffect, useImperativeHandle, useMemo, useRef, type Ref } from 'react';
+import { Clone, useAnimations, useGLTF, Bounds } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { Box3, PerspectiveCamera, Sphere, Vector3 } from 'three';
+import { Box3, Group, PerspectiveCamera, Sphere, Vector3 } from 'three';
 import gsap from 'gsap';
 import Annotations from '../three/Annotations';
-import { useAtom } from 'jotai';
-import { manifestAtom, showAnnotationsAtom } from '../atoms';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { manifestAtom, modelAnimationAtom, sceneIdAtom, showAnnotationsAtom } from '../atoms';
 import { defaultCameraOf, type DefaultCamera } from '../../core';
 import { runFocusFlight, type Vec3 } from '../../core';
 import { fitView, topView } from '../../core';
@@ -94,6 +94,34 @@ function PlacedGLTF({ url, position }: PlacedModel) {
   );
 }
 
+// Plays the animations stored in the model (glTF animations), looped, all at once.
+// The play/pause button outside the 3D view switches modelAnimationAtom.playing.
+function useModelAnimation(model: { animations: import('three').AnimationClip[] }) {
+  const root = useRef<Group>(null);
+  const { actions } = useAnimations(model.animations, root);
+  const setAnimation = useSetAtom(modelAnimationAtom);
+  const { playing } = useAtomValue(modelAnimationAtom);
+
+  useEffect(() => {
+    setAnimation({ clips: model.animations.length, playing: true });
+    return () => setAnimation({ clips: 0, playing: true });
+  }, [model, setAnimation]);
+
+  useEffect(() => {
+    const all = Object.values(actions);
+    all.forEach((a) => a?.reset().play());
+    return () => all.forEach((a) => a?.stop());
+  }, [actions]);
+
+  useEffect(() => {
+    Object.values(actions).forEach((a) => {
+      if (a) a.paused = !playing;
+    });
+  }, [actions, playing]);
+
+  return root;
+}
+
 export default function Scene({
   glbUrl,
   extraModels = [],
@@ -105,15 +133,24 @@ export default function Scene({
 }) {
   const [showAnnotations] = useAtom(showAnnotationsAtom);
   const [manifest] = useAtom(manifestAtom);
+  const sceneId = useAtomValue(sceneIdAtom);
   const model = useGLTF(glbUrl);
-  const cam = useMemo(() => defaultCameraOf(manifest), [manifest]);
+  const cam = useMemo(() => defaultCameraOf(manifest, sceneId), [manifest, sceneId]);
   const sphere = useMemo(() => new Box3().setFromObject(model.scene).getBoundingSphere(new Sphere()), [model]);
+  const animationRoot = useModelAnimation(model);
+  // A model with animations is drawn as it is loaded, not as a copy: the copy rebuilds each light
+  // with a new target, so a spot light that the animation moves would keep pointing at the origin.
+  const body = (
+    <group ref={animationRoot}>
+      {model.animations.length > 0 ? <primitive object={model.scene} /> : <Clone object={model.scene} />}
+    </group>
+  );
 
   return (
     <>
       {cam ? (
         <>
-          <Clone object={model.scene} />
+          {body}
           <ManifestCamera cam={cam} center={sphere.center} radius={sphere.radius} />
         </>
       ) : (
@@ -123,7 +160,7 @@ export default function Scene({
            left many Smithsonian scans off-screen / oversized. Only the model is
            wrapped so the fit targets the mesh, not the annotation markers. */
         <Bounds fit clip margin={1.2}>
-          <Clone object={model.scene} />
+          {body}
         </Bounds>
       )}
       {viewRef && <ViewController handle={viewRef} center={sphere.center} radius={sphere.radius} />}

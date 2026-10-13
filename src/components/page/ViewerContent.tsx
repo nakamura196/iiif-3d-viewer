@@ -53,7 +53,7 @@ const ViewerContent: NextPage = () => {
 
   return (
     <div className="flex flex-col h-screen">
-      <Header />
+      <Header compact />
       <main className="flex-1 flex overflow-hidden">
         {manifestUrl ? (
           <Viewer
