@@ -1,10 +1,10 @@
 {
   "Info": {
-    "about": "資料情報"
+    "rights": "権利"
   },
   "About": {
     "thisResource": "この資料",
-    "thisPage": "この画面の対象",
+    "thisPage": "表示中のページ",
     "ranges": "目次の項目",
     "rights": "権利",
     "attribution": "出典表記",
@@ -22,6 +22,8 @@
     "description": "説明",
     "metadata": "メタデータ",
     "thumbnail": "サムネイル",
-    "empty": "この資料についての追加情報はありません"
+    "empty": "この資料についての追加情報はありません",
+    "title": "タイトル",
+    "license": "ライセンス"
   }
 }

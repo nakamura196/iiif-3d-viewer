@@ -1,15 +1,13 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   contentStateOf,
-  labelIn,
   matchTarget,
   parseContentState,
   parseDroppedText,
   startOf,
-  pageThumbnailUrl,
   type CanvasTarget,
   type ContainerInfo,
 } from '../core';
@@ -21,7 +19,7 @@ import {
   usePageOrder,
   useManifestSwitch,
 } from './displays/structureState';
-import { useLocale, useTranslations } from './env';
+import { useTranslations } from './env';
 
 interface Props {
   containers: ContainerInfo[];
@@ -40,20 +38,19 @@ const isEditable = (el: EventTarget | null): boolean => {
   );
 };
 
-// The page navigation of a manifest: previous / next, a strip of thumbnails, and the arrow keys.
+// The page navigation of a manifest: previous / next and the arrow keys. The list of the pages
+// is a tab of the right panel (panels/PagesPanel.tsx).
 // It also receives the requests of the table of contents (right panel), opens the Canvas that
 // the content state or `start` points to, and takes a dropped iiif-content link.
 // Nothing is shown for a single container.
 export default function ContainerList({ containers, selected, onSelect }: Props) {
   const t = useTranslations('Structure');
-  const locale = useLocale();
   const manifest = useAtomValue(manifestAtom);
   const [request, setRequest] = useAtom(navRequestAtom);
   const setFocus = useSetAtom(focusAtom);
   const { open, back, canGoBack } = useManifestSwitch();
-  const { viewing, order, groups } = usePageOrder(manifest, containers);
+  const { viewing, groups } = usePageOrder(manifest, containers);
   const sentinel = useRef<HTMLSpanElement>(null);
-  const strip = useRef<HTMLDivElement>(null);
   // targets that wait for the manifest being opened (a content state, a drop)
   const pending = useRef<CanvasTarget[] | null>(null);
   const applied = useRef<string | null>(null);
@@ -207,19 +204,6 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
     };
   }, []);
 
-  // keep the selected thumbnail in view
-  useEffect(() => {
-    strip.current
-      ?.querySelector<HTMLElement>('[aria-selected="true"]')
-      ?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
-  }, [selected]);
-
-  const rawItems = useMemo(() => {
-    const map = new Map<string, unknown>();
-    for (const c of manifest?.items ?? []) map.set((c as { id: string }).id, c);
-    return map;
-  }, [manifest]);
-
   const showPager = !isCollection && containers.length >= 2;
   const showBack = canGoBack;
 
@@ -231,7 +215,6 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
     );
   }
 
-  const labelOf = (c: ContainerInfo, i: number) => labelIn(c.label, locale) || `${c.kind} ${i + 1}`;
   const group = groups[groupAt] ?? [selected];
   const progress =
     group.length > 1
@@ -254,66 +237,31 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
         </div>
       )}
       {showPager && (
-        <>
-          <div className="flex items-center justify-center gap-2 p-1.5" role="group" aria-label={t('pager')}>
-            <button
-              type="button"
-              className={btn}
-              disabled={leftIsNext ? !hasNext : !hasPrev}
-              onClick={() => step(leftIsNext ? 1 : -1)}
-              aria-label={leftIsNext ? t('next') : t('prev')}
-              title={leftIsNext ? t('next') : t('prev')}
-            >
-              ‹
-            </button>
-            <span className="text-sm tabular-nums text-[var(--ds-fg)]" aria-live="polite">
-              {progress}
-            </span>
-            <button
-              type="button"
-              className={btn}
-              disabled={leftIsNext ? !hasPrev : !hasNext}
-              onClick={() => step(leftIsNext ? -1 : 1)}
-              aria-label={leftIsNext ? t('prev') : t('next')}
-              title={leftIsNext ? t('prev') : t('next')}
-            >
-              ›
-            </button>
-          </div>
-          <div
-            ref={strip}
-            role="tablist"
-            aria-label={t('pages')}
-            dir={rtl ? 'rtl' : 'ltr'}
-            className="flex gap-1 overflow-x-auto px-1.5 pb-1.5"
+        <div className="flex items-center justify-center gap-2 p-1.5" role="group" aria-label={t('pager')}>
+          <button
+            type="button"
+            className={btn}
+            disabled={leftIsNext ? !hasNext : !hasPrev}
+            onClick={() => step(leftIsNext ? 1 : -1)}
+            aria-label={leftIsNext ? t('next') : t('prev')}
+            title={leftIsNext ? t('next') : t('prev')}
           >
-            {order.map((i) => {
-              const c = containers[i];
-              if (!c) return null;
-              const thumb = pageThumbnailUrl(c, rawItems.get(c.id));
-              const active = i === selected;
-              return (
-                <button
-                  key={c.id}
-                  role="tab"
-                  aria-selected={active}
-                  aria-label={labelOf(c, i)}
-                  title={labelOf(c, i)}
-                  onClick={() => go(i)}
-                  className={`shrink-0 flex flex-col items-center gap-0.5 text-xs px-1 py-1 rounded transition-colors ${
-                    active ? 'bg-blue-600 text-white' : 'text-[var(--ds-fg)] hover:bg-[var(--ds-surface-2)]'
-                  }`}
-                >
-                  {thumb ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={thumb} alt="" loading="lazy" draggable={false} className="h-12 w-auto max-w-24 object-contain bg-white/60" />
-                  ) : null}
-                  <span className="max-w-24 truncate">{labelOf(c, i)}</span>
-                </button>
-              );
-            })}
-          </div>
-        </>
+            ‹
+          </button>
+          <span className="text-sm tabular-nums text-[var(--ds-fg)]" aria-live="polite">
+            {progress}
+          </span>
+          <button
+            type="button"
+            className={btn}
+            disabled={leftIsNext ? !hasPrev : !hasNext}
+            onClick={() => step(leftIsNext ? -1 : 1)}
+            aria-label={leftIsNext ? t('prev') : t('next')}
+            title={leftIsNext ? t('prev') : t('next')}
+          >
+            ›
+          </button>
+        </div>
       )}
     </div>
   );

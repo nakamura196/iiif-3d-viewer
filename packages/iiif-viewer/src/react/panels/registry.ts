@@ -1,19 +1,20 @@
-import { aboutPanel } from './AboutPanel';
+import { infoPanel, rightsPanel } from './AboutPanel';
 import { annotationTranscriptPanel } from './AnnotationTranscriptPanel';
 import { annotationsPanel } from './AnnotationsPanel';
 import { canvasAnnotationsPanel } from './CanvasAnnotationsPanel';
 import { layersPanel } from './LayersPanel';
-import { metadataPanel } from './MetadataPanel';
+import { pagesPanel } from './PagesPanel';
 import { structurePanel } from './StructurePanel';
 import { transcriptPanel } from './TranscriptTab';
 import type { Panel } from './types';
 
 // タブの並び順。新しいタブは、ここに 1 行足す。
 export const PANELS: Panel[] = [
-  metadataPanel,
+  infoPanel,
+  pagesPanel,
   structurePanel,
   layersPanel,
-  aboutPanel,
+  rightsPanel,
   transcriptPanel,
   annotationTranscriptPanel,
   canvasAnnotationsPanel,

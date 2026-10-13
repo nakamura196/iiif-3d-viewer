@@ -30,7 +30,9 @@ const Info = ({ tab, onTabChange, container, manifest }: Props) => {
   const ctx = { container, manifest };
   const available = PANELS.filter((p) => p.available(ctx));
   const ids = available.map((p) => p.id);
-  const wanted = tab ?? inner ?? ids[0];
+  // 「資料情報」は前の「資料情報（about）」タブも兼ねる。古いリンクの ?tab=about はそこへ
+  const asked = tab === 'about' ? 'metadata' : tab;
+  const wanted = asked ?? inner ?? ids[0];
   const active = available.find((p) => p.id === wanted) ?? available[0];
 
   const handleTabChange = (next: InfoTab) => {

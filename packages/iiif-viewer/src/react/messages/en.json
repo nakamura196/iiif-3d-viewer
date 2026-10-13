@@ -17,14 +17,16 @@
     "filteredCount": "{shown} of {total}",
     "images": "Images",
     "relatedImages": "Related resources",
-    "clearFilter": "Clear filters"
+    "clearFilter": "Clear filters",
+    "showOnModel": "Show on model"
   },
   "SidePanel": {
     "open": "Show panel",
-    "close": "Hide panel"
+    "close": "Hide panel",
+    "resize": "Drag to resize (double-click to reset)"
   },
   "Info": {
-    "metadata": "Metadata",
+    "metadata": "About",
     "annotations": "Annotations",
     "transcript": "Transcript"
   },
