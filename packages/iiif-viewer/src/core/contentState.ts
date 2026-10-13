@@ -83,9 +83,10 @@ export function encodeContentState(manifestUrl: string): string {
 /**
  * URL の引数から、表示するマニフェストの URL を決める。
  * `iiif-content` を優先し、無ければ従来の `manifest` を使う（既存リンクの互換）。
+ * IIIF Curation Viewer と同じ `curation`（キュレーションの URL）も受ける。
  */
 export function manifestFromParams(params: URLSearchParams): string | null {
-  return decodeContentState(params.get('iiif-content')) ?? params.get('manifest') ?? null;
+  return decodeContentState(params.get('iiif-content')) ?? params.get('manifest') ?? params.get('curation') ?? null;
 }
 
 /** サイトが出すリンクの引数。マニフェスト URL そのものを `iiif-content` に入れる。 */

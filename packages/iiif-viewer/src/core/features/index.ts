@@ -5,3 +5,4 @@ export * from './temporal';
 export * from './about';
 export * from './annotations';
 export * from './layers';
+export * from './curation';
