@@ -1,0 +1,60 @@
+{
+  "@context": [
+    "http://iiif.io/api/presentation/2/context.json",
+    "http://codh.rois.ac.jp/iiif/curation/1/context.json"
+  ],
+  "@type": "cr:Curation",
+  "@id": "http://example.org/iiif/curation/curation.json",
+  "label": "Curated NIJL Data set",
+  "attribution": "Provided by CODH (ROIS) and NIJL NW Project.",
+  "related": {
+    "@id": "http://example.org/iiif/curation/sample.html",
+    "format": "text/html"
+  },
+  "selections": [
+    {
+      "@id": "http://codh.rois.ac.jp/pmjt/book/200014778/range/r1",
+      "@type": "sc:Range",
+      "label": "Curated contents from 『画本虫撰』",
+      "canvases": [
+        "http://codh.rois.ac.jp/pmjt/iiif/200014778/canvas/00000",
+        "http://codh.rois.ac.jp/pmjt/iiif/200014778/canvas/00011",
+        "http://codh.rois.ac.jp/pmjt/iiif/200014778/canvas/00023",
+        "http://codh.rois.ac.jp/pmjt/iiif/200014778/canvas/00023#xywh=3435,2487,840,750"
+      ],
+      "within": "http://codh.rois.ac.jp/pmjt/book/200014778/manifest.json"
+    },
+    {
+      "@id": "http://codh.rois.ac.jp/pmjt/book/200003067/range/r1",
+      "@type": "sc:Range",
+      "label": "Curated contents from 『唐糸草紙』",
+      "members": [
+        {
+          "@id": "http://codh.rois.ac.jp/pmjt/iiif/200003067/canvas/00000",
+          "@type": "sc:Canvas",
+          "label": "p.1"
+        },
+        {
+          "@id": "http://codh.rois.ac.jp/pmjt/iiif/200003067/canvas/00008",
+          "@type": "sc:Canvas",
+          "label": "p.9"
+        },
+        {
+          "@id": "http://codh.rois.ac.jp/pmjt/iiif/200003067/canvas/00010",
+          "@type": "sc:Canvas",
+          "label": "p.11"
+        },
+        {
+          "@id": "http://codh.rois.ac.jp/pmjt/iiif/200003067/canvas/00010#xywh=2850,1000,730,680",
+          "@type": "sc:Canvas",
+          "label": "p.11"
+        }
+      ],
+      "within": {
+        "@id": "http://codh.rois.ac.jp/pmjt/book/200003067/manifest.json",
+        "@type": "sc:Manifest",
+        "label": "唐糸草紙"
+      }
+    }
+  ]
+}

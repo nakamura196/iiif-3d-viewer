@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   contentStateOf,
+  curationMemberAt,
   matchTarget,
   parseContentState,
   parseDroppedText,
@@ -102,12 +103,18 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
       const state = parseContentState(param);
       if (state) found = matchTarget(state.targets, containers);
     }
+    // ?pos= of a curation: which item to show first (from 1, as in IIIF Curation Viewer)
+    if (!found && typeof window !== 'undefined') {
+      const target = curationMemberAt(manifest, Number(new URLSearchParams(window.location.search).get('pos')));
+      if (target) found = matchTarget([target], containers);
+    }
     if (found) {
       go(found.index, found);
       return;
     }
     const start = startOf(manifest, containers);
-    if (start) go(start.index, start.t ? start : undefined);
+    // a region (#xywh=) or a time in `start` is highlighted
+    if (start) go(start.index, start);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [manifest, containers]);
 
