@@ -30,10 +30,11 @@ export default function HomeContent() {
       date: tNews('item4Date'),
       title: tNews('item4Title'),
     },
-    {
-      date: tNews('item3Date'),
-      title: tNews('item3Title'),
-    },
+    // 同じ場所の注釈・キー付きタグ（研究段階）の告知。掲載の了承が得られたら戻す
+    // {
+    //   date: tNews('item3Date'),
+    //   title: tNews('item3Title'),
+    // },
     {
       date: tNews('item2Date'),
       title: tNews('item2Title'),
@@ -55,7 +56,8 @@ export default function HomeContent() {
     { key: 'specImage', href: 'https://iiif.io/api/image/3.0/' },
     { key: 'specContentState', href: 'https://iiif.io/api/content-state/1.0/' },
     { key: 'specGeoref', href: 'https://iiif.io/api/extension/georef/' },
-    { key: 'specRegionTag', href: 'https://github.com/nakamura196/iiif-region-tag-extension' },
+    // 研究段階のため公開ページには出さない（掲載の了承が得られたら戻す）
+    // { key: 'specRegionTag', href: 'https://github.com/nakamura196/iiif-region-tag-extension' },
   ] as const;
 
   // ロケール別のデモ動画（YouTube videoId）。日本語版 / 英語版を出し分ける。
