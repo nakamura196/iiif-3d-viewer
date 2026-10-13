@@ -17,14 +17,16 @@
     "filteredCount": "{total}件中 {shown}件",
     "images": "画像",
     "relatedImages": "関連する資料",
-    "clearFilter": "絞り込みを解除"
+    "clearFilter": "絞り込みを解除",
+    "showOnModel": "3D に表示"
   },
   "SidePanel": {
     "open": "説明を開く",
-    "close": "説明を閉じる"
+    "close": "説明を閉じる",
+    "resize": "ドラッグで幅を変える（ダブルクリックで元に戻す）"
   },
   "Info": {
-    "metadata": "メタデータ",
+    "metadata": "資料情報",
     "annotations": "アノテーション",
     "transcript": "文字起こし"
   },

@@ -1,9 +1,9 @@
 'use client';
 
 import { lazy, Suspense, useEffect, useMemo } from 'react';
-import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { useAtomValue, useSetAtom } from 'jotai';
 import { chosenUrl, paintedModelsOf, type SceneV4 } from '../../core';
-import { modelChoicesAtom, paintedModelsAtom, showAnnotationsAtom } from '../atoms';
+import { modelChoicesAtom, paintedModelsAtom } from '../atoms';
 import { useTranslations } from '../env';
 import ModelChoice from '../three/ModelChoice';
 import type { Display, DisplayProps } from './types';
@@ -16,7 +16,6 @@ function SceneDisplay({ container, manifest, iiifContent, renderActions, selecte
   const paintedModels = useAtomValue(paintedModelsAtom);
   const setPaintedModels = useSetAtom(paintedModelsAtom);
   const modelChoices = useAtomValue(modelChoicesAtom);
-  const [showAnnotations, setShowAnnotations] = useAtom(showAnnotationsAtom);
 
   // The 3D display reads the models of the Scene that is shown (not always the first one).
   const sceneId = container.id;
@@ -45,16 +44,6 @@ function SceneDisplay({ container, manifest, iiifContent, renderActions, selecte
         <ModelChoice />
         {renderActions?.({ iiifContent, hasChoices, selectedIndex })}
       </div>
-      {/* アノテーション表示切替ボタン */}
-      <button
-        onClick={() => setShowAnnotations(!showAnnotations)}
-        className="absolute top-4 left-4 z-10 px-3 py-2 bg-[var(--ds-surface)] rounded-lg shadow-md hover:bg-[var(--ds-surface-2)] transition-colors border border-[var(--ds-border)]"
-        title={showAnnotations ? t('hideAnnotations') : t('showAnnotations')}
-      >
-        <span className="text-sm text-[var(--ds-fg)]">
-          {showAnnotations ? t('hideAnnotations') : t('showAnnotations')}
-        </span>
-      </button>
     </div>
   );
 }

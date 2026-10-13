@@ -3,8 +3,6 @@
 import type { ReactNode } from 'react';
 import { useAtomValue } from 'jotai';
 import {
-  aboutHasContent,
-  aboutScopeHasContent,
   aboutOf,
   safeAboutUrl,
   type AboutAgent,
@@ -94,7 +92,10 @@ const Place = ({ place }: { place: AboutPlace }) => {
   );
 };
 
-function ScopeView({ scope, full }: { scope: AboutScope; full: boolean }) {
+// Mirador に倣い、右パネルを「資料情報」（何の資料か）と「権利」（使ってよいか・誰のものか）に分ける。
+// 資料情報は、表示中のページ → 資料全体 → 目次の項目の順に並べる。
+
+function InfoScope({ scope, title }: { scope: AboutScope; title: boolean }) {
   const t = useTranslations('About');
   const links: [string, AboutLink[]][] = [
     [t('homepage'), scope.homepage],
@@ -104,58 +105,8 @@ function ScopeView({ scope, full }: { scope: AboutScope; full: boolean }) {
   ];
   return (
     <div className="space-y-4">
-      {full && scope.summary.length > 0 && (
-        <Section title={t('description')}>
-          {scope.summary.map((h, i) => (
-            <SafeHtml key={i} html={h} as="div" />
-          ))}
-        </Section>
-      )}
-      {full && scope.metadata.length > 0 && (
-        <Section title={t('metadata')}>
-          <MetadataList items={scope.metadata} />
-        </Section>
-      )}
-      {(scope.rights || scope.requiredStatement) && (
-        <Section title={t('rights')}>
-          {scope.requiredStatement && <MetadataList items={[scope.requiredStatement]} />}
-          {scope.rights &&
-            (safeAboutUrl(scope.rights.url) ? (
-              <a href={safeAboutUrl(scope.rights.url)} target="_blank" rel="noopener noreferrer" className={LINK_CLASS}>
-                {scope.rights.label}
-              </a>
-            ) : (
-              <span>{scope.rights.label}</span>
-            ))}
-        </Section>
-      )}
-      {scope.providers.length > 0 && (
-        <Section title={t('provider')}>
-          {scope.providers.map((a, i) => (
-            <Agent key={i} agent={a} />
-          ))}
-        </Section>
-      )}
-      {links.map(([title, list]) =>
-        list.length > 0 ? (
-          <Section key={title} title={title}>
-            <Links links={list} />
-          </Section>
-        ) : null,
-      )}
-      {scope.navDate && (
-        <Section title={t('date')}>
-          <time dateTime={scope.navDate.iso}>{scope.navDate.text}</time>
-        </Section>
-      )}
-      {scope.places.length > 0 && (
-        <Section title={t('place')}>
-          {scope.places.map((p, i) => (
-            <Place key={i} place={p} />
-          ))}
-        </Section>
-      )}
-      {full && scope.thumbnails.length > 0 && (
+      {title && scope.label && <Section title={t('title')}>{scope.label}</Section>}
+      {scope.thumbnails.length > 0 && (
         <Section title={t('thumbnail')}>
           <div className="flex flex-wrap gap-2">
             {scope.thumbnails.map((src) => (
@@ -170,40 +121,124 @@ function ScopeView({ scope, full }: { scope: AboutScope; full: boolean }) {
           </div>
         </Section>
       )}
+      {scope.summary.length > 0 && (
+        <Section title={t('description')}>
+          {scope.summary.map((h, i) => (
+            <SafeHtml key={i} html={h} as="div" />
+          ))}
+        </Section>
+      )}
+      {scope.metadata.length > 0 && (
+        <Section title={t('metadata')}>
+          <MetadataList items={scope.metadata} />
+        </Section>
+      )}
+      {scope.navDate && (
+        <Section title={t('date')}>
+          <time dateTime={scope.navDate.iso}>{scope.navDate.text}</time>
+        </Section>
+      )}
+      {scope.places.length > 0 && (
+        <Section title={t('place')}>
+          {scope.places.map((p, i) => (
+            <Place key={i} place={p} />
+          ))}
+        </Section>
+      )}
+      {links.map(([name, list]) =>
+        list.length > 0 ? (
+          <Section key={name} title={name}>
+            <Links links={list} />
+          </Section>
+        ) : null,
+      )}
     </div>
   );
 }
 
-function AboutView({ container, manifest }: PanelContext) {
+function RightsScope({ scope }: { scope: AboutScope }) {
   const t = useTranslations('About');
-  const ti = useTranslations('Info');
+  return (
+    <div className="space-y-4">
+      {scope.requiredStatement && (
+        <Section title={scope.requiredStatement.label || t('attribution')}>
+          <MetadataList items={[{ ...scope.requiredStatement, label: '' }]} />
+        </Section>
+      )}
+      {scope.rights && (
+        <Section title={t('license')}>
+          {safeAboutUrl(scope.rights.url) ? (
+            <a href={safeAboutUrl(scope.rights.url)} target="_blank" rel="noopener noreferrer" className={LINK_CLASS}>
+              {scope.rights.label}
+            </a>
+          ) : (
+            <span>{scope.rights.label}</span>
+          )}
+        </Section>
+      )}
+      {scope.providers.length > 0 && (
+        <Section title={t('provider')}>
+          {scope.providers.map((a, i) => (
+            <Agent key={i} agent={a} />
+          ))}
+        </Section>
+      )}
+    </div>
+  );
+}
+
+const hasInfo = (s: AboutScope): boolean =>
+  !!(
+    s.summary.length ||
+    s.metadata.length ||
+    s.thumbnails.length ||
+    s.navDate ||
+    s.places.length ||
+    s.homepage.length ||
+    s.rendering.length ||
+    s.seeAlso.length ||
+    s.partOf.length
+  );
+const hasRights = (s: AboutScope): boolean => !!(s.requiredStatement || s.rights || s.providers.length);
+
+const Heading = ({ children, sub }: { children: ReactNode; sub?: string }) => (
+  <h3 className="font-semibold text-gray-800 dark:text-gray-100">
+    {children}
+    {sub && <span className="ml-2 font-normal">{sub}</span>}
+  </h3>
+);
+
+function useAbout({ container, manifest }: PanelContext) {
   const locale = useLocale();
   const fromAtom = useAtomValue(manifestAtom);
-  const info = aboutOf(manifest ?? fromAtom, container?.id, locale);
-  if (!info || !aboutHasContent(info)) {
-    return <div className="p-6 text-sm text-gray-500 dark:text-gray-400">{t('empty')}</div>;
-  }
+  return aboutOf(manifest ?? fromAtom, container?.id, locale);
+}
+
+/** 資料情報: 表示中のページ、資料全体、目次の項目。 */
+export function InfoView(ctx: PanelContext) {
+  const t = useTranslations('About');
+  const info = useAbout(ctx);
+  if (!info) return null;
+  const page = info.container && hasInfo(info.container) ? info.container : undefined;
   return (
     <div className="p-6 space-y-6">
-      <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">{ti('about')}</h2>
-      {/* 資料全体のメタデータと説明は「メタデータ」タブにあるので、ここでは出さない */}
-      <ScopeView scope={info.manifest} full={false} />
-      {info.container && aboutScopeHasContent(info.container) && (
+      {page && (
         <div className="space-y-3">
-          <h3 className="font-semibold text-gray-800 dark:text-gray-100">
-            {t('thisPage')}
-            {info.container.label && <span className="ml-2 font-normal">{info.container.label}</span>}
-          </h3>
-          <ScopeView scope={info.container} full />
+          <Heading sub={page.label}>{t('thisPage')}</Heading>
+          <InfoScope scope={page} title={false} />
         </div>
       )}
+      <div className="space-y-3">
+        <Heading>{t('thisResource')}</Heading>
+        <InfoScope scope={info.manifest} title />
+      </div>
       {info.ranges.length > 0 && (
         <div className="space-y-3">
-          <h3 className="font-semibold text-gray-800 dark:text-gray-100">{t('ranges')}</h3>
+          <Heading>{t('ranges')}</Heading>
           {info.ranges.map((r) => (
             <div key={r.id} className="space-y-2">
               <div className="font-medium text-gray-700 dark:text-gray-300">{r.label || r.id}</div>
-              <ScopeView scope={r} full />
+              <InfoScope scope={r} title={false} />
             </div>
           ))}
         </div>
@@ -212,12 +247,45 @@ function AboutView({ container, manifest }: PanelContext) {
   );
 }
 
-export const aboutPanel: Panel = {
-  id: 'about',
-  // 追加で見せるものがあるときだけタブを出す（言語は問わない）
+/** 権利: 出典表記・ライセンス・提供者。ページや目次の項目が別の権利を持つときは、それも出す。 */
+function RightsView(ctx: PanelContext) {
+  const t = useTranslations('About');
+  const info = useAbout(ctx);
+  if (!info) return null;
+  const others = [
+    ...(info.container && hasRights(info.container) ? [{ scope: info.container, title: t('thisPage') }] : []),
+    ...info.ranges.filter(hasRights).map((r) => ({ scope: r, title: t('ranges') })),
+  ];
+  return (
+    <div className="p-6 space-y-6">
+      {hasRights(info.manifest) && (
+        <div className="space-y-3">
+          {others.length > 0 && <Heading>{t('thisResource')}</Heading>}
+          <RightsScope scope={info.manifest} />
+        </div>
+      )}
+      {others.map(({ scope, title }) => (
+        <div key={scope.id} className="space-y-3">
+          <Heading sub={scope.label}>{title}</Heading>
+          <RightsScope scope={scope} />
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export const infoPanel: Panel = {
+  // URL の ?tab=metadata を壊さないよう、id は前のまま
+  id: 'metadata',
+  available: () => true,
+  Component: (ctx) => <InfoView {...ctx} />,
+};
+
+export const rightsPanel: Panel = {
+  id: 'rights',
   available: ({ manifest, container }) => {
     const info = aboutOf(manifest, container?.id, 'en');
-    return !!info && aboutHasContent(info);
+    return !!info && [info.manifest, info.container, ...info.ranges].some((s) => !!s && hasRights(s));
   },
-  Component: (ctx) => <AboutView {...ctx} />,
+  Component: (ctx) => <RightsView {...ctx} />,
 };

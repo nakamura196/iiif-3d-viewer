@@ -1,6 +1,7 @@
 {
   "Info": {
-    "structure": "Contents"
+    "structure": "Contents",
+    "pages": "Pages"
   },
   "Structure": {
     "pager": "Page navigation",

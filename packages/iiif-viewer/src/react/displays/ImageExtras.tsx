@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import type { ImageAnnotation } from '../../core';
 import { useTranslations } from '../env';
 
@@ -83,58 +82,5 @@ export function MediaCover({
         <span aria-hidden="true">▶</span>
       </span>
     </button>
-  );
-}
-
-export interface ThumbnailItem {
-  key: string;
-  label: string;
-  url?: string;
-}
-
-// サムネイルの並び。Canvas が thumbnail を持っているときだけ出す（持たないときは出さない）。
-export function ThumbnailStrip({
-  items,
-  selected,
-  onSelect,
-}: {
-  items: ThumbnailItem[];
-  selected: number;
-  onSelect: (index: number) => void;
-}) {
-  const t = useTranslations('Viewer');
-  const [broken, setBroken] = useState<Record<string, boolean>>({});
-  return (
-    <div
-      role="group"
-      aria-label={t('thumbnails')}
-      className="shrink-0 flex gap-1.5 overflow-x-auto p-1.5 bg-[var(--ds-surface)] border-t border-[var(--ds-border)]"
-    >
-      {items.map((it, i) => (
-        <button
-          key={it.key}
-          type="button"
-          onClick={() => onSelect(i)}
-          aria-current={i === selected ? 'true' : undefined}
-          title={it.label}
-          className={`shrink-0 h-14 min-w-10 rounded border overflow-hidden text-xs text-[var(--ds-fg)] ${
-            i === selected ? 'border-blue-600 ring-2 ring-blue-600' : 'border-[var(--ds-border)]'
-          }`}
-        >
-          {it.url && !broken[it.key] ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={it.url}
-              alt={it.label}
-              draggable={false}
-              className="h-full w-auto"
-              onError={() => setBroken((b) => ({ ...b, [it.key]: true }))}
-            />
-          ) : (
-            <span className="px-1">{it.label || i + 1}</span>
-          )}
-        </button>
-      ))}
-    </div>
   );
 }

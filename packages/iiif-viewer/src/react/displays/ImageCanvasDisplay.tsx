@@ -6,7 +6,6 @@ import {
   canvasImagesOf,
   detailWidthOf,
   imageChoiceOf,
-  labelIn,
   layerThumbnailUrl,
   manifestItemsOf,
   paintsImage,
@@ -25,7 +24,7 @@ import { canvasLayersAtom, layerOrderAtom, layerSettingsAtom } from '../atoms';
 import { useLocale, useTranslations } from '../env';
 import { usePlayback } from '../playback';
 import ChoiceBar from './ChoiceBar';
-import { AnnotationBoxes, MediaCover, ThumbnailStrip, type ThumbnailItem } from './ImageExtras';
+import { AnnotationBoxes, MediaCover } from './ImageExtras';
 import ImageLayerView from './ImageTiles';
 import ImageView from './ImageView';
 import { useRawManifest } from './rawManifest';
@@ -233,41 +232,11 @@ function MediaBody({ props, images, kind }: { props: DisplayProps; images: Canva
   );
 }
 
-// ---- thumbnails of the manifest's containers
-
-function useThumbnails(props: DisplayProps, rawManifest: unknown): ThumbnailItem[] | null {
-  const locale = useLocale();
-  const { containers } = props;
-  return useMemo(() => {
-    const byId = new Map<string, Json>();
-    for (const c of manifestItemsOf(rawManifest ?? props.manifest)) byId.set(String(c.id ?? ''), c);
-    const manifestThumb = thumbnailUrlOf((rawManifest as Json | null)?.thumbnail);
-    let declared = false;
-    const items = containers.map((c, i) => {
-      const raw = byId.get(c.id);
-      const images = raw ? canvasImagesOf(raw) : undefined;
-      let url = images?.thumbnail;
-      if (url) declared = true;
-      if (!url && containers.length === 1 && manifestThumb) {
-        url = manifestThumb;
-        declared = true;
-      }
-      if (!url) {
-        const layer = images?.paintings.flatMap((p) => p.options).find((o) => o.layer)?.layer;
-        url = layer ? layerThumbnailUrl(layer) : undefined;
-      }
-      return { key: c.id, label: labelIn(c.label, locale) || String(i + 1), url };
-    });
-    return declared ? items : null;
-  }, [containers, rawManifest, props.manifest, locale]);
-}
-
 // ---- the display
 
 function ImageCanvasDisplay(props: DisplayProps) {
   const t = useTranslations('Viewer');
   const raw = useRawManifest(props.iiifContent);
-  const thumbs = useThumbnails(props, raw);
   const { container } = props;
 
   // before the source manifest arrives, a converted Canvas (a Scene) is not yet known to be flat
@@ -302,13 +271,8 @@ function ImageCanvasDisplay(props: DisplayProps) {
     return delegate();
   }
 
-  const showStrip = thumbs && thumbs.length > 0;
-  return (
-    <>
-      {body}
-      {showStrip && <ThumbnailStrip items={thumbs} selected={props.selectedIndex} onSelect={props.select} />}
-    </>
-  );
+  // ページの一覧は右パネルの「ページ一覧」タブ（panels/PagesPanel.tsx）にある
+  return <>{body}</>;
 }
 
 const hasModel = (c: DisplayProps['container']) => c.painting.some((p) => p.options.some((o) => o.kind === 'Model'));

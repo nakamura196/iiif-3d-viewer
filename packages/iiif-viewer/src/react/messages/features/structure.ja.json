@@ -1,6 +1,7 @@
 {
   "Info": {
-    "structure": "目次"
+    "structure": "目次",
+    "pages": "ページ一覧"
   },
   "Structure": {
     "pager": "ページ送り",

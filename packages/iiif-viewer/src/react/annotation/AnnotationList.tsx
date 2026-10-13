@@ -2,6 +2,7 @@ import {
   annotationFilterAtom,
   annotationsAtom,
   selectedAnnotationIdAtom,
+  showAnnotationsAtom,
   visibleAnnotationsAtom,
 } from '../atoms';
 import { useAtom } from 'jotai';
@@ -24,6 +25,7 @@ export default function AnnotationList() {
   const [visibleAnnotations] = useAtom(visibleAnnotationsAtom);
   const [filter, setFilter] = useAtom(annotationFilterAtom);
   const [selectedAnnotationId, setSelectedAnnotationId] = useAtom(selectedAnnotationIdAtom);
+  const [showAnnotations, setShowAnnotations] = useAtom(showAnnotationsAtom);
   const selectedRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -100,9 +102,19 @@ export default function AnnotationList() {
 
   return (
     <div className="p-6 bg-white dark:bg-gray-900">
-      <h2 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-100">
-        {t('annotations')}
-      </h2>
+      <div className="mb-6 flex items-center justify-between gap-3">
+        <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">{t('annotations')}</h2>
+        {/* 3D の上に印を出すかどうか（前は 3D 表示の左上のボタン） */}
+        <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200 cursor-pointer select-none">
+          <input
+            type="checkbox"
+            checked={showAnnotations}
+            onChange={(e) => setShowAnnotations(e.target.checked)}
+            className="h-4 w-4 accent-blue-600"
+          />
+          {t('showOnModel')}
+        </label>
+      </div>
       <input
         type="search"
         value={filter.query}
