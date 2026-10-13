@@ -7,7 +7,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import { Link } from '@/i18n/routing';
 import { ThemeToggle, LanguageSwitcher, buttonClass } from '@nakamura196/react-ui';
 
-const Header = () => {
+// compact: ビューアのように表示領域を広く取りたいページでは、帯を細くする
+const Header = ({ compact = false }: { compact?: boolean }) => {
   const [manifestUrl, setManifestUrl] = useAtom(manifestUrlAtom);
   const router = useRouter();
   const pathname = usePathname();
@@ -34,7 +35,7 @@ const Header = () => {
   };
 
   return (
-    <header className="h-14 bg-[var(--ds-bg)] border-b border-[var(--ds-border)] flex items-center px-3 sm:px-6 justify-between">
+    <header className={`${compact ? 'h-10' : 'h-14'} shrink-0 bg-[var(--ds-bg)] border-b border-[var(--ds-border)] flex items-center px-3 sm:px-6 justify-between`}>
       <div className="flex items-center space-x-2 sm:space-x-4 min-w-0">
         <Link
           href="/"
@@ -42,7 +43,7 @@ const Header = () => {
           className="hover:opacity-80 transition-opacity shrink-0 flex items-center"
         >
           <h1
-            className="text-lg sm:text-xl font-semibold text-[var(--ds-primary)] leading-none"
+            className={`${compact ? 'text-base sm:text-lg' : 'text-lg sm:text-xl'} font-semibold text-[var(--ds-primary)] leading-none`}
             style={{ fontFamily: 'var(--ds-font-serif)' }}
           >
             {t('title')}
@@ -52,7 +53,7 @@ const Header = () => {
           <Link
             href="/"
             onClick={handleHomeClick}
-            className="px-3 py-1.5 text-sm text-[var(--ds-fg-muted)] bg-[var(--ds-surface)] rounded-md hover:bg-[var(--ds-surface-2)] hover:text-[var(--ds-fg)] transition-colors flex items-center gap-1"
+            className={`px-3 ${compact ? 'py-1' : 'py-1.5'} text-sm text-[var(--ds-fg-muted)] bg-[var(--ds-surface)] rounded-md hover:bg-[var(--ds-surface-2)] hover:text-[var(--ds-fg)] transition-colors flex items-center gap-1`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
