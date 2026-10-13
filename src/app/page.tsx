@@ -1,14 +1,5 @@
-'use client';
-
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import LocaleRedirect from '@/components/LocaleRedirect';
 
 export default function RootPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    router.replace('/ja/');
-  }, [router]);
-
-  return null;
+  return <LocaleRedirect path="/" />;
 }
