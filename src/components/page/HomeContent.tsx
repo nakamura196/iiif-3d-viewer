@@ -16,7 +16,29 @@ export default function HomeContent() {
   const tNews = useTranslations('News');
   const locale = useLocale();
 
+  // 新しいものが上。表示は直近の 8 件まで（古い項目は文言ごと消す）
   const newsItems = [
+    {
+      date: tNews('item13Date'),
+      title: tNews('item13Title'),
+      // 推論タブを開いた状態の例（NDL「銘尽」6 コマ目）
+      href: `/viewer/?iiif-content=${encodeURIComponent('https://dl.ndl.go.jp/api/iiif/1288371/manifest.json')}&tab=inference&canvas=6`,
+    },
+    {
+      date: tNews('item12Date'),
+      title: tNews('item12Title'),
+      href: '/georef',
+    },
+    {
+      date: tNews('item11Date'),
+      title: tNews('item11Title'),
+      href: '/usecases',
+    },
+    {
+      date: tNews('item10Date'),
+      title: tNews('item10Title'),
+      href: '/samples',
+    },
     {
       date: tNews('item6Date'),
       title: tNews('item6Title'),
@@ -24,28 +46,23 @@ export default function HomeContent() {
       external: true,
     },
     {
-      date: tNews('item5Date'),
-      title: tNews('item5Title'),
+      date: tNews('item9Date'),
+      title: tNews('item9Title'),
+      href: '/usecases',
     },
     {
-      date: tNews('item4Date'),
-      title: tNews('item4Title'),
+      date: tNews('item8Date'),
+      title: tNews('item8Title'),
+    },
+    {
+      date: tNews('item7Date'),
+      title: tNews('item7Title'),
     },
     // 同じ場所の注釈・キー付きタグ（研究段階）の告知。掲載の了承が得られたら戻す
     // {
     //   date: tNews('item3Date'),
     //   title: tNews('item3Title'),
     // },
-    {
-      date: tNews('item2Date'),
-      title: tNews('item2Title'),
-    },
-    {
-      date: tNews('item1Date'),
-      title: tNews('item1Title'),
-      href: 'https://tech.ldas.jp/ja/posts/iiif-3d-viewer-presentation-api-4-converter/',
-      external: true,
-    },
   ];
 
   const steps = ['step1', 'step2', 'step3', 'step4'] as const;
