@@ -48,7 +48,9 @@
     "item13Date": "2026-10-14",
     "item13Title": "New Inference tab: runs NDL Kotenseki OCR-Lite and NDLOCR-Lite in your browser to read the text of the image on screen. The image is never sent anywhere",
     "item14Date": "2026-10-14",
-    "item14Title": "New Story tab: step through the annotations of a manifest, gliding to each scene as you read. Existing tour manifests such as the Wakō zukan story open as they are"
+    "item14Title": "New Story tab: step through the annotations of a manifest, gliding to each scene as you read. Existing tour manifests such as the Wakō zukan story open as they are",
+    "item15Date": "2026-10-14",
+    "item15Title": "The Cookbook samples page now lists all 76 IIIF Cookbook recipes in numbering order. Filter by category and open each one in Kasane"
   },
   "Input": {
     "title": "Open an IIIF manifest",
@@ -152,15 +154,35 @@
     "video": "Watch in video",
     "cookbook": {
       "title": "Cookbook samples",
-      "lead": "Recipes from the IIIF Cookbook. Use “Open in viewer” to check that each one displays in Kasane.",
+      "lead": "Every recipe in the IIIF Cookbook, in the Cookbook’s numbering order. Use “Open in viewer” to check that each one displays in Kasane.",
       "link": "See Kasane's own samples",
       "videoHeading": "Cookbook recipes opened in Kasane",
-      "videoLead": "A video of every recipe opened in Kasane in turn. Use the chapters to jump to a recipe."
+      "videoLead": "A video of every recipe opened in Kasane in turn. Use the chapters to jump to a recipe.",
+      "listHeading": "All recipes",
+      "filter": "Filter by category",
+      "all": "All"
     },
     "own": {
       "title": "Kasane samples",
       "lead": "Test manifests made for this site. They cover uses the Cookbook does not, such as annotations on 3D models and timed transcripts.",
       "link": "See IIIF Cookbook samples"
+    },
+    "openWith": "Open in viewer ({label})",
+    "category": {
+      "basics": "Building a manifest in stages",
+      "supplementary": "Textual and other supplementary content",
+      "annotations": "Other kinds of annotations",
+      "internal": "Internal structure",
+      "higher": "Higher-level structure",
+      "segmentation": "Segmentation and complex resources",
+      "linking": "Linking",
+      "sharing": "Sharing IIIF content",
+      "technical": "Technical",
+      "realWorld": "Real-world complex objects"
+    },
+    "status": {
+      "unchecked": "Not checked yet",
+      "none": "No manifest to open"
     }
   },
   "UseCases": {
