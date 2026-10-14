@@ -95,6 +95,10 @@ export function hrefOf(open: UseCaseOpen): string {
 export const thumbnailOf = (u: UseCase, locale: Locale): string =>
   withBasePath(`/thumbnails/usecases/${u.id}.${locale}.webp`);
 
+// トップのカードで再生する短い動画（scripts/capture-usecase-clips.mjs で撮った、音なしの数秒の録画）
+export const clipOf = (u: UseCase, locale: Locale): string =>
+  withBasePath(`/clips/usecases/${u.id}.${locale}.mp4`);
+
 export const videoOf = (u: UseCase, locale: Locale): string | undefined =>
   u.video?.[locale] ?? u.video?.[locale === 'ja' ? 'en' : 'ja'];
 
@@ -144,7 +148,7 @@ export const USE_CASES: UseCase[] = [
     video: { ja: '3qsZbPXC9qg', en: 'RoE5Mm6vSFE' },
     site: 'https://geo.ldas.jp/',
     featured: true,
-    headline: { ja: '古地図に、現在の地図との対応点を付ける', en: 'Link an old map to modern coordinates' },
+    headline: { ja: '古地図を現在の地図に重ねる', en: 'Lay an old map over today’s map' },
   },
   {
     id: 'shelley',

@@ -3,7 +3,8 @@ import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { buttonClass } from '@nakamura196/react-ui';
-import { FEATURED_USE_CASES, hrefOf, thumbnailOf } from '@/lib/usecases';
+import { FEATURED_USE_CASES, clipOf, hrefOf, thumbnailOf } from '@/lib/usecases';
+import UseCaseClip from '@/components/usecases/UseCaseClip';
 
 const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => void }) => {
   const t = useTranslations('Input');
@@ -74,7 +75,7 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
 
       <div className="mt-8 text-sm text-[var(--ds-fg-muted)]">
         <h3 className="font-medium mb-2">{t('sampleManifest')}:</h3>
-        {/* 開いたときの画面（サムネイル）つきで並べ、何ができるかを見せる。6 件を 3 列 × 2 行（主な機能の 3 列とそろえる） */}
+        {/* 開いたときの画面（短い動画）つきで並べ、何ができるかを見せる。6 件を 3 列 × 2 行（主な機能の 3 列とそろえる） */}
         <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-left">
           {FEATURED_USE_CASES.map((u) => (
             <li key={u.id}>
@@ -82,15 +83,8 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
                 href={hrefOf(u.open)}
                 className="group block h-full rounded-lg border border-[var(--ds-border)] bg-[var(--ds-surface)] overflow-hidden hover:border-[var(--ds-primary)]"
               >
-                {/* eslint-disable-next-line @next/next/no-img-element -- 静的書き出しのため next/image は使わない */}
-                <img
-                  src={thumbnailOf(u, locale)}
-                  alt=""
-                  width={640}
-                  height={400}
-                  loading="lazy"
-                  className="w-full aspect-[16/10] object-cover bg-[var(--ds-surface-2)]"
-                />
+                {/* 開いて何をすると何が起きるかを、数秒の動画で見せる */}
+                <UseCaseClip src={clipOf(u, locale)} poster={thumbnailOf(u, locale)} />
                 {/* 見出しは「何ができるか」、その下に小さく資料の名前 */}
                 <span className="block p-2">
                   <span className="block font-medium text-[var(--ds-primary)] group-hover:underline">
