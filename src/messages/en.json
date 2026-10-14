@@ -24,7 +24,8 @@
     "relatedSample": "IIIF 3D samples",
     "relatedOtherTools": "Other tools by nakamura196",
     "developers": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)",
-    "samplesAll": "All samples"
+    "samplesAll": "All samples",
+    "useCasesAll": "Use cases"
   },
   "News": {
     "heading": "News",
@@ -43,17 +44,14 @@
     "item3Title": "Richer annotation display: grouping of annotations on the same region, keyed tags and creators, search and filters, and a fix for flying to annotations without a camera"
   },
   "Input": {
-    "title": "3D Model Viewer",
+    "title": "Open an IIIF manifest",
     "description": "Enter the URL of the IIIF Manifest",
     "submit": "View",
-    "sampleManifest": "Sample Manifest",
-    "sampleManifest1": "Ishibuchi Family Globe (Kikuchi City Library Collection)",
-    "sampleManifest2": "Ishibuchi Family Globe (Kikuchi City Library Collection) - With Annotations",
-    "sampleManifest3": "Ishibuchi Family Globe (Kikuchi City Library Collection) - Map Viewer",
-    "sampleManifest4": "Ishibuchi Family Globe (Kikuchi City Library Collection) - Shared Region and Keyed Tag example",
+    "sampleManifest": "Use cases",
     "sampleManifestAll": "All samples: image, audio, video and 3D (IIIF Cookbook and more)",
     "requiredUrl": "Enter the Manifest URL",
-    "invalidUrl": "Enter a valid URL"
+    "invalidUrl": "Enter a valid URL",
+    "sampleUseCasesAll": "All use cases (with videos)"
   },
   "Help": {
     "title": "Help"
@@ -142,5 +140,21 @@
     "manifest": "Manifest",
     "recipe": "Recipe (Cookbook)",
     "own": "Test manifest of this site"
+  },
+  "UseCases": {
+    "title": "Use cases",
+    "lead": "Examples of Kasane with real collections. Watch the video, then open the same material with “Open in Kasane”.",
+    "open": "Open in Kasane",
+    "manifest": "Manifest",
+    "site": "Original project",
+    "videoPending": "Video coming soon",
+    "features": {
+      "image": "Image",
+      "3d": "3D",
+      "compare": "Compare",
+      "layers": "Layers",
+      "georef": "Georeference",
+      "curation": "Curation"
+    }
   }
 }

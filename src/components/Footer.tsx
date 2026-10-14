@@ -34,7 +34,7 @@ export default function Footer() {
             { label: t('terms'), href: '/terms' },
           ],
         },
-        // 3列目: サンプル（Input のサンプルマニフェスト3件）
+        // 3列目: サンプル（地球儀の3件と、ユースケース・サンプル一覧）
         {
           heading: t('samplesHeading'),
           links: [
@@ -42,6 +42,7 @@ export default function Footer() {
             { label: t('sample2'), href: `/viewer?${contentParam(SAMPLE_ANNOT)}&tab=annotations` },
             { label: t('sample3'), href: `/georef?${contentParam(SAMPLE_ANNOT)}` },
             // { label: t('sample4'), href: `/viewer?${contentParam(SAMPLE_REGION_TAGS)}&tab=annotations` },
+            { label: t('useCasesAll'), href: '/usecases' },
             { label: t('samplesAll'), href: '/samples' },
           ],
         },
