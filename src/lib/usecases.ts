@@ -30,7 +30,7 @@ export type UseCaseOpen =
     };
 
 /** 何を見せる例か。一覧に札として出す。表示名は messages の UseCases.features */
-export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation'] as const;
+export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'auth'] as const;
 export type UseCaseFeature = (typeof USE_CASE_FEATURES)[number];
 
 export interface UseCase {
@@ -166,6 +166,20 @@ export const USE_CASES: UseCase[] = [
     video: { ja: 'aDwMzalPIxY' },
     site: 'https://utda.github.io/kaishi/',
     featured: true,
+  },
+  {
+    id: 'wellcome-auth',
+    title: {
+      ja: 'Wellcome Collection の閲覧注意付き資料（IIIF Auth API 2.0）',
+      en: 'Wellcome Collection material behind a content advisory (IIIF Auth API 2.0)',
+    },
+    note: {
+      ja: 'Wellcome Collection が IIIF Auth API 2.0 で閲覧に同意を求めている文書です。開くと画像はぼかされ、先方の注意書きが出ます。「Accept Terms and Open」を押して同意すると、画像が表示されます。',
+      en: 'An archive document that Wellcome Collection serves behind a content advisory, using the IIIF Auth API 2.0. The image opens blurred under the advisory, and appears once you press “Accept Terms and Open”.',
+    },
+    open: { page: 'viewer', manifest: 'https://iiif.wellcomecollection.org/presentation/v3/b18659135' },
+    features: ['image', 'auth'],
+    site: 'https://wellcomecollection.org/works/a222zvge',
   },
 ];
 

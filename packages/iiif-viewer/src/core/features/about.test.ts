@@ -27,6 +27,14 @@ describe('sanitizeAboutHtml', () => {
     expect(sanitizeAboutHtml('<iframe src="https://evil"></iframe>ok')).toBe('ok');
   });
 
+  it('keeps list items apart when it drops list tags', () => {
+    expect(sanitizeAboutHtml('<p>may:</p><ul><li>one</li><li>two</li></ul>By viewing')).toBe(
+      '<p>may:</p>one<br>two<br>By viewing',
+    );
+    expect(sanitizeAboutHtml('<div>a</div><div>b</div>')).toBe('a<br>b');
+    expect(htmlToText('<ul><li>one</li><li>two</li></ul>')).toBe('one\ntwo');
+  });
+
   it('removes event handler attributes', () => {
     const out = sanitizeAboutHtml('<img src="https://example.org/a.png" onerror="alert(1)" onload=alert(2)>');
     expect(out).toBe('<img src="https://example.org/a.png">');

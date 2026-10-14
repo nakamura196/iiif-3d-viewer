@@ -33,6 +33,7 @@ import { useLocale, useTranslations } from '../env';
 import { usePlayback } from '../playback';
 import ChoiceBar from './ChoiceBar';
 import AuthPrompt from '../auth/AuthPrompt';
+import { useAuthPanels } from '../auth/authStore';
 import { AnnotationBoxes, MediaCover } from './ImageExtras';
 import ImageLayerView from './ImageTiles';
 import ImageView from './ImageView';
@@ -70,6 +71,8 @@ function ImageBody({
 }) {
   const { container } = props;
   const [failedBase, setFailedBase] = useState(false);
+  // 認証の確認中・案内中は、画像が届かないのが当然なので「読み込めませんでした」を出さない
+  const authPending = useAuthPanels().some(({ state }) => state.phase !== 'ok');
   const settings = useAtomValue(layerSettingsAtom);
   const setSettings = useSetAtom(layerSettingsAtom);
   const order = useAtomValue(layerOrderAtom)[container.id];
@@ -182,7 +185,7 @@ function ImageBody({
           drawn[0] && <ImageView key={drawn[0].layer.url} src={drawn[0].layer.url} container={container} />
         )}
         <AuthPrompt />
-        {failedBase && items.length === 1 && <FailedHint />}
+        {failedBase && items.length === 1 && !authPending && <FailedHint />}
       </div>
     </>
   );
