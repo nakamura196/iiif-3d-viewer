@@ -12,6 +12,8 @@ import temporalJa from './features/temporal.ja.json';
 import temporalEn from './features/temporal.en.json';
 import layersJa from './features/layers.ja.json';
 import layersEn from './features/layers.en.json';
+import inferenceJa from './features/inference.ja.json';
+import inferenceEn from './features/inference.en.json';
 
 export type ViewerMessages = Record<string, Record<string, string>>;
 
@@ -26,6 +28,6 @@ const merge = (...parts: ViewerMessages[]): ViewerMessages => {
 };
 
 export const messages: Record<'ja' | 'en', ViewerMessages> = {
-  ja: merge(ja, imageJa, structureJa, temporalJa, aboutJa, annotationsJa, layersJa),
-  en: merge(en, imageEn, structureEn, temporalEn, aboutEn, annotationsEn, layersEn),
+  ja: merge(ja, imageJa, structureJa, temporalJa, aboutJa, annotationsJa, layersJa, inferenceJa),
+  en: merge(en, imageEn, structureEn, temporalEn, aboutEn, annotationsEn, layersEn, inferenceEn),
 };

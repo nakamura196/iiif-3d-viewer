@@ -1,0 +1,29 @@
+{
+  "Info": {
+    "inference": "推論"
+  },
+  "Inference": {
+    "hint": "モデルをこの端末のブラウザにダウンロードし、表示中の画像を読み取ります。画像はどこにも送りません。結果は注釈として画像に重ねて表示し、保存できます。",
+    "download": "ダウンロード（{size}）",
+    "downloading": "ダウンロード中 {done} / {total}",
+    "cancel": "中止",
+    "remove": "削除",
+    "run": "この画像で実行",
+    "runAgain": "もう一度実行",
+    "downloadFailed": "ダウンロードできませんでした（{message}）",
+    "runFailed": "実行できませんでした（{message}）",
+    "noImage": "この Canvas には画像がありません。",
+    "image_noImage": "この Canvas には画像がありません。",
+    "image_unsupported": "切り抜き・回転した画像には、まだ対応していません。",
+    "image_fetch": "画像を読み込めませんでした。画像のサーバが、他のサイトからの読み取りを許可していない可能性があります。",
+    "stage_image": "画像を読み込み中...",
+    "stage_load": "モデルを準備中...",
+    "stage_detect": "行を検出中...",
+    "stage_read": "文字を読み取り中 {done} / {total} 行",
+    "resultSummary": "{count} 件（{seconds} 秒、{backend}）",
+    "showOnImage": "画像に重ねる",
+    "saveJson": "注釈を保存（JSON）",
+    "saveText": "テキストを保存",
+    "discard": "結果を消す"
+  }
+}

@@ -8,3 +8,4 @@ export * from './layers';
 export * from './curation';
 export * from './annotationStyle';
 export * from './search';
+export * from './inference';

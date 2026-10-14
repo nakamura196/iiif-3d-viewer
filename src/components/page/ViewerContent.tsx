@@ -14,7 +14,6 @@ import { Link } from '@/i18n/routing';
 import { contentParam, manifestFromParams } from '@nakamura196/iiif-viewer/core';
 import { isViewerTab } from '@/lib/viewerTabs';
 
-
 // /viewer?iiif-content=...&tab=...（?manifest=... も読む）: ビューア本体はパッケージの Viewer。
 // ここでは URL の読み書きと、ヘッダー・フッター・入力欄だけを持つ。
 const ViewerContent: NextPage = () => {

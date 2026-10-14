@@ -1,4 +1,5 @@
 import { infoPanel, rightsPanel } from './AboutPanel';
+import { inferencePanel } from './InferencePanel';
 import { annotationTranscriptPanel } from './AnnotationTranscriptPanel';
 import { annotationsPanel } from './AnnotationsPanel';
 import { canvasAnnotationsPanel } from './CanvasAnnotationsPanel';
@@ -19,4 +20,5 @@ export const PANELS: Panel[] = [
   annotationTranscriptPanel,
   canvasAnnotationsPanel,
   annotationsPanel,
+  inferencePanel,
 ];
