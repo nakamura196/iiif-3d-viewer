@@ -27,7 +27,7 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
   };
 
   return (
-    <div className="w-full px-4">
+    <div className="w-full">
       <div className="max-w-md mx-auto">
         <div className="mb-8 text-center">
           <div className="inline-block p-4 bg-[var(--ds-surface-2)] rounded-full mb-4">
@@ -72,10 +72,10 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
         </form>
       </div>
 
-      <div className="mt-8 max-w-3xl mx-auto text-sm text-[var(--ds-fg-muted)]">
+      <div className="mt-8 text-sm text-[var(--ds-fg-muted)]">
         <h3 className="font-medium mb-2">{t('sampleManifest')}:</h3>
         {/* 開いたときの画面（サムネイル）つきで並べ、何ができるかを見せる */}
-        <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-left">
+        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 text-left">
           {FEATURED_USE_CASES.map((u) => (
             <li key={u.id}>
               <Link
@@ -96,23 +96,20 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
             </li>
           ))}
         </ul>
-        <ul className="mt-4 space-y-2 text-left">
-          <li>
-            <Link href="/usecases" className="text-[var(--ds-primary)] hover:underline">
-              {t('sampleUseCasesAll')}
-            </Link>
-          </li>
-          <li>
-            <Link href="/samples" className="text-[var(--ds-primary)] hover:underline">
-              {t('sampleManifestAll')}
-            </Link>
-          </li>
-          <li>
-            <Link href="/search" className="text-[var(--ds-primary)] hover:underline">
-              {t('searchCollection')}
-            </Link>
-          </li>
-        </ul>
+        {/* 一覧ページへの入口。ユースケースとサンプルはボタンで目立たせ、検索は文字のリンクのまま */}
+        <div className="mt-6 grid sm:grid-cols-2 gap-3">
+          <Link href="/usecases" className={buttonClass('primary', 'lg', 'w-full')}>
+            {t('sampleUseCasesAll')}
+          </Link>
+          <Link href="/samples" className={buttonClass('secondary', 'lg', 'w-full')}>
+            {t('sampleManifestAll')}
+          </Link>
+        </div>
+        <p className="mt-4 text-left">
+          <Link href="/search" className="text-[var(--ds-primary)] hover:underline">
+            {t('searchCollection')}
+          </Link>
+        </p>
       </div>
     </div>
   );

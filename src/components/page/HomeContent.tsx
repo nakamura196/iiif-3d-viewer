@@ -6,6 +6,7 @@ import { Link } from '@/i18n/routing';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ManifestInput from '@/components/Input';
+import PageContainer from '@/components/layout/PageContainer';
 import { SectionHeading, News, VideoEmbed } from '@nakamura196/react-ui';
 import { contentParam } from '@nakamura196/iiif-viewer/core';
 
@@ -112,107 +113,105 @@ export default function HomeContent() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1">
-        <div className="container mx-auto px-4 py-12">
-          <div className="max-w-4xl mx-auto">
-            <section className="text-center mb-16">
-              <h1
-                className="text-4xl md:text-5xl font-bold text-[var(--ds-fg)] mb-6"
-                style={{ fontFamily: 'var(--ds-font-serif)' }}
-              >
-                {t('title')}
-              </h1>
-              <p className="text-lg md:text-xl text-[var(--ds-fg-muted)] mb-8">
-                {t('subtitle')}
-              </p>
-            </section>
+        <PageContainer>
+          <section className="text-center mb-16">
+            <h1
+              className="text-4xl md:text-5xl font-bold text-[var(--ds-fg)] mb-6"
+              style={{ fontFamily: 'var(--ds-font-serif)' }}
+            >
+              {t('title')}
+            </h1>
+            <p className="text-lg md:text-xl text-[var(--ds-fg-muted)] mb-8">
+              {t('subtitle')}
+            </p>
+          </section>
 
-            <section className="mb-16">
-              <VideoEmbed videoId={demoVideoId} title={t('title')} />
-            </section>
+          <section className="mb-16">
+            <VideoEmbed videoId={demoVideoId} title={t('title')} />
+          </section>
 
-            <section className="mb-16">
-              <ManifestInput onSubmit={handleManifestSubmit} />
-            </section>
+          <section className="mb-16">
+            <ManifestInput onSubmit={handleManifestSubmit} />
+          </section>
 
-            <News
-              heading={tNews('heading')}
-              items={newsItems}
-              emptyText={tNews('empty')}
-              LinkComponent={Link}
-              className="mb-16 !px-0 !py-0"
-            />
+          <News
+            heading={tNews('heading')}
+            items={newsItems}
+            emptyText={tNews('empty')}
+            LinkComponent={Link}
+            className="mb-16 !px-0 !py-0"
+          />
 
-            <section className="mb-16">
-              <SectionHeading>{t('features')}</SectionHeading>
-              <div className="grid md:grid-cols-3 gap-8">
-                {featureCards.map((card) => (
-                  <div
-                    key={card.titleKey}
-                    className="bg-[var(--ds-surface)] border border-[var(--ds-border)] p-6 rounded-lg shadow-md"
-                  >
-                    <div className="text-[var(--ds-primary)] mb-4">
-                      <svg
-                        className="w-12 h-12"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d={card.path}
-                        />
-                      </svg>
-                    </div>
-                    <h3 className="text-lg font-semibold mb-2 text-[var(--ds-fg)]">
-                      {t(card.titleKey)}
-                    </h3>
-                    <p className="text-[var(--ds-fg-muted)]">
-                      {t(card.descKey)}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="mb-16">
-              <SectionHeading>{t('specs')}</SectionHeading>
-              <ul className="space-y-3">
-                {specs.map((spec) => (
-                  <li
-                    key={spec.key}
-                    className="bg-[var(--ds-surface)] border border-[var(--ds-border)] p-4 rounded-lg"
-                  >
-                    <a
-                      href={spec.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="font-semibold text-[var(--ds-primary)] hover:underline"
+          <section className="mb-16">
+            <SectionHeading>{t('features')}</SectionHeading>
+            <div className="grid md:grid-cols-3 gap-8">
+              {featureCards.map((card) => (
+                <div
+                  key={card.titleKey}
+                  className="bg-[var(--ds-surface)] border border-[var(--ds-border)] p-6 rounded-lg shadow-md"
+                >
+                  <div className="text-[var(--ds-primary)] mb-4">
+                    <svg
+                      className="w-12 h-12"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
                     >
-                      {t(`${spec.key}Title`)}
-                    </a>
-                    <p className="mt-1 text-sm text-[var(--ds-fg-muted)]">{t(`${spec.key}Note`)}</p>
-                  </li>
-                ))}
-              </ul>
-            </section>
-
-            <section className="mb-16">
-              <SectionHeading>{t('howToUse')}</SectionHeading>
-              <div className="grid md:grid-cols-2 gap-8">
-                {steps.map((step) => (
-                  <div
-                    key={step}
-                    className="bg-[var(--ds-surface)] border border-[var(--ds-border)] p-6 rounded-lg shadow-md text-[var(--ds-fg-muted)]"
-                  >
-                    {t(step)}
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d={card.path}
+                      />
+                    </svg>
                   </div>
-                ))}
-              </div>
-            </section>
-          </div>
-        </div>
+                  <h3 className="text-lg font-semibold mb-2 text-[var(--ds-fg)]">
+                    {t(card.titleKey)}
+                  </h3>
+                  <p className="text-[var(--ds-fg-muted)]">
+                    {t(card.descKey)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          <section className="mb-16">
+            <SectionHeading>{t('specs')}</SectionHeading>
+            <ul className="space-y-3">
+              {specs.map((spec) => (
+                <li
+                  key={spec.key}
+                  className="bg-[var(--ds-surface)] border border-[var(--ds-border)] p-4 rounded-lg"
+                >
+                  <a
+                    href={spec.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-[var(--ds-primary)] hover:underline"
+                  >
+                    {t(`${spec.key}Title`)}
+                  </a>
+                  <p className="mt-1 text-sm text-[var(--ds-fg-muted)]">{t(`${spec.key}Note`)}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="mb-16">
+            <SectionHeading>{t('howToUse')}</SectionHeading>
+            <div className="grid md:grid-cols-2 gap-8">
+              {steps.map((step) => (
+                <div
+                  key={step}
+                  className="bg-[var(--ds-surface)] border border-[var(--ds-border)] p-6 rounded-lg shadow-md text-[var(--ds-fg-muted)]"
+                >
+                  {t(step)}
+                </div>
+              ))}
+            </div>
+          </section>
+        </PageContainer>
       </main>
       <Footer />
     </div>
