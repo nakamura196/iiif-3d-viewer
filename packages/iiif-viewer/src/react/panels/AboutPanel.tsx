@@ -277,12 +277,16 @@ function RightsView(ctx: PanelContext) {
 export const infoPanel: Panel = {
   // URL の ?tab=metadata を壊さないよう、id は前のまま
   id: 'metadata',
+
+  order: 10,
   available: () => true,
   Component: (ctx) => <InfoView {...ctx} />,
 };
 
 export const rightsPanel: Panel = {
   id: 'rights',
+
+  order: 50,
   available: ({ manifest, container }) => {
     const info = aboutOf(manifest, container?.id, 'en');
     return !!info && [info.manifest, info.container, ...info.ranges].some((s) => !!s && hasRights(s));

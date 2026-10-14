@@ -260,6 +260,7 @@ function MapPanel({ manifest, container }: PanelContext) {
 
 export const mapPanel: Panel = {
   id: 'map',
+  order: 45,
   available: ({ manifest }) => mapPlacesOf(manifest, 'en').length > 0,
   Component: MapPanel,
 };

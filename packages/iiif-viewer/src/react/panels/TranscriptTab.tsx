@@ -22,6 +22,8 @@ function TranscriptTab({ container }: PanelContext) {
 
 export const transcriptPanel: Panel = {
   id: 'transcript',
+
+  order: 60,
   available: ({ container }) => !!transcriptOf(container?.supplementing ?? []),
   Component: TranscriptTab,
 };

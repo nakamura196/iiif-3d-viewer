@@ -1,26 +1,21 @@
-import { infoPanel, rightsPanel } from './AboutPanel';
-import { inferencePanel } from './InferencePanel';
-import { annotationTranscriptPanel } from './AnnotationTranscriptPanel';
-import { annotationsPanel } from './AnnotationsPanel';
-import { canvasAnnotationsPanel } from './CanvasAnnotationsPanel';
-import { layersPanel } from './LayersPanel';
-import { mapPanel } from './MapPanel';
-import { pagesPanel } from './PagesPanel';
-import { structurePanel } from './StructurePanel';
-import { transcriptPanel } from './TranscriptTab';
+import { MODULES } from './registry.generated';
 import type { Panel } from './types';
 
-// タブの並び順。新しいタブは、ここに 1 行足す。
-export const PANELS: Panel[] = [
-  infoPanel,
-  pagesPanel,
-  structurePanel,
-  layersPanel,
-  mapPanel,
-  rightsPanel,
-  transcriptPanel,
-  annotationTranscriptPanel,
-  canvasAnnotationsPanel,
-  annotationsPanel,
-  inferencePanel,
-];
+// 右パネルのタブ。panels/ のファイルが書き出す Panel を集め、order の小さい順に並べる
+// （order の無いものは後ろ、その中は id 順）。一覧は scripts/gen-registries.mjs が作るので、
+// 新しいタブは panels/<名前>Panel.tsx を足すだけでよい。ここは書き換えない。
+const isPanel = (v: unknown): v is Panel =>
+  !!v &&
+  typeof v === 'object' &&
+  typeof (v as Panel).id === 'string' &&
+  typeof (v as Panel).available === 'function' &&
+  'Component' in v;
+
+const orderOf = (p: Panel) => p.order ?? Number.MAX_SAFE_INTEGER;
+
+export const PANELS: Panel[] = MODULES.flatMap((m) => Object.values(m).filter(isPanel)).sort(
+  (a, b) => orderOf(a) - orderOf(b) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0),
+);
+
+/** ?tab= に指定できるタブの id。 */
+export const PANEL_IDS: string[] = PANELS.map((p) => p.id);

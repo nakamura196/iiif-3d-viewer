@@ -209,6 +209,8 @@ function LabelOf({ label, fallback }: { label: unknown; fallback: string }) {
 // Canvas 上の注釈（コメント・タグ・リンクなど）の一覧。3D の Scene では出さない。
 export const canvasAnnotationsPanel: Panel = {
   id: 'canvasAnnotations',
+
+  order: 80,
   // 書かれている注釈か、取りに行く参照のどちらかがあるときだけ出す
   available: ({ container, manifest }) => {
     if (container?.kind !== 'Canvas') return false;

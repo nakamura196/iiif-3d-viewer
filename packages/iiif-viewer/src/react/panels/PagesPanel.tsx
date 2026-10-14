@@ -81,6 +81,8 @@ function PagesView({ container, manifest }: PanelContext) {
 
 export const pagesPanel: Panel = {
   id: 'pages',
+
+  order: 20,
   // 2 ページ以上あるマニフェストだけ（コレクションは別の表示で一覧を出す）
   available: ({ manifest }) =>
     (manifest as { type?: string } | null | undefined)?.type !== 'Collection' && containersOf(manifest).length >= 2,

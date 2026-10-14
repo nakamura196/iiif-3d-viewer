@@ -149,6 +149,8 @@ function StructurePanel({ container, manifest }: PanelContext) {
 
 export const structurePanel: Panel = {
   id: 'structure',
+
+  order: 30,
   available: ({ manifest }) => hasToc(manifest) || sequencesOf(manifest).length > 1,
   Component: StructurePanel,
 };
