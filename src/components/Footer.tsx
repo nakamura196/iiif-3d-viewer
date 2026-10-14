@@ -3,17 +3,13 @@
 import { Link } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import { Footer as DsFooter } from '@nakamura196/react-ui';
-import { withBasePath } from '@/lib/basePath';
-import { contentParam } from '@nakamura196/iiif-viewer/core';
 
 // 共有デザインシステム (@nakamura196/react-ui) の4列フッター。
 // 左ブロック (title + description) ＋ columns (最大3列) = 計4列。
 // next-intl の Link を LinkComponent に渡してロケール付きリンクを描画する。
-const SAMPLE = withBasePath('/manifests/sample-manifest.json');
-const SAMPLE_ANNOT = withBasePath('/manifests/sample-manifest-with-annotations.json');
-// Shared Region and Keyed Tag Extension の例（正本は iiif-region-tag-extension の examples/manifest.json）
-// 研究段階のため公開ページには出さない（掲載の了承が得られたら戻す）
-// const SAMPLE_REGION_TAGS = withBasePath('/manifests/sample-manifest-region-tags.json');
+// 個々の資料へのリンクは置かず、例の一覧（/usecases）・Cookbook の対応表（/samples）・検索への入口だけを置く。
+// Shared Region and Keyed Tag Extension の例（public/manifests/sample-manifest-region-tags.json）は
+// 研究段階のため公開ページには出さない（掲載の了承が得られたら /usecases に足す）
 
 export default function Footer() {
   const t = useTranslations('Footer');
@@ -34,14 +30,10 @@ export default function Footer() {
             { label: t('terms'), href: '/terms' },
           ],
         },
-        // 3列目: サンプル（地球儀の3件と、ユースケース・サンプル一覧）
+        // 3列目: サンプル（ユースケース・Cookbook のサンプル一覧・検索）
         {
           heading: t('samplesHeading'),
           links: [
-            { label: t('sample1'), href: `/viewer?${contentParam(SAMPLE)}` },
-            { label: t('sample2'), href: `/viewer?${contentParam(SAMPLE_ANNOT)}&tab=annotations` },
-            { label: t('sample3'), href: `/georef?${contentParam(SAMPLE_ANNOT)}` },
-            // { label: t('sample4'), href: `/viewer?${contentParam(SAMPLE_REGION_TAGS)}&tab=annotations` },
             { label: t('useCasesAll'), href: '/usecases' },
             { label: t('samplesAll'), href: '/samples' },
             { label: t('search'), href: '/search' },
