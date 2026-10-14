@@ -162,6 +162,7 @@
       "layers": "レイヤー",
       "georef": "位置情報",
       "curation": "キュレーション",
+      "search": "検索",
       "auth": "認証"
     }
   },

@@ -6,13 +6,15 @@ import type { ViewerTab } from '@/lib/viewerTabs';
 
 // ユースケース（実際の資料で Kasane を使った例）。/usecases の一覧と、トップの入力欄のサンプルに出す。
 // 1 件足すときは USE_CASES に 1 項目を書き足す。ページの部品は触らなくてよい。
+// 開く先のページを増やすときは、UseCaseOpen に page の種類を足し、hrefOf に URL の組み立てを足す。
 
 type Localized = { ja: string; en: string };
 export type Locale = keyof Localized;
 
 /**
  * 「Kasane で開く」で開く先。開くページごとに、URL に載せられる引数が違うので分けて書く。
- * 新しいページ（例: 推論のタブ）に開かせたいときは、ここに 1 種類足して hrefOf に分岐を足す。
+ * 新しいページに開かせたいときは、ここに 1 種類足して hrefOf に分岐を足す。
+ * georef は地図と並べて見るページ、search はキュレーション・コレクションを横断して検索するページ。
  */
 export type UseCaseOpen =
   | {
@@ -27,10 +29,21 @@ export type UseCaseOpen =
       page: 'compare';
       manifest: string;
       mode?: CompareMode;
+    }
+  | {
+      page: 'georef';
+      manifest: string;
+    }
+  | {
+      page: 'search';
+      // 検索する対象のキュレーション・コレクションの URL
+      url: string;
+      // 最初から入れておく検索語
+      query?: string;
     };
 
 /** 何を見せる例か。一覧に札として出す。表示名は messages の UseCases.features */
-export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'auth'] as const;
+export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'search', 'auth'] as const;
 export type UseCaseFeature = (typeof USE_CASE_FEATURES)[number];
 
 export interface UseCase {
@@ -49,7 +62,15 @@ export interface UseCase {
   featured?: boolean;
 }
 
+/** 開く資料そのものの URL（マニフェスト、search ならキュレーション・コレクション） */
+export const sourceOf = (open: UseCaseOpen): string => (open.page === 'search' ? open.url : open.manifest);
+
 export function hrefOf(open: UseCaseOpen): string {
+  if (open.page === 'search') {
+    const q = [`u=${encodeURIComponent(open.url)}`];
+    if (open.query) q.push(`q=${encodeURIComponent(open.query)}`);
+    return `/search?${q.join('&')}`;
+  }
   const q = [contentParam(open.manifest)];
   switch (open.page) {
     case 'viewer':
@@ -58,6 +79,8 @@ export function hrefOf(open: UseCaseOpen): string {
       break;
     case 'compare':
       if (open.mode) q.push(`mode=${open.mode}`);
+      break;
+    case 'georef':
       break;
   }
   return `/${open.page}?${q.join('&')}`;
@@ -86,16 +109,29 @@ export const USE_CASES: UseCase[] = [
     featured: true,
   },
   {
+    id: 'globe-georef',
+    title: {
+      ja: '石淵家地球儀（3D と地図を並べて見る）',
+      en: 'Ishibuchi family globe (3D beside a map)',
+    },
+    note: {
+      ja: '同じ『石淵家地球儀』を、3D の地球儀と現在の地図を並べて表示します。地名を選ぶと、地球儀の視点と地図の位置が一緒に動きます。',
+      en: 'The same globe, shown as the 3D model beside a modern map. Choosing a place name moves both the globe view and the map.',
+    },
+    open: { page: 'georef', manifest: `${SITE_URL}/manifests/sample-manifest-with-annotations.json` },
+    features: ['3d', 'georef'],
+  },
+  {
     id: 'iiif-geo',
     title: {
       ja: '東京大学本郷キャンパス歴史的建造物マップ（iiif_geo）',
       en: 'Hongo Campus Historical Buildings Map (iiif_geo)',
     },
     note: {
-      ja: '鳥瞰図『東京帝國大學本部構内及農學部建物鳥瞰圖』に、IIIF Georeference Extension で現在の地図との対応点を付けた資料です。Kasane では、図と、対応点の緯度経度の一覧が開きます。',
-      en: 'A bird’s-eye view of the Imperial University campus, georeferenced with the IIIF Georeference Extension. Kasane shows the image and the latitude and longitude of each control point.',
+      ja: '鳥瞰図『東京帝國大學本部構内及農學部建物鳥瞰圖』に、IIIF Georeference Extension で現在の地図との対応点を付けた資料です。Kasane では、図と対応点を現在の地図と並べて表示します。対応点を押すと双方で同じ場所が選ばれ、図を地図に重ねることもできます。',
+      en: 'A bird’s-eye view of the Imperial University campus, georeferenced with the IIIF Georeference Extension. Kasane shows the image and its control points beside a modern map. Selecting a point picks the same place on both, and the image can be overlaid on the map.',
     },
-    open: { page: 'viewer', manifest: 'https://geo.ldas.jp/manifest.json' },
+    open: { page: 'georef', manifest: 'https://geo.ldas.jp/manifest.json' },
     features: ['image', 'georef'],
     video: { ja: '3qsZbPXC9qg', en: 'RoE5Mm6vSFE' },
     site: 'https://geo.ldas.jp/',
@@ -150,6 +186,19 @@ export const USE_CASES: UseCase[] = [
     features: ['image', 'curation'],
     site: 'https://codh.rois.ac.jp/iiif/curation/',
     featured: true,
+  },
+  {
+    id: 'curation-search',
+    title: {
+      ja: 'キュレーションを検索する（江戸の花見の顔 121 点）',
+      en: 'Searching a curation (121 faces in Edo hanami prints)',
+    },
+    note: {
+      ja: 'NDL ラボの顔検出で集めた「江戸の花見」のキュレーションです。29 冊に散らばる 121 か所を読み込み、年代や性別などで絞り込めます。読み込みには少し時間がかかります。',
+      en: 'A curation of faces detected in Edo-period hanami (cherry-blossom viewing) prints. It loads 121 regions spread over 29 books, which can be narrowed down by period, gender and more. Loading takes a little while.',
+    },
+    open: { page: 'search', url: 'https://nakamura196.github.io/ndl-face-finder/curations/works/edonohanami.json' },
+    features: ['image', 'curation', 'search'],
   },
   {
     id: 'kaishi',
