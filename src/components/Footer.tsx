@@ -40,18 +40,25 @@ export default function Footer() {
             { label: t('search'), href: '/search' },
           ],
         },
-        // 4列目: 関連サイト（旧 References ページの外部リンク）
+        // 4列目: 関連サイト（IIIF の入口・Kasane が読む仕様・ソースコード）
         {
           heading: t('relatedHeading'),
           links: [
+            { label: t('relatedIiif'), href: 'https://iiif.io/', external: true },
+            {
+              label: t('relatedPresentation'),
+              href: 'https://iiif.io/api/presentation/3.0/',
+              external: true,
+            },
+            { label: t('relatedCookbook'), href: 'https://iiif.io/api/cookbook/', external: true },
             {
               label: t('relatedSpec'),
               href: 'https://iiif.io/api/extension/3d/',
               external: true,
             },
             {
-              label: t('relatedSample'),
-              href: 'https://iiif.github.io/3d/manifests/9_commenting_annotations/',
+              label: t('relatedSource'),
+              href: 'https://github.com/nakamura196/iiif-kasane',
               external: true,
             },
           ],
