@@ -17,6 +17,7 @@ import {
   sequencesOf,
   viewingOf,
   type CanvasTarget,
+  type CompareItem,
   type ContainerInfo,
   type ManifestV4,
   type SequenceInfo,
@@ -37,6 +38,17 @@ export const focusAtom = atom<NavRequest | null>(null);
 
 /** 0540: content state が複数の Canvas を指すとき、並べて見せる container の番号（先頭が選択中）。 */
 export const compareAtom = atom<number[]>([]);
+
+/**
+ * 0540: content state が別々のマニフェストの Canvas を指すとき、並べて見せるもの。
+ * anchor は開いているマニフェストの Canvas の番号（ここから離れたら解除）。failed は読めなかったマニフェスト。
+ */
+export interface CompareMulti {
+  anchor: number;
+  items: CompareItem[];
+  failed: string[];
+}
+export const compareMultiAtom = atom<CompareMulti | null>(null);
 
 /** 選ばれている代替のページ順（sequence の Range の id）。null は元の順。 */
 export const sequenceIdAtom = atom<string | null>(null);
@@ -86,6 +98,7 @@ export function useManifestSwitch() {
   const setSequence = useSetAtom(sequenceIdAtom);
   const setFocus = useSetAtom(focusAtom);
   const setCompare = useSetAtom(compareAtom);
+  const setCompareMulti = useSetAtom(compareMultiAtom);
 
   const apply = useCallback(
     (next: ManifestV4) => {
@@ -97,8 +110,9 @@ export function useManifestSwitch() {
       setSequence(null);
       setFocus(null);
       setCompare([]);
+      setCompareMulti(null);
     },
-    [setManifest, setAnnotations, setPainted, setChoices, setSequence, setFocus, setCompare],
+    [setManifest, setAnnotations, setPainted, setChoices, setSequence, setFocus, setCompare, setCompareMulti],
   );
 
   /** URL のマニフェスト（または Collection）を開く。push なら「戻る」で今のものに戻れる。 */

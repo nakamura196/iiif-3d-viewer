@@ -519,6 +519,74 @@ export function matchTarget(
   return matchTargets(targets, containers)[0] ?? null;
 }
 
+/**
+ * 0540: 開いたマニフェストには無い Canvas のうち、別のマニフェスト（partOf）にあると書かれたものを、
+ * マニフェストごとにまとめる（target の並び順）。単一のマニフェストの content state では空になる。
+ */
+export function remoteGroupsOf(
+  targets: ContentStateTargets['targets'],
+  containers: ContainerInfo[],
+): Array<{ manifestUrl: string; targets: CanvasTarget[] }> {
+  const groups = new Map<string, CanvasTarget[]>();
+  for (const t of targets) {
+    if (!t.manifestUrl || indexOfCanvas(containers, t.canvasId) >= 0) continue;
+    const list = groups.get(t.manifestUrl) ?? [];
+    list.push(t);
+    groups.set(t.manifestUrl, list);
+  }
+  return [...groups].map(([manifestUrl, ts]) => ({ manifestUrl, targets: ts }));
+}
+
+export interface CompareSource {
+  /** このマニフェストの URL。開いているマニフェスト（最初の要素）は省略してよい */
+  manifestUrl?: string;
+  /** 見出しに使うマニフェストの名前 */
+  label: string;
+  containers: ContainerInfo[];
+}
+
+export interface CompareItem {
+  container: ContainerInfo;
+  /** どのマニフェストの Canvas か */
+  manifestLabel: string;
+  sourceIndex: number;
+}
+
+/**
+ * 0540: target の並び順に、並べて見せる Canvas を決める。
+ * sources[0] は開いているマニフェスト。Canvas の id がそこにあればそれを使い、
+ * 無ければ target の manifestUrl が一致する他の source から探す。同じ Canvas の重複は 1 つにする。
+ */
+export function resolveCompareItems(
+  targets: ContentStateTargets['targets'],
+  sources: CompareSource[],
+): CompareItem[] {
+  const out: CompareItem[] = [];
+  const seen = new Set<string>();
+  for (const t of targets) {
+    let found: CompareItem | null = null;
+    const first = sources[0];
+    const i0 = first ? indexOfCanvas(first.containers, t.canvasId) : -1;
+    if (first && i0 >= 0) found = { container: first.containers[i0], manifestLabel: first.label, sourceIndex: 0 };
+    else {
+      for (let s = 1; s < sources.length; s++) {
+        if (t.manifestUrl && sources[s].manifestUrl !== t.manifestUrl) continue;
+        const i = indexOfCanvas(sources[s].containers, t.canvasId);
+        if (i >= 0) {
+          found = { container: sources[s].containers[i], manifestLabel: sources[s].label, sourceIndex: s };
+          break;
+        }
+      }
+    }
+    if (!found) continue;
+    const key = `${found.sourceIndex}|${found.container.id}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(found);
+  }
+  return out;
+}
+
 /** 並べて見せる Canvas の番号（重複なし）。2 つ未満なら空（並べる意味が無い）。 */
 export function compareIndexesOf(matched: Array<{ index: number }>): number[] {
   const idx = [...new Set(matched.map((m) => m.index))];

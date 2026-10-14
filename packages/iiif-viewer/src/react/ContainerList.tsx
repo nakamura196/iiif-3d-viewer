@@ -7,23 +7,31 @@ import {
   contentStateOf,
   curationMemberAt,
   compareIndexesOf,
+  containersOf,
+  convertToV4,
+  fetchManifest,
+  labelIn,
   matchTargets,
+  remoteGroupsOf,
+  resolveCompareItems,
   parseContentState,
   parseDroppedText,
   startOf,
   type CanvasTarget,
+  type ContentStateTargets,
   type ContainerInfo,
 } from '../core';
 import { manifestAtom } from './atoms';
 import {
   compareAtom,
+  compareMultiAtom,
   focusAtom,
   navRequestAtom,
   nextSeq,
   usePageOrder,
   useManifestSwitch,
 } from './displays/structureState';
-import { useTranslations } from './env';
+import { useLocale, useTranslations } from './env';
 
 interface Props {
   containers: ContainerInfo[];
@@ -53,11 +61,14 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
   const [request, setRequest] = useAtom(navRequestAtom);
   const setFocus = useSetAtom(focusAtom);
   const setCompare = useSetAtom(compareAtom);
+  const setCompareMulti = useSetAtom(compareMultiAtom);
+  const multiRun = useRef(0);
+  const locale = useLocale();
   const { open, back, canGoBack } = useManifestSwitch();
   const { viewing, groups } = usePageOrder(manifest, containers);
   const sentinel = useRef<HTMLSpanElement>(null);
   // targets that wait for the manifest being opened (a content state, a drop)
-  const pending = useRef<CanvasTarget[] | null>(null);
+  const pending = useRef<ContentStateTargets['targets'] | null>(null);
   const applied = useRef<string | null>(null);
   const opened = useRef<string | null>(null);
 
@@ -71,8 +82,10 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
       if (index !== selected) onSelect(index);
       setFocus(target && (target.xywh || target.t) ? { seq: nextSeq(), target } : null);
       setCompare([]);
+      multiRun.current++;
+      setCompareMulti(null);
     },
-    [containers.length, selected, onSelect, setFocus, setCompare],
+    [containers.length, selected, onSelect, setFocus, setCompare, setCompareMulti],
   );
 
   // --- page movement (in display order; a spread moves two pages at once) ---
@@ -83,6 +96,41 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
   };
   const hasPrev = groupAt > 0;
   const hasNext = groupAt >= 0 && groupAt < groups.length - 1;
+
+  // 0540: target が別のマニフェストの Canvas も指すとき、そのマニフェストを読んで並べて見せる
+  const startMulti = useCallback(
+    (targets: ContentStateTargets['targets'], anchor: number) => {
+      if (!manifest) return;
+      const remote = remoteGroupsOf(targets, containers);
+      if (remote.length === 0) return;
+      const run = ++multiRun.current;
+      const nameOf = (m: { label?: unknown }, url: string) => labelIn(m.label as never, locale) || url.split('/').pop() || url;
+      void (async () => {
+        const sources = [{ label: nameOf(manifest, manifest.id), containers }] as Array<{
+          manifestUrl?: string;
+          label: string;
+          containers: ContainerInfo[];
+        }>;
+        const failed: string[] = [];
+        await Promise.all(
+          remote.map(async (g) => {
+            try {
+              const raw = await fetchManifest(g.manifestUrl);
+              if (!raw) throw new Error('fetch failed');
+              const m = convertToV4(raw);
+              sources.push({ manifestUrl: g.manifestUrl, label: nameOf(m, g.manifestUrl), containers: containersOf(m) });
+            } catch {
+              failed.push(g.manifestUrl);
+            }
+          }),
+        );
+        if (run !== multiRun.current) return;
+        const items = resolveCompareItems(targets, sources);
+        setCompareMulti({ anchor, items, failed });
+      })();
+    },
+    [manifest, containers, locale, setCompareMulti],
+  );
 
   // --- requests from the table of contents ---
   useEffect(() => {
@@ -99,14 +147,19 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
     if (applied.current === key) return;
     applied.current = key;
     let matched: Array<CanvasTarget & { index: number }> = [];
+    let allTargets: ContentStateTargets['targets'] = [];
     if (pending.current) {
+      allTargets = pending.current;
       matched = matchTargets(pending.current, containers);
       pending.current = null;
     }
     if (matched.length === 0 && typeof window !== 'undefined') {
       const param = new URLSearchParams(window.location.search).get('iiif-content');
       const state = parseContentState(param);
-      if (state) matched = matchTargets(state.targets, containers);
+      if (state) {
+        allTargets = state.targets;
+        matched = matchTargets(state.targets, containers);
+      }
     }
     // ?pos= of a curation: which item to show first (from 1, as in IIIF Curation Viewer)
     if (matched.length === 0 && typeof window !== 'undefined') {
@@ -122,6 +175,7 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
       go(matched[0].index, matched[0]);
       // 0540: 複数の Canvas を指すときは、並べて見せる
       setCompare(compareIndexesOf(matched));
+      startMulti(allTargets, matched[0].index);
       return;
     }
     const start = startOf(manifest, containers);
@@ -200,6 +254,7 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
       if (matched.length > 0) {
         go(matched[0].index, matched[0]);
         setCompare(compareIndexesOf(matched));
+        startMulti(state.targets, matched[0].index);
       }
     };
   });

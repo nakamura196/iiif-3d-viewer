@@ -8,7 +8,7 @@ import { useLocale } from '../env';
 import { usePlayback } from '../playback';
 import { flatDisplay } from './FlatDisplay';
 import { imageCanvasDisplay } from './ImageCanvasDisplay';
-import { compareAtom, focusAtom, usePageOrder } from './structureState';
+import { compareAtom, compareMultiAtom, focusAtom, usePageOrder } from './structureState';
 import type { Display, DisplayProps } from './types';
 
 const imageOf = (c: ContainerInfo | undefined): { url: string } | null => {
@@ -53,7 +53,15 @@ function PageImage({
 }
 
 // Facing pages: the order of the two pages follows the viewing direction.
-function Spread({ pages, direction }: { pages: ContainerInfo[]; direction: string }) {
+function Spread({
+  pages,
+  direction,
+  labels,
+}: {
+  pages: ContainerInfo[];
+  direction: string;
+  labels?: string[];
+}) {
   const vertical = direction === 'top-to-bottom' || direction === 'bottom-to-top';
   const reversed = direction === 'right-to-left' || direction === 'bottom-to-top';
   const shown = reversed ? [...pages].reverse() : pages;
@@ -63,11 +71,21 @@ function Spread({ pages, direction }: { pages: ContainerInfo[]; direction: strin
     >
       {shown.map((c, i) => (
         <div key={c.id} className="flex-1 min-h-0 min-w-0 flex">
-          <PageImage
-            container={c}
-            vertical={vertical}
-            align={vertical ? undefined : i === 0 ? 'left' : 'right'}
-          />
+          {labels ? (
+            <figure className="flex-1 min-h-0 min-w-0 flex flex-col m-0">
+              <figcaption
+                data-testid="compare-label"
+                className="shrink-0 truncate px-2 py-1 text-xs text-center text-neutral-600 dark:text-neutral-300"
+              >
+                {labels[pages.indexOf(c)]}
+              </figcaption>
+              <div className="flex-1 min-h-0 min-w-0 flex">
+                <PageImage container={c} vertical={vertical} align={vertical ? undefined : i === 0 ? 'left' : 'right'} />
+              </div>
+            </figure>
+          ) : (
+            <PageImage container={c} vertical={vertical} align={vertical ? undefined : i === 0 ? 'left' : 'right'} />
+          )}
         </div>
       ))}
     </div>
@@ -201,10 +219,21 @@ function PagedDisplay(props: DisplayProps) {
     if (compare.length > 0 && compare[0] !== selectedIndex) setCompare([]);
   }, [compare, selectedIndex, setCompare]);
 
+  // 0540: 別々のマニフェストの Canvas を並べる（開いているマニフェストの Canvas から離れたら解除）
+  const [multi, setMulti] = useAtom(compareMultiAtom);
+  useEffect(() => {
+    if (multi && multi.anchor !== selectedIndex) setMulti(null);
+  }, [multi, selectedIndex, setMulti]);
+  const locale = useLocale();
+  const multiOn = !!multi && multi.anchor === selectedIndex;
+  const multiItems = multiOn && multi.items.length >= 2 ? multi.items : null;
+
   // 0540: content state が複数の Canvas を指しているときは、指された順に並べる（先頭が選択中のとき）
-  const comparing = compare.length >= 2 && compare[0] === selectedIndex;
+  const comparing = !!multiItems || (compare.length >= 2 && compare[0] === selectedIndex);
   const group = comparing ? compare : (groups.find((g) => g.includes(selectedIndex)) ?? [selectedIndex]);
-  const pages = group.map((i) => containers[i]).filter((c): c is ContainerInfo => !!c);
+  const pages = multiItems
+    ? multiItems.map((m) => m.container)
+    : group.map((i) => containers[i]).filter((c): c is ContainerInfo => !!c);
   const allImages = pages.length > 1 && pages.every((c) => !!imageOf(c));
 
   let body: React.ReactNode;
@@ -219,7 +248,13 @@ function PagedDisplay(props: DisplayProps) {
       />
     );
   } else if (allImages) {
-    body = <Spread pages={pages} direction={comparing ? 'left-to-right' : viewing.direction} />;
+    body = (
+      <Spread
+        pages={pages}
+        direction={comparing ? 'left-to-right' : viewing.direction}
+        labels={multiItems ? multiItems.map((m) => m.manifestLabel) : undefined}
+      />
+    );
   } else {
     // 1 ページだけのとき: 画像の深いズーム・重ね表示などは imageCanvas、画像以外はそこから次の表示へ
     body = <imageCanvasDisplay.Component {...props} />;
@@ -227,6 +262,17 @@ function PagedDisplay(props: DisplayProps) {
 
   return (
     <div ref={host} className="relative flex-1 min-h-0 min-w-0 flex flex-col">
+      {multiOn && multi.failed.length > 0 && (
+        <p
+          role="status"
+          data-testid="compare-failed"
+          className="shrink-0 m-0 px-3 py-1 text-xs bg-amber-100 text-amber-900 dark:bg-amber-900/40 dark:text-amber-100"
+        >
+          {locale === 'ja'
+            ? `読み込めなかったマニフェストがあります（残りを表示しています）: ${multi.failed.join(', ')}`
+            : `Some manifests could not be loaded (showing the rest): ${multi.failed.join(', ')}`}
+        </p>
+      )}
       {body}
       <RegionHighlight host={host} container={container} />
     </div>

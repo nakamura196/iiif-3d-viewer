@@ -144,6 +144,16 @@ export const SAMPLES: Sample[] = [
     manifest: cookbookV3('0065-opera-multiple-canvases'), source: recipePage('0065-opera-multiple-canvases'),
   },
   {
+    id: '0540', kind: 'cookbook', media: 'image',
+    title: { ja: '複数の Canvas を並べて開くリンク', en: 'Link for opening multiple canvases' },
+    note: {
+      ja: '2 つのマニフェストにある Canvas を指す content state。それぞれのマニフェスト名をつけて並べて表示する',
+      en: 'A content state that points at canvases in two different manifests. They are shown side by side, each labelled with its manifest',
+    },
+    manifest: 'https://iiif.io/api/cookbook/recipe/0540-link-for-opening-multiple-canvases/annotation.json',
+    source: recipePage('0540-link-for-opening-multiple-canvases'),
+  },
+  {
     id: '0074', kind: 'cookbook', media: 'video',
     title: { ja: '多言語の字幕', en: 'Multiple-language captions' },
     note: { ja: '言語ごとの字幕を切り替える', en: 'Switch between captions in several languages' },
