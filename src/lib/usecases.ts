@@ -1,5 +1,6 @@
 import type { CompareMode } from '@nakamura196/iiif-viewer';
 import { contentParam } from '@nakamura196/iiif-viewer/core';
+import { withBasePath } from '@/lib/basePath';
 import type { ViewerTab } from '@/lib/viewerTabs';
 
 // ユースケース（実際の資料で Kasane を使った例）。/usecases の一覧と、トップの入力欄のサンプルに出す。
@@ -60,6 +61,9 @@ export function hrefOf(open: UseCaseOpen): string {
   }
   return `/${open.page}?${q.join('&')}`;
 }
+
+// サムネイル（scripts/capture-thumbnails.mjs で撮った画面）。public/ からのパス
+export const thumbnailOf = (u: UseCase): string => withBasePath(`/thumbnails/usecases/${u.id}.webp`);
 
 export const videoOf = (u: UseCase, locale: Locale): string | undefined =>
   u.video?.[locale] ?? u.video?.[locale === 'ja' ? 'en' : 'ja'];
