@@ -21,6 +21,7 @@
     "relatedOtherTools": "Other tools by nakamura196",
     "developers": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)",
     "samplesAll": "Cookbook samples",
+    "samplesOwn": "Kasane samples",
     "useCasesAll": "Use cases",
     "search": "Search a collection"
   },
@@ -136,8 +137,6 @@
     "canvas": "Canvas"
   },
   "Samples": {
-    "title": "Samples",
-    "lead": "Recipes from the IIIF Cookbook and this site's own test manifests. Use “Open in viewer” to check that each one displays.",
     "media": {
       "image": "Image",
       "audio": "Audio",
@@ -147,7 +146,18 @@
     "open": "Open in viewer",
     "manifest": "Manifest",
     "recipe": "Recipe (Cookbook)",
-    "own": "Test manifest of this site"
+    "cookbook": {
+      "title": "Cookbook samples",
+      "lead": "Recipes from the IIIF Cookbook. Use “Open in viewer” to check that each one displays in Kasane.",
+      "link": "See Kasane's own samples",
+      "videoHeading": "Cookbook recipes opened in Kasane",
+      "videoLead": "A video of every recipe opened in Kasane in turn. Use the chapters to jump to a recipe."
+    },
+    "own": {
+      "title": "Kasane samples",
+      "lead": "Test manifests made for this site. They cover uses the Cookbook does not, such as annotations on 3D models and timed transcripts.",
+      "link": "See IIIF Cookbook samples"
+    }
   },
   "UseCases": {
     "title": "Use cases",
