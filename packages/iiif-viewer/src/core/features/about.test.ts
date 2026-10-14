@@ -295,6 +295,14 @@ describe('cookbook: date and place', () => {
     expect(p.label).toMatch(/Targeted Map/);
   });
 
+  it('georeferencing Annotation: control points are not places of the item', () => {
+    const raw = JSON.parse(readFileSync(new URL('./__fixtures__/about/0139-geolocate-canvas-fragment.json', import.meta.url), 'utf8'));
+    const m = convertToV4(raw);
+    const canvas = m.items?.[0] as { id: string; annotations?: { items?: { motivation?: unknown }[] }[] };
+    for (const page of canvas.annotations ?? []) for (const a of page.items ?? []) a.motivation = ['georeferencing'];
+    expect(aboutOf(m, canvas.id, 'en')!.container!.places).toHaveLength(0);
+  });
+
   it('ignores invalid coordinates', () => {
     const info = aboutOf(
       {

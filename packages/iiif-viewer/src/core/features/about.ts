@@ -412,13 +412,17 @@ export const geoFeaturesOf = (v: unknown): Json[] => {
   return out;
 };
 
+// Control points of a georeferenced picture pair image coordinates with map coordinates;
+// they are not places of the item, so they must not be listed as places.
+export const isGeoreferencing = (anno: Json): boolean => asList(anno.motivation).includes('georeferencing');
+
 // A tagging Annotation whose body is a GeoJSON Feature (recipe 0139).
 const annotationPlaces = (container: Json, locale: string): AboutPlace[] => {
   const out: AboutPlace[] = [];
   for (const page of asList(container.annotations)) {
     if (!isObj(page)) continue;
     for (const anno of asList(page.items)) {
-      if (!isObj(anno)) continue;
+      if (!isObj(anno) || isGeoreferencing(anno)) continue;
       const target = typeof anno.target === 'string' ? anno.target : isObj(anno.target) ? str(anno.target.id) : undefined;
       const fragment = target?.includes('#') ? target.slice(target.indexOf('#')) : undefined;
       for (const body of geoFeaturesOf(anno.body)) {

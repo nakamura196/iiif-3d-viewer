@@ -15,6 +15,14 @@ describe('mapPlacesOf: cookbook', () => {
     expect(places[0].shapes[0].kind).toBe('point');
   });
 
+  it('georeferencing Annotation: control points are not places', () => {
+    const m = load('0139-geolocate-canvas-fragment');
+    expect(mapPlacesOf(m, 'en')).toHaveLength(1);
+    const canvas = m.items?.[0] as { annotations?: { items?: { motivation?: unknown }[] }[] };
+    for (const page of canvas.annotations ?? []) for (const a of page.items ?? []) a.motivation = ['georeferencing'];
+    expect(mapPlacesOf(m, 'en')).toHaveLength(0);
+  });
+
   it('0240 navPlace on Canvases: one place per Canvas, with the Canvas to open', () => {
     const m = load('0240-navPlace-on-canvases');
     const ids = (m.items as { id: string }[]).map((c) => c.id);

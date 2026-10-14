@@ -65,6 +65,7 @@
     "title": "利用規約"
   },
   "GeoRef": {
+    "viewOnMap": "地図に重ねて見る",
     "map": "地図",
     "viewer3d": "3D",
     "image": "画像",
