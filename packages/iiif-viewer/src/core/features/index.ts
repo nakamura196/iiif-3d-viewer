@@ -7,3 +7,4 @@ export * from './annotations';
 export * from './layers';
 export * from './curation';
 export * from './annotationStyle';
+export * from './search';

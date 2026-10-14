@@ -25,7 +25,8 @@
     "relatedOtherTools": "nakamura196 の他のツール",
     "developers": "中村 覚・小川 潤（東京大学）",
     "samplesAll": "サンプル一覧を見る",
-    "useCasesAll": "ユースケース"
+    "useCasesAll": "ユースケース",
+    "search": "コレクションを検索"
   },
   "News": {
     "heading": "お知らせ",
@@ -51,7 +52,8 @@
     "sampleManifestAll": "画像・音声・動画・3D のサンプル一覧（IIIF Cookbook など）",
     "requiredUrl": "マニフェストURLを入力してください",
     "invalidUrl": "有効なURLを入力してください",
-    "sampleUseCasesAll": "ユースケース一覧（動画つき）"
+    "sampleUseCasesAll": "ユースケース一覧（動画つき）",
+    "searchCollection": "コレクション・キュレーションを検索する"
   },
   "Help": {
     "title": "ヘルプ"
@@ -155,6 +157,36 @@
       "layers": "レイヤー",
       "georef": "位置情報",
       "curation": "キュレーション"
+    }
+  },
+  "Search": {
+    "title": "コレクション・キュレーションの検索",
+    "lead": "IIIF のコレクションかキュレーション（Curation API）の URL を入れると、中身をメタデータで絞り込める一覧にします。コレクションは、各マニフェストを読んでメタデータを集めます。",
+    "inputLabel": "コレクションかキュレーションの URL",
+    "submit": "開いて検索",
+    "invalidUrl": "URL の形になっていません",
+    "privacy": "読み込みと集計はすべてブラウザの中で行います。URL や画像がサーバに送られることはありません。CORS に対応していないサーバのものは読めません。",
+    "queryPlaceholder": "語句で絞り込む",
+    "more": "ほか {count} 件",
+    "less": "たたむ",
+    "count": "{total} 件中 {hits} 件",
+    "change": "別の URL を開く",
+    "loading": "読み込んでいます…",
+    "loadingManifests": "マニフェストを読んでいます（{done} / {total}）",
+    "error": "読み込めませんでした。コレクションかキュレーションの URL か、CORS に対応しているかを確かめてください。",
+    "failed": "{count} 冊のマニフェストを読めませんでした（その分はメタデータとサムネイルがありません）",
+    "remove": "{value} を外す",
+    "clear": "すべて外す",
+    "noHits": "当てはまるものがありません",
+    "showMore": "さらに {count} 件を表示",
+    "examplesHeading": "例",
+    "examples": {
+      "curation": "キュレーション: 江戸の花見（顔 121 点、NDL 顔検出）",
+      "collection": "コレクション: e-codices ボドメール文庫（214 冊）"
+    },
+    "kinds": {
+      "curation": "キュレーション",
+      "collection": "コレクション"
     }
   }
 }

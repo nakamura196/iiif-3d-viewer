@@ -25,7 +25,8 @@
     "relatedOtherTools": "Other tools by nakamura196",
     "developers": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)",
     "samplesAll": "All samples",
-    "useCasesAll": "Use cases"
+    "useCasesAll": "Use cases",
+    "search": "Search a collection"
   },
   "News": {
     "heading": "News",
@@ -51,7 +52,8 @@
     "sampleManifestAll": "All samples: image, audio, video and 3D (IIIF Cookbook and more)",
     "requiredUrl": "Enter the Manifest URL",
     "invalidUrl": "Enter a valid URL",
-    "sampleUseCasesAll": "All use cases (with videos)"
+    "sampleUseCasesAll": "All use cases (with videos)",
+    "searchCollection": "Search a collection or curation"
   },
   "Help": {
     "title": "Help"
@@ -155,6 +157,36 @@
       "layers": "Layers",
       "georef": "Georeference",
       "curation": "Curation"
+    }
+  },
+  "Search": {
+    "title": "Search a collection or curation",
+    "lead": "Enter the URL of a IIIF Collection or a Curation (Curation API) to browse its contents with metadata facets. For a Collection, each Manifest is read to gather its metadata.",
+    "inputLabel": "URL of a Collection or Curation",
+    "submit": "Open & search",
+    "invalidUrl": "Not a valid URL",
+    "privacy": "Everything is fetched and aggregated in your browser; no URL or image is sent to a server. Servers without CORS support cannot be read.",
+    "queryPlaceholder": "Filter by words",
+    "more": "{count} more",
+    "less": "Show less",
+    "count": "{hits} of {total}",
+    "change": "Open another URL",
+    "loading": "Loading…",
+    "loadingManifests": "Reading manifests ({done} / {total})",
+    "error": "Could not load it. Check that the URL is a Collection or a Curation and that the server supports CORS.",
+    "failed": "{count} manifests could not be read (they have no metadata or thumbnail)",
+    "remove": "Remove {value}",
+    "clear": "Clear all",
+    "noHits": "No matches",
+    "showMore": "Show {count} more",
+    "examplesHeading": "Examples",
+    "examples": {
+      "curation": "Curation: Edo cherry-blossom viewing (121 faces, NDL face detection)",
+      "collection": "Collection: e-codices, Fondation Martin Bodmer (214 manuscripts)"
+    },
+    "kinds": {
+      "curation": "Curation",
+      "collection": "Collection"
     }
   }
 }
