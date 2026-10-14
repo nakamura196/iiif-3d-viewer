@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import type { ManifestV4 } from '../types/iiif';
-import { containersOf, firstSceneOf } from './containers';
+import { containersOf, defaultChoiceIndex, firstSceneOf, pagePlaceholderOf } from './containers';
 import { convertToV4 } from './manifestConverter';
 import { parseManifestV4, sceneCamerasOf } from './manifestParser';
 
@@ -192,5 +192,91 @@ describe('convertToV4: legacy (Presentation 3) manifests', () => {
     expect(firstSceneOf(m)?.id).toBe('https://e.org/a');
     expect(parseManifestV4(m).modelUrl).toBe('https://e.org/file');
     expect(sceneCamerasOf(m)).toEqual([]);
+  });
+});
+
+describe('Choice bodies and empty pages', () => {
+  const choiceManifest = (type: string, extra: string[] = []) => ({
+    '@context': 'http://iiif.io/api/presentation/3/context.json',
+    id: 'https://e.org/m',
+    type: 'Manifest',
+    items: [
+      {
+        id: 'https://e.org/c1',
+        type: 'Canvas',
+        label: { en: ['Track'] },
+        items: [
+          {
+            id: 'https://e.org/c1/p',
+            type: 'AnnotationPage',
+            items: [
+              {
+                id: 'https://e.org/c1/a',
+                type: 'Annotation',
+                motivation: 'painting',
+                body: {
+                  type: 'Choice',
+                  items: [
+                    { id: 'https://e.org/a.mp3', type, format: 'audio/mp3' },
+                    { id: 'https://e.org/a.ogg', type, format: 'audio/ogg' },
+                    ...extra.map((t) => ({ id: `https://e.org/x.${t}`, type: t })),
+                  ],
+                },
+                target: 'https://e.org/c1',
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  });
+
+  it('keeps a Canvas painted only with a Choice of Sound as a Canvas, with all options', () => {
+    const m = convertToV4(choiceManifest('Sound'));
+    expect(m.items[0].type).toBe('Canvas');
+    const [c] = containersOf(m);
+    expect(c.painting).toHaveLength(1);
+    expect(c.painting[0].options.map((o) => o.kind)).toEqual(['Audio', 'Audio']);
+  });
+
+  it('keeps a Canvas painted only with a Choice of Video as a Canvas', () => {
+    expect(convertToV4(choiceManifest('Video')).items[0].type).toBe('Canvas');
+  });
+
+  it('still makes a Scene when a Choice offers a Model', () => {
+    expect(convertToV4(choiceManifest('Sound', ['Model'])).items[0].type).toBe('Scene');
+  });
+
+  it('gives an empty page an "empty" placeholder, not the kind (Scene)', () => {
+    const m = convertToV4({
+      '@context': 'http://iiif.io/api/presentation/3/context.json',
+      id: 'https://e.org/m',
+      type: 'Manifest',
+      items: [{ id: 'https://e.org/c2', type: 'Canvas', label: { en: ['f. 1v — MISSING'] }, items: [] }],
+    });
+    const [c] = containersOf(m);
+    expect(c.label).toEqual({ en: ['f. 1v — MISSING'] });
+    expect(pagePlaceholderOf(c)).toBe('empty');
+    expect(pagePlaceholderOf(containersOf(convertToV4(choiceManifest('Sound')))[0])).toBe('Canvas');
+  });
+});
+
+describe('defaultChoiceIndex', () => {
+  const opts = [
+    { kind: 'Audio' as const, format: 'audio/alac' },
+    { kind: 'Audio' as const, format: 'audio/mpeg' },
+    { kind: 'Audio' as const, format: 'audio/ogg' },
+  ];
+  it('picks the first playable option', () => {
+    expect(defaultChoiceIndex(opts, (f) => (f === 'audio/alac' ? '' : 'maybe'))).toBe(1);
+  });
+  it('treats an option without a format as a candidate', () => {
+    expect(defaultChoiceIndex([opts[0], { kind: 'Audio' as const }], () => '')).toBe(1);
+  });
+  it('falls back to the first when none is playable', () => {
+    expect(defaultChoiceIndex(opts, () => '')).toBe(0);
+  });
+  it('does not touch image Choices', () => {
+    expect(defaultChoiceIndex([{ kind: 'Image' as const, format: 'x/y' }], () => '')).toBe(0);
   });
 });

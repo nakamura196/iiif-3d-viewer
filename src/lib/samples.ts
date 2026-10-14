@@ -108,6 +108,12 @@ export const SAMPLES: Sample[] = [
     manifest: cookbookV3('0033-choice'), source: recipePage('0033-choice'),
   },
   {
+    id: '0434', kind: 'cookbook', media: 'audio',
+    title: { ja: '音声の形式の切り替え', en: 'Choice of audio formats' },
+    note: { ja: '同じ音声の別の形式（Choice）を切り替えて聞く', en: 'Switch between alternative formats of one audio track (Choice)' },
+    manifest: cookbookV3('0434-choice-av'), source: recipePage('0434-choice-av'),
+  },
+  {
     id: '0229', kind: 'cookbook', media: 'video',
     title: { ja: 'サムネイルで移動する動画', en: 'Video navigation with thumbnails' },
     note: { ja: '動画の区切り（Range）をサムネイルの一覧から選ぶ', en: 'Pick sections (Ranges) of a video from thumbnails' },

@@ -175,3 +175,22 @@ export const sceneOf = (manifest: ManifestV4 | null | undefined, sceneId?: strin
   (sceneId
     ? (manifest?.items ?? []).find((c): c is SceneV4 => (c as ContainerV4)?.type === 'Scene' && c.id === sceneId)
     : undefined) ?? firstSceneOf(manifest);
+
+// What the page list shows in place of a thumbnail: the container kind, or 'empty' for a
+// container that paints nothing (e.g. a Canvas whose image is missing).
+export const pagePlaceholderOf = (c: Pick<ContainerInfo, 'kind' | 'painting'>): ContainerKind | 'empty' =>
+  c.painting.length === 0 ? 'empty' : c.kind;
+
+// The option a Choice of audio / video opens on: the first one the browser can play.
+// An option without a format stays a candidate; when none can be played, the first one.
+// `canPlay` is the browser's `canPlayType` (injected so that it can be tested).
+export const defaultChoiceIndex = (
+  options: readonly Pick<MediaOption, 'kind' | 'format'>[],
+  canPlay: (format: string) => string,
+): number => {
+  if (!options.some((o) => o.kind === 'Audio' || o.kind === 'Video')) return 0;
+  const i = options.findIndex(
+    (o) => !o.format || (o.kind !== 'Audio' && o.kind !== 'Video') || canPlay(o.format) !== '',
+  );
+  return i < 0 ? 0 : i;
+};

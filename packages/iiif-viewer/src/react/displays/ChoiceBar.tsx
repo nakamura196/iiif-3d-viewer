@@ -2,17 +2,27 @@
 
 import type { ReactNode } from 'react';
 import { useAtom } from 'jotai';
-import { labelIn, type MediaOption, type PaintingContent } from '../../core';
+import { defaultChoiceIndex, labelIn, type MediaOption, type PaintingContent } from '../../core';
 import { modelChoicesAtom } from '../atoms';
 import { useLocale, useTranslations } from '../env';
 
 const optionLabel = (o: MediaOption, locale: string) =>
   labelIn(o.label, locale) || decodeURIComponent(o.url.split('/').pop() ?? o.url);
 
-/** Index of the chosen option of a painting (a Choice shows its first one by default). */
+// Audio / video: the first option this browser can play. Others: the first option.
+const initialIndex = (painting: PaintingContent): number => {
+  if (typeof document === 'undefined') return 0;
+  const probe = document.createElement('video');
+  return defaultChoiceIndex(painting.options, (f) => probe.canPlayType(f));
+};
+
+const chosenIndex = (painting: PaintingContent, choices: Record<string, number>): number =>
+  Math.min(choices[painting.id] ?? initialIndex(painting), painting.options.length - 1);
+
+/** Index of the chosen option of a painting (a Choice opens on its first playable one by default). */
 export function useChoiceIndex(painting: PaintingContent | undefined): number {
   const [choices] = useAtom(modelChoicesAtom);
-  return painting ? Math.min(choices[painting.id] ?? 0, painting.options.length - 1) : 0;
+  return painting ? chosenIndex(painting, choices) : 0;
 }
 
 // A Choice between two or more candidates of an image / video / audio painting.
@@ -32,7 +42,7 @@ export default function ChoiceBar({
   const t = useTranslations('Viewer');
   const locale = useLocale();
   const [choices, setChoices] = useAtom(modelChoicesAtom);
-  const index = controlled ?? Math.min(choices[painting.id] ?? 0, painting.options.length - 1);
+  const index = controlled ?? chosenIndex(painting, choices);
   if (painting.options.length < 2) return null;
 
   return (
