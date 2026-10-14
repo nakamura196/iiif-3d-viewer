@@ -1,19 +1,13 @@
 // 入力フォームコンポーネント
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { buttonClass } from '@nakamura196/react-ui';
-import { withBasePath } from '@/lib/basePath';
-import { contentParam } from '@nakamura196/iiif-viewer/core';
-
-const SAMPLE = withBasePath('/manifests/sample-manifest.json');
-const SAMPLE_ANNOT = withBasePath('/manifests/sample-manifest-with-annotations.json');
-// Shared Region and Keyed Tag Extension の例（正本は iiif-region-tag-extension の examples/manifest.json）
-// 研究段階のため公開ページには出さない（掲載の了承が得られたら戻す）
-// const SAMPLE_REGION_TAGS = withBasePath('/manifests/sample-manifest-region-tags.json');
+import { FEATURED_USE_CASES, hrefOf } from '@/lib/usecases';
 
 const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => void }) => {
   const t = useTranslations('Input');
+  const locale = useLocale() === 'en' ? 'en' : 'ja';
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
 
@@ -79,40 +73,18 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
       <div className="mt-8 text-sm text-[var(--ds-fg-muted)]">
         <h3 className="font-medium mb-2">{t('sampleManifest')}:</h3>
         <ul className="space-y-2 text-left">
+          {FEATURED_USE_CASES.map((u) => (
+            <li key={u.id}>
+              <Link href={hrefOf(u.open)} className="text-[var(--ds-primary)] hover:underline">
+                {u.title[locale]}
+              </Link>
+            </li>
+          ))}
           <li>
-            <button
-              onClick={() => onSubmit(SAMPLE)}
-              className="text-left text-[var(--ds-primary)] hover:underline"
-            >
-              {t('sampleManifest1')}
-            </button>
-          </li>
-          <li>
-            <button
-              onClick={() => onSubmit(SAMPLE_ANNOT, 'annotations')}
-              className="text-left text-[var(--ds-primary)] hover:underline"
-            >
-              {t('sampleManifest2')}
-            </button>
-          </li>
-          <li>
-            <Link
-              href={`/georef?${contentParam(SAMPLE_ANNOT)}`}
-              className="text-[var(--ds-primary)] hover:underline"
-            >
-              {t('sampleManifest3')}
+            <Link href="/usecases" className="text-[var(--ds-primary)] hover:underline">
+              {t('sampleUseCasesAll')}
             </Link>
           </li>
-          {/* 研究段階のため公開ページには出さない（掲載の了承が得られたら戻す）
-          <li>
-            <button
-              onClick={() => onSubmit(SAMPLE_REGION_TAGS, 'annotations')}
-              className="text-left text-[var(--ds-primary)] hover:underline"
-            >
-              {t('sampleManifest4')}
-            </button>
-          </li>
-          */}
           <li>
             <Link href="/samples" className="text-[var(--ds-primary)] hover:underline">
               {t('sampleManifestAll')}

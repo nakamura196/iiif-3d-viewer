@@ -12,8 +12,8 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Link } from '@/i18n/routing';
 import { contentParam, manifestFromParams } from '@nakamura196/iiif-viewer/core';
+import { isViewerTab } from '@/lib/viewerTabs';
 
-const TABS: InfoTab[] = ['metadata', 'pages', 'structure', 'layers', 'rights', 'transcript', 'annotationTranscript', 'canvasAnnotations', 'annotations'];
 
 // /viewer?iiif-content=...&tab=...（?manifest=... も読む）: ビューア本体はパッケージの Viewer。
 // ここでは URL の読み書きと、ヘッダー・フッター・入力欄だけを持つ。
@@ -41,8 +41,8 @@ const ViewerContent: NextPage = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const tabParam = searchParams?.get('tab') as InfoTab | null;
-  const tab = tabParam && TABS.includes(tabParam) ? tabParam : undefined;
+  const tabParam = searchParams?.get('tab');
+  const tab = isViewerTab(tabParam) ? tabParam : undefined;
 
   const handleTabChange = (next: InfoTab) => {
     const params = new URLSearchParams(searchParams?.toString() || '');
