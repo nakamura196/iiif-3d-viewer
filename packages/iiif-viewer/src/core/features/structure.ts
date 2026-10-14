@@ -560,6 +560,43 @@ export function collectionEntriesOf(raw: unknown): CollectionEntry[] {
 // サムネイル
 // ---------------------------------------------------------------------------
 
+/** 画像の本体（Choice なら最初の選択肢）から、小さい画像の URL を作る。Image API があればそれで縮める。 */
+const imageBodyThumbnail = (body: unknown, height: number): string | undefined => {
+  const b = isObject(body) && body.type === 'Choice' ? asList(body.items)[0] : body;
+  if (!isObject(b) || b.type !== 'Image') return undefined;
+  for (const s of asList(b.service)) {
+    if (!isObject(s)) continue;
+    const base = str(s.id) ?? str(s['@id']);
+    const kind = str(s.type) ?? str(s['@type']) ?? 'ImageService3';
+    if (base && /^ImageService[23]$/.test(kind)) return `${base.replace(/\/$/, '')}/full/,${height}/0/default.jpg`;
+  }
+  return str(b.id);
+};
+
+/**
+ * Manifest（または Collection）本体から、一覧のカードに出す小さな画像の URL を選ぶ。
+ * Collection の項目にサムネイルが無いとき（Cookbook 0230 など）に、Manifest を取ってきて使う。
+ * 順に: 本体の thumbnail → 最初の Canvas の thumbnail → 最初の Canvas の画像（Image API なら縮めて）。
+ */
+export function manifestThumbnailOf(raw: unknown, height = 192): string | undefined {
+  if (!isObject(raw)) return undefined;
+  const own = firstThumbnail(raw.thumbnail);
+  if (own) return own;
+  const canvas = asList(raw.items).find(isObject);
+  if (!canvas) return undefined;
+  const t = firstThumbnail(canvas.thumbnail);
+  if (t) return t;
+  for (const page of asList(canvas.items)) {
+    if (!isObject(page)) continue;
+    for (const anno of asList(page.items)) {
+      if (!isObject(anno) || anno.motivation !== 'painting') continue;
+      const url = imageBodyThumbnail(anno.body, height);
+      if (url) return url;
+    }
+  }
+  return undefined;
+}
+
 /**
  * ページ送りの小さな画像の URL。Canvas の thumbnail があればそれを使う。
  * 無ければ、IIIF Image API の画像 URL（…/full/<size>/0/default.jpg）を小さい指定に直す。

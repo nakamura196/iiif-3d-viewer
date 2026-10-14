@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   chronologyOf,
   collectionEntriesOf,
   fetchManifest,
   hasChronology,
   labelIn,
+  manifestThumbnailOf,
   navDateText,
   yearText,
   type CollectionEntry,
@@ -15,6 +16,61 @@ import { useLocale, useTranslations } from '../env';
 import { displayAfter } from './registry';
 import { useManifestSwitch } from './structureState';
 import type { Display, DisplayProps } from './types';
+
+// Thumbnails read from the Manifests themselves, by Manifest id. Kept for the page's lifetime,
+// so switching the order (or reopening the Collection) does not fetch them again.
+const fetchedThumbnails = new Map<string, Promise<string | undefined>>();
+const thumbnailFromManifest = (id: string) => {
+  let p = fetchedThumbnails.get(id);
+  if (!p) {
+    p = fetchManifest(id).then((raw) => manifestThumbnailOf(raw));
+    fetchedThumbnails.set(id, p);
+  }
+  return p;
+};
+
+// The picture of a card. When the Collection gives no thumbnail for the item (Cookbook 0230),
+// the Manifest is fetched, but only once the card comes into view: a Collection may list hundreds.
+function EntryThumbnail({ entry, className }: { entry: CollectionEntry; className: string }) {
+  const ref = useRef<HTMLSpanElement>(null);
+  const [fetched, setFetched] = useState<{ id: string; url?: string } | null>(null);
+  const need = !entry.thumbnail;
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!need || !el) return;
+    let cancelled = false;
+    const load = () =>
+      thumbnailFromManifest(entry.id).then((url) => {
+        if (!cancelled) setFetched({ id: entry.id, url });
+      });
+    if (typeof IntersectionObserver === 'undefined') {
+      load();
+      return () => {
+        cancelled = true;
+      };
+    }
+    const io = new IntersectionObserver((seen) => {
+      if (seen.some((s) => s.isIntersecting)) {
+        io.disconnect();
+        load();
+      }
+    });
+    io.observe(el);
+    return () => {
+      cancelled = true;
+      io.disconnect();
+    };
+  }, [need, entry.id]);
+
+  const url = entry.thumbnail ?? (fetched?.id === entry.id ? fetched.url : undefined);
+  if (url) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={url} alt="" loading="lazy" className={`object-contain bg-white/60 ${className}`} />;
+  }
+  // nothing yet (or nothing found): keep the place empty, so the card does not jump when the picture arrives
+  return need && fetched?.id !== entry.id ? <span ref={ref} aria-hidden className={className} /> : null;
+}
 
 // A Collection (a manifest whose items are Manifests): choose one to open.
 // When two or more items carry a navDate (Cookbook 0230), they can also be shown by date, grouped by year.
@@ -74,15 +130,7 @@ function CollectionDisplay(props: DisplayProps) {
         onClick={() => openEntry(e)}
         className={`w-full h-full text-left rounded border border-[var(--ds-border)] bg-[var(--ds-surface)] hover:bg-[var(--ds-surface-2)] p-2 text-sm text-[var(--ds-fg)] flex gap-1 ${layout === 'row' ? 'flex-row gap-3 items-start' : 'flex-col'}`}
       >
-        {e.thumbnail ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
-            src={e.thumbnail}
-            alt=""
-            loading="lazy"
-            className={`object-contain bg-white/60 ${layout === 'row' ? 'h-24 w-24 shrink-0' : 'h-24 w-full'}`}
-          />
-        ) : null}
+        <EntryThumbnail entry={e} className={layout === 'row' ? 'h-24 w-24 shrink-0' : 'h-24 w-full'} />
         <span className="flex min-w-0 flex-col gap-1">
           <span className="font-medium break-words">{labelIn(e.label, locale) || e.id}</span>
           {e.navDate ? (
