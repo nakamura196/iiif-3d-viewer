@@ -14,7 +14,8 @@
     "test": "vitest run",
     "test:basepath": "GITHUB_PAGES=true npm run build && ./scripts/check-basepath.sh",
     "test:export": "node scripts/check-export.mjs",
-    "test:live": "node scripts/check-live.mjs"
+    "test:live": "node scripts/check-live.mjs",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@iiif/presentation-3": "^2.1.0",
@@ -36,6 +37,7 @@
     "three-stdlib": "^2.36.0"
   },
   "devDependencies": {
+    "@playwright/test": "1.63.0",
     "@tailwindcss/typography": "^0.5.19",
     "@types/node": "^25.2.0",
     "@types/react": "^19.2.10",

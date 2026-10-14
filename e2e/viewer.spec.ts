@@ -1,0 +1,88 @@
+import { test, expect, type Page } from '@playwright/test';
+
+// ビューアの表示を、Cookbook の実データで確かめる。
+// 単体テストでは見えないところ（動画に字幕が実際に読み込まれるか、3D が描かれるか）を見る。
+
+const v4 = (recipe: string) => `https://iiif.io/api/cookbook/recipe/${recipe}/v4/manifest.json`;
+const v3 = (recipe: string) => `https://iiif.io/api/cookbook/recipe/${recipe}/manifest.json`;
+
+// Cookbook の v4 版のうち、まだ iiif.io に無いもの（IIIF/cookbook-recipes #621・#622 が未マージ）。
+// preview.iiif.io には CORS ヘッダが無いので、ブラウザに渡る応答へヘッダを足して読ませる。
+// マージされたら v4() の URL に置き換え、allowCors も外す。
+const PREVIEW = 'https://preview.iiif.io/cookbook';
+const v4Preview0074 = `${PREVIEW}/v4-0074-update-with-provides/recipe/0074-multiple-language-captions/v4/manifest.json`;
+const v4Preview0079 = `${PREVIEW}/v4-0079-using-annotations-for-captions/recipe/0079-annotations-for-captions/v4/manifest.json`;
+
+async function allowCors(page: Page, origin: string) {
+  await page.route(`${origin}/**`, async (route) => {
+    const response = await route.fetch();
+    await route.fulfill({ response, headers: { ...response.headers(), 'access-control-allow-origin': '*' } });
+  });
+}
+
+const open = (page: Page, manifest: string) =>
+  page.goto(`/ja/viewer/?iiif-content=${encodeURIComponent(manifest)}`);
+
+interface TrackInfo {
+  kind: string;
+  language: string;
+  cues: number;
+}
+
+// <video> の字幕をすべて読み込ませ（hidden にすると読み込みが始まる）、種類・言語・行数を返す。
+async function loadedTracks(page: Page, expected: number): Promise<TrackInfo[]> {
+  const video = page.locator('video');
+  await expect(video).toBeAttached();
+  await expect(video.locator('track')).toHaveCount(expected);
+  await video.evaluate((v: HTMLVideoElement) => {
+    for (const t of Array.from(v.textTracks)) if (t.mode === 'disabled') t.mode = 'hidden';
+  });
+  await expect
+    .poll(() => video.evaluate((v: HTMLVideoElement) => Array.from(v.textTracks).every((t) => (t.cues?.length ?? 0) > 0)))
+    .toBe(true);
+  return video.evaluate((v: HTMLVideoElement) =>
+    Array.from(v.textTracks).map((t) => ({ kind: t.kind, language: t.language, cues: t.cues?.length ?? 0 })),
+  );
+}
+
+const byLanguage = (a: TrackInfo, b: TrackInfo) => a.language.localeCompare(b.language);
+
+test('3D モデルを描く（0608 v4）', async ({ page }) => {
+  const errors: string[] = [];
+  page.on('pageerror', (e) => errors.push(e.message));
+  await open(page, v4('0608-mvm-3d'));
+  const canvas = page.locator('canvas').first();
+  await expect(canvas).toBeVisible();
+  const box = await canvas.boundingBox();
+  expect(box?.width ?? 0).toBeGreaterThan(100);
+  expect(box?.height ?? 0).toBeGreaterThan(100);
+  expect(errors).toEqual([]);
+});
+
+test('字幕ファイルを読む（0219 v4）', async ({ page }) => {
+  await open(page, v4('0219-using-caption-file'));
+  const tracks = await loadedTracks(page, 1);
+  expect(tracks[0].kind).toBe('captions');
+});
+
+test('複数言語の字幕を読む（0074 v3）', async ({ page }) => {
+  await open(page, v3('0074-multiple-language-captions'));
+  const tracks = await loadedTracks(page, 2);
+  expect(tracks.map((t) => t.language).sort()).toEqual(['en', 'it']);
+});
+
+test('provides で字幕の種類を見分ける（0074 v4、preview）', async ({ page }) => {
+  await allowCors(page, PREVIEW);
+  await open(page, v4Preview0074);
+  const tracks = (await loadedTracks(page, 2)).sort(byLanguage);
+  expect(tracks.map((t) => t.language)).toEqual(['en', 'it']);
+  // 0074 v4 は provides で、英語を subtitles（翻訳）、イタリア語を closedCaptions（原語）としている
+  expect(tracks.map((t) => t.kind)).toEqual(['subtitles', 'captions']);
+});
+
+test('注釈で書かれた字幕を読む（0079 v4、preview）', async ({ page }) => {
+  await allowCors(page, PREVIEW);
+  await open(page, v4Preview0079);
+  const tracks = await loadedTracks(page, 1);
+  expect(tracks[0].cues).toBeGreaterThan(1);
+});
