@@ -1,5 +1,6 @@
 import { isCuration, resolveCuration } from '../features/curation';
 import { upgradeToV3 } from './upgradeV2';
+import { inlineSharedServices } from './sharedServices';
 
 const getJson = async (url: string): Promise<unknown> => {
   const response = await fetch(url);
@@ -29,8 +30,8 @@ export const fetchManifest = async (manifestUrl: string) => {
       if (!built) throw new Error('No canvas of the curation could be read');
       return built;
     }
-    // Presentation 2 は 3 に直してから渡す（3 / 4 はそのまま）
-    return upgradeToV3(raw);
+    // Presentation 2 は 3 に直してから渡す（3 / 4 はそのまま）。末尾の services への参照は中身に置き換える
+    return inlineSharedServices(upgradeToV3(raw));
   } catch (error) {
     console.error('Error fetching manifest:', error);
     return null;

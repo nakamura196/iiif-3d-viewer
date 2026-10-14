@@ -13,7 +13,11 @@ export default defineConfig({
   reporter: 'list',
   use: { baseURL, trace: 'retain-on-failure' },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
-  webServer: process.env.E2E_BASE_URL
-    ? undefined
-    : { command: 'npm run dev', url: 'http://localhost:3838/ja/', reuseExistingServer: true, timeout: 180_000 },
+  webServer: [
+    // IIIF Authorization Flow 2.0 のモックサーバ（e2e/auth.spec.ts が使う）
+    { command: 'node scripts/auth-mock-server.mjs 3839', url: 'http://localhost:3839/manifest.json', reuseExistingServer: true },
+    ...(process.env.E2E_BASE_URL
+      ? []
+      : [{ command: 'npm run dev', url: 'http://localhost:3838/ja/', reuseExistingServer: true, timeout: 180_000 }]),
+  ],
 });

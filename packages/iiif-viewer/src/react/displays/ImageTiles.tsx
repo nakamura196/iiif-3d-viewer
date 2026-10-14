@@ -1,7 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
+  probeServiceOf,
+  substituteLayer,
+  type AuthProbeRef,
   canvasRectToLayer,
   imageInfoUrl,
   imageRequestUrl,
@@ -17,37 +20,48 @@ import {
   type ImageServiceRef,
   type ImageRegion,
 } from '../../core';
-import { useTranslations } from '../env';
+import { useAuth } from '../auth/authStore';
+import { useLocale, useTranslations } from '../env';
 import type { StageInfo } from './ImageView';
 
 // Image API の深いズーム。info.json から「どの大きさの画像を、どの範囲だけ」取るかを決め、
 // 見えている範囲のタイルだけを <img> で並べる（依存なし・CSS の位置指定だけ）。
 
-const infoCache = new Map<string, Promise<ImageInfo | null>>();
+interface LoadedInfo {
+  info: ImageInfo | null;
+  json: unknown;
+}
 
-const loadInfo = (service: ImageServiceRef): Promise<ImageInfo | null> => {
+// Keyed by URL and login epoch: after a login the info.json is fetched again.
+const infoCache = new Map<string, Promise<LoadedInfo>>();
+
+// info.json goes without cookies: servers with Auth 2.0 answer it with CORS `*` (refused with cookies),
+// and some answer 401 with the full info.json in the body (Wellcome Collection), so that body is used too.
+// The tiles are <img> and carry the cookies the access service set.
+const loadInfo = (service: ImageServiceRef, withAuth: boolean, epoch: number): Promise<LoadedInfo> => {
   const url = imageInfoUrl(service);
-  let p = infoCache.get(url);
+  const key = `${url}#${withAuth ? epoch : 0}${withAuth ? 'c' : ''}`;
+  let p = infoCache.get(key);
   if (!p) {
     p = fetch(url)
-      .then((r) => (r.ok ? r.json() : null))
-      .then((json) => parseImageInfo(json))
-      .catch(() => null);
-    infoCache.set(url, p);
+      .then((r) => (r.ok || (withAuth && r.status === 401) ? r.json() : null))
+      .then((json) => ({ info: parseImageInfo(json), json }))
+      .catch(() => ({ info: null, json: null }));
+    infoCache.set(key, p);
   }
   return p;
 };
 
-type InfoState = { status: 'none' | 'loading' | 'error' } | { status: 'ready'; info: ImageInfo };
+type InfoState = { status: 'none' | 'loading' | 'error' } | { status: 'ready'; info: ImageInfo; json: unknown };
 
-function useImageInfo(service: ImageServiceRef | undefined): InfoState {
-  const key = service ? imageInfoUrl(service) : null;
-  const [res, setRes] = useState<{ key: string; info: ImageInfo | null } | null>(null);
+function useImageInfo(service: ImageServiceRef | undefined, withAuth: boolean, epoch: number): InfoState {
+  const key = service ? `${imageInfoUrl(service)}#${withAuth ? epoch : 0}${withAuth ? 'c' : ''}` : null;
+  const [res, setRes] = useState<{ key: string; info: ImageInfo | null; json: unknown } | null>(null);
   useEffect(() => {
     if (!service || !key) return;
     let cancelled = false;
-    loadInfo(service).then((info) => {
-      if (!cancelled) setRes({ key, info });
+    loadInfo(service, withAuth, epoch).then((r) => {
+      if (!cancelled) setRes({ key, ...r });
     });
     return () => {
       cancelled = true;
@@ -56,9 +70,13 @@ function useImageInfo(service: ImageServiceRef | undefined): InfoState {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
   if (!key) return { status: 'none' };
-  if (res?.key !== key) return { status: 'loading' };
-  return res.info ? { status: 'ready', info: res.info } : { status: 'error' };
+  // keep drawing the previous info while a reload is under way
+  if (res?.key !== key) return res?.info ? { status: 'ready', info: res.info, json: res.json } : { status: 'loading' };
+  return res.info ? { status: 'ready', info: res.info, json: res.json } : { status: 'error' };
 }
+
+// A cache-busting query for the images fetched again after a login (they may have come back degraded before).
+const bust = (url: string, epoch: number) => (epoch > 0 ? `${url}${url.includes('?') ? '&' : '?'}_auth=${epoch}` : url);
 
 const pct = (v: number) => `${v * 100}%`;
 
@@ -67,7 +85,7 @@ const pct = (v: number) => `${v * 100}%`;
  * With an Image API service the sharpest tiles for the view are drawn over a small base image.
  */
 export default function ImageLayerView({
-  layer,
+  layer: given,
   canvasWidth,
   canvasHeight,
   stage,
@@ -83,7 +101,21 @@ export default function ImageLayerView({
   onFailed?: () => void;
 }) {
   const t = useTranslations('Viewer');
-  const state = useImageInfo(layer.service);
+  const locale = useLocale();
+  // the probe the manifest declares; an info.json may declare one too (read once its first fetch is back)
+  const [infoProbe, setInfoProbe] = useState<AuthProbeRef | undefined>();
+  const probe = given.auth ?? infoProbe;
+  const auth = useAuth(probe, locale);
+  const epoch = auth?.state.epoch ?? 0;
+  // a substitute resource (probe status 30x with `location`) replaces the image
+  const location = auth?.state.location;
+  const layer = useMemo(() => (location ? substituteLayer(given, location) : given), [given, location]);
+  const state = useImageInfo(layer.service, !!probe, epoch);
+  const infoJson = state.status === 'ready' ? state.json : undefined;
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    if (!given.auth && infoJson) setInfoProbe(probeServiceOf(infoJson, locale));
+  }, [given.auth, infoJson, locale]);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
 
   if (state.status === 'loading') {
@@ -121,17 +153,18 @@ export default function ImageLayerView({
 
   // no usable service: the image as the manifest gives it
   if (!info || !layer.service) {
-    if (failedUrl === layer.url) return null;
+    const own = bust(layer.url, epoch);
+    if (failedUrl === own) return null;
     return (
       <div style={frame}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={layer.url}
+          src={bust(layer.url, epoch)}
           alt=""
           draggable={false}
           className="absolute inset-0 w-full h-full"
           onError={() => {
-            setFailedUrl(layer.url);
+            setFailedUrl(own);
             onFailed?.();
           }}
         />
@@ -172,7 +205,7 @@ export default function ImageLayerView({
     <div style={frame}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={base}
+        src={bust(base, epoch)}
         alt=""
         draggable={false}
         className="absolute inset-0 w-full h-full"
@@ -183,8 +216,8 @@ export default function ImageLayerView({
       {tiles.map((tile) => (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          key={tile.key}
-          src={tile.url}
+          key={`${tile.key}:${epoch}`}
+          src={bust(tile.url, epoch)}
           alt=""
           draggable={false}
           className="absolute"

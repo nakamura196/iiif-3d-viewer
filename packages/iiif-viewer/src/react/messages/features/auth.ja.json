@@ -1,0 +1,12 @@
+{
+  "Viewer": {
+    "authHeading": "ログインが必要です",
+    "authNote": "この画像を見るには、ログインが必要です。",
+    "authConfirm": "ログイン",
+    "authWorking": "認証しています...",
+    "authDeniedHeading": "この画像は表示できません",
+    "authDeniedNote": "ログインできなかったか、閲覧する権限がありません。",
+    "authRetry": "もう一度試す",
+    "authLogout": "ログアウト"
+  }
+}

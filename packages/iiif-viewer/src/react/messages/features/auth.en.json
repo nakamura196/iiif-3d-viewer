@@ -1,0 +1,12 @@
+{
+  "Viewer": {
+    "authHeading": "Login required",
+    "authNote": "You need to log in to see this image.",
+    "authConfirm": "Log in",
+    "authWorking": "Authenticating...",
+    "authDeniedHeading": "This image cannot be shown",
+    "authDeniedNote": "Login failed, or you do not have permission to view it.",
+    "authRetry": "Try again",
+    "authLogout": "Log out"
+  }
+}
