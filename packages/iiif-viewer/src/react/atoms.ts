@@ -27,6 +27,17 @@ export const canvasLayersAtom = atom<{ canvasId: string; items: LayerItem[] } | 
 export const layerSettingsAtom = atom<Record<string, LayerSetting>>({});
 export const layerOrderAtom = atom<Record<string, string[]>>({});
 
+// レイヤーの再生。右パネルの別のタブに移っても止まらないよう、タブの外に置く。
+// タイマーは画像の表示（ImageCanvasDisplay）が動かす。ids は再生するレイヤー（下から）
+export interface LayerPlayback {
+  canvasId: string;
+  ids: string[];
+  step: number;
+}
+export const layerPlaybackAtom = atom<LayerPlayback | null>(null);
+// 再生の間隔（秒）と繰り返し
+export const layerPlaybackOptionsAtom = atom<{ seconds: number; loop: boolean }>({ seconds: 1, loop: true });
+
 // 一覧の検索・絞り込みの条件。3D の印もこの結果だけを表示する
 export const annotationFilterAtom = atom<AnnotationFilter>(EMPTY_FILTER);
 
