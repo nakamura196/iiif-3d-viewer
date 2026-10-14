@@ -1,8 +1,12 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   annotationSourcesOf,
+  annotationStyles,
+  parseAnnotationCss,
+  type AnnotationStyles,
+  type StyleRules,
   nextPageOf,
   rawCanvasOf,
   readCanvasAnnotations,
@@ -30,6 +34,25 @@ const fetchPage = (url: string): Promise<unknown> => {
   return p;
 };
 
+// 外部の stylesheet（Recipe 0045）。取得してすぐ、許可した性質だけに読み直す（生の CSS はここから外に出さない）。
+const MAX_CSS_BYTES = 100_000;
+const sheetCache = new Map<string, Promise<StyleRules>>();
+
+const fetchSheet = (url: string): Promise<StyleRules> => {
+  let p = sheetCache.get(url);
+  if (!p) {
+    p = fetch(url, { credentials: 'omit', referrerPolicy: 'no-referrer', headers: { Accept: 'text/css, text/plain' } })
+      .then((r) => {
+        if (!r.ok) throw new Error(`HTTP ${r.status}`);
+        return r.text();
+      })
+      .then((text) => parseAnnotationCss(text.slice(0, MAX_CSS_BYTES)));
+    p.catch(() => sheetCache.delete(url));
+    sheetCache.set(url, p);
+  }
+  return p;
+};
+
 interface Fetched {
   key: string;
   pages: unknown[];
@@ -40,6 +63,8 @@ export interface CanvasAnnotationsState {
   annotations: CanvasAnnotation[];
   loading: boolean;
   failed: boolean;
+  /** 注釈の見た目（許可した性質だけ。外部 stylesheet は取得できたら反映される）。 */
+  styleOf: (annotation: CanvasAnnotation) => AnnotationStyles;
 }
 
 // Canvas の注釈。マニフェストに書かれたものはすぐ、参照だけのページは取得してから足す。
@@ -94,7 +119,31 @@ export function useCanvasAnnotations(
         : [],
     [canvasId, sources, current, width, height],
   );
+  const sheetUrls = useMemo(
+    () => [...new Set(annotations.map((a) => a.stylesheetUrl).filter((u): u is string => !!u))].slice(0, 5),
+    [annotations],
+  );
+  const sheetKey = sheetUrls.join('|');
+  const [sheets, setSheets] = useState<Record<string, StyleRules>>({});
+  useEffect(() => {
+    let cancelled = false;
+    for (const url of sheetUrls) {
+      fetchSheet(url).then(
+        (rules) => {
+          if (!cancelled) setSheets((prev) => (prev[url] ? prev : { ...prev, [url]: rules }));
+        },
+        () => {}, // 取得できなければ、見た目の指定なしで表示する
+      );
+    }
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sheetKey]);
+  const styleOf = useCallback((a: CanvasAnnotation) => annotationStyles(a, sheets), [sheets]);
+
   return {
+    styleOf,
     annotations,
     loading: sources.references.length > 0 && !current,
     failed: current?.failed ?? false,
