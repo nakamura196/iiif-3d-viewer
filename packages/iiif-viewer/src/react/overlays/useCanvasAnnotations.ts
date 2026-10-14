@@ -12,6 +12,7 @@ import {
   type StyleRules,
   nextPageOf,
   rawCanvasOf,
+  canvasIdsOf,
   readCanvasAnnotations,
   type CanvasAnnotation,
   type ContainerInfo,
@@ -85,6 +86,7 @@ export function useCanvasAnnotations(
     () => annotationSourcesOf(canvasId ? rawCanvasOf(manifest, canvasId) : undefined),
     [manifest, canvasId],
   );
+  const canvasIds = useMemo(() => canvasIdsOf(manifest), [manifest]);
   const key = `${canvasId ?? ''}|${sources.references.join('|')}`;
   const [fetched, setFetched] = useState<Fetched | null>(null);
 
@@ -101,7 +103,7 @@ export function useCanvasAnnotations(
             const page = await fetchPage(url);
             pages.push(page);
             // follow `next` only while this page still has annotations for this Canvas
-            const mine = readCanvasAnnotations(canvasId, [page], { width, height });
+            const mine = readCanvasAnnotations(canvasId, [page], { width, height }, canvasIds);
             url = mine.length > 0 ? nextPageOf(page) : undefined;
           } catch {
             failed = true;
@@ -114,20 +116,20 @@ export function useCanvasAnnotations(
     return () => {
       cancelled = true;
     };
-  }, [canvasId, key, sources, width, height]);
+  }, [canvasId, key, sources, width, height, canvasIds]);
 
   const current = fetched?.key === key ? fetched : null;
   const local = useAtomValue(localAnnotationPagesAtom);
   const annotations = useMemo(
     () =>
       canvasId
-        ? readCanvasAnnotations(
-            canvasId,
-            [...sources.pages, ...(current?.pages ?? []), ...local.filter((l) => l.canvasId === canvasId).map((l) => l.page)],
-            { width, height },
-          )
+        ? [
+            // the Canvas's own pages: an annotation whose target is no Canvas of the manifest is on this one
+            ...readCanvasAnnotations(canvasId, [...sources.pages, ...(current?.pages ?? [])], { width, height }, canvasIds),
+            ...readCanvasAnnotations(canvasId, local.filter((l) => l.canvasId === canvasId).map((l) => l.page), { width, height }),
+          ]
         : [],
-    [canvasId, sources, current, local, width, height],
+    [canvasId, sources, current, local, width, height, canvasIds],
   );
   const sheetUrls = useMemo(
     () => [...new Set(annotations.map((a) => a.stylesheetUrl).filter((u): u is string => !!u))].slice(0, 5),

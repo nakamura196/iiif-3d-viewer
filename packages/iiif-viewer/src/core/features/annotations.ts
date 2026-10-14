@@ -420,11 +420,17 @@ export const annotationSourcesOf = (canvas: Json | undefined): CanvasAnnotationS
 /** The page that follows (`next`), as an address. */
 export const nextPageOf = (page: unknown): string | undefined => (isObj(page) ? idOf(page.next) : undefined);
 
-/** Reads the annotations of the pages that target `canvasId`. */
+/**
+ * Reads the annotations of the pages that target `canvasId`.
+ * `canvasIds`: every Canvas of the manifest, given only when the pages are the Canvas's own
+ * (`annotations`). An annotation there whose target names none of them is taken to be on this Canvas
+ * (Cookbook 0464 reuses the Canvas of 0008 and its annotation targets a Canvas URI that does not exist).
+ */
 export const readCanvasAnnotations = (
   canvasId: string,
   pages: unknown[],
   canvasSize?: { width?: number; height?: number },
+  canvasIds?: ReadonlySet<string>,
 ): CanvasAnnotation[] => {
   const out: CanvasAnnotation[] = [];
   const seen = new Set<string>();
@@ -459,6 +465,7 @@ export const readCanvasAnnotations = (
         layer = { id: layerIds[0], label: layerInfo.label };
         target.canvasId = canvasId;
       }
+      if (canvasIds && target.canvasId !== undefined && !canvasIds.has(target.canvasId)) target.canvasId = canvasId;
       if (target.canvasId !== canvasId) continue;
       // supplementing on the whole Canvas (captions, transcripts) is shown elsewhere; on a region of the
       // image it is text read from that place (OCR), and is drawn like other annotations
@@ -492,7 +499,11 @@ export const embeddedCanvasAnnotations = (
   canvasId: string,
   size?: { width?: number; height?: number },
 ): CanvasAnnotation[] =>
-  readCanvasAnnotations(canvasId, annotationSourcesOf(rawCanvasOf(manifest, canvasId)).pages, size);
+  readCanvasAnnotations(canvasId, annotationSourcesOf(rawCanvasOf(manifest, canvasId)).pages, size, canvasIdsOf(manifest));
+
+/** The ids of the Canvases of a manifest (for `readCanvasAnnotations`). */
+export const canvasIdsOf = (manifest: unknown): Set<string> =>
+  new Set(manifestItemsOf(manifest).map((c) => c?.id).filter((id): id is string => typeof id === 'string'));
 
 // ---- placing on the image ----------------------------------------------------
 
