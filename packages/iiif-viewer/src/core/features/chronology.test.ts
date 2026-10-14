@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 import { chronologyOf, hasChronology, navDateKey, navDateText, yearText } from './chronology';
-import { collectionEntriesOf, type CollectionEntry } from './structure';
+import { collectionEntriesOf, manifestThumbnailOf, type CollectionEntry } from './structure';
 
 const raw = (name: string) => JSON.parse(readFileSync(new URL(`./__fixtures__/chronology/${name}.json`, import.meta.url), 'utf8'));
 const e = (id: string, navDate?: string): CollectionEntry => ({ id, type: 'Manifest', label: id, navDate });
@@ -52,5 +52,24 @@ describe('text', () => {
     expect(yearText(-499, 'en')).toBe('500 BCE');
     expect(yearText(-499, 'ja')).toBe('紀元前 500');
     expect(navDateText('-0499-06-01T00:00:00Z', 'en')).toBe('500 BCE');
+  });
+});
+
+describe('manifestThumbnailOf', () => {
+  it('0230: an item without a thumbnail gets one from the Image API of its first image', () => {
+    expect(manifestThumbnailOf(raw('0230-navdate_map_1-manifest'), 96)).toBe(
+      'https://iiif.io/api/image/3.0/example/reference/43153e2ec7531f14dd1c9b2fc401678a-88695674/full/,96/0/default.jpg',
+    );
+  });
+  it('prefers the thumbnail of the Manifest, then of the first Canvas', () => {
+    const canvas = { type: 'Canvas', thumbnail: [{ id: 'c.jpg' }], items: [] };
+    expect(manifestThumbnailOf({ thumbnail: [{ id: 'm.jpg' }], items: [canvas] })).toBe('m.jpg');
+    expect(manifestThumbnailOf({ items: [canvas] })).toBe('c.jpg');
+  });
+  it('uses the first choice of a Choice, and the image itself without a service', () => {
+    const anno = (body: unknown) => ({ items: [{ type: 'Canvas', items: [{ items: [{ motivation: 'painting', body }] }] }] });
+    expect(manifestThumbnailOf(anno({ type: 'Choice', items: [{ type: 'Image', id: 'a.jpg' }, { type: 'Image', id: 'b.jpg' }] }))).toBe('a.jpg');
+    expect(manifestThumbnailOf(anno({ type: 'Sound', id: 'a.mp3' }))).toBeUndefined();
+    expect(manifestThumbnailOf(null)).toBeUndefined();
   });
 });

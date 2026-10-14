@@ -92,6 +92,8 @@ test('Collection を navDate の年代順に並べる（0230）', async ({ page 
   await page.getByRole('button', { name: '年代順' }).click();
   const timeline = page.getByRole('list', { name: '年表' });
   await expect(timeline.getByRole('heading', { level: 3 })).toHaveText(['1986', '1987']);
+  // the items carry no thumbnail: the picture comes from the image service of each Manifest
+  await expect(timeline.locator('img[src*="/full/,192/0/default.jpg"]')).toHaveCount(2);
   await page.getByRole('button', { name: 'コレクションの順' }).click();
   await expect(timeline).toHaveCount(0);
 });
