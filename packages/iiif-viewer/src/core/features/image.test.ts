@@ -17,6 +17,7 @@ import {
   thumbnailUrlOf,
   tileSchemeOf,
   tilesCovering,
+  tilesForView,
   type CanvasImages,
 } from './image';
 
@@ -193,6 +194,19 @@ describe('tiles', () => {
     const one = tilesCovering(service, info, scheme, 4, { x: 10, y: 10, w: 10, h: 10 });
     expect(one).toHaveLength(1);
     expect(one[0].url).toBe('https://h/i/0,0,4000,3000/1000,/0/default.jpg');
+  });
+
+  it('steps to a coarser factor rather than cutting the tiles of a view', () => {
+    // a large level 0 image (8612 x 6470, 200 px tiles) shown whole on a wide screen
+    const big = { ...info, width: 8612, height: 6470, level: 0, tiles: [{ width: 200, height: 200, scaleFactors: [1, 2, 4, 8, 16, 32] }] };
+    const scheme = tileSchemeOf(big)!;
+    const whole = { x: 0, y: 0, w: 8612, h: 6470 };
+    // factor 2 would take 22 x 17 = 374 tiles; factor 4 takes 11 x 9 = 99
+    const tiles = tilesForView(service, big, scheme, 0.43, whole);
+    expect(tiles).toHaveLength(99);
+    expect(tiles[tiles.length - 1].key).toBe('4/10/8');
+    // a view that fits keeps the sharpest factor
+    expect(tilesForView(service, big, scheme, 0.43, { x: 0, y: 0, w: 2000, h: 1500 })[0].key).toBe('2/0/0');
   });
 
   it('level 0 without tiles: a listed size, never a region', () => {
