@@ -186,6 +186,27 @@ export function startOf(manifest: unknown, containers: ContainerInfo[]): StartIn
   return index < 0 ? null : { ...target, index };
 }
 
+/**
+ * URL の `canvas` 引数で、最初に開く Canvas を決める。
+ * 値は 1 から数えたコマの番号（`canvas=6`）か、Canvas の URI（`#xywh=` などの断片つきでもよい）。
+ * 当たらなければ null。
+ */
+export function canvasParamTarget(
+  value: string | null | undefined,
+  containers: ContainerInfo[],
+): (CanvasTarget & { index: number }) | null {
+  const v = value?.trim();
+  if (!v) return null;
+  if (/^\d+$/.test(v)) {
+    const index = Number(v) - 1;
+    const c = containers[index];
+    return c ? { canvasId: c.id, index } : null;
+  }
+  const { id, fragment } = splitId(v);
+  const index = indexOfCanvas(containers, id);
+  return index < 0 ? null : { canvasId: id, ...fragment, index };
+}
+
 // ---------------------------------------------------------------------------
 // 目次（structures の Range）と代替のページ順
 // ---------------------------------------------------------------------------
