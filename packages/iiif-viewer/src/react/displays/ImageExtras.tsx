@@ -51,7 +51,8 @@ export function AnnotationBoxes({
   );
 }
 
-// 動画の表紙（placeholderCanvas、なければサムネイル）。押すと隠れて、再生を始める。
+// 動画の表紙（placeholderCanvas、なければサムネイル、それも無ければ動画から取った絵）。
+// 絵が無いあいだは黒地に再生の印だけを出す。押すと隠れて、再生を始める。
 // 再生位置が動き始めたとき（文字起こしからの移動など）も隠れる。
 export function MediaCover({
   src,
@@ -59,7 +60,7 @@ export function MediaCover({
   onDismiss,
   onPlay,
 }: {
-  src: string;
+  src?: string;
   dismissed: boolean;
   onDismiss: () => void;
   onPlay: () => void;
@@ -76,8 +77,10 @@ export function MediaCover({
       aria-label={t('playMedia')}
       className="absolute inset-0 z-10 flex items-center justify-center bg-black cursor-pointer"
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" draggable={false} className="max-w-full max-h-full object-contain" />
+      {src && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={src} alt="" draggable={false} className="w-full h-full object-contain" />
+      )}
       <span className="absolute w-16 h-16 rounded-full bg-black/60 text-white text-3xl grid place-items-center">
         <span aria-hidden="true">▶</span>
       </span>

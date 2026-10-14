@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type MutableRefObject } from 'react';
+import { useRef, useState, type MutableRefObject } from 'react';
 import { useTranslations } from '../env';
 
 export interface CaptionTrack {
@@ -23,10 +23,16 @@ interface Props {
   onTimeUpdate?: (seconds: number) => void;
 }
 
+/** Where a video is moved before playing, so that its first frame is drawn (seconds). */
+export const FIRST_FRAME = 0.001;
+
 // <video controls> (with captions as <track>) or <audio controls>.
 export default function MediaView({ kind, src, format, tracks = [], mediaRef, onTimeUpdate }: Props) {
   const t = useTranslations('Viewer');
   const [failed, setFailed] = useState<string | null>(null);
+  // 再生前の動画が黒いままにならないよう、読み込んだら少しだけ進めて最初のフレームを描かせる。
+  // この移動は再生位置として知らせない（表紙が消えたり、文字起こしが動いたりしないように）。
+  const nudging = useRef(false);
 
   if (failed === src) {
     return <div className="p-4 text-sm text-[var(--ds-fg)]" role="alert">{t('mediaError')}</div>;
@@ -35,8 +41,16 @@ export default function MediaView({ kind, src, format, tracks = [], mediaRef, on
   const common = {
     controls: true,
     onError: () => setFailed(src),
-    onTimeUpdate: (e: React.SyntheticEvent<HTMLMediaElement>) => onTimeUpdate?.(e.currentTarget.currentTime),
-    onSeeked: (e: React.SyntheticEvent<HTMLMediaElement>) => onTimeUpdate?.(e.currentTarget.currentTime),
+    onTimeUpdate: (e: React.SyntheticEvent<HTMLMediaElement>) => {
+      if (!nudging.current) onTimeUpdate?.(e.currentTarget.currentTime);
+    },
+    onSeeked: (e: React.SyntheticEvent<HTMLMediaElement>) => {
+      if (nudging.current) {
+        nudging.current = false;
+        return;
+      }
+      onTimeUpdate?.(e.currentTarget.currentTime);
+    },
   };
 
   if (kind === 'Audio') {
@@ -67,6 +81,13 @@ export default function MediaView({ kind, src, format, tracks = [], mediaRef, on
         className="w-full h-full object-contain"
         crossOrigin="anonymous"
         preload="metadata"
+        onLoadedMetadata={(e) => {
+          const el = e.currentTarget;
+          if (el.paused && el.currentTime === 0) {
+            nudging.current = true;
+            el.currentTime = FIRST_FRAME;
+          }
+        }}
         {...common}
       >
         <source src={src} type={format} />

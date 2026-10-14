@@ -39,6 +39,7 @@ import { AnnotationBoxes, MediaCover } from './ImageExtras';
 import ImageLayerView from './ImageTiles';
 import ImageView from './ImageView';
 import { useRawManifest } from './rawManifest';
+import { useVideoPoster } from './videoPoster';
 import Waveform from './Waveform';
 import { DISPLAYS } from './registry';
 import type { Display, DisplayProps } from './types';
@@ -237,6 +238,12 @@ function MediaBody({ props, images, kind }: { props: DisplayProps; images: Canva
   const next = nextDisplay(props);
   const { mediaRef, currentTime } = usePlayback();
   const [dismissedId, setDismissedId] = useState<string | null>(null);
+  // 表紙が無い動画は、動画の途中から絵を取って表紙にする
+  const own = kind === 'Video' ? images.placeholder?.layer.url ?? images.thumbnail : undefined;
+  const video = kind === 'Video' && !own && !images.accompanying
+    ? images.paintings.flatMap((p) => p.options).find((o) => o.kind === 'Video')?.url
+    : undefined;
+  const still = useVideoPoster(video);
   if (!next) return null;
   const Next = next.Component;
 
@@ -265,14 +272,13 @@ function MediaBody({ props, images, kind }: { props: DisplayProps; images: Canva
     );
   }
 
-  // a video shows its placeholder (or thumbnail) until it is played
-  const cover = kind === 'Video' ? images.placeholder?.layer.url ?? images.thumbnail : undefined;
+  // a video shows its placeholder (or thumbnail, or a still taken from it) until it is played
   return (
     <div className="relative flex-1 min-h-0 min-w-0 flex flex-col">
       <Next {...props} />
-      {cover && (
+      {kind === 'Video' && (
         <MediaCover
-          src={cover}
+          src={own ?? still}
           dismissed={dismissedId === props.container.id || currentTime > 0}
           onDismiss={() => setDismissedId(props.container.id)}
           onPlay={() => {

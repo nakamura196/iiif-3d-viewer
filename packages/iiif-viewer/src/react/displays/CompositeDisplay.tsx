@@ -4,8 +4,10 @@ import { useAtomValue } from 'jotai';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   activeItemsAt,
+  canvasImagesOf,
   isComposite,
   mediaTimeAt,
+  rawCanvasOf,
   rawContainerOf,
   sanitizeTemporalHtml,
   timelineImageUrl,
@@ -19,6 +21,9 @@ import { useTranslations } from '../env';
 import { usePlayback } from '../playback';
 import ChoiceBar from './ChoiceBar';
 import { flatDisplay } from './FlatDisplay';
+import { MediaCover } from './ImageExtras';
+import { FIRST_FRAME } from './MediaView';
+import { useRawManifest } from './rawManifest';
 import { fmt } from './TranscriptPanel';
 import type { Display, DisplayProps } from './types';
 
@@ -58,7 +63,8 @@ function TimedMedia({ item, time, playing }: { item: TimelineItem; time: number;
   const common = {
     preload: 'auto' as const,
     onLoadedMetadata: (e: React.SyntheticEvent<HTMLMediaElement>) => {
-      e.currentTarget.currentTime = localRef.current;
+      // 0 秒のままだと最初のフレームが描かれず黒くなるので、ほんの少し進める
+      e.currentTarget.currentTime = Math.max(localRef.current, FIRST_FRAME);
     },
   };
   if (item.kind === 'Audio') {
@@ -98,7 +104,7 @@ function ItemView({ item, time, playing }: { item: TimelineItem; time: number; p
   }
 }
 
-function CompositeStage({ container, timeline }: { container: ContainerInfo; timeline: Timeline }) {
+function CompositeStage({ container, timeline, cover }: { container: ContainerInfo; timeline: Timeline; cover?: string }) {
   const t = useTranslations('Viewer');
   const choices = useAtomValue(modelChoicesAtom);
   const { mediaRef, setCurrentTime } = usePlayback();
@@ -106,6 +112,8 @@ function CompositeStage({ container, timeline }: { container: ContainerInfo; tim
 
   const [time, setTime] = useState(0);
   const [playing, setPlaying] = useState(false);
+  // 一度でも再生するか、位置を動かすまでは表紙を出す
+  const [started, setStarted] = useState(false);
   const clock = useRef({ t0: 0, base: 0 });
   const timeRef = useRef(0);
 
@@ -114,6 +122,7 @@ function CompositeStage({ container, timeline }: { container: ContainerInfo; tim
     timeRef.current = v;
     clock.current = { t0: performance.now(), base: v };
     setTime(v);
+    if (v > 0) setStarted(true);
   }, [duration]);
 
   // 文字起こし（右パネル）から時刻を動かせるように、再生位置の受け口を舞台の時計にする
@@ -188,6 +197,7 @@ function CompositeStage({ container, timeline }: { container: ContainerInfo; tim
 
   const togglePlay = () => {
     if (!playing && timeRef.current >= duration) seek(0);
+    setStarted(true);
     setPlaying((p) => !p);
   };
 
@@ -225,6 +235,9 @@ function CompositeStage({ container, timeline }: { container: ContainerInfo; tim
             })}
           </div>
         </div>
+        {cover && (
+          <MediaCover src={cover} dismissed={started} onDismiss={() => setStarted(true)} onPlay={() => setPlaying(true)} />
+        )}
       </div>
       <div className="flex items-center gap-2 px-2 py-1.5 bg-[var(--ds-surface)] border-t border-[var(--ds-border)] text-[var(--ds-fg)]">
         <button
@@ -254,13 +267,20 @@ function CompositeStage({ container, timeline }: { container: ContainerInfo; tim
 
 function CompositeDisplayView(props: DisplayProps) {
   const { container, manifest } = props;
+  // 表紙は元のマニフェストの placeholderCanvas、無ければ Canvas の thumbnail（動画を含むときだけ）
+  const raw = useRawManifest(props.iiifContent);
+  const cover = useMemo(() => {
+    const images = canvasImagesOf(rawCanvasOf(raw ?? manifest, container.id));
+    return images.placeholder?.layer.url ?? images.thumbnail;
+  }, [raw, manifest, container.id]);
   const timeline = useMemo(
     () => timelineOf(rawContainerOf(manifest, container.id), manifest),
     [manifest, container.id]
   );
   // 時間の指定が読めなかったときは、これまでどおりの表示にする
   if (!timeline || !isComposite(timeline)) return <flatDisplay.Component {...props} />;
-  return <CompositeStage key={container.id} container={container} timeline={timeline} />;
+  const hasVideo = timeline.items.some((m) => m.kind === 'Video');
+  return <CompositeStage key={container.id} container={container} timeline={timeline} cover={hasVideo ? cover : undefined} />;
 }
 
 // 共有の読み取り（ContainerInfo）には時間が無いので、ここでは「動画・音声か duration があり、
