@@ -15,7 +15,7 @@ export default function UseCaseCard({ useCase: u, locale }: { useCase: UseCase; 
   return (
     <section
       id={u.id}
-      className="scroll-mt-20 bg-[var(--ds-surface)] rounded-lg border border-[var(--ds-border)] p-4 space-y-3"
+      className="scroll-mt-20 bg-[var(--ds-surface)] rounded-lg border border-[var(--ds-border)] p-4 flex flex-col gap-3"
     >
       <h2 className="text-lg font-semibold text-[var(--ds-fg)]">{u.title[locale]}</h2>
       <ul className="flex flex-wrap gap-2">
@@ -29,17 +29,14 @@ export default function UseCaseCard({ useCase: u, locale }: { useCase: UseCase; 
         ))}
       </ul>
       {videoId ? (
-        <VideoEmbed videoId={videoId} title={u.title[locale]} />
+        <VideoEmbed videoId={videoId} title={u.title[locale]} className="w-full" />
       ) : (
         <div className="aspect-video w-full rounded-xl border border-dashed border-[var(--ds-border)] flex items-center justify-center text-sm text-[var(--ds-fg-muted)]">
           {t('videoPending')}
         </div>
       )}
-      <p className="text-sm text-[var(--ds-fg-muted)]">{u.note[locale]}</p>
+      <p className="text-sm text-[var(--ds-fg-muted)] flex-1">{u.note[locale]}</p>
       <div className="flex flex-wrap items-center gap-4 text-sm">
-        <Link href={hrefOf(u.open)} className={buttonClass('primary', 'md')}>
-          {t('open')}
-        </Link>
         <a href={u.open.manifest} target="_blank" rel="noopener noreferrer" className={linkClass}>
           {t('manifest')}
         </a>
@@ -49,6 +46,9 @@ export default function UseCaseCard({ useCase: u, locale }: { useCase: UseCase; 
           </a>
         )}
       </div>
+      <Link href={hrefOf(u.open)} className={`${buttonClass('primary', 'md')} self-start`}>
+        {t('open')}
+      </Link>
     </section>
   );
 }
