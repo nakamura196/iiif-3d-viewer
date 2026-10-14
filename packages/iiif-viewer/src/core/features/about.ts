@@ -19,6 +19,11 @@ const str = (v: unknown): string | undefined => (typeof v === 'string' && v ? v 
 
 const ALLOWED_TAGS = new Set(['a', 'b', 'br', 'i', 'img', 'p', 'small', 'span', 'sub', 'sup']);
 const VOID_TAGS = new Set(['br', 'img']);
+// 許さないが、区切りのあるタグ。タグを外すと前後の文字がつながる（"項目1項目2"）ので、改行を入れる。
+// Presentation 3 の範囲外だが、Wellcome の Auth の note などは <ul><li> で書かれている
+const BREAK_TAGS = new Set([
+  'li', 'ul', 'ol', 'div', 'dt', 'dd', 'dl', 'tr', 'blockquote', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+]);
 // 中身ごと捨てるタグ
 const DROP_WITH_CONTENT = new Set([
   'script', 'style', 'noscript', 'template', 'iframe', 'object', 'embed', 'textarea', 'title', 'svg', 'math',
@@ -88,14 +93,24 @@ export const sanitizeAboutHtml = (html: unknown): string => {
   const open: string[] = [];
   let i = 0;
   let dropUntil: string | null = null;
+  let pendingBreak = false;
+  // 文字や許したタグを足す。外した区切りのタグの後で、直前が段落の切れ目でなければ改行を挟む
+  const push = (piece: string) => {
+    if (pendingBreak && piece.trim()) {
+      const last = out[out.length - 1];
+      if (last && !/^(<br>|<p[ >]|<\/p>)/.test(last)) out.push('<br>');
+      pendingBreak = false;
+    }
+    out.push(piece);
+  };
 
   while (i < src.length) {
     const lt = src.indexOf('<', i);
     if (lt < 0) {
-      if (!dropUntil) out.push(escapeTextKeepEntities(src.slice(i)));
+      if (!dropUntil) push(escapeTextKeepEntities(src.slice(i)));
       break;
     }
-    if (lt > i && !dropUntil) out.push(escapeTextKeepEntities(src.slice(i, lt)));
+    if (lt > i && !dropUntil) push(escapeTextKeepEntities(src.slice(i, lt)));
     // コメント
     if (src.startsWith('<!--', lt)) {
       const end = src.indexOf('-->', lt + 4);
@@ -109,7 +124,7 @@ export const sanitizeAboutHtml = (html: unknown): string => {
         const end = src.indexOf('>', lt);
         i = end < 0 ? src.length : end + 1;
       } else {
-        if (!dropUntil) out.push('&lt;');
+        if (!dropUntil) push('&lt;');
         i = lt + 1;
       }
       continue;
@@ -138,7 +153,11 @@ export const sanitizeAboutHtml = (html: unknown): string => {
       if (!closing && !/\/\s*$/.test(attrSrc)) dropUntil = tag;
       continue;
     }
-    if (!ALLOWED_TAGS.has(tag)) continue; // タグだけ外して中の文字は残す
+    if (!ALLOWED_TAGS.has(tag)) {
+      // タグだけ外して中の文字は残す。区切りのタグなら、次に文字が来たときに改行を入れる
+      if (BREAK_TAGS.has(tag)) pendingBreak = true;
+      continue;
+    }
     if (closing) {
       const k = open.lastIndexOf(tag);
       if (k >= 0 && !VOID_TAGS.has(tag)) {
@@ -146,7 +165,7 @@ export const sanitizeAboutHtml = (html: unknown): string => {
       }
       continue;
     }
-    out.push(`<${tag}${attributesFor(tag, parseAttributes(attrSrc))}>`);
+    push(`<${tag}${attributesFor(tag, parseAttributes(attrSrc))}>`);
     if (!VOID_TAGS.has(tag)) open.push(tag);
   }
   while (open.length) out.push(`</${open.pop()}>`);

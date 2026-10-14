@@ -160,7 +160,8 @@
       "compare": "見比べ",
       "layers": "レイヤー",
       "georef": "位置情報",
-      "curation": "キュレーション"
+      "curation": "キュレーション",
+      "auth": "認証"
     }
   },
   "Search": {
