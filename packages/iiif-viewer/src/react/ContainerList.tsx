@@ -5,7 +5,8 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   contentStateOf,
   curationMemberAt,
-  matchTarget,
+  compareIndexesOf,
+  matchTargets,
   parseContentState,
   parseDroppedText,
   startOf,
@@ -14,6 +15,7 @@ import {
 } from '../core';
 import { manifestAtom } from './atoms';
 import {
+  compareAtom,
   focusAtom,
   navRequestAtom,
   nextSeq,
@@ -49,6 +51,7 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
   const manifest = useAtomValue(manifestAtom);
   const [request, setRequest] = useAtom(navRequestAtom);
   const setFocus = useSetAtom(focusAtom);
+  const setCompare = useSetAtom(compareAtom);
   const { open, back, canGoBack } = useManifestSwitch();
   const { viewing, groups } = usePageOrder(manifest, containers);
   const sentinel = useRef<HTMLSpanElement>(null);
@@ -66,8 +69,9 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
       if (index < 0 || index >= containers.length) return;
       if (index !== selected) onSelect(index);
       setFocus(target && (target.xywh || target.t) ? { seq: nextSeq(), target } : null);
+      setCompare([]);
     },
-    [containers.length, selected, onSelect, setFocus],
+    [containers.length, selected, onSelect, setFocus, setCompare],
   );
 
   // --- page movement (in display order; a spread moves two pages at once) ---
@@ -93,23 +97,25 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
     const key = `${manifest.id}`;
     if (applied.current === key) return;
     applied.current = key;
-    let found: (CanvasTarget & { index: number }) | null = null;
+    let matched: Array<CanvasTarget & { index: number }> = [];
     if (pending.current) {
-      found = matchTarget(pending.current, containers);
+      matched = matchTargets(pending.current, containers);
       pending.current = null;
     }
-    if (!found && typeof window !== 'undefined') {
+    if (matched.length === 0 && typeof window !== 'undefined') {
       const param = new URLSearchParams(window.location.search).get('iiif-content');
       const state = parseContentState(param);
-      if (state) found = matchTarget(state.targets, containers);
+      if (state) matched = matchTargets(state.targets, containers);
     }
     // ?pos= of a curation: which item to show first (from 1, as in IIIF Curation Viewer)
-    if (!found && typeof window !== 'undefined') {
+    if (matched.length === 0 && typeof window !== 'undefined') {
       const target = curationMemberAt(manifest, Number(new URLSearchParams(window.location.search).get('pos')));
-      if (target) found = matchTarget([target], containers);
+      if (target) matched = matchTargets([target], containers);
     }
-    if (found) {
-      go(found.index, found);
+    if (matched.length > 0) {
+      go(matched[0].index, matched[0]);
+      // 0540: 複数の Canvas を指すときは、並べて見せる
+      setCompare(compareIndexesOf(matched));
       return;
     }
     const start = startOf(manifest, containers);
@@ -184,8 +190,11 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
         void open(state.manifestUrl, false);
         return;
       }
-      const found = matchTarget(state.targets, containers);
-      if (found) go(found.index, found);
+      const matched = matchTargets(state.targets, containers);
+      if (matched.length > 0) {
+        go(matched[0].index, matched[0]);
+        setCompare(compareIndexesOf(matched));
+      }
     };
   });
   useEffect(() => {
