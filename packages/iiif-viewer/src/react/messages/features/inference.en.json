@@ -26,6 +26,13 @@
     "showOnImage": "Show on the image",
     "saveJson": "Save annotations (JSON)",
     "saveText": "Save text",
-    "discard": "Discard"
+    "discard": "Discard",
+    "pointStart": "Click on the image to outline",
+    "pointStop": "Stop clicking",
+    "pointUndo": "Remove the last one",
+    "pointHint": "Click on something in the image to trace its shape. Shift-click to add to the last shape, Alt (Option)-click to take away from it. Zoom in before clicking for finer shapes.",
+    "pointLabel": "Region {n}",
+    "stage_encode": "Reading the image...",
+    "stage_segment": "Tracing the shape..."
   }
 }

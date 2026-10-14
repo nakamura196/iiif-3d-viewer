@@ -32,8 +32,6 @@
     "item6Date": "2026-10-14",
     "item6Title": "Published a video introducing the compare page (comparing two models side by side, with a swipe, or through a spyglass; sharing by URL; the collapsible side panel)",
     "item3Title": "Richer annotation display: grouping of annotations on the same region, keyed tags and creators, search and filters, and a fix for flying to annotations without a camera",
-    "item8Date": "2026-10-12",
-    "item8Title": "Image layers: show or hide each painted image, change opacity and stacking order, play the layers in or out one by one, and compare image Choices on the compare page",
     "item9Date": "2026-10-13",
     "item9Title": "New use cases and search pages: examples of what the viewer is for, search across collections and curations, and support for the IIIF Curation API",
     "item10Date": "2026-10-14",
@@ -51,7 +49,9 @@
     "item16Date": "2026-10-14",
     "item16Title": "New model in the Inference tab: Faces in Japanese art finds the faces in ukiyo-e, picture scrolls and modern bijin-ga in your browser and marks them with boxes; the image is scanned in parts, so small faces in a crowd are found too",
     "item17Date": "2026-10-14",
-    "item17Title": "The video on the Cookbook samples page is new: it opens the recipes in Kasane category by category with narration, in Japanese and English, and each recipe links to its scene in the video"
+    "item17Title": "The video on the Cookbook samples page is new: it opens the recipes in Kasane category by category with narration, in Japanese and English, and each recipe links to its scene in the video",
+    "item18Date": "2026-10-14",
+    "item18Title": "New in the Inference tab: Click to outline. Click a thing in the image and SAM 2.1 turns its outline into a polygon annotation; Shift+click adds to the shape, Alt+click takes away from it"
   },
   "Input": {
     "title": "Open an IIIF manifest",

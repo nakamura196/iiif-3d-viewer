@@ -7,6 +7,8 @@ import {
   sam2Crop,
   sam2MaskToCrop,
   sam2Outline,
+  sam2PointInput,
+  sam2ViewCrop,
   SAM2_MASK,
   simplifyRing,
   toAnnotationPage,
@@ -65,6 +67,20 @@ describe('SAM 2.1', () => {
 
   it('枠を、切り出した部分を 1,024 角に引き伸ばした座標にする', () => {
     expect(sam2BoxInput({ x0: 50, y0: 60, x1: 100, y1: 110 }, { x0: 0, y0: 10, x1: 200, y1: 410 })).toEqual([256, 128, 512, 256]);
+  });
+
+  it('クリックのときは、画面に見えている部分を切り出す。狭すぎれば広げ、画像の端で止める', () => {
+    expect(sam2ViewCrop({ x0: -50, y0: 100, x1: 600, y1: 700 }, 1000, 800)).toEqual({ x0: 0, y0: 100, x1: 600, y1: 700 });
+    expect(sam2ViewCrop({ x0: 480, y0: 10, x1: 520, y1: 50 }, 1000, 800)).toEqual({ x0: 372, y0: 0, x1: 628, y1: 256 });
+    expect(sam2ViewCrop({ x0: 0, y0: 0, x1: 50, y1: 50 }, 100, 100)).toEqual({ x0: 0, y0: 0, x1: 100, y1: 100 });
+  });
+
+  it('クリックした点を、切り出した部分を 1,024 角に引き伸ばした座標と、内（1）・外（0）にする', () => {
+    const crop = { x0: 100, y0: 0, x1: 300, y1: 400 };
+    expect(sam2PointInput([{ x: 200, y: 100, positive: true }, { x: 150, y: 300, positive: false }], crop)).toEqual({
+      coords: [512, 256, 256, 768],
+      labels: [1, 0],
+    });
   });
 
   it('256 角のマスクを、切り出した部分の大きさにする', () => {

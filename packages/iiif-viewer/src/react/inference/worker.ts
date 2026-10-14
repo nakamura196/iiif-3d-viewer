@@ -37,7 +37,7 @@ const sessionOf = (file: ModelFile, prefer: Backend) => {
   return s;
 };
 
-const run = async ({ job, modelId, bitmap }: ToWorker) => {
+const run = async ({ job, modelId, bitmap, prompt, imageKey }: ToWorker) => {
   try {
     const model = modelById(modelId);
     if (!model) throw new Error(`Unknown model: ${modelId}`);
@@ -57,6 +57,8 @@ const run = async ({ job, modelId, bitmap }: ToWorker) => {
         return s;
       },
       progress: (stage, done, total) => post({ type: 'progress', job, stage, done, total }),
+      prompt,
+      imageKey,
     });
     post({ type: 'result', job, output, backends: [...backends], ms: performance.now() - t0 });
   } finally {

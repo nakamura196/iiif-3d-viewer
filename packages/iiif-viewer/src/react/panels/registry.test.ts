@@ -27,6 +27,6 @@ describe('PANELS', () => {
 
 describe('OVERLAYS', () => {
   it('collects the overlays from the folder', () => {
-    expect(OVERLAYS.map((o) => o.id)).toEqual(['annotations']);
+    expect(OVERLAYS.map((o) => o.id)).toEqual(['annotations', 'point-pick']);
   });
 });

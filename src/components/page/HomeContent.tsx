@@ -19,6 +19,12 @@ export default function HomeContent() {
   // 新しいものが上。表示は直近の 8 件まで（古い項目は文言ごと消す）
   const newsItems = [
     {
+      date: tNews('item18Date'),
+      title: tNews('item18Title'),
+      // 推論タブを開いた状態の例（item16 と同じ花見のキュレーション。「クリックで切り出す」を選んで使う）
+      href: `/viewer/?iiif-content=${encodeURIComponent('https://nakamura196.github.io/ndl-face-finder/curations/works/edonohanami.json')}&pos=2&tab=inference`,
+    },
+    {
       date: tNews('item17Date'),
       title: tNews('item17Title'),
       href: '/samples',
@@ -71,10 +77,6 @@ export default function HomeContent() {
       date: tNews('item9Date'),
       title: tNews('item9Title'),
       href: '/usecases',
-    },
-    {
-      date: tNews('item8Date'),
-      title: tNews('item8Title'),
     },
     // 同じ場所の注釈・キー付きタグ（研究段階）の告知。掲載の了承が得られたら戻す
     // {
