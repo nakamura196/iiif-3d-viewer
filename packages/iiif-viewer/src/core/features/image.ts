@@ -5,6 +5,8 @@
 // 元の（Presentation 3 のままの）Canvas から読む。
 // ここで読むのは「表示に要る情報」だけで、画面の組み立ては react/displays/ImageCanvasDisplay.tsx が行う。
 
+import { probeServiceOf, type AuthProbeRef, type AuthSubstitute } from './auth';
+
 type Json = Record<string, unknown>;
 
 const asList = (v: unknown): unknown[] => (Array.isArray(v) ? v : v == null ? [] : [v]);
@@ -44,6 +46,8 @@ export interface ImageLayer {
   mirror: boolean;
   /** Annotations that belong to this image only (Image body `annotations`). */
   annotations: ImageAnnotation[];
+  /** The AuthProbeService2 of the image (IIIF Authorization Flow 2.0), when the manifest declares one. */
+  auth?: AuthProbeRef;
 }
 
 /** An annotation drawn as a box on the image. Image bodies and text are what the box shows. */
@@ -113,6 +117,15 @@ const serviceOf = (resource: Json): ImageServiceRef | undefined => {
     return { id: id.replace(/\/+$/, ''), version };
   }
   return undefined;
+};
+
+/** The layer with the resource an AuthProbeResult2 `location` points to (a substitute image). */
+export const substituteLayer = (layer: ImageLayer, location: AuthSubstitute): ImageLayer => {
+  const { service: _old, auth: _auth, ...rest } = layer;
+  void _old;
+  void _auth;
+  const service = location.serviceId ? { id: location.serviceId, version: layer.service?.version ?? 3 } : undefined;
+  return { ...rest, url: location.id, ...(service ? { service: service as ImageServiceRef } : {}) };
 };
 
 // A service id found in an Image API request URL ({id}/{region}/{size}/{rotation}/{quality}.{format}),
@@ -306,6 +319,8 @@ const layerOf = (
     ...(declared ? { service: declared } : guessed ? { service: { id: guessed, version: 3 as const } } : {}),
     ...(regionSpec ? { regionSpec } : {}),
   };
+  const auth = probeServiceOf(source);
+  if (auth) layer.auth = auth;
   const w = num(source.width);
   const h = num(source.height);
   if (w !== undefined) layer.width = w;

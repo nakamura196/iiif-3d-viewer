@@ -16,7 +16,8 @@
     "test:basepath": "GITHUB_PAGES=true npm run build && ./scripts/check-basepath.sh",
     "test:export": "node scripts/check-export.mjs",
     "test:live": "node scripts/check-live.mjs",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "auth-mock": "node scripts/auth-mock-server.mjs"
   },
   "dependencies": {
     "@iiif/presentation-3": "^2.1.0",

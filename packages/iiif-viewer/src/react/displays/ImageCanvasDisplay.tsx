@@ -24,6 +24,7 @@ import { canvasLayersAtom, layerOrderAtom, layerSettingsAtom } from '../atoms';
 import { useLocale, useTranslations } from '../env';
 import { usePlayback } from '../playback';
 import ChoiceBar from './ChoiceBar';
+import AuthPrompt from '../auth/AuthPrompt';
 import { AnnotationBoxes, MediaCover } from './ImageExtras';
 import ImageLayerView from './ImageTiles';
 import ImageView from './ImageView';
@@ -147,6 +148,7 @@ function ImageBody({
           // neither the Canvas nor the image says how big it is: the plain image
           drawn[0] && <ImageView key={drawn[0].layer.url} src={drawn[0].layer.url} container={container} />
         )}
+        <AuthPrompt />
         {failedBase && items.length === 1 && <FailedHint />}
       </div>
     </>

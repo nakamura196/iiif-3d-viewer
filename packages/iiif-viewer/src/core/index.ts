@@ -5,6 +5,7 @@ export * from './services/manifestParser';
 export * from './services/paintedModels';
 export * from './services/utils';
 export * from './services/upgradeV2';
+export * from './services/sharedServices';
 export * from './viewCamera';
 export * from './focusCamera';
 export * from './annotationFilter';
