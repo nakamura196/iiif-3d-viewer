@@ -28,6 +28,55 @@ function fixChoices(v: unknown): void {
   Object.values(o).forEach(fixChoices);
 }
 
+// upgrader は、related / seeAlso / rendering が URL の文字列だと、URL を捨てて
+// 「http://example.org/undefined/1」「type: unknown」の仮の値に置き換える（@iiif/parser 4.0.3 で確認）。
+// さらに related は先頭の 1 件だけを、仮の provider の homepage に入れる。
+// そこで文字列は { @id } の形にそろえ、資料全体の related は upgrader に渡さず、3 の homepage として自分で付ける。
+const LINK_KEYS = ['related', 'seeAlso', 'rendering'];
+const LINK_TYPES: Record<string, string> = { homepage: 'Text', rendering: 'Text', seeAlso: 'Dataset' };
+
+const asList = (v: unknown): unknown[] => (Array.isArray(v) ? v : v == null ? [] : [v]);
+const linkObject = (e: unknown): unknown => (typeof e === 'string' ? { '@id': e } : e);
+
+function fixLinkStrings(v: unknown): void {
+  if (Array.isArray(v)) {
+    v.forEach(fixLinkStrings);
+    return;
+  }
+  if (typeof v !== 'object' || v === null) return;
+  const o = v as Json;
+  for (const key of LINK_KEYS) if (o[key] != null) o[key] = asList(o[key]).map(linkObject);
+  Object.values(o).forEach(fixLinkStrings);
+}
+
+const homepageOf = (related: unknown): Json[] =>
+  asList(related).flatMap((e) => {
+    if (typeof e !== 'object' || e === null) return [];
+    const r = e as Json;
+    const id = r['@id'] ?? r.id;
+    if (typeof id !== 'string' || !id) return [];
+    const link: Json = { id, type: 'Text' };
+    if (typeof r.label === 'string' && r.label) link.label = { none: [r.label] };
+    if (typeof r.format === 'string' && r.format) link.format = r.format;
+    return [link];
+  });
+
+// 仮の type: unknown を、その欄で普通に使う型に直す
+function fixUnknownTypes(v: unknown): void {
+  if (Array.isArray(v)) {
+    v.forEach(fixUnknownTypes);
+    return;
+  }
+  if (typeof v !== 'object' || v === null) return;
+  const o = v as Json;
+  for (const [key, type] of Object.entries(LINK_TYPES)) {
+    for (const e of asList(o[key])) {
+      if (typeof e === 'object' && e !== null && (e as Json).type === 'unknown') (e as Json).type = type;
+    }
+  }
+  Object.values(o).forEach(fixUnknownTypes);
+}
+
 const V2_CONTEXTS = ['http://iiif.io/api/presentation/2/context.json', 'http://www.shared-canvas.org/ns/context.json'];
 
 /** Presentation 2 の manifest / collection か（upgrader 自身の判定と同じ基準）。 */
@@ -44,5 +93,12 @@ export const isPresentation2 = (json: unknown): boolean => {
 export const upgradeToV3 = (json: unknown): unknown => {
   if (!isPresentation2(json)) return json;
   fixChoices(json);
-  return upgrade(json);
+  fixLinkStrings(json);
+  const o = json as Json;
+  const homepage = homepageOf(o.related);
+  delete o.related;
+  const out = upgrade(json) as unknown as Json;
+  if (homepage.length) out.homepage = [...asList(out.homepage), ...homepage];
+  fixUnknownTypes(out);
+  return out;
 };
