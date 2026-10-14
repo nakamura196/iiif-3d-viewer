@@ -1,4 +1,4 @@
-import SamplesContent from '@/components/page/SamplesContent';
+import CookbookSamplesContent from '@/components/page/CookbookSamplesContent';
 import { setRequestLocale } from 'next-intl/server';
 import { alternatesFor } from '@/lib/site';
 import type { Metadata } from 'next';
@@ -10,7 +10,7 @@ export default async function SamplesPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <SamplesContent kind="cookbook" />;
+  return <CookbookSamplesContent />;
 }
 
 export function generateStaticParams() {

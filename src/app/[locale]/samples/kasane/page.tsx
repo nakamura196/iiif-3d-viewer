@@ -10,7 +10,7 @@ export default async function KasaneSamplesPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <SamplesContent kind="own" />;
+  return <SamplesContent />;
 }
 
 export function generateStaticParams() {

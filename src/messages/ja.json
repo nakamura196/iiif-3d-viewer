@@ -45,7 +45,9 @@
     "item13Date": "2026-10-14",
     "item13Title": "右パネルに「推論」タブを足しました（NDL古典籍OCR-Lite・NDLOCR-Lite をブラウザの中で動かし、表示中の画像の文字を読み取ります。画像はどこにも送りません）",
     "item14Date": "2026-10-14",
-    "item14Title": "右パネルに「ストーリー」タブを足しました（マニフェストの注釈を順に送りながら、その場面に寄って説明を読めます。倭寇図巻などの既存のストーリー用マニフェストをそのまま開けます）"
+    "item14Title": "右パネルに「ストーリー」タブを足しました（マニフェストの注釈を順に送りながら、その場面に寄って説明を読めます。倭寇図巻などの既存のストーリー用マニフェストをそのまま開けます）",
+    "item15Date": "2026-10-14",
+    "item15Title": "「Cookbook のサンプル」に IIIF Cookbook の全 76 レシピを番号順に並べました。カテゴリで絞り込め、各レシピをそのまま Kasane で開けます"
   },
   "Input": {
     "title": "IIIF マニフェストを表示",
@@ -149,15 +151,35 @@
     "video": "動画で見る",
     "cookbook": {
       "title": "Cookbook のサンプル",
-      "lead": "IIIF Cookbook のレシピです。「ビューアで開く」で、Kasane で表示できるかを確かめられます。",
+      "lead": "IIIF Cookbook の全レシピを、Cookbook の番号順に並べました。「ビューアで開く」で、Kasane で表示できるかを確かめられます。",
       "link": "Kasane 独自のサンプルはこちら",
       "videoHeading": "Cookbook のレシピを Kasane で開いた様子",
-      "videoLead": "全レシピを順に Kasane で開いて確かめた動画です。チャプターからレシピを選べます。"
+      "videoLead": "全レシピを順に Kasane で開いて確かめた動画です。チャプターからレシピを選べます。",
+      "listHeading": "レシピの一覧",
+      "filter": "カテゴリで絞り込む",
+      "all": "すべて"
     },
     "own": {
       "title": "Kasane 独自のサンプル",
       "lead": "このサイトで用意した検査用のマニフェストです。Cookbook に無い使い方（3D へのアノテーション、時刻つき文字起こしなど）を確かめられます。",
       "link": "IIIF Cookbook のサンプルはこちら"
+    },
+    "openWith": "ビューアで開く（{label}）",
+    "category": {
+      "basics": "基本（段階的に組み立てるマニフェスト）",
+      "supplementary": "文字起こし・字幕などの補足",
+      "annotations": "いろいろなアノテーション",
+      "internal": "資料の中の構造",
+      "higher": "資料をまとめる構造",
+      "segmentation": "分割と複合した資料",
+      "linking": "リンク",
+      "sharing": "IIIF コンテンツの共有",
+      "technical": "技術的な事項",
+      "realWorld": "実際の資料に近い複雑な例"
+    },
+    "status": {
+      "unchecked": "未確認",
+      "none": "開くマニフェストなし"
     }
   },
   "UseCases": {

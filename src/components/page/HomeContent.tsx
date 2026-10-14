@@ -19,6 +19,11 @@ export default function HomeContent() {
   // 新しいものが上。表示は直近の 8 件まで（古い項目は文言ごと消す）
   const newsItems = [
     {
+      date: tNews('item15Date'),
+      title: tNews('item15Title'),
+      href: '/samples',
+    },
+    {
       date: tNews('item14Date'),
       title: tNews('item14Title'),
       // ストーリータブを開いた状態の例（倭寇図巻）
