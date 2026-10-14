@@ -41,4 +41,28 @@ describe('upgradeToV3', () => {
   it('@context の無い 2 も、@id と sc:Manifest で見分ける', () => {
     expect(isPresentation2({ '@id': 'https://example.org/m', '@type': 'sc:Manifest' })).toBe(true);
   });
+
+  // 比較ページで、関連資料に「http://example.org/undefined/2 unknown」と出ていた
+  it('文字列の related を、URL を残したまま 3 の homepage にする', () => {
+    const v2 = (o: Record<string, unknown>) => ({
+      '@context': 'http://iiif.io/api/presentation/2/context.json',
+      '@id': 'https://example.org/m',
+      '@type': 'sc:Manifest',
+      label: 'L',
+      sequences: [],
+      ...o,
+    });
+    const m = upgradeToV3(
+      v2({ related: ['https://example.org/a', { '@id': 'https://example.org/b', label: 'B', format: 'text/html' }] }),
+    ) as Record<string, unknown>;
+    expect(m.homepage).toEqual([
+      { id: 'https://example.org/a', type: 'Text' },
+      { id: 'https://example.org/b', type: 'Text', label: { none: ['B'] }, format: 'text/html' },
+    ]);
+    expect(m.provider).toBeUndefined();
+
+    const s = upgradeToV3(v2({ seeAlso: 'https://example.org/s', rendering: 'https://example.org/r' })) as Record<string, unknown>;
+    expect(s.seeAlso).toEqual([{ id: 'https://example.org/s', type: 'Dataset' }]);
+    expect(s.rendering).toEqual([{ id: 'https://example.org/r', type: 'Text' }]);
+  });
 });
