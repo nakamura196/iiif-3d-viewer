@@ -6,6 +6,8 @@
 
 import type { ManifestV4 } from '../types/iiif';
 
+import { parseStyleClasses, readStylesheetField, type AnnotationStyleSource } from './annotationStyle';
+
 export { sanitizeAnnotationHtml, safeAnnotationUrl } from './annotationHtml';
 
 type Json = Record<string, unknown>;
@@ -45,7 +47,7 @@ export interface AnnotationCollectionRef {
   total?: number;
 }
 
-export interface CanvasAnnotation {
+export interface CanvasAnnotation extends AnnotationStyleSource {
   id: string;
   motivations: string[];
   region: AnnotationRegion;
@@ -217,6 +219,17 @@ const regionFromSelector = (sel: Json, w?: number, h?: number): AnnotationRegion
   }
 };
 
+// styleClass of the target (a SpecificResource) / of the body (Choice: its items too)
+const bodyClassesOf = (body: unknown): string[] => {
+  const out: string[] = [];
+  for (const b of asList(body)) {
+    if (!isObj(b)) continue;
+    out.push(...parseStyleClasses(b.styleClass));
+    if (b.type === 'Choice') out.push(...bodyClassesOf(b.items));
+  }
+  return [...new Set(out)];
+};
+
 const parseTarget = (target: unknown, w?: number, h?: number): ParsedTarget | null => {
   const t = asList(target)[0];
   if (typeof t === 'string') {
@@ -383,9 +396,15 @@ export const readCanvasAnnotations = (
       const id = str(raw.id) ?? `${canvasId}#annotation-${out.length}`;
       if (seen.has(id)) continue;
       seen.add(id);
+      const targetClasses = parseStyleClasses(isObj(asList(raw.target)[0]) ? (asList(raw.target)[0] as Json).styleClass : undefined);
+      const bodyClasses = bodyClassesOf(raw.body);
+      const sheet = readStylesheetField(raw.stylesheet);
       out.push({
         id,
         motivations,
+        ...sheet,
+        ...(targetClasses.length ? { targetClasses } : {}),
+        ...(bodyClasses.length ? { bodyClasses } : {}),
         region: target.region,
         bodies,
         ...(collection ? { collection } : {}),

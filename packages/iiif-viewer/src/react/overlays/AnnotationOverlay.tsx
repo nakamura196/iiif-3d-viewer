@@ -32,7 +32,7 @@ const STROKE = '#2563eb';
 export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: OverlayProps) {
   const locale = useLocale();
   const manifest = useAtomValue(manifestAtom);
-  const { annotations } = useCanvasAnnotations(manifest, container);
+  const { annotations, styleOf } = useCanvasAnnotations(manifest, container);
   const [selected, setSelected] = useAtom(selectedCanvasAnnotationAtom);
 
   const drawn = annotations
@@ -55,6 +55,8 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
           e.stopPropagation();
           setSelected(isSel ? null : a.id);
         };
+        // 見た目の指定（許可した性質だけ）。選択中は既定の強調を優先する。
+        const st = isSel ? {} : styleOf(a).target;
         const common = {
           title: titleOf(a) || undefined,
           'data-annotation-id': a.id,
@@ -72,7 +74,12 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
               className={`absolute pointer-events-auto rounded-full border-2 border-white shadow ${
                 isSel ? 'bg-orange-500 w-5 h-5' : 'bg-blue-600 w-4 h-4'
               }`}
-              style={{ left: `${p.left}%`, top: `${p.top}%`, transform: 'translate(-50%, -50%)' }}
+              style={{
+                ...st,
+                left: `${p.left}%`,
+                top: `${p.top}%`,
+                transform: 'translate(-50%, -50%)',
+              }}
             />
           );
         }
@@ -95,8 +102,8 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
                   {...common}
                   points={ring.map((pt) => pt.join(',')).join(' ')}
                   className="pointer-events-auto cursor-pointer"
-                  fill={isSel ? 'rgba(249,115,22,0.30)' : 'rgba(37,99,235,0.15)'}
-                  stroke={isSel ? '#f97316' : STROKE}
+                  fill={isSel ? 'rgba(249,115,22,0.30)' : (st.backgroundColor ?? 'rgba(37,99,235,0.15)')}
+                  stroke={isSel ? '#f97316' : (st.borderColor ?? STROKE)}
                   strokeWidth={2}
                   vectorEffect="non-scaling-stroke"
                   onClick={toggle}
@@ -126,6 +133,7 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
                 isSel ? 'border-orange-500 bg-orange-500/25' : 'border-blue-600 bg-blue-600/10'
               }`}
               style={{
+                ...st,
                 left: `${b.left}%`,
                 top: `${b.top}%`,
                 width: `${b.width}%`,

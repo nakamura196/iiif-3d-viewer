@@ -12,6 +12,7 @@ import {
   sanitizeAnnotationHtml,
   type AnnotationBodyItem,
   type CanvasAnnotation,
+  type StyleDeclarations,
 } from '../../core';
 import { useLocale, useTranslations } from '../env';
 import { useCanvasNavigation } from '../navigation';
@@ -86,7 +87,9 @@ function Item({
   selected,
   onSelect,
   canvasLabels,
+  bodyStyle,
 }: {
+  bodyStyle?: StyleDeclarations;
   annotation: CanvasAnnotation;
   selected: boolean;
   onSelect: () => void;
@@ -126,7 +129,10 @@ function Item({
         ) : null}
         <span>{where}</span>
       </div>
-      <div className="space-y-1">
+      <div
+        className={`space-y-1 ${bodyStyle?.color ? '[&_*]:!text-inherit' : ''}`}
+        style={bodyStyle}
+      >
         {bodies.map((b, i) => (
           <Body key={i} body={b} canvasLabels={canvasLabels} />
         ))}
@@ -138,7 +144,7 @@ function Item({
 export function CanvasAnnotationsPanelBody({ container, manifest }: PanelContext) {
   const t = useTranslations('Info');
   const locale = useLocale();
-  const { annotations, loading, failed } = useCanvasAnnotations(manifest, container);
+  const { annotations, loading, failed, styleOf } = useCanvasAnnotations(manifest, container);
   const [selected, setSelected] = useAtom(selectedCanvasAnnotationAtom);
 
   // clear the selection when the Canvas changes
@@ -185,6 +191,7 @@ export function CanvasAnnotationsPanelBody({ container, manifest }: PanelContext
                 selected={selected === a.id}
                 onSelect={() => setSelected(selected === a.id ? null : a.id)}
                 canvasLabels={canvasLabels}
+                bodyStyle={styleOf(a).body}
               />
             ))}
           </ul>
