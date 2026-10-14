@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
+  canvasParamTarget,
   contentStateOf,
   curationMemberAt,
   compareIndexesOf,
@@ -111,6 +112,11 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
     if (matched.length === 0 && typeof window !== 'undefined') {
       const target = curationMemberAt(manifest, Number(new URLSearchParams(window.location.search).get('pos')));
       if (target) matched = matchTargets([target], containers);
+    }
+    // ?canvas= : the frame number (from 1) or a Canvas URI
+    if (matched.length === 0 && typeof window !== 'undefined') {
+      const target = canvasParamTarget(new URLSearchParams(window.location.search).get('canvas'), containers);
+      if (target) matched = [target];
     }
     if (matched.length > 0) {
       go(matched[0].index, matched[0]);

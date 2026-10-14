@@ -5,6 +5,7 @@ import { containersOf } from '../services/containers';
 import { convertToV4 } from '../services/manifestConverter';
 import {
   canvasBehaviorsOf,
+  canvasParamTarget,
   collectionEntriesOf,
   contentStateOf,
   groupSpreads,
@@ -88,6 +89,25 @@ describe('start 0015・0202', () => {
   it('start が無ければ null', () => {
     const { manifest, containers } = load('0009');
     expect(startOf(manifest, containers)).toBeNull();
+  });
+});
+
+describe('URL の canvas 引数', () => {
+  it('1 から数えたコマの番号', () => {
+    const { containers } = load('0202');
+    expect(canvasParamTarget('2', containers)).toEqual({ canvasId: containers[1].id, index: 1 });
+  });
+  it('Canvas の URI（断片つき）', () => {
+    const { containers } = load('0202');
+    const t = canvasParamTarget(`${containers[1].id}#xywh=10,20,30,40`, containers);
+    expect(t).toMatchObject({ canvasId: containers[1].id, index: 1, xywh: [10, 20, 30, 40] });
+  });
+  it('範囲の外・0・知らない URI・空は null', () => {
+    const { containers } = load('0202');
+    expect(canvasParamTarget(String(containers.length + 1), containers)).toBeNull();
+    expect(canvasParamTarget('0', containers)).toBeNull();
+    expect(canvasParamTarget('https://example.org/none', containers)).toBeNull();
+    expect(canvasParamTarget(null, containers)).toBeNull();
   });
 });
 

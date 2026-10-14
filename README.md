@@ -11,7 +11,7 @@ Formerly **IIIF 3D Viewer**. The project started as a 3D viewer and now handles 
 - **Audio and Video**: Playback with captions and time-aligned transcripts, including Canvases that combine multiple media
 - **Annotations**: Points on 3D models, image regions and media times, with grouping, tags, search and filtering
 - **Comparison and Maps**: Side-by-side, swipe and spyglass comparison of two models; a map view for georeferenced resources
-- **Structure, Sharing and Embedding**: Tables of contents, paging, two-page spreads, Collections, IIIF Content State links, and the `<iiif-viewer>` custom element
+- **Structure, Sharing and Embedding**: Tables of contents, paging, two-page spreads, Collections, IIIF Content State links, `/viewer?manifest=<URL>&canvas=<n>` to open a given frame (from 1, or a Canvas URI), and the `<iiif-viewer>` custom element
 - **IIIF Curation API**: Curations (`cr:Curation`, [CODH Curation API 1.0](https://codh.rois.ac.jp/iiif/curation/)) gathered from several manifests open as one item, with each region in the table of contents. Open one with `/viewer?curation=<URL>&pos=<n>` (the same parameters as IIIF Curation Viewer) or `/viewer?iiif-content=<URL>`
 - **Multi-language Support**: Available in English and Japanese
 - **Static Export**: Deployable as a static site to any hosting service
