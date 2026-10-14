@@ -599,6 +599,35 @@ export const pickScaleFactor = (scaleFactors: number[], screenPxPerSourcePx: num
   return pick;
 };
 
+/** How many tiles of one scale factor cover `visible` (source pixels). */
+const tileCountOf = (info: ImageInfo, scheme: { width: number; height: number }, scaleFactor: number, visible: ImageRegion): number => {
+  const spanW = scheme.width * scaleFactor;
+  const spanH = scheme.height * scaleFactor;
+  const cols = Math.min(Math.ceil(info.width / spanW) - 1, Math.floor((visible.x + visible.w) / spanW)) - Math.max(0, Math.floor(visible.x / spanW)) + 1;
+  const rows = Math.min(Math.ceil(info.height / spanH) - 1, Math.floor((visible.y + visible.h) / spanH)) - Math.max(0, Math.floor(visible.y / spanH)) + 1;
+  return Math.max(0, cols) * Math.max(0, rows);
+};
+
+/**
+ * The tiles to draw for a view: those of `pickScaleFactor`, or of a coarser factor when they would be more
+ * than `limit` (a large screen showing a large image whole). Cutting the list instead would leave the
+ * bottom of the view without tiles.
+ */
+export const tilesForView = (
+  service: ImageServiceRef,
+  info: ImageInfo,
+  scheme: { width: number; height: number; scaleFactors: number[] },
+  screenPxPerSourcePx: number,
+  visible: ImageRegion,
+  limit = 150,
+): Tile[] => {
+  let sf = pickScaleFactor(scheme.scaleFactors, screenPxPerSourcePx);
+  for (const f of [...scheme.scaleFactors].sort((a, b) => a - b)) {
+    if (f > sf && tileCountOf(info, scheme, sf, visible) > limit) sf = f;
+  }
+  return tilesCovering(service, info, scheme, sf, visible, limit);
+};
+
 /** Tiles of one scale factor that cover `visible` (source pixels). At most `limit` tiles. */
 export const tilesCovering = (
   service: ImageServiceRef,
