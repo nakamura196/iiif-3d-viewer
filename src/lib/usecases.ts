@@ -106,6 +106,7 @@ export const USE_CASES: UseCase[] = [
     },
     open: { page: 'viewer', manifest: `${SITE_URL}/manifests/sample-manifest-with-annotations.json`, tab: 'annotations' },
     features: ['3d', 'annotations'],
+    video: { ja: 'ocEU8G3jCXw', en: 'rFGlytYXToc' },
     featured: true,
   },
   {
@@ -140,15 +141,16 @@ export const USE_CASES: UseCase[] = [
   {
     id: 'shelley',
     title: {
-      ja: 'シェリー書簡（元画像と透過光画像）',
-      en: 'Shelley letter (original and transmitted-light images)',
+      ja: 'シェリーの手稿（元画像と透過光画像）',
+      en: 'Shelley manuscript (original and transmitted-light images)',
     },
     note: {
-      ja: '同じ書簡を、ふつうの光と透過光で撮った 2 枚の画像です。左右に並べたり、境目を動かしたりして見比べます。',
-      en: 'The same letter photographed in reflected and in transmitted light. Compare the two side by side or with a swipe.',
+      ja: '同じ手稿を、ふつうの光と透過光で撮った 2 枚の画像です。左右に並べたり、境目を動かしたりして見比べます。',
+      en: 'The same manuscript photographed in reflected and in transmitted light. Compare the two side by side or with a swipe.',
     },
     open: { page: 'compare', manifest: 'https://utda.github.io/shelley/iiif/shelley/manifest.json' },
     features: ['image', 'compare'],
+    video: { ja: 'nQBgdcvWlj0', en: '06oQxj2AXV4' },
     site: 'https://utda.github.io/shelley/',
     featured: true,
   },
@@ -184,6 +186,7 @@ export const USE_CASES: UseCase[] = [
       pos: 4,
     },
     features: ['image', 'curation'],
+    video: { ja: 'LnkuxXYNCSs', en: 'qvLPzS2hCzo' },
     site: 'https://codh.rois.ac.jp/iiif/curation/',
     featured: true,
   },
