@@ -30,8 +30,6 @@
     "item6Date": "2026-10-14",
     "item6Title": "Published a video introducing the compare page (comparing two models side by side, with a swipe, or through a spyglass; sharing by URL; the collapsible side panel)",
     "item3Title": "Richer annotation display: grouping of annotations on the same region, keyed tags and creators, search and filters, and a fix for flying to annotations without a camera",
-    "item7Date": "2026-10-12",
-    "item7Title": "Renamed to IIIF Kasane and moved to kasane.ldas.jp: besides 3D, it now shows image manifests and IIIF Cookbook recipes",
     "item8Date": "2026-10-12",
     "item8Title": "Image layers: show or hide each painted image, change opacity and stacking order, play the layers in or out one by one, and compare image Choices on the compare page",
     "item9Date": "2026-10-13",
@@ -45,7 +43,9 @@
     "item13Date": "2026-10-14",
     "item13Title": "New Inference tab: runs NDL Kotenseki OCR-Lite and NDLOCR-Lite in your browser to read the text of the image on screen. The image is never sent anywhere",
     "item14Date": "2026-10-14",
-    "item14Title": "New Story tab: step through the annotations of a manifest, gliding to each scene as you read. Existing tour manifests such as the Wakō zukan story open as they are"
+    "item14Title": "New Story tab: step through the annotations of a manifest, gliding to each scene as you read. Existing tour manifests such as the Wakō zukan story open as they are",
+    "item15Date": "2026-10-14",
+    "item15Title": "New model in the Inference tab: Faces in Japanese art finds the faces in ukiyo-e, picture scrolls and modern bijin-ga in your browser and marks them with boxes; the image is scanned in parts, so small faces in a crowd are found too"
   },
   "Input": {
     "title": "Open an IIIF manifest",

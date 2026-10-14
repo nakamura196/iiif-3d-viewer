@@ -127,3 +127,31 @@ NDL デジタルコレクション「銘尽」（https://dl.ndl.go.jp/api/iiif/1
   Python も V8 も TimSort で、64 未満は同じ手順（二分挿入）なので一致するはずだが、64 以上は確かめていない
 - 並びのならしで、順位の幅が 0 になる場合（原本は 0 で割って止まる）
 - Safari・Firefox・スマホ
+
+## 2026-10-14 顔の検出（顔貌コレクションで学習した YOLO11x）を足した
+
+### 何をしたか
+
+- 推論タブに 3 つ目のモデル「顔の検出（日本の絵画）」を足した（`models/kaokoreFace.ts`・`.run.ts`、共通の部品は `core/features/inference/yolo.ts`）。
+  結果は `regions`（枠と `face` の札）で、既存の注釈への書き出しにそのまま乗った
+- 検出の手順は face-web（nakamura196/face-web の `src/lib/ort-yolo.ts`・`sahi.ts`）から写した。face-web は同じモデルの fp32 版（228MB）を既にブラウザで動かしていた
+- モデルは fp16 にして HF の既存リポジトリ nakamura196/yolov11x-kaokore-face に `best-fp16.onnx` として足した（コミット 526e7db、README に 1 段落）
+
+### 決めたこと・やめた案
+
+- **重みだけ fp16（onnxconverter-common、keep_io_types）。** 228MB → 114MB。int8 は WebGPU で使えない演算になりやすいのでやめた
+- **全体で 1 回 ＋ 1,280 角に 20% 重ねて切った分（SAHI）。** 長辺 2,560px で取り直し、6 枚に切る。入力は 1,280 角・batch 1 の固定（書き出しが dynamic でない）なので 1 枚ずつ流す。
+  まとめの NMS は face-web と同じ IoU 0.3、下限 0.25
+- 当初「YOLO11x 系の fp32 は大きすぎる」として外していた（上の表）。face-web で実際に動いていたので、この判断は改めた
+
+### 実測（NDL 1301975「江戸名所」1 コマ目、ndl-face-finder の edonohanami キュレーションの資料）
+
+- fp32 と fp16（onnxruntime 1.31 CPU、1,280px）: 3 件とも同じ、枠の差は 1 画素以内
+- 全体だけ: 3 件（キュレーションの 3 件すべて）。全体 ＋ 切った分: 21 件。描いて目で見ると 19 件が顔、2 件が違う（確からしさ 0.27・0.34）
+- ブラウザ（Chrome、localhost、WebGPU）: 21 件、1.9 秒。Python の結果と件数が一致
+
+### 確かめていないこと
+
+- wasm（WebGPU の無いブラウザ）での時間。7 回流すので長くなるはず
+- 浮世絵の顔のモデル（yolov11x-ukiyoe-face、入力 1,536 角）・YuNet（227KB、写実的な顔）・RetinaFace は未搭載。face-web にはある
+- 顔コレの学習元（絵巻・絵本）と違う画風での取りこぼし

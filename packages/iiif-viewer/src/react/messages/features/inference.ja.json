@@ -20,6 +20,7 @@
     "stage_load": "モデルを準備中...",
     "stage_detect": "行を検出中...",
     "stage_read": "文字を読み取り中 {done} / {total} 行",
+    "stage_scan": "画像を調べています {done} / {total} 枚目",
     "resultSummary": "{count} 件（{seconds} 秒、{backend}）",
     "showOnImage": "画像に重ねる",
     "saveJson": "注釈を保存（JSON）",
