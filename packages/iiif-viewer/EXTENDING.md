@@ -4,12 +4,21 @@
 
 | 足すもの | 書くファイル（新規） | 共有ファイルで触る所 |
 | --- | --- | --- |
-| 表示（ページ送り・合成など） | `src/react/displays/<名前>Display.tsx`（型は `displays/types.ts`） | `displays/registry.ts` に 1 行 |
-| 右パネルのタブ | `src/react/panels/<名前>Panel.tsx`（型は `panels/types.ts`） | `panels/registry.ts` に 1 行 |
-| 画像の上に重ねる表示 | `src/react/overlays/<名前>Overlay.tsx`（型は `overlays/types.ts`） | `overlays/registry.ts` に 1 行 |
-| 読み取り（React に依存しない） | `src/core/features/<機能>.ts` と `<機能>.test.ts` | 無し（`features/index.ts` に用意済み） |
-| 文言 | `src/react/messages/features/<機能>.{ja,en}.json` | 無し（`messages/index.ts` が足し合わせる） |
+| 表示（ページ送り・合成など） | `src/react/displays/<名前>Display.tsx`（型は `displays/types.ts`） | `displays/registry.ts` に 1 行（当たる順が意味を持つため） |
+| 右パネルのタブ | `src/react/panels/<名前>Panel.tsx`（型は `panels/types.ts`。並びは `order`） | 無し |
+| 画像の上に重ねる表示 | `src/react/overlays/<名前>Overlay.tsx`（型は `overlays/types.ts`。重ね順は `order`） | 無し |
+| 読み取り（React に依存しない） | `src/core/features/<機能>.ts` と `<機能>.test.ts`、または `<機能>/index.ts` のフォルダ | 無し |
+| 文言 | `src/react/messages/features/<機能>.{ja,en}.json` | 無し |
 | 推論のモデル（ブラウザ内の OCR など） | `src/react/inference/models/<名前>.ts`（型は `models/types.ts`。重い処理は `load()` の先の `<名前>.run.ts`）。React に依存しない前処理・後処理は `src/core/features/inference/` | `models/registry.ts` に 1 行 |
+
+「無し」のものは、ファイルを置けば一覧に入る。一覧は `scripts/gen-registries.mjs` が
+`*.generated.ts` として作る（git には入れない）。開発サーバ・テスト・ビルドが自動で走らせるので、
+ふつうは意識しなくてよい。エディタで「`registry.generated` が無い」と出たら `npm run gen`。
+
+- `core/features/` の中で、機能の内側だけで使う補助ファイルは、名前を `_` で始める（一覧に入らない）
+- タブの `order` は 10 刻みで付けてある（資料情報 10 … 注釈 90）。間に入れたいときは 15 などを使う。
+  付けなければ最後に並ぶ
+- サイトの `?tab=` の許可一覧（`src/lib/viewerTabs.ts`）もタブから作るので、書き換えなくてよい
 
 機能の枠（用意済み）: `image`（画像・深いズーム・重ね表示）、`structure`（ページ送り・目次）、`temporal`（時間の指定・複数メディア）、`about`（来歴・権利・リンク）、`annotations`（Canvas 上の注釈）。
 
@@ -20,7 +29,6 @@
 - 画像の上の帯に置くのは、その Canvas を見るのに欠かせない最小限の切り替えだけ（Choice の候補選び、ページ送り）
 - 同じものを帯とタブの両方で操作するときは、同じ状態（`atoms.ts`）を読み書きし、食い違わないようにする
   （例: Choice の候補選びは、レイヤーの表示・非表示として持つ）
-- タブを足したら、サイトの `?tab=` の許可一覧（`src/components/page/ViewerContent.tsx` の `TABS`）にも足す
 
 ## 守ること
 

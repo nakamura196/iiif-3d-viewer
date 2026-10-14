@@ -1,19 +1,10 @@
+import { PANEL_IDS } from '@nakamura196/iiif-viewer';
+
 // /viewer の ?tab= に指定できるタブ。ViewerContent が URL を読むときと、
-// ユースケース・サンプルが「開いたあとに選ぶタブ」を書くときの両方で使う
-export const VIEWER_TABS = [
-  'metadata',
-  'pages',
-  'structure',
-  'layers',
-  'rights',
-  'transcript',
-  'annotationTranscript',
-  'canvasAnnotations',
-  'annotations',
-  'inference',
-] as const;
+// ユースケース・サンプルが「開いたあとに選ぶタブ」を書くときの両方で使う。
+// 一覧はビューアの右パネル（panels/）から作るので、タブを足してもここは書き換えない。
+export const VIEWER_TABS: readonly string[] = PANEL_IDS;
 
-export type ViewerTab = (typeof VIEWER_TABS)[number];
+export type ViewerTab = string;
 
-export const isViewerTab = (v: string | null | undefined): v is ViewerTab =>
-  !!v && (VIEWER_TABS as readonly string[]).includes(v);
+export const isViewerTab = (v: string | null | undefined): v is ViewerTab => !!v && VIEWER_TABS.includes(v);

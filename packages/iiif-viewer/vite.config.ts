@@ -1,6 +1,9 @@
 import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/postcss';
 import { fileURLToPath } from 'node:url';
+import { generateRegistries } from '../../scripts/gen-registries.mjs';
+
+generateRegistries();
 
 // Build of the <iiif-viewer> tag: one ES module (iiif-viewer.js) with React and the
 // viewer inside, plus style.css. The 3D part (three.js, react-three-fiber) is a lazy

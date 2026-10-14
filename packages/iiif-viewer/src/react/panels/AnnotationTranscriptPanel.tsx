@@ -90,6 +90,8 @@ function AnnotationTranscript(ctx: PanelContext) {
 
 export const annotationTranscriptPanel: Panel = {
   id: 'annotationTranscript',
+
+  order: 70,
   available: (ctx) => {
     if (!ctx.container || ctx.container.kind === 'Scene') return false;
     const s = sources(ctx);

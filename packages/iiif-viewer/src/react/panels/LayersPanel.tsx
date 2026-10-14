@@ -286,6 +286,8 @@ function LayersTab({ container }: PanelContext) {
 
 export const layersPanel: Panel = {
   id: 'layers',
+
+  order: 40,
   available: ({ container }) => imageLayerCount(container?.painting ?? []) > 1,
   Component: LayersTab,
 };

@@ -3,8 +3,16 @@ import { describe, expect, it } from 'vitest';
 import ja from '@/messages/ja.json';
 import en from '@/messages/en.json';
 import { FEATURED_USE_CASES, USE_CASES, USE_CASE_FEATURES, hrefOf, videoOf } from './usecases';
+import { isViewerTab } from './viewerTabs';
 
 describe('USE_CASES', () => {
+  it('開いたあとに選ぶタブは、ビューアに実在するタブ', () => {
+    for (const u of USE_CASES) {
+      const tab = (u.open as { tab?: string } | undefined)?.tab;
+      if (tab) expect(isViewerTab(tab), `${u.id}: ${tab}`).toBe(true);
+    }
+  });
+
   it('id は重複せず、ページ内リンクに使える形', () => {
     const ids = USE_CASES.map((u) => u.id);
     expect(new Set(ids).size).toBe(ids.length);

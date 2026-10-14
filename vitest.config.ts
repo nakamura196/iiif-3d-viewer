@@ -1,5 +1,8 @@
 import { defineConfig } from 'vitest/config';
 import path from 'node:path';
+import { generateRegistries } from './scripts/gen-registries.mjs';
+
+generateRegistries();
 
 export default defineConfig({
   test: {

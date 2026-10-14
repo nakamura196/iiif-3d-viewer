@@ -18,6 +18,9 @@
 /out/
 /packages/*/dist/
 
+# scripts/gen-registries.mjs が作る一覧
+*.generated.ts
+
 # production
 /build
 

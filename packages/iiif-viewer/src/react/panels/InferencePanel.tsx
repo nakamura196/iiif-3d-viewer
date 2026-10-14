@@ -284,6 +284,7 @@ function InferenceTab({ container, manifest }: PanelContext) {
 // 画像の Canvas でだけ出す（3D・音声・動画では出さない）
 export const inferencePanel: Panel = {
   id: 'inference',
+  order: 100,
   available: ({ container }) => container?.kind === 'Canvas' && imageLayerCount(container.painting) > 0,
   Component: InferenceTab,
 };

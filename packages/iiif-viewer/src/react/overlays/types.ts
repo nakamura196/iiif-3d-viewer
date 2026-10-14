@@ -12,6 +12,8 @@ export interface OverlayProps {
 
 export interface Overlay {
   id: string;
+  /** Drawing order, smaller first (below). Without it the overlay goes on top. */
+  order?: number;
   /** Whether this overlay has anything to draw for the container. */
   available: (container: ContainerInfo) => boolean;
   Component: ComponentType<OverlayProps>;

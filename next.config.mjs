@@ -1,4 +1,9 @@
 import createNextIntlPlugin from 'next-intl/plugin';
+import { generateRegistries, watchRegistries } from './scripts/gen-registries.mjs';
+
+// 機能の一覧（右パネルのタブなど）を、置いてあるファイルから作る。開発中はファイルの追加も見張る
+generateRegistries();
+if (process.argv.includes('dev')) watchRegistries();
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
