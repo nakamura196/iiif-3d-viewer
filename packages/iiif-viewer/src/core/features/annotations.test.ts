@@ -94,6 +94,21 @@ describe('Cookbook のレシピ', () => {
       expect(r.bbox).toMatchObject({ x: 270, y: 661, w: 1260, h: 1239 });
     }
   });
+  it('0464: Canvas を借りたマニフェストで、どの Canvas でもない URI を指す注釈は、その Canvas の全体に付く', () => {
+    const { annos } = firstCanvasAnnotations('0464-reuse-manifest.json');
+    expect(annos).toHaveLength(1);
+    expect(annos[0].motivations).toContain('commenting');
+    expect(annos[0].region.type).toBe('canvas');
+    expect(annos[0].bodies[0]).toMatchObject({ value: 'Göttinger Marktplatz mit Gänseliesel Brunnen' });
+  });
+
+  it('マニフェストにある別の Canvas を指す注釈は、これまでどおり外す', () => {
+    const page = { type: 'AnnotationPage', items: [{ id: 'a', type: 'Annotation', motivation: 'commenting', body: { type: 'TextualBody', value: 'x' }, target: 'https://example.org/c2' }] };
+    const ids = new Set(['https://example.org/c1', 'https://example.org/c2']);
+    expect(readCanvasAnnotations('https://example.org/c1', [page], undefined, ids)).toHaveLength(0);
+    expect(readCanvasAnnotations('https://example.org/c2', [page], undefined, ids)).toHaveLength(1);
+  });
+
   it('0266: Canvas 全体', () => {
     const { annos } = firstCanvasAnnotations('0266-full-canvas-annotation.json');
     expect(annos).toHaveLength(1);
