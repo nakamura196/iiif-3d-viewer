@@ -7,6 +7,8 @@ export interface CaptionTrack {
   url: string;
   language?: string;
   label: string;
+  /** "subtitles" when the manifest says `provides: ["subtitles"]` (v4); otherwise "captions" */
+  kind?: 'captions' | 'subtitles';
 }
 
 interface Props {
@@ -71,7 +73,7 @@ export default function MediaView({ kind, src, format, tracks = [], mediaRef, on
         {tracks.map((tr, i) => (
           <track
             key={tr.url}
-            kind="captions"
+            kind={tr.kind ?? 'captions'}
             src={tr.url}
             srcLang={tr.language}
             label={tr.label}

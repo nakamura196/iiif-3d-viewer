@@ -47,6 +47,14 @@ describe('canvasImagesOf: Cookbook recipes', () => {
     });
   });
 
+  it('0005 image service（v4 版。Cookbook PR #725）: v3 版と同じに読む', () => {
+    const l = layerOf(first('0005-image-service-v4'));
+    expect(l.service).toEqual({
+      id: 'https://iiif.io/api/image/3.0/example/reference/918ecd18c2592080851777620de9bcb5-gottingen',
+      version: 3,
+    });
+  });
+
   it('0036 composition: the miniature has a place on the Canvas', () => {
     const c = first('0036-composition-from-multiple-images');
     expect(c.paintings).toHaveLength(2);

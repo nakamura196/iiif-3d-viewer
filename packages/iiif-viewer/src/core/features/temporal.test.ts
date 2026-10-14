@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import r0017 from './__fixtures__/temporal/0017.json';
 import r0074 from './__fixtures__/temporal/0074.json';
+import r0074v4 from './__fixtures__/temporal/0074-v4.json';
+import r0079v4 from './__fixtures__/temporal/0079-v4.json';
+import r0079v4page from './__fixtures__/temporal/0079-v4-captions.page.json';
 import r0103 from './__fixtures__/temporal/0103.json';
 import r0434 from './__fixtures__/temporal/0434.json';
 import r0489 from './__fixtures__/temporal/0489.json';
@@ -21,9 +24,11 @@ import {
   sanitizeTemporalHtml,
   targetRegionOf,
   targetTimeOf,
+  timedCaptionsOf,
   timedTextsOf,
   timelineImageUrl,
   timelineOf,
+  toWebVtt,
 } from './temporal';
 
 // the viewer reads a v3 manifest through convertToV4, so the tests do the same
@@ -165,6 +170,33 @@ describe('captionFilesOf（0074）と renderingTranscriptOf（0017）', () => {
       format: 'text/plain',
       url: expect.stringMatching(/volleyball\.txt$/),
     });
+  });
+});
+
+describe('v4 の字幕（Cookbook PR #621 の 0074・#622 の 0079）', () => {
+  it('0074 v4: 注釈ごとの VTT を読み、provides で字幕の種類を分ける', () => {
+    const files = captionFilesOf(first(r0074v4).container);
+    expect(files.map((f) => [f.language, f.kind])).toEqual([
+      ['en', 'subtitles'],
+      ['it', 'captions'],
+    ]);
+  });
+  it('0079 v4: 参照先のページを足すと、時刻つきの注釈が字幕になる', () => {
+    const { container } = first(r0079v4);
+    // 参照だけのうちは何も無い（取得は画面側の仕事）
+    expect(timedCaptionsOf(container)).toEqual([]);
+    const resolved = { ...container, annotations: [...(container?.annotations as unknown[]), r0079v4page] };
+    const groups = timedCaptionsOf(resolved);
+    expect(groups).toHaveLength(1);
+    expect(groups[0]).toMatchObject({ language: 'en', kind: 'captions' });
+    expect(groups[0].cues).toHaveLength(9);
+    expect(groups[0].cues[0]).toMatchObject({ start: 1.2, end: 21, text: '[music]' });
+  });
+  it('toWebVtt: 時刻を書式どおりに、本文の --> と空行は崩さない', () => {
+    const vtt = toWebVtt([
+      { id: 'a', start: 1.2, end: 3661.5, text: 'a --> b\n\n<i>c</i> & d', provides: [] },
+    ]);
+    expect(vtt).toBe('WEBVTT\n\n00:00:01.200 --> 01:01:01.500\na --&gt; b\n&lt;i>c&lt;/i> &amp; d\n');
   });
 });
 

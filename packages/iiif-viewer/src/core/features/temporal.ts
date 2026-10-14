@@ -465,6 +465,10 @@ export interface TimedText {
   text: string;
   /** the AnnotationPage's label, when it has one (e.g. "Environmental Noise") */
   group?: unknown;
+  /** the Annotation's `provides` ("closedCaptions", "subtitles", ...) */
+  provides: string[];
+  /** BCP 47 code of the first body that has one */
+  language?: string;
 }
 
 /**
@@ -490,12 +494,17 @@ export const timedTextsOf = (container: unknown): TimedText[] => {
       const bodyValue = str(anno.bodyValue);
       if (bodyValue) values.push(bodyValue);
       if (values.length === 0) continue;
+      const language = asList(anno.body)
+        .flatMap((b) => asList(obj(b)?.language))
+        .find((l): l is string => typeof l === 'string');
       out.push({
         id: String(anno.id ?? `timed-${out.length}`),
         start: time.start,
         end: time.end ?? Number.NaN,
         text: values.join('\n'),
         ...(page?.label !== undefined ? { group: page.label } : {}),
+        provides: asList(anno.provides).filter((p): p is string => typeof p === 'string'),
+        ...(language ? { language } : {}),
       });
     }
   }
@@ -507,6 +516,60 @@ export const timedTextsOf = (container: unknown): TimedText[] => {
   }));
 };
 
+// ---------------------------------------------------------------- 注釈で書かれた字幕（0079）
+
+/** `<track kind>`: "subtitles" only when the Annotation says so and not closedCaptions too. */
+export type CaptionKind = 'captions' | 'subtitles';
+
+export const captionKindOf = (provides: string[]): CaptionKind =>
+  provides.includes('subtitles') && !provides.includes('closedCaptions') ? 'subtitles' : 'captions';
+
+export interface TimedCaptions {
+  language?: string;
+  kind: CaptionKind;
+  cues: TimedText[];
+}
+
+/**
+ * Timed TextualBody annotations that provide closedCaptions or subtitles (recipe 0079),
+ * one set per language and kind, so that each can be given to the player as a track.
+ */
+export const timedCaptionsOf = (container: unknown): TimedCaptions[] => {
+  const groups = new Map<string, TimedCaptions>();
+  for (const cue of timedTextsOf(container)) {
+    if (!cue.provides.some((p) => p === 'closedCaptions' || p === 'subtitles')) continue;
+    const kind = captionKindOf(cue.provides);
+    const key = `${cue.language ?? ''}|${kind}`;
+    let g = groups.get(key);
+    if (!g) {
+      g = { ...(cue.language ? { language: cue.language } : {}), kind, cues: [] };
+      groups.set(key, g);
+    }
+    g.cues.push(cue);
+  }
+  return [...groups.values()];
+};
+
+const vttTime = (seconds: number): string => {
+  const ms = Math.max(0, Math.round(seconds * 1000));
+  const pad = (n: number, w = 2) => String(n).padStart(w, '0');
+  return `${pad(Math.floor(ms / 3_600_000))}:${pad(Math.floor(ms / 60_000) % 60)}:${pad(Math.floor(ms / 1000) % 60)}.${pad(ms % 1000, 3)}`;
+};
+
+/** A WebVTT file of the cues. "-->" and blank lines in the text would end a cue, so they are escaped. */
+export const toWebVtt = (cues: TimedText[]): string =>
+  [
+    'WEBVTT',
+    ...cues.map((c) => {
+      const text = c.text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/-->/g, '--&gt;')
+        .replace(/\n\s*\n/g, '\n');
+      return `${vttTime(c.start)} --> ${vttTime(c.end)}\n${text}`;
+    }),
+  ].join('\n\n') + '\n';
+
 // ---------------------------------------------------------------- 字幕・文字起こしのファイル
 
 export interface CaptionFile {
@@ -516,6 +579,7 @@ export interface CaptionFile {
   language?: string;
   label?: unknown;
   provides: string[];
+  kind: CaptionKind;
 }
 
 const isVttBody = (b: Json): boolean => {
@@ -549,6 +613,7 @@ export const captionFilesOf = (container: unknown): CaptionFile[] => {
           ...(language ? { language } : {}),
           ...(b.label !== undefined ? { label: b.label } : {}),
           provides,
+          kind: captionKindOf(provides),
         });
       }
     }
