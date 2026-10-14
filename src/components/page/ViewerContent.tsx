@@ -31,16 +31,6 @@ const ViewerContent: NextPage = () => {
     if (manifestParam) setManifestUrl(manifestParam);
   }, [setManifestUrl]);
 
-  // モバイルのブラウザで 100vh がずれるのを避けるための --vh
-  useEffect(() => {
-    const handleResize = () => {
-      document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
-    };
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   const tabParam = searchParams?.get('tab');
   const tab = isViewerTab(tabParam) ? tabParam : undefined;
 
@@ -52,7 +42,8 @@ const ViewerContent: NextPage = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
+    // h-dvh: スマホではブラウザのツールバーの分だけ 100vh が見える範囲より高く、下端が隠れるため
+    <div className="flex flex-col h-dvh">
       <Header compact />
       <main className="flex-1 flex overflow-hidden">
         {manifestUrl ? (

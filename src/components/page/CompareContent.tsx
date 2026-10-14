@@ -145,7 +145,7 @@ const CompareContent: NextPage = () => {
   else if (!is3D && images && !imageChoice) noChoice = t('noImageChoice');
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-dvh">
       <Header compact />
       <main className="flex-1 flex overflow-hidden">
         {manifestUrl ? (
