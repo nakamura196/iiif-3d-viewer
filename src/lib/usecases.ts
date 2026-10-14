@@ -1,6 +1,7 @@
 import type { CompareMode } from '@nakamura196/iiif-viewer';
 import { contentParam } from '@nakamura196/iiif-viewer/core';
 import { withBasePath } from '@/lib/basePath';
+import { SITE_URL } from '@/lib/site';
 import type { ViewerTab } from '@/lib/viewerTabs';
 
 // ユースケース（実際の資料で Kasane を使った例）。/usecases の一覧と、トップの入力欄のサンプルに出す。
@@ -29,7 +30,7 @@ export type UseCaseOpen =
     };
 
 /** 何を見せる例か。一覧に札として出す。表示名は messages の UseCases.features */
-export const USE_CASE_FEATURES = ['image', '3d', 'compare', 'layers', 'georef', 'curation'] as const;
+export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation'] as const;
 export type UseCaseFeature = (typeof USE_CASE_FEATURES)[number];
 
 export interface UseCase {
@@ -69,6 +70,21 @@ export const videoOf = (u: UseCase, locale: Locale): string | undefined =>
   u.video?.[locale] ?? u.video?.[locale === 'ja' ? 'en' : 'ja'];
 
 export const USE_CASES: UseCase[] = [
+  // 3D モデルへのアノテーションが Kasane の中心の機能なので、先頭に置く
+  {
+    id: 'globe-annotations',
+    title: {
+      ja: '石淵家地球儀（3D モデルへのアノテーション）',
+      en: 'Ishibuchi family globe (annotations on a 3D model)',
+    },
+    note: {
+      ja: '菊池市立図書館所蔵の『石淵家地球儀』の 3D モデルです。地名にアノテーションを付けてあり、一覧の地名を押すと、その場所へ視点が移ります。',
+      en: 'A 3D model of the Ishibuchi family globe (Kikuchi City Library), with annotations on place names. Click a place in the list to move the view there.',
+    },
+    open: { page: 'viewer', manifest: `${SITE_URL}/manifests/sample-manifest-with-annotations.json`, tab: 'annotations' },
+    features: ['3d', 'annotations'],
+    featured: true,
+  },
   {
     id: 'iiif-geo',
     title: {

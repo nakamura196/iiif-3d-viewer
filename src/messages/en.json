@@ -154,6 +154,7 @@
     "features": {
       "image": "Image",
       "3d": "3D",
+      "annotations": "Annotations",
       "compare": "Compare",
       "layers": "Layers",
       "georef": "Georeference",

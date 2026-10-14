@@ -154,6 +154,7 @@
     "features": {
       "image": "画像",
       "3d": "3D",
+      "annotations": "アノテーション",
       "compare": "見比べ",
       "layers": "レイヤー",
       "georef": "位置情報",
