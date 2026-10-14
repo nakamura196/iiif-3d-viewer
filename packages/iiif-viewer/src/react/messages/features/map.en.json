@@ -1,0 +1,19 @@
+{
+  "Info": {
+    "map": "Map"
+  },
+  "Map": {
+    "map": "Map of the places",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "fitAll": "Show all places",
+    "untitled": "Untitled place",
+    "region": "Region",
+    "openError": "Could not open",
+    "scope_manifest": "This resource",
+    "scope_canvas": "Page",
+    "scope_range": "Section",
+    "scope_annotation": "Annotation",
+    "scope_item": "Item"
+  }
+}

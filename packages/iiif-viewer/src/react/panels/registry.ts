@@ -4,6 +4,7 @@ import { annotationTranscriptPanel } from './AnnotationTranscriptPanel';
 import { annotationsPanel } from './AnnotationsPanel';
 import { canvasAnnotationsPanel } from './CanvasAnnotationsPanel';
 import { layersPanel } from './LayersPanel';
+import { mapPanel } from './MapPanel';
 import { pagesPanel } from './PagesPanel';
 import { structurePanel } from './StructurePanel';
 import { transcriptPanel } from './TranscriptTab';
@@ -15,6 +16,7 @@ export const PANELS: Panel[] = [
   pagesPanel,
   structurePanel,
   layersPanel,
+  mapPanel,
   rightsPanel,
   transcriptPanel,
   annotationTranscriptPanel,
