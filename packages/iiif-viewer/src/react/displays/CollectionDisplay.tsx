@@ -1,13 +1,23 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { collectionEntriesOf, fetchManifest, labelIn, type CollectionEntry } from '../../core';
+import {
+  chronologyOf,
+  collectionEntriesOf,
+  fetchManifest,
+  hasChronology,
+  labelIn,
+  navDateText,
+  yearText,
+  type CollectionEntry,
+} from '../../core';
 import { useLocale, useTranslations } from '../env';
 import { displayAfter } from './registry';
 import { useManifestSwitch } from './structureState';
 import type { Display, DisplayProps } from './types';
 
 // A Collection (a manifest whose items are Manifests): choose one to open.
+// When two or more items carry a navDate (Cookbook 0230), they can also be shown by date, grouped by year.
 // The converter turns the items into empty Scenes, so the Collection is fetched again
 // to know which entries are Manifests and which are Collections.
 function CollectionDisplay(props: DisplayProps) {
@@ -18,6 +28,7 @@ function CollectionDisplay(props: DisplayProps) {
   const isCollection = (manifest as { type?: string }).type === 'Collection';
   const [fetched, setFetched] = useState<{ id: string; entries: CollectionEntry[] } | null>(null);
   const [state, setState] = useState<{ id: string; kind: 'opening' | 'error' } | null>(null);
+  const [order, setOrder] = useState<'collection' | 'date'>('collection');
 
   useEffect(() => {
     if (!isCollection || !manifest.id) return;
@@ -42,7 +53,8 @@ function CollectionDisplay(props: DisplayProps) {
     type: 'Manifest',
     label: c.label,
   }));
-  const entries = fetched?.id === manifest.id && fetched.entries.length > 0 ? fetched.entries : fromContainers;
+  const entries =
+    fetched?.id === manifest.id && fetched.entries.length > 0 ? fetched.entries : fromContainers;
 
   const openEntry = async (e: CollectionEntry) => {
     setState({ id: e.id, kind: 'opening' });
@@ -54,29 +66,101 @@ function CollectionDisplay(props: DisplayProps) {
     return <div className="p-4 text-sm text-[var(--ds-fg)]">{t('collectionEmpty')}</div>;
   }
 
+  const card = (e: CollectionEntry) => (
+    <li key={e.id}>
+      <button
+        type="button"
+        onClick={() => openEntry(e)}
+        className="w-full h-full text-left rounded border border-[var(--ds-border)] bg-[var(--ds-surface)] hover:bg-[var(--ds-surface-2)] p-2 text-sm text-[var(--ds-fg)] flex flex-col gap-1"
+      >
+        {e.thumbnail ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={e.thumbnail}
+            alt=""
+            loading="lazy"
+            className="h-24 w-full object-contain bg-white/60"
+          />
+        ) : null}
+        <span className="font-medium break-words">{labelIn(e.label, locale) || e.id}</span>
+        {e.navDate ? (
+          <time dateTime={e.navDate} className="text-xs">
+            {navDateText(e.navDate, locale)}
+          </time>
+        ) : null}
+        <span className="text-xs opacity-70">
+          {e.type === 'Collection' ? t('subCollection') : t('manifest')}
+          {state?.id === e.id ? ` ・ ${t(state.kind === 'opening' ? 'opening' : 'openError')}` : ''}
+        </span>
+      </button>
+    </li>
+  );
+  const grid = (list: CollectionEntry[]) => (
+    <ul
+      className="grid gap-2"
+      style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(11rem, 1fr))' }}
+    >
+      {list.map(card)}
+    </ul>
+  );
+
+  const dated = hasChronology(entries);
+  const byDate = dated && order === 'date';
+  const chronology = byDate ? chronologyOf(entries) : null;
+
   return (
     <div className="flex-1 min-h-0 min-w-0 overflow-auto p-3">
-      <ul className="grid gap-2" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(11rem, 1fr))' }}>
-        {entries.map((e) => (
-          <li key={e.id}>
+      {dated ? (
+        <div
+          role="group"
+          aria-label={t('collectionOrder')}
+          className="mb-3 flex items-center gap-2 text-xs text-[var(--ds-fg)]"
+        >
+          <span className="opacity-70">{t('collectionOrder')}</span>
+          {(['collection', 'date'] as const).map((o) => (
             <button
+              key={o}
               type="button"
-              onClick={() => openEntry(e)}
-              className="w-full h-full text-left rounded border border-[var(--ds-border)] bg-[var(--ds-surface)] hover:bg-[var(--ds-surface-2)] p-2 text-sm text-[var(--ds-fg)] flex flex-col gap-1"
+              aria-pressed={order === o}
+              onClick={() => setOrder(o)}
+              className={`rounded border border-[var(--ds-border)] px-2 py-1 ${order === o ? 'bg-[var(--ds-surface-2)] font-medium' : 'bg-[var(--ds-surface)] hover:bg-[var(--ds-surface-2)]'}`}
             >
-              {e.thumbnail ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={e.thumbnail} alt="" loading="lazy" className="h-24 w-full object-contain bg-white/60" />
-              ) : null}
-              <span className="font-medium break-words">{labelIn(e.label, locale) || e.id}</span>
-              <span className="text-xs opacity-70">
-                {e.type === 'Collection' ? t('subCollection') : t('manifest')}
-                {state?.id === e.id ? ` ・ ${t(state.kind === 'opening' ? 'opening' : 'openError')}` : ''}
-              </span>
+              {t(o === 'collection' ? 'orderCollection' : 'orderDate')}
             </button>
-          </li>
-        ))}
-      </ul>
+          ))}
+        </div>
+      ) : null}
+      {chronology ? (
+        <ol aria-label={t('timeline')} className="border-l-2 border-[var(--ds-border)] ml-2">
+          {chronology.years.map((y) => (
+            <li key={y.year} className="relative pl-4 pb-4">
+              <span
+                aria-hidden
+                className="absolute -left-[7px] top-1 h-3 w-3 rounded-full bg-[var(--ds-fg)]"
+              />
+              <h3 className="mb-2 text-sm font-semibold text-[var(--ds-fg)]">
+                {yearText(y.year, locale)}
+                {y.entries.length > 1 ? (
+                  <span className="ml-2 text-xs font-normal opacity-70">
+                    {t('itemCount', { count: y.entries.length })}
+                  </span>
+                ) : null}
+              </h3>
+              {grid(y.entries.map((d) => d.entry))}
+            </li>
+          ))}
+          {chronology.undated.length > 0 ? (
+            <li className="relative pl-4 pb-4">
+              <h3 className="mb-2 text-sm font-semibold text-[var(--ds-fg)] opacity-70">
+                {t('undated')}
+              </h3>
+              {grid(chronology.undated)}
+            </li>
+          ) : null}
+        </ol>
+      ) : (
+        grid(entries)
+      )}
     </div>
   );
 }

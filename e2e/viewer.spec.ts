@@ -86,3 +86,12 @@ test('注釈で書かれた字幕を読む（0079 v4、preview）', async ({ pag
   const tracks = await loadedTracks(page, 1);
   expect(tracks[0].cues).toBeGreaterThan(1);
 });
+
+test('Collection を navDate の年代順に並べる（0230）', async ({ page }) => {
+  await open(page, 'https://iiif.io/api/cookbook/recipe/0230-navdate/navdate-collection.json');
+  await page.getByRole('button', { name: '年代順' }).click();
+  const timeline = page.getByRole('list', { name: '年表' });
+  await expect(timeline.getByRole('heading', { level: 3 })).toHaveText(['1986', '1987']);
+  await page.getByRole('button', { name: 'コレクションの順' }).click();
+  await expect(timeline).toHaveCount(0);
+});

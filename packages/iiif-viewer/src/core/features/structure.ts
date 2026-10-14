@@ -534,6 +534,8 @@ export interface CollectionEntry {
   type: 'Manifest' | 'Collection';
   label: unknown;
   thumbnail?: string;
+  /** 項目に書かれた navDate（Cookbook 0230）。Manifest の中までは見に行かない。 */
+  navDate?: string;
 }
 
 /** Collection（読み込み前の JSON）の項目。Manifest と入れ子の Collection だけを拾う。 */
@@ -547,6 +549,8 @@ export function collectionEntriesOf(raw: unknown): CollectionEntry[] {
     const entry: CollectionEntry = { id, type: item.type, label: item.label };
     const thumb = firstThumbnail(item.thumbnail);
     if (thumb) entry.thumbnail = thumb;
+    const navDate = str(item.navDate);
+    if (navDate) entry.navDate = navDate;
     out.push(entry);
   }
   return out;
