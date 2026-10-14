@@ -162,6 +162,7 @@
       "layers": "Layers",
       "georef": "Georeference",
       "curation": "Curation",
+      "search": "Search",
       "auth": "Authentication"
     }
   },

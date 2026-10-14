@@ -25,7 +25,7 @@ const ViewerContent: NextPage = () => {
   const { resolvedTheme } = useTheme();
   const tc = useTranslations('Compare');
   const tg = useTranslations('GeoRef');
-  // 地図に重ねられる Canvas（georeferencing の注釈つき）があるか
+  // 地図と並べて見られる位置情報（Canvas または Scene の georeferencing）があるか
   const [hasGeoCanvas, setHasGeoCanvas] = useState(false);
 
   useEffect(() => {
@@ -39,7 +39,10 @@ const ViewerContent: NextPage = () => {
     let cancelled = false;
     fetchManifest(manifestUrl)
       .then((raw) => {
-        if (!cancelled && raw) setHasGeoCanvas(!!parseManifestV4(convertToV4(raw)).geoCanvasId);
+        if (cancelled || !raw) return;
+        // 2D の Canvas か、3D の Scene に位置情報（georeferencing）がある
+        const { geoCanvasId, geoFeatures } = parseManifestV4(convertToV4(raw));
+        setHasGeoCanvas(!!geoCanvasId || geoFeatures.length > 0);
       })
       .catch(() => {});
     return () => {

@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { VideoEmbed, buttonClass } from '@nakamura196/react-ui';
 import { Link } from '@/i18n/routing';
-import { hrefOf, videoOf, type Locale, type UseCase } from '@/lib/usecases';
+import { hrefOf, sourceOf, videoOf, type Locale, type UseCase } from '@/lib/usecases';
 
 const linkClass = 'text-[var(--ds-primary)] hover:underline';
 
@@ -37,7 +37,7 @@ export default function UseCaseCard({ useCase: u, locale }: { useCase: UseCase; 
       )}
       <p className="text-sm text-[var(--ds-fg-muted)] flex-1">{u.note[locale]}</p>
       <div className="flex flex-wrap items-center gap-4 text-sm">
-        <a href={u.open.manifest} target="_blank" rel="noopener noreferrer" className={linkClass}>
+        <a href={sourceOf(u.open)} target="_blank" rel="noopener noreferrer" className={linkClass}>
           {t('manifest')}
         </a>
         {u.site && (

@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import ja from '@/messages/ja.json';
 import en from '@/messages/en.json';
-import { FEATURED_USE_CASES, USE_CASES, USE_CASE_FEATURES, hrefOf, videoOf } from './usecases';
+import { FEATURED_USE_CASES, USE_CASES, USE_CASE_FEATURES, hrefOf, sourceOf, videoOf } from './usecases';
 import { isViewerTab } from './viewerTabs';
 
 describe('USE_CASES', () => {
@@ -27,7 +27,7 @@ describe('USE_CASES', () => {
 
   it('マニフェストと元のページは https の URL', () => {
     for (const u of USE_CASES) {
-      expect(new URL(u.open.manifest).protocol).toBe('https:');
+      expect(new URL(sourceOf(u.open)).protocol).toBe('https:');
       if (u.site) expect(new URL(u.site).protocol).toBe('https:');
     }
   });
@@ -65,6 +65,20 @@ describe('hrefOf', () => {
 
   it('compare は見比べ方を載せる', () => {
     expect(hrefOf({ page: 'compare', manifest: m, mode: 'swipe' })).toBe(`/compare?iiif-content=${enc}&mode=swipe`);
+  });
+});
+
+describe('hrefOf（georef・search）', () => {
+  it('georef は iiif-content だけを載せる', () => {
+    expect(hrefOf({ page: 'georef', manifest: 'https://example.org/m.json' })).toBe(
+      `/georef?iiif-content=${encodeURIComponent('https://example.org/m.json')}`,
+    );
+  });
+
+  it('search は u に URL、q に検索語を載せる', () => {
+    const u = 'https://example.org/c.json';
+    expect(hrefOf({ page: 'search', url: u })).toBe(`/search?u=${encodeURIComponent(u)}`);
+    expect(hrefOf({ page: 'search', url: u, query: '花 見' })).toBe(`/search?u=${encodeURIComponent(u)}&q=${encodeURIComponent('花 見')}`);
   });
 });
 
