@@ -45,11 +45,6 @@ export default function Footer() {
           heading: t('relatedHeading'),
           links: [
             {
-              label: t('relatedArticle'),
-              href: 'https://tech.ldas.jp/ja/posts/iiif-3d-viewer-presentation-api-4-converter/',
-              external: true,
-            },
-            {
               label: t('relatedSpec'),
               href: 'https://iiif.io/api/extension/3d/',
               external: true,
@@ -57,12 +52,6 @@ export default function Footer() {
             {
               label: t('relatedSample'),
               href: 'https://iiif.github.io/3d/manifests/9_commenting_annotations/',
-              external: true,
-            },
-            {
-              // nakamura196 が公開している他のツール一覧 (academicpages portfolio)
-              label: t('relatedOtherTools'),
-              href: 'https://nakamura196.github.io/portfolio/',
               external: true,
             },
           ],

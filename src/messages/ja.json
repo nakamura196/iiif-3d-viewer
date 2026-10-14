@@ -15,10 +15,8 @@
     "terms": "利用規約",
     "samplesHeading": "サンプル",
     "relatedHeading": "関連サイト",
-    "relatedArticle": "開発解説記事",
     "relatedSpec": "IIIF 3D Extension",
     "relatedSample": "IIIF 3D サンプル",
-    "relatedOtherTools": "nakamura196 の他のツール",
     "developers": "中村 覚・小川 潤（東京大学）",
     "samplesAll": "Cookbook のサンプル",
     "samplesOwn": "Kasane 独自のサンプル",
@@ -146,6 +144,7 @@
     "open": "ビューアで開く",
     "manifest": "マニフェスト",
     "recipe": "レシピ（Cookbook）",
+    "video": "動画で見る",
     "cookbook": {
       "title": "Cookbook のサンプル",
       "lead": "IIIF Cookbook のレシピです。「ビューアで開く」で、Kasane で表示できるかを確かめられます。",
