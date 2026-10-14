@@ -26,3 +26,8 @@ export {
   type ImageCompareViewProps,
 } from './displays/ImageCompareView';
 export * from './compare/CompareParts';
+export {
+  default as GeoImageView,
+  type GeoImagePoint,
+  type GeoImageViewProps,
+} from './georef/GeoImageView';

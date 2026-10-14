@@ -8,6 +8,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 maplibregl.setWorkerUrl(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/maplibre/maplibre-gl-worker.mjs`);
 import { useTheme } from 'next-themes';
 import { useLocale, useTranslations } from 'next-intl';
+import { geoFeatureIdOf } from '@nakamura196/iiif-viewer/core';
 
 interface GeoFeatureName {
   toponym: string;
@@ -36,7 +37,7 @@ interface GeoFeature {
   };
   properties: {
     title: string;
-    resourceCoords: [number, number, number];
+    resourceCoords: [number, number] | [number, number, number];
   };
   names?: GeoFeatureName[];
   links?: GeoFeatureLink[];
@@ -122,7 +123,7 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
       if (lat > 85 || lat < -85) {
         return;
       }
-      const featureId = feature['@id'] || `geo-feature-${currentFeatures.indexOf(feature)}`;
+      const featureId = geoFeatureIdOf(feature, currentFeatures.indexOf(feature));
       const title = feature.properties.title;
       const thumbnail = feature.depictions?.[0]?.['@id'];
       const altNames = feature.names?.filter(n => n.toponym !== title).map(n => n.toponym).join(', ');
@@ -281,7 +282,7 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
 
     // Fly to selected marker
     if (selectedId) {
-      const feature = features.find((f, idx) => (f['@id'] || `geo-feature-${idx}`) === selectedId);
+      const feature = features.find((f, idx) => geoFeatureIdOf(f, idx) === selectedId);
       if (feature && map.current) {
         // 選んだピンへ移る。今より引かない（全体に合わせた拡大のまま、中心だけ動かす）
         map.current.flyTo({
