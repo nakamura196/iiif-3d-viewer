@@ -1,5 +1,6 @@
 // 画面の側から Worker に推論を頼む。Worker はページに 1 つ、初めて使うときに作る。
 import type { InferenceOutput } from '../../core';
+import type { PointPrompt } from './models/types';
 import type { Backend } from './ort';
 import type { FromWorker, ToWorker } from './protocol';
 
@@ -49,10 +50,11 @@ export const runModel = (
   modelId: string,
   bitmap: ImageBitmap,
   onProgress: (stage: string, done: number, total: number) => void,
+  extra?: { prompt?: PointPrompt; imageKey?: string },
 ): Promise<RunResult> =>
   new Promise((resolve, reject) => {
     const job = nextJob++;
     pending.set(job, { resolve, reject, onProgress });
-    const msg: ToWorker = { type: 'run', job, modelId, bitmap };
+    const msg: ToWorker = { type: 'run', job, modelId, bitmap, ...extra };
     workerOf().postMessage(msg, [bitmap]);
   });
