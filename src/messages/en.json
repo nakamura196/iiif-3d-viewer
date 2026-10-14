@@ -49,7 +49,9 @@
     "item15Date": "2026-10-14",
     "item15Title": "The Cookbook samples page now lists all 76 IIIF Cookbook recipes in numbering order. Filter by category and open each one in Kasane",
     "item16Date": "2026-10-14",
-    "item16Title": "New model in the Inference tab: Faces in Japanese art finds the faces in ukiyo-e, picture scrolls and modern bijin-ga in your browser and marks them with boxes; the image is scanned in parts, so small faces in a crowd are found too"
+    "item16Title": "New model in the Inference tab: Faces in Japanese art finds the faces in ukiyo-e, picture scrolls and modern bijin-ga in your browser and marks them with boxes; the image is scanned in parts, so small faces in a crowd are found too",
+    "item17Date": "2026-10-14",
+    "item17Title": "The video on the Cookbook samples page is new: it opens the recipes in Kasane category by category with narration, in Japanese and English, and each recipe links to its scene in the video"
   },
   "Input": {
     "title": "Open an IIIF manifest",
@@ -156,7 +158,7 @@
       "lead": "Every recipe in the IIIF Cookbook, in the Cookbook’s numbering order. Use “Open in viewer” to check that each one displays in Kasane.",
       "link": "See Kasane's own samples",
       "videoHeading": "Cookbook recipes opened in Kasane",
-      "videoLead": "A video of every recipe opened in Kasane in turn. Use the chapters to jump to a recipe.",
+      "videoLead": "A narrated video that opens the recipes in Kasane, category by category, in Cookbook order. Use the chapters to jump to a recipe.",
       "listHeading": "All recipes",
       "filter": "Filter by category",
       "all": "All"

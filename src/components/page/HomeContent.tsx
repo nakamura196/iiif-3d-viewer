@@ -19,6 +19,11 @@ export default function HomeContent() {
   // 新しいものが上。表示は直近の 8 件まで（古い項目は文言ごと消す）
   const newsItems = [
     {
+      date: tNews('item17Date'),
+      title: tNews('item17Title'),
+      href: '/samples',
+    },
+    {
       date: tNews('item16Date'),
       title: tNews('item16Title'),
       // 推論タブを開いた状態の例（NDL「江戸名所」、ndl-face-finder の花見のキュレーション）

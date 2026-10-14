@@ -13,17 +13,11 @@ import {
   recipeHref,
   recipePage,
   type CookbookCategory,
-  type CookbookRecipe,
 } from '@/lib/cookbookRecipes';
 import { SAMPLE_PAGES } from '@/components/page/SamplesContent';
 
 const linkClass = 'text-[var(--ds-primary)] hover:underline';
 
-// 動画のチャプターは 1 レシピに 1 つ。最初に開くマニフェストで引く
-const videoUrl = (r: CookbookRecipe): string | null => {
-  const url = r.links[0]?.url;
-  return url ? cookbookVideoUrl(r.id, url) : null;
-};
 
 export default function CookbookSamplesContent() {
   const t = useTranslations('Samples');
@@ -56,7 +50,7 @@ export default function CookbookSamplesContent() {
         <section>
           <h2 className="text-lg font-semibold text-[var(--ds-fg)] mb-3">{t('cookbook.videoHeading')}</h2>
           <p className="mb-3 text-sm text-[var(--ds-fg-muted)]">{t('cookbook.videoLead')}</p>
-          <VideoEmbed videoId={COOKBOOK_VIDEO_ID} title={t('cookbook.videoHeading')} />
+          <VideoEmbed videoId={COOKBOOK_VIDEO_ID[locale]} title={t('cookbook.videoHeading')} />
         </section>
 
         <section>
@@ -75,7 +69,7 @@ export default function CookbookSamplesContent() {
 
           <ul className="mt-4 divide-y divide-[var(--ds-border)] border-y border-[var(--ds-border)]">
             {items.map((r) => {
-              const video = videoUrl(r);
+              const video = cookbookVideoUrl(r.id, locale);
               return (
                 <li key={r.id} className="py-3 flex gap-4">
                   <span className="shrink-0 w-12 font-mono text-sm text-[var(--ds-fg-muted)] pt-0.5">{r.id}</span>
