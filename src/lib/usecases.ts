@@ -128,10 +128,10 @@ export const USE_CASES: UseCase[] = [
       en: 'Hongo Campus Historical Buildings Map (iiif_geo)',
     },
     note: {
-      ja: '鳥瞰図『東京帝國大學本部構内及農學部建物鳥瞰圖』に、IIIF Georeference Extension で現在の地図との対応点を付けた資料です。Kasane では、図と対応点を現在の地図と並べて表示します。対応点を押すと双方で同じ場所が選ばれ、図を地図に重ねることもできます。',
-      en: 'A bird’s-eye view of the Imperial University campus, georeferenced with the IIIF Georeference Extension. Kasane shows the image and its control points beside a modern map. Selecting a point picks the same place on both, and the image can be overlaid on the map.',
+      ja: '鳥瞰図『東京帝國大學本部構内及農學部建物鳥瞰圖』に、IIIF Georeference Extension で現在の地図との対応点を付けた資料です。Kasane では、図と対応点を現在の地図と並べて表示します。対応点を押すと双方で同じ場所が選ばれ、図を地図に重ねることもできます。対応点には、OpenStreetMap にある現在の建物名を付けています。',
+      en: 'A bird’s-eye view of the Imperial University campus, georeferenced with the IIIF Georeference Extension. Kasane shows the image and its control points beside a modern map. Selecting a point picks the same place on both, and the image can be overlaid on the map. The control points are labelled with current building names from OpenStreetMap.',
     },
-    open: { page: 'georef', manifest: 'https://geo.ldas.jp/manifest.json' },
+    open: { page: 'georef', manifest: `${SITE_URL}/manifests/geo-hongo-buildings.json` },
     features: ['image', 'georef'],
     video: { ja: '3qsZbPXC9qg', en: 'RoE5Mm6vSFE' },
     site: 'https://geo.ldas.jp/',

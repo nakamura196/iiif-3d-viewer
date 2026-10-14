@@ -1,0 +1,956 @@
+{
+  "@context": [
+    "http://iiif.io/api/extension/georef/1/context.json",
+    "http://iiif.io/api/presentation/3/context.json"
+  ],
+  "id": "https://example.org/iiif/manifest.json",
+  "type": "Manifest",
+  "label": {
+    "ja": [
+      "東京大学本郷キャンパス歴史的建造物マップ"
+    ],
+    "en": [
+      "University of Tokyo Hongo Campus Historical Buildings Map"
+    ]
+  },
+  "metadata": [
+    {
+      "label": {
+        "ja": [
+          "説明"
+        ],
+        "en": [
+          "Description"
+        ]
+      },
+      "value": {
+        "ja": [
+          "東京大学本郷キャンパスの歴史的建造物の位置を示すマップです。"
+        ],
+        "en": [
+          "A map showing the locations of historical buildings on the University of Tokyo Hongo Campus."
+        ]
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "https://example.org/iiif/canvas/1",
+      "type": "Canvas",
+      "label": {
+        "ja": [
+          "東京帝國大學本部構内及農學部建物鳥瞰圖"
+        ],
+        "en": [
+          "Bird's Eye View of University of Tokyo Main Campus and Faculty of Agriculture Buildings"
+        ]
+      },
+      "height": 12911,
+      "width": 18415,
+      "items": [
+        {
+          "id": "https://example.org/iiif/page/1",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://example.org/iiif/annotation/1",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://iiif.dl.itc.u-tokyo.ac.jp/iiif/2/agriculture_re%2Fnou_tatemonochokanzu%2F0002.tif/full/full/0/default.jpg",
+                "type": "Image",
+                "format": "image/jpeg",
+                "height": 12911,
+                "width": 18415,
+                "service": [
+                  {
+                    "id": "https://iiif.dl.itc.u-tokyo.ac.jp/iiif/2/agriculture_re%2Fnou_tatemonochokanzu%2F0002.tif",
+                    "type": "ImageService2"
+                  }
+                ]
+              },
+              "target": "https://example.org/iiif/canvas/1"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://example.org/iiif/annotationpage/1",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://example.org/iiif/georef-annotation/1",
+              "type": "Annotation",
+              "motivation": "georeferencing",
+              "target": "https://example.org/iiif/canvas/1",
+              "body": {
+                "type": "FeatureCollection",
+                "transformation": {
+                  "type": "polynomial",
+                  "options": {
+                    "order": 1
+                  }
+                },
+                "features": [
+                  {
+                    "type": "Feature",
+                    "id": "gcp-1",
+                    "@id": "https://example.org/places/gcp-1",
+                    "properties": {
+                      "resourceCoords": [
+                        6690,
+                        7517
+                      ],
+                      "title": "電気実験室",
+                      "tags": [
+                        "工学部"
+                      ]
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7623182,
+                        35.7151233
+                      ]
+                    },
+                    "names": [
+                      {
+                        "toponym": "電気実験室",
+                        "lang": "ja"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-2",
+                    "@id": "https://example.org/places/gcp-2",
+                    "properties": {
+                      "resourceCoords": [
+                        8846,
+                        9181
+                      ],
+                      "title": "法文2号館",
+                      "tags": [
+                        "法学部",
+                        "文学部",
+                        "経済学部"
+                      ]
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7612649,
+                        35.7129321
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/relation/6859326"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "法文2号館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Law & Letters Building 2",
+                        "lang": "en"
+                      },
+                      {
+                        "toponym": "法文経教室　第二号館",
+                        "lang": "ja"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-3",
+                    "@id": "https://example.org/places/gcp-3",
+                    "properties": {
+                      "resourceCoords": [
+                        11626,
+                        8624
+                      ],
+                      "title": "医学部2号館",
+                      "tags": [
+                        "医学部"
+                      ]
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7622949,
+                        35.7109037
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/relation/1854345"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "医学部2号館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "医学部　第二号館",
+                        "lang": "ja"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-4",
+                    "properties": {
+                      "resourceCoords": [
+                        12761,
+                        9476
+                      ],
+                      "title": "医学部1号館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7618816,
+                        35.7097492
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/relation/1854349"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "医学部1号館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Faculty of Medicine Building 1",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-5",
+                    "properties": {
+                      "resourceCoords": [
+                        7540,
+                        8365
+                      ],
+                      "title": "工学部2号館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7618343,
+                        35.7143244
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/relation/9693129"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "工学部2号館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Faculty of Engineering Building 2",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-6",
+                    "properties": {
+                      "resourceCoords": [
+                        10681,
+                        5983
+                      ],
+                      "title": "GCP 6"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.764372,
+                        35.7123118
+                      ]
+                    }
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-7",
+                    "properties": {
+                      "resourceCoords": [
+                        9304,
+                        5659
+                      ],
+                      "title": "第二食堂"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7645652,
+                        35.7135689
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/way/137625420"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "第二食堂",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Second Refectory",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-8",
+                    "properties": {
+                      "resourceCoords": [
+                        3826,
+                        10219
+                      ],
+                      "title": "農学部2号館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7594158,
+                        35.7166753
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/relation/1323398"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "農学部2号館",
+                        "lang": "ja"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-9",
+                    "properties": {
+                      "resourceCoords": [
+                        8044,
+                        9859
+                      ],
+                      "title": "法文1号館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.76062,
+                        35.7134203
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/way/134668792"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "法文1号館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Law & Letters Building 1",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-10",
+                    "properties": {
+                      "resourceCoords": [
+                        10517,
+                        7862
+                      ],
+                      "title": "山上会館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7627108,
+                        35.7121183
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/way/142583749"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "山上会館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Sanjo Conference Hall",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-11",
+                    "properties": {
+                      "resourceCoords": [
+                        8892,
+                        9831
+                      ],
+                      "title": "法文2号館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7607901,
+                        35.7126873
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/relation/6859326"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "法文2号館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Law & Letters Building 2",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-12",
+                    "properties": {
+                      "resourceCoords": [
+                        14667,
+                        9708
+                      ],
+                      "title": "GCP 12"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7620234,
+                        35.7081704
+                      ]
+                    }
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-13",
+                    "properties": {
+                      "resourceCoords": [
+                        2354,
+                        8506
+                      ],
+                      "title": "GCP 13"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7608678,
+                        35.7184833
+                      ]
+                    }
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-14",
+                    "properties": {
+                      "resourceCoords": [
+                        10054,
+                        8713
+                      ],
+                      "title": "GCP 14"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7620034,
+                        35.7122089
+                      ]
+                    }
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-15",
+                    "properties": {
+                      "resourceCoords": [
+                        5594,
+                        10678
+                      ],
+                      "title": "GCP 15"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7593041,
+                        35.7151585
+                      ]
+                    }
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-16",
+                    "properties": {
+                      "resourceCoords": [
+                        13028,
+                        6647
+                      ],
+                      "title": "南研究棟"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7642327,
+                        35.7102509
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/way/137625426"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "南研究棟",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "South Research Building",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-17",
+                    "properties": {
+                      "resourceCoords": [
+                        10685,
+                        10444
+                      ],
+                      "title": "東京大学史料編纂所"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7605725,
+                        35.7111428
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/way/240758876"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "東京大学史料編纂所",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Historiographical Institute, the University of Tokyo",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-18",
+                    "properties": {
+                      "resourceCoords": [
+                        4438,
+                        9181
+                      ],
+                      "title": "農学部3号館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7606565,
+                        35.7165095
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/relation/1323400"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "農学部3号館",
+                        "lang": "ja"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-19",
+                    "properties": {
+                      "resourceCoords": [
+                        8840,
+                        10491
+                      ],
+                      "title": "法学部3号館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7602447,
+                        35.7126024
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/way/122948722"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "法学部3号館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Faculty of Law Building 3",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-20",
+                    "properties": {
+                      "resourceCoords": [
+                        4667,
+                        10202
+                      ],
+                      "title": "農学部1号館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.759576,
+                        35.7159457
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/relation/1323397"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "農学部1号館",
+                        "lang": "ja"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-21",
+                    "properties": {
+                      "resourceCoords": [
+                        6762,
+                        10060
+                      ],
+                      "title": "工学部1号館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7600401,
+                        35.7144106
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/way/122948728"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "工学部1号館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Faculty of Engineering Building 1",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-22",
+                    "properties": {
+                      "resourceCoords": [
+                        8587,
+                        8135
+                      ],
+                      "title": "安田講堂"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.762299,
+                        35.7134381
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/way/134668789"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "安田講堂",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Yasuda Auditorium",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-23",
+                    "properties": {
+                      "resourceCoords": [
+                        7967,
+                        10465
+                      ],
+                      "title": "工学部列品館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7600601,
+                        35.7133129
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/relation/1682269"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "工学部列品館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Faculty of Engineering Exhibition Hall",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-24",
+                    "properties": {
+                      "resourceCoords": [
+                        6466,
+                        8313
+                      ],
+                      "title": "工学部4号館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7616346,
+                        35.7150937
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/relation/1682270"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "工学部4号館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Faculty of Engineering Building 4",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-25",
+                    "properties": {
+                      "resourceCoords": [
+                        7569,
+                        7471
+                      ],
+                      "title": "工学部3号館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7625263,
+                        35.7143713
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/relation/1682268"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "工学部3号館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Faculty of Engineering Building 3",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-26",
+                    "properties": {
+                      "resourceCoords": [
+                        10111,
+                        10099
+                      ],
+                      "title": "東京大学総合図書館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7607835,
+                        35.7116287
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/way/240758655"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "東京大学総合図書館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "University of Tokyo General Library",
+                        "lang": "en"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "Feature",
+                    "id": "gcp-27",
+                    "properties": {
+                      "resourceCoords": [
+                        12606,
+                        10162
+                      ],
+                      "title": "理学部2号館"
+                    },
+                    "geometry": {
+                      "type": "Point",
+                      "coordinates": [
+                        139.7611825,
+                        35.7096128
+                      ]
+                    },
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "https://www.openstreetmap.org/relation/1854348"
+                      }
+                    ],
+                    "names": [
+                      {
+                        "toponym": "理学部2号館",
+                        "lang": "ja"
+                      },
+                      {
+                        "toponym": "Faculty of Science Building 2",
+                        "lang": "en"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "requiredStatement": {
+    "label": {
+      "ja": [
+        "建物名の出典"
+      ],
+      "en": [
+        "Building names"
+      ]
+    },
+    "value": {
+      "ja": [
+        "建物名は OpenStreetMap（© OpenStreetMap contributors、ODbL）の現在の名称による（2026-10-14 取得）。電気実験室・法文経教室 第二号館・医学部 第二号館は図に描かれた当時の名称"
+      ],
+      "en": [
+        "Building names are current names from OpenStreetMap (© OpenStreetMap contributors, ODbL), retrieved 2026-10-14. 電気実験室, 法文経教室 第二号館 and 医学部 第二号館 are the historical names shown on the map"
+      ]
+    }
+  }
+}

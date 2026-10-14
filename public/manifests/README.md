@@ -14,6 +14,9 @@ v4 form directly (Scene, PointSelector / WKTSelector, PerspectiveCamera).
 - `sample-manifest-region-tags.json` - 石淵家地球儀 - Shared Region and Keyed Tag Extension の例。
   正本は [iiif-region-tag-extension](https://github.com/nakamura196/iiif-region-tag-extension) の
   `examples/manifest.json`。拡張の例を変えたら、ここにも複製し直す（試験がこのファイルを読む）
+- `geo-hongo-buildings.json` - 東京帝國大學本部構内及農學部建物鳥瞰圖（ジオリファレンス、対応点 27）。
+  元は https://geo.ldas.jp/manifest.json（nakamura196/iiif_geo）。対応点に OpenStreetMap の現在の建物名を付けた。
+  経緯は `docs/notes/georef-overlay.md`
 
 ## Adding New Manifests
 
