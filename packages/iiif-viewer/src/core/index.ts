@@ -11,6 +11,7 @@ export * from './focusCamera';
 export * from './annotationFilter';
 export * from './regions';
 export * from './thumbnail';
+export * from './georefOverlay';
 export * from './vtt';
 export * from './types/iiif';
 export * from './types/main';

@@ -10,9 +10,9 @@ import { manifestAtom } from '@nakamura196/iiif-viewer';
 import { CanvasComponent, GeoImageView, useCanvasImages } from '@nakamura196/iiif-viewer';
 import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
-import MapView from '@/components/map/MapView';
+import MapView, { type MapImageOverlay } from '@/components/map/MapView';
 import { convertToV4 } from '@nakamura196/iiif-viewer/core';
-import { parseManifestV4, geoAnnotations, geoFeatureIdOf, type GeoFeature } from '@nakamura196/iiif-viewer/core';
+import { parseManifestV4, geoAnnotations, geoFeatureIdOf, overlayCorners, type GeoFeature, type ImageLayer } from '@nakamura196/iiif-viewer/core';
 import { AnnotationCard } from '@nakamura196/iiif-viewer';
 import { SidePanel } from '@nakamura196/iiif-viewer';
 import { useTranslations, useLocale } from 'next-intl';
@@ -26,6 +26,16 @@ const getAttribution = (manifest: Record<string, unknown>, locale: string): stri
   if (!requiredStatement?.value) return undefined;
   const value = requiredStatement.value;
   return value[locale]?.[0] || value['en']?.[0] || value['none']?.[0] || Object.values(value)[0]?.[0];
+};
+
+// 地図に重ねる画像の URL。Image API があれば、地図に貼るのに足りる大きさ（長辺 4096 px まで）で取る。
+// 元の画像は数万 px になることがあり、そのままでは重く、ブラウザの上限も超える
+const OVERLAY_MAX = 4096;
+const overlayUrlOf = (layer: ImageLayer): string => {
+  if (!layer.service) return layer.url;
+  const size = Math.min(OVERLAY_MAX, Math.max(layer.width ?? OVERLAY_MAX, layer.height ?? OVERLAY_MAX));
+  const quality = layer.service.version === 1 ? 'native' : 'default';
+  return `${layer.service.id}/full/!${size},${size}/0/${quality}.jpg`;
 };
 
 const GeoRefContent: NextPage = () => {
@@ -82,6 +92,25 @@ const GeoRefContent: NextPage = () => {
     [geoFeatures]
   );
 
+  // 画像を地図に重ねる。対応点から四隅の位置を求める（1 次の多項式、対応点が 3 つ以上のとき）。
+  // Canvas に画像が 1 枚だけ全面に貼られている場合に限る（一部に貼った画像や回転は扱わない）
+  const mapOverlay = useMemo((): MapImageOverlay | null => {
+    const paintings = geoCanvas?.paintings ?? [];
+    const layer = paintings.length === 1 ? paintings[0].options[0]?.layer : undefined;
+    const width = geoCanvas?.width ?? layer?.width;
+    const height = geoCanvas?.height ?? layer?.height;
+    if (!layer || layer.target || layer.regionSpec || layer.rotation || layer.mirror || !width || !height) return null;
+    const corners = overlayCorners(
+      geoFeatures.map((f) => ({
+        resource: [f.properties.resourceCoords[0], f.properties.resourceCoords[1]],
+        geo: f.geometry.coordinates,
+      })),
+      width,
+      height
+    );
+    return corners ? { url: overlayUrlOf(layer), corners } : null;
+  }, [geoCanvas, geoFeatures]);
+
   const handleFeatureClick = (id: string) => {
     setSelectedAnnotationId(id);
   };
@@ -111,6 +140,7 @@ const GeoRefContent: NextPage = () => {
                 features={geoFeatures}
                 selectedId={selectedAnnotationId}
                 onFeatureClick={handleFeatureClick}
+                overlay={mapOverlay}
               />
             </div>
             {/* 3D Viewer, or the georeferenced picture */}

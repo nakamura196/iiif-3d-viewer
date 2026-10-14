@@ -72,6 +72,8 @@
     "searchPlaceholder": "検索...",
     "noAnnotations": "アノテーションがありません",
     "fitAll": "全体を表示",
+    "overlayImage": "画像を重ねる",
+    "overlayOpacity": "画像の濃さ",
     "noResults": "結果が見つかりません"
   },
   "Home": {

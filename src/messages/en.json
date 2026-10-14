@@ -72,6 +72,8 @@
     "searchPlaceholder": "Search...",
     "noAnnotations": "No annotations",
     "fitAll": "Show all",
+    "overlayImage": "Overlay image",
+    "overlayOpacity": "Image opacity",
     "noResults": "No results found"
   },
   "Home": {
