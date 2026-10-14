@@ -14,6 +14,8 @@ import {
   compareIndexesOf,
   matchTarget,
   matchTargets,
+  remoteGroupsOf,
+  resolveCompareItems,
   navigableTree,
   orderOf,
   parseContentState,
@@ -222,6 +224,37 @@ describe('content state 0485・0540・0599', () => {
     expect(compareIndexesOf(matchTargets(state!.targets, b))).toEqual([]);
     expect(matchTarget(state!.targets, [...b, ...a])).toEqual(matched[0]);
     expect(matchTargets(state!.targets, [])).toEqual([]);
+  });
+  it('0540 別々のマニフェストの Canvas: マニフェストごとにまとめ、target の順に並べる', () => {
+    const state = contentStateOf(raw('0540'))!;
+    const base = 'https://iiif.io/api/cookbook/recipe/0540-link-for-opening-multiple-canvases';
+    const a = load('0540-manifest-2').containers;
+    const b = load('0540-manifest').containers;
+    // manifest-2 を開いた場合、足りない Canvas は manifest.json にある
+    expect(remoteGroupsOf(state.targets, a).map((g) => [g.manifestUrl, g.targets.map((t) => t.canvasId)])).toEqual([
+      [`${base}/manifest.json`, [`${base}/canvas/p2`]],
+    ]);
+    // 同じマニフェストの Canvas だけなら、取りに行くものは無い（従来どおり）
+    expect(remoteGroupsOf(state.targets, [...a, ...b])).toEqual([]);
+    expect(remoteGroupsOf([{ canvasId: a[0].id }], a)).toEqual([]);
+    const items = resolveCompareItems(state.targets, [
+      { label: 'A', containers: a },
+      { manifestUrl: `${base}/manifest.json`, label: 'B', containers: b },
+    ]);
+    expect(items.map((i) => [i.container.id, i.manifestLabel])).toEqual([
+      [`${base}/canvas/2`, 'A'],
+      [`${base}/canvas/p2`, 'B'],
+    ]);
+    // 読めなかったマニフェストの分は欠け、残りだけ返る
+    const partial = resolveCompareItems(state.targets, [{ label: 'A', containers: a }]);
+    expect(partial.map((i) => i.manifestLabel)).toEqual(['A']);
+    // manifestUrl が違う source からは拾わない
+    expect(
+      resolveCompareItems(state.targets, [
+        { label: 'A', containers: a },
+        { manifestUrl: 'https://ex.org/other.json', label: 'X', containers: b },
+      ]).map((i) => i.manifestLabel),
+    ).toEqual(['A']);
   });
   it('matchTargets: 同じ Canvas・領域の重複は 1 つにまとめ、領域が違えば別に数える', () => {
     const { containers } = load('0009');
