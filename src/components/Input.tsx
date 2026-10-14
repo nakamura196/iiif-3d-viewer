@@ -74,8 +74,8 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
 
       <div className="mt-8 text-sm text-[var(--ds-fg-muted)]">
         <h3 className="font-medium mb-2">{t('sampleManifest')}:</h3>
-        {/* 開いたときの画面（サムネイル）つきで並べ、何ができるかを見せる */}
-        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 text-left">
+        {/* 開いたときの画面（サムネイル）つきで並べ、何ができるかを見せる。6 件を 3 列 × 2 行（主な機能の 3 列とそろえる） */}
+        <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-left">
           {FEATURED_USE_CASES.map((u) => (
             <li key={u.id}>
               <Link
