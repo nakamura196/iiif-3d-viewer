@@ -329,7 +329,11 @@ const paintsOnlyFlatMedia = (canvas: LegacyContainer): boolean => {
   for (const page of canvas.items ?? []) {
     for (const anno of page.items ?? []) {
       if (!normalizeMotivation(anno.motivation).includes('painting')) continue;
-      const bodies = [anno.body].flat();
+      // A Choice (alternative formats of one thing) is judged by what it offers.
+      const bodies = [anno.body].flat().flatMap((b) => {
+        const body = b as { type?: unknown; items?: unknown } | undefined;
+        return body?.type === 'Choice' && Array.isArray(body.items) ? body.items : [b];
+      });
       types.push(...bodies.map((b) => (b as { type?: unknown } | undefined)?.type));
     }
   }

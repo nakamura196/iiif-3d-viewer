@@ -11,6 +11,7 @@
     "spread": "{from}, {to} / {total}",
     "pages": "Pages",
     "pageLabel": "Page {index}",
+    "noImage": "No image",
     "toc": "Table of contents",
     "order": "Page order",
     "orderDefault": "Manifest order",
