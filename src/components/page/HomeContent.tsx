@@ -9,6 +9,7 @@ import ManifestInput from '@/components/Input';
 import PageContainer from '@/components/layout/PageContainer';
 import { SectionHeading, News, VideoEmbed } from '@nakamura196/react-ui';
 import { contentParam } from '@nakamura196/iiif-viewer/core';
+import { NEWS, NEWS_ON_HOME } from '@/lib/news';
 
 export default function HomeContent() {
   const router = useRouter();
@@ -16,72 +17,13 @@ export default function HomeContent() {
   const tNews = useTranslations('News');
   const locale = useLocale();
 
-  // 新しいものが上。表示は直近の 8 件まで（古い項目は文言ごと消す）
-  const newsItems = [
-    {
-      date: tNews('item17Date'),
-      title: tNews('item17Title'),
-      href: '/samples',
-    },
-    {
-      date: tNews('item16Date'),
-      title: tNews('item16Title'),
-      // 推論タブを開いた状態の例（NDL「江戸名所」、ndl-face-finder の花見のキュレーション）
-      href: `/viewer/?iiif-content=${encodeURIComponent('https://nakamura196.github.io/ndl-face-finder/curations/works/edonohanami.json')}&pos=2&tab=inference`,
-    },
-    {
-      date: tNews('item15Date'),
-      title: tNews('item15Title'),
-      href: '/samples',
-    },
-    {
-      date: tNews('item14Date'),
-      title: tNews('item14Title'),
-      // ストーリータブを開いた状態の例（倭寇図巻）
-      href: `/viewer/?iiif-content=${encodeURIComponent('https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/cp/story/m.json')}&tab=story`,
-    },
-    {
-      date: tNews('item13Date'),
-      title: tNews('item13Title'),
-      // 推論タブを開いた状態の例（NDL「銘尽」6 コマ目）
-      href: `/viewer/?iiif-content=${encodeURIComponent('https://dl.ndl.go.jp/api/iiif/1288371/manifest.json')}&tab=inference&canvas=6`,
-    },
-    {
-      date: tNews('item12Date'),
-      title: tNews('item12Title'),
-      href: '/georef',
-    },
-    {
-      date: tNews('item11Date'),
-      title: tNews('item11Title'),
-      href: '/usecases',
-    },
-    {
-      date: tNews('item10Date'),
-      title: tNews('item10Title'),
-      href: '/samples',
-    },
-    {
-      date: tNews('item6Date'),
-      title: tNews('item6Title'),
-      href: `https://www.youtube.com/watch?v=${locale === 'en' ? 'wOh2JiaHkS8' : 'Sb7m0J6pRTM'}`,
-      external: true,
-    },
-    {
-      date: tNews('item9Date'),
-      title: tNews('item9Title'),
-      href: '/usecases',
-    },
-    {
-      date: tNews('item8Date'),
-      title: tNews('item8Title'),
-    },
-    // 同じ場所の注釈・キー付きタグ（研究段階）の告知。掲載の了承が得られたら戻す
-    // {
-    //   date: tNews('item3Date'),
-    //   title: tNews('item3Title'),
-    // },
-  ];
+  // お知らせは src/lib/news.ts。トップには新しいものから NEWS_ON_HOME 件
+  const lang = locale === 'en' ? 'en' : 'ja';
+  const newsItems = NEWS.slice(0, NEWS_ON_HOME).map((n) => ({
+    date: n.date,
+    title: n.title[lang],
+    href: `/news/${n.id}`,
+  }));
 
   const steps = ['step1', 'step2', 'step3', 'step4'] as const;
 
@@ -174,8 +116,13 @@ export default function HomeContent() {
             items={newsItems}
             emptyText={tNews('empty')}
             LinkComponent={Link}
-            className="mb-16 !px-0 !py-0"
+            className="!px-0 !py-0"
           />
+          <p className="mt-3 mb-16 text-right text-sm">
+            <Link href="/news" className="text-[var(--ds-primary)] hover:underline">
+              {tNews('viewAll')} →
+            </Link>
+          </p>
 
           <section className="mb-16">
             <SectionHeading>{t('features')}</SectionHeading>
