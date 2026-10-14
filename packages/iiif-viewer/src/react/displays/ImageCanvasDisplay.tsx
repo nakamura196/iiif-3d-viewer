@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import {
   canvasImagesOf,
   detailWidthOf,
@@ -17,10 +17,18 @@ import {
   isLayerVisible,
   layerItemsOf,
   layerOpacity,
+  nextPlaybackStep,
   orderLayers,
+  playbackSettings,
   type PaintingContent,
 } from '../../core';
-import { canvasLayersAtom, layerOrderAtom, layerSettingsAtom } from '../atoms';
+import {
+  canvasLayersAtom,
+  layerOrderAtom,
+  layerPlaybackAtom,
+  layerPlaybackOptionsAtom,
+  layerSettingsAtom,
+} from '../atoms';
 import { useLocale, useTranslations } from '../env';
 import { usePlayback } from '../playback';
 import ChoiceBar from './ChoiceBar';
@@ -72,6 +80,31 @@ function ImageBody({
   useEffect(() => {
     setCanvasLayers({ canvasId: container.id, items });
   }, [container.id, items, setCanvasLayers]);
+
+  // レイヤーの再生（右パネルのレイヤーのタブで始める）。タブを閉じても、ここで進める
+  const [playback, setPlayback] = useAtom(layerPlaybackAtom);
+  const { seconds, loop } = useAtomValue(layerPlaybackOptionsAtom);
+  const playing = playback && playback.canvasId === container.id ? playback : null;
+  useEffect(() => {
+    if (!playing) return;
+    const timer = setTimeout(() => {
+      const step = nextPlaybackStep(playing.step, playing.ids.length, loop);
+      if (step === null) {
+        setPlayback(null);
+        return;
+      }
+      setSettings((s) => playbackSettings(s, playing.ids, step));
+      // 繰り返さないときは、いちばん奥の 1 枚を出したところで止める
+      setPlayback(!loop && step === playing.ids.length - 1 ? null : { ...playing, step });
+    }, seconds * 1000);
+    return () => clearTimeout(timer);
+  }, [playing, seconds, loop, setSettings, setPlayback]);
+  // 別の Canvas に移ったら止める
+  useEffect(
+    () => () => setPlayback((p) => (p && p.canvasId === container.id ? null : p)),
+    [container.id, setPlayback],
+  );
+
   const drawn = orderLayers(items, order).filter((it) => isLayerVisible(it, settings));
   const annotations: ImageAnnotation[] = [...drawn.flatMap((it) => it.layer.annotations), ...images.annotations];
 

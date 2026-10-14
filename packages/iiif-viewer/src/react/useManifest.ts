@@ -12,6 +12,7 @@ import {
 import {
   annotationsAtom,
   layerOrderAtom,
+  layerPlaybackAtom,
   layerSettingsAtom,
   manifestAtom,
   manifestUrlAtom,
@@ -33,6 +34,7 @@ export function useManifest(iiifContent: string | null): { failed: boolean } {
   const setModelChoices = useSetAtom(modelChoicesAtom);
   const setLayerSettings = useSetAtom(layerSettingsAtom);
   const setLayerOrder = useSetAtom(layerOrderAtom);
+  const setLayerPlayback = useSetAtom(layerPlaybackAtom);
 
   useEffect(() => {
     if (!iiifContent) return;
@@ -51,6 +53,7 @@ export function useManifest(iiifContent: string | null): { failed: boolean } {
         setModelChoices({});
         setLayerSettings({});
         setLayerOrder({});
+        setLayerPlayback(null);
         setManifest(manifest);
         setAnnotations(annotations);
       } catch (e) {
@@ -61,7 +64,7 @@ export function useManifest(iiifContent: string | null): { failed: boolean } {
     return () => {
       cancelled = true;
     };
-  }, [iiifContent, setManifestUrl, setManifest, setAnnotations, setPaintedModels, setModelChoices, setLayerSettings, setLayerOrder]);
+  }, [iiifContent, setManifestUrl, setManifest, setAnnotations, setPaintedModels, setModelChoices, setLayerSettings, setLayerOrder, setLayerPlayback]);
 
   return { failed: iiifContent !== null && failedUrl === iiifContent };
 }

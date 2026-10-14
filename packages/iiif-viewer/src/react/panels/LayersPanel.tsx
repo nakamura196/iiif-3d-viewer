@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   imageLayerCount,
@@ -9,12 +9,17 @@ import {
   layerOpacity,
   layerThumbnailUrl,
   moveLayer,
-  nextPlaybackStep,
   orderLayers,
   playbackSettings,
   type LayerItem,
 } from '../../core';
-import { canvasLayersAtom, layerOrderAtom, layerSettingsAtom } from '../atoms';
+import {
+  canvasLayersAtom,
+  layerOrderAtom,
+  layerPlaybackAtom,
+  layerPlaybackOptionsAtom,
+  layerSettingsAtom,
+} from '../atoms';
 import { useLocale, useTranslations } from '../env';
 import type { Panel, PanelContext } from './types';
 
@@ -22,6 +27,7 @@ import type { Panel, PanelContext } from './types';
 // 一覧は上が手前（画像編集ソフトのレイヤーと同じ向き）。重ね順はドラッグか ▲▼ で変える。
 // Mirador の Layers パネルと同じ操作をそろえた。
 // ▶ で、表示中の画像を手前から 1 枚ずつ隠していく（起こし絵図をめくるように見せる）。
+// 再生の状態はタブの外（atom）にあり、タイマーは画像の表示が動かす。別のタブに移っても続く。
 
 const BUTTON =
   'shrink-0 grid place-items-center w-7 h-7 rounded text-[var(--ds-fg)] hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 disabled:hover:bg-transparent';
@@ -47,13 +53,6 @@ function PlayIcon({ playing }: { playing: boolean }) {
 // 再生の間隔（秒）
 const INTERVALS = [0.5, 1, 1.5, 2, 3, 5];
 
-interface Playback {
-  canvasId: string;
-  /** The layers played, bottom first. */
-  ids: string[];
-  step: number;
-}
-
 function LayersTab({ container }: PanelContext) {
   const t = useTranslations('Layers');
   const locale = useLocale();
@@ -62,26 +61,9 @@ function LayersTab({ container }: PanelContext) {
   const [orders, setOrders] = useAtom(layerOrderAtom);
   const [dragging, setDragging] = useState<string | null>(null);
   const [over, setOver] = useState<string | null>(null);
-  const [playback, setPlayback] = useState<Playback | null>(null);
-  const [seconds, setSeconds] = useState(1);
-  const [loop, setLoop] = useState(true);
-  // 別の Canvas に移ったら止める
+  const [playback, setPlayback] = useAtom(layerPlaybackAtom);
+  const [{ seconds, loop }, setOptions] = useAtom(layerPlaybackOptionsAtom);
   const playing = playback && playback.canvasId === container?.id ? playback : null;
-
-  useEffect(() => {
-    if (!playing) return;
-    const timer = setTimeout(() => {
-      const step = nextPlaybackStep(playing.step, playing.ids.length, loop);
-      if (step === null) {
-        setPlayback(null);
-        return;
-      }
-      setSettings((s) => playbackSettings(s, playing.ids, step));
-      // 繰り返さないときは、いちばん奥の 1 枚を出したところで止める
-      setPlayback(!loop && step === playing.ids.length - 1 ? null : { ...playing, step });
-    }, seconds * 1000);
-    return () => clearTimeout(timer);
-  }, [playing, seconds, loop, setSettings]);
 
   if (!container || !current || current.canvasId !== container.id) {
     return <div className="p-4 text-sm text-[var(--ds-fg)]">{t('loading')}</div>;
@@ -144,7 +126,7 @@ function LayersTab({ container }: PanelContext) {
           {t('interval')}
           <select
             value={seconds}
-            onChange={(e) => setSeconds(Number(e.target.value))}
+            onChange={(e) => setOptions((o) => ({ ...o, seconds: Number(e.target.value) }))}
             className="rounded border border-[var(--ds-border)] bg-[var(--ds-surface)] px-1 py-0.5"
           >
             {INTERVALS.map((v) => (
@@ -156,7 +138,7 @@ function LayersTab({ container }: PanelContext) {
           {t('seconds')}
         </label>
         <label className="inline-flex items-center gap-1 text-xs">
-          <input type="checkbox" checked={loop} onChange={(e) => setLoop(e.target.checked)} />
+          <input type="checkbox" checked={loop} onChange={(e) => setOptions((o) => ({ ...o, loop: e.target.checked }))} />
           {t('loop')}
         </label>
         {playing && (
