@@ -146,6 +146,7 @@
     "open": "Open in viewer",
     "manifest": "Manifest",
     "recipe": "Recipe (Cookbook)",
+    "video": "Watch in video",
     "cookbook": {
       "title": "Cookbook samples",
       "lead": "Recipes from the IIIF Cookbook. Use “Open in viewer” to check that each one displays in Kasane.",

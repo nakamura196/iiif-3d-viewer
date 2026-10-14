@@ -5,6 +5,7 @@ import { Link } from '@/i18n/routing';
 import CommonLayout from '@/components/layout/Common';
 import PageContainer from '@/components/layout/PageContainer';
 import { VideoEmbed } from '@nakamura196/react-ui';
+import { COOKBOOK_VIDEO_ID, cookbookVideoUrl } from '@/lib/cookbookVideo';
 import { SAMPLES, sampleHref, sampleThumbnail, type Sample, type SampleKind } from '@/lib/samples';
 
 // 3D（アノテーションつき）が Kasane の中心の機能なので先に出す
@@ -15,10 +16,6 @@ export const SAMPLE_PAGES: Record<SampleKind, string> = {
   cookbook: '/samples',
   own: '/samples/kasane',
 };
-
-// Cookbook のレシピを Kasane で開いて確かめた動画（全レシピを 1 本につないだもの、YouTube の videoId）。
-// 未公開のあいだは null で、ページには出さない
-const COOKBOOK_VIDEO_ID: string | null = null;
 
 export default function SamplesContent({ kind }: { kind: SampleKind }) {
   const t = useTranslations('Samples');
@@ -37,7 +34,7 @@ export default function SamplesContent({ kind }: { kind: SampleKind }) {
             </Link>
           </p>
         </div>
-        {kind === 'cookbook' && COOKBOOK_VIDEO_ID && (
+        {kind === 'cookbook' && (
           <section>
             <h2 className="text-lg font-semibold text-[var(--ds-fg)] mb-3">{t('cookbook.videoHeading')}</h2>
             <p className="mb-3 text-sm text-[var(--ds-fg-muted)]">{t('cookbook.videoLead')}</p>
@@ -88,6 +85,16 @@ export default function SamplesContent({ kind }: { kind: SampleKind }) {
                         >
                           {t('manifest')}
                         </a>
+                        {s.kind === 'cookbook' && cookbookVideoUrl(s.id, s.manifest) && (
+                          <a
+                            href={cookbookVideoUrl(s.id, s.manifest)!}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-[var(--ds-primary)] hover:underline"
+                          >
+                            {t('video')}
+                          </a>
+                        )}
                         {s.source && (
                           <a
                             href={s.source}

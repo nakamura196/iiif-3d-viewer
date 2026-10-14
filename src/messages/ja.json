@@ -146,6 +146,7 @@
     "open": "ビューアで開く",
     "manifest": "マニフェスト",
     "recipe": "レシピ（Cookbook）",
+    "video": "動画で見る",
     "cookbook": {
       "title": "Cookbook のサンプル",
       "lead": "IIIF Cookbook のレシピです。「ビューアで開く」で、Kasane で表示できるかを確かめられます。",
