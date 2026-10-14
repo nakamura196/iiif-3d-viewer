@@ -62,6 +62,8 @@ export interface UseCase {
   site?: string;
   // トップの入力欄のサンプルにも出す
   featured?: boolean;
+  // トップのカードの見出し。資料の名前ではなく「何ができるか」を短く（featured のときは必ず書く）
+  headline?: Localized;
 }
 
 /** 開く資料そのものの URL（マニフェスト、search ならキュレーション・コレクション） */
@@ -89,8 +91,13 @@ export function hrefOf(open: UseCaseOpen): string {
   return `/${open.page}?${q.join('&')}`;
 }
 
-// サムネイル（scripts/capture-thumbnails.mjs で撮った画面）。public/ からのパス
-export const thumbnailOf = (u: UseCase): string => withBasePath(`/thumbnails/usecases/${u.id}.webp`);
+// サムネイル（scripts/capture-thumbnails.mjs で撮った、右の欄を除いたビューアの画面）。言語ごとに撮ってある
+export const thumbnailOf = (u: UseCase, locale: Locale): string =>
+  withBasePath(`/thumbnails/usecases/${u.id}.${locale}.webp`);
+
+// トップのカードで再生する短い動画（scripts/capture-usecase-clips.mjs で撮った、音なしの数秒の録画）
+export const clipOf = (u: UseCase, locale: Locale): string =>
+  withBasePath(`/clips/usecases/${u.id}.${locale}.mp4`);
 
 export const videoOf = (u: UseCase, locale: Locale): string | undefined =>
   u.video?.[locale] ?? u.video?.[locale === 'ja' ? 'en' : 'ja'];
@@ -111,6 +118,7 @@ export const USE_CASES: UseCase[] = [
     features: ['3d', 'annotations'],
     video: { ja: 'ocEU8G3jCXw', en: 'rFGlytYXToc' },
     featured: true,
+    headline: { ja: '3D モデルに注釈を付ける', en: 'Annotate a 3D model' },
   },
   {
     id: 'globe-georef',
@@ -140,6 +148,7 @@ export const USE_CASES: UseCase[] = [
     video: { ja: '3qsZbPXC9qg', en: 'RoE5Mm6vSFE' },
     site: 'https://geo.ldas.jp/',
     featured: true,
+    headline: { ja: '古地図を現在の地図に重ねる', en: 'Lay an old map over today’s map' },
   },
   {
     id: 'shelley',
@@ -156,6 +165,7 @@ export const USE_CASES: UseCase[] = [
     video: { ja: 'nQBgdcvWlj0', en: '06oQxj2AXV4' },
     site: 'https://utda.github.io/shelley/',
     featured: true,
+    headline: { ja: '2 枚の画像を見比べる', en: 'Compare two images' },
   },
   {
     id: 'ueno',
@@ -171,6 +181,7 @@ export const USE_CASES: UseCase[] = [
     features: ['3d', 'compare'],
     video: { ja: 'Sb7m0J6pRTM', en: 'wOh2JiaHkS8' },
     featured: true,
+    headline: { ja: '2 つの 3D モデルを見比べる', en: 'Compare two 3D models' },
   },
   {
     id: 'curation',
@@ -192,6 +203,7 @@ export const USE_CASES: UseCase[] = [
     video: { ja: 'LnkuxXYNCSs', en: 'qvLPzS2hCzo' },
     site: 'https://codh.rois.ac.jp/iiif/curation/',
     featured: true,
+    headline: { ja: '資料から選んだ箇所を集めて見せる', en: 'Gather selected regions from books' },
   },
   {
     id: 'curation-search',
@@ -221,6 +233,7 @@ export const USE_CASES: UseCase[] = [
     video: { ja: 'aDwMzalPIxY' },
     site: 'https://utda.github.io/kaishi/',
     featured: true,
+    headline: { ja: '貼り重ねた紙片を 1 枚ずつめくる', en: 'Peel back stacked paper flaps' },
   },
   {
     id: 'meizukushi-ocr',
