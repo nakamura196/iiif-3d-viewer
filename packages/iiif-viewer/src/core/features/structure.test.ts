@@ -10,7 +10,9 @@ import {
   groupSpreads,
   hasToc,
   isTocNodeActive,
+  compareIndexesOf,
   matchTarget,
+  matchTargets,
   navigableTree,
   orderOf,
   parseContentState,
@@ -182,6 +184,33 @@ describe('content state 0485・0540・0599', () => {
       'https://ex.org/a/manifest.json',
       'https://ex.org/b/manifest.json',
     ]);
+  });
+  it('0540 レシピの content state が指す Canvas をすべて探す', () => {
+    const state = contentStateOf(raw('0540'));
+    const base = 'https://iiif.io/api/cookbook/recipe/0540-link-for-opening-multiple-canvases';
+    expect(state?.targets.map((t) => t.canvasId)).toEqual([`${base}/canvas/2`, `${base}/canvas/p2`]);
+    expect(state?.targets.map((t) => t.manifestUrl)).toEqual([`${base}/manifest-2.json`, `${base}/manifest.json`]);
+    // 2 つの Manifest の Canvas を、1 つの container の並びに入れた場合（比較ビュー）
+    const a = load('0540-manifest-2').containers;
+    const b = load('0540-manifest').containers;
+    const matched = matchTargets(state!.targets, [...b, ...a]);
+    expect(matched.map((m) => m.canvasId)).toEqual([`${base}/canvas/2`, `${base}/canvas/p2`]);
+    expect(matched.map((m) => m.index)).toEqual([2, 1]);
+    expect(compareIndexesOf(matched)).toEqual([2, 1]);
+    // 開いた Manifest に含まれる Canvas だけが当たる。先頭は matchTarget と同じ
+    expect(matchTargets(state!.targets, b).map((m) => m.index)).toEqual([1]);
+    expect(compareIndexesOf(matchTargets(state!.targets, b))).toEqual([]);
+    expect(matchTarget(state!.targets, [...b, ...a])).toEqual(matched[0]);
+    expect(matchTargets(state!.targets, [])).toEqual([]);
+  });
+  it('matchTargets: 同じ Canvas・領域の重複は 1 つにまとめ、領域が違えば別に数える', () => {
+    const { containers } = load('0009');
+    const id = containers[1].id;
+    const same = matchTargets([{ canvasId: id }, { canvasId: id }], containers);
+    expect(same).toHaveLength(1);
+    const regions = matchTargets([{ canvasId: id, xywh: [0, 0, 1, 1] }, { canvasId: id, xywh: [2, 2, 3, 3] }], containers);
+    expect(regions).toHaveLength(2);
+    expect(compareIndexesOf(regions)).toEqual([]);
   });
   it('0599 マニフェストを指す Annotation（ドロップ）', () => {
     const state = contentStateOf(raw('0599'));

@@ -1,14 +1,14 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import type { ContainerInfo } from '../../core';
 import { labelIn } from '../../core';
 import { useLocale } from '../env';
 import { usePlayback } from '../playback';
 import { flatDisplay } from './FlatDisplay';
 import { imageCanvasDisplay } from './ImageCanvasDisplay';
-import { focusAtom, usePageOrder } from './structureState';
+import { compareAtom, focusAtom, usePageOrder } from './structureState';
 import type { Display, DisplayProps } from './types';
 
 const imageOf = (c: ContainerInfo | undefined): { url: string } | null => {
@@ -195,13 +195,20 @@ function PagedDisplay(props: DisplayProps) {
   const { viewing, order, groups } = usePageOrder(manifest, containers);
   const host = useRef<HTMLDivElement>(null);
   useSeekOnFocus(container);
+  const [compare, setCompare] = useAtom(compareAtom);
+  // ページ一覧など go を通らない移動で先頭から離れたら、並べた表示をやめる（戻っても再び並べない）
+  useEffect(() => {
+    if (compare.length > 0 && compare[0] !== selectedIndex) setCompare([]);
+  }, [compare, selectedIndex, setCompare]);
 
-  const group = groups.find((g) => g.includes(selectedIndex)) ?? [selectedIndex];
+  // 0540: content state が複数の Canvas を指しているときは、指された順に並べる（先頭が選択中のとき）
+  const comparing = compare.length >= 2 && compare[0] === selectedIndex;
+  const group = comparing ? compare : (groups.find((g) => g.includes(selectedIndex)) ?? [selectedIndex]);
   const pages = group.map((i) => containers[i]).filter((c): c is ContainerInfo => !!c);
   const allImages = pages.length > 1 && pages.every((c) => !!imageOf(c));
 
   let body: React.ReactNode;
-  if (viewing.mode === 'continuous' && containers.length > 1 && containers.every((c) => !!imageOf(c))) {
+  if (!comparing && viewing.mode === 'continuous' && containers.length > 1 && containers.every((c) => !!imageOf(c))) {
     body = (
       <Strip
         containers={containers}
@@ -212,7 +219,7 @@ function PagedDisplay(props: DisplayProps) {
       />
     );
   } else if (allImages) {
-    body = <Spread pages={pages} direction={viewing.direction} />;
+    body = <Spread pages={pages} direction={comparing ? 'left-to-right' : viewing.direction} />;
   } else {
     // 1 ページだけのとき: 画像の深いズーム・重ね表示などは imageCanvas、画像以外はそこから次の表示へ
     body = <imageCanvasDisplay.Component {...props} />;

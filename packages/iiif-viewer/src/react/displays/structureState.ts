@@ -35,6 +35,9 @@ export const navRequestAtom = atom<NavRequest | null>(null);
 /** いま強調する領域・時間（移動の結果）。ページを変えると消える。 */
 export const focusAtom = atom<NavRequest | null>(null);
 
+/** 0540: content state が複数の Canvas を指すとき、並べて見せる container の番号（先頭が選択中）。 */
+export const compareAtom = atom<number[]>([]);
+
 /** 選ばれている代替のページ順（sequence の Range の id）。null は元の順。 */
 export const sequenceIdAtom = atom<string | null>(null);
 
@@ -82,6 +85,7 @@ export function useManifestSwitch() {
   const setTrail = useSetAtom(trailAtom);
   const setSequence = useSetAtom(sequenceIdAtom);
   const setFocus = useSetAtom(focusAtom);
+  const setCompare = useSetAtom(compareAtom);
 
   const apply = useCallback(
     (next: ManifestV4) => {
@@ -92,8 +96,9 @@ export function useManifestSwitch() {
       setAnnotations(annotations);
       setSequence(null);
       setFocus(null);
+      setCompare([]);
     },
-    [setManifest, setAnnotations, setPainted, setChoices, setSequence, setFocus],
+    [setManifest, setAnnotations, setPainted, setChoices, setSequence, setFocus, setCompare],
   );
 
   /** URL のマニフェスト（または Collection）を開く。push なら「戻る」で今のものに戻れる。 */

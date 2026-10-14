@@ -469,18 +469,39 @@ export function parseDroppedText(text: string): ContentStateTargets | null {
 }
 
 /**
- * containers の中から、content state の target に当たる最初の Canvas を探す。
- * 見つからなければ null。
+ * containers の中から、content state の target に当たる Canvas をすべて探す（target の並び順）。
+ * 0540: 1 つの content state が複数の Canvas を指すとき、その全部。
+ * 同じ Canvas・同じ領域・同じ時間の重複は 1 つにまとめる。見つからなければ空。
  */
+export function matchTargets(
+  targets: ContentStateTargets['targets'],
+  containers: ContainerInfo[],
+): Array<CanvasTarget & { index: number }> {
+  const out: Array<CanvasTarget & { index: number }> = [];
+  const seen = new Set<string>();
+  for (const t of targets) {
+    const index = indexOfCanvas(containers, t.canvasId);
+    if (index < 0) continue;
+    const key = `${index}|${t.xywh?.join(',') ?? ''}|${t.t?.join(',') ?? ''}`;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push({ ...t, index });
+  }
+  return out;
+}
+
+/** content state の target に当たる最初の Canvas。見つからなければ null。 */
 export function matchTarget(
   targets: ContentStateTargets['targets'],
   containers: ContainerInfo[],
 ): (CanvasTarget & { index: number }) | null {
-  for (const t of targets) {
-    const index = indexOfCanvas(containers, t.canvasId);
-    if (index >= 0) return { ...t, index };
-  }
-  return null;
+  return matchTargets(targets, containers)[0] ?? null;
+}
+
+/** 並べて見せる Canvas の番号（重複なし）。2 つ未満なら空（並べる意味が無い）。 */
+export function compareIndexesOf(matched: Array<{ index: number }>): number[] {
+  const idx = [...new Set(matched.map((m) => m.index))];
+  return idx.length >= 2 ? idx : [];
 }
 
 // ---------------------------------------------------------------------------
