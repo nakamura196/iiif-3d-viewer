@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -8,7 +8,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 maplibregl.setWorkerUrl(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/maplibre/maplibre-gl-worker.mjs`);
 import { useTheme } from 'next-themes';
 import { useLocale, useTranslations } from 'next-intl';
-import { geoFeatureIdOf } from '@nakamura196/iiif-viewer/core';
+import { geoFeatureIdOf, type LngLat } from '@nakamura196/iiif-viewer/core';
 
 interface GeoFeatureName {
   toponym: string;
@@ -44,11 +44,21 @@ interface GeoFeature {
   depictions?: GeoFeatureDepiction[];
 }
 
+/** 地図に重ねる画像（絵図・古地図）。corners は左上・右上・右下・左下の経度・緯度。 */
+export interface MapImageOverlay {
+  url: string;
+  corners: LngLat[];
+}
+
 interface MapViewProps {
   features: GeoFeature[];
   selectedId: string | null;
   onFeatureClick: (id: string) => void;
+  overlay?: MapImageOverlay | null;
 }
+
+const OVERLAY_SOURCE = 'georef-overlay';
+const OVERLAY_LAYER = 'georef-overlay';
 
 // 「全体を表示」ボタン。手で拡大・移動したあと、すべてのピンが収まる縮尺に戻す。
 // 拡大・縮小のボタン（NavigationControl）と同じ見た目の枠に入れる
@@ -77,7 +87,7 @@ class FitAllControl implements maplibregl.IControl {
   }
 }
 
-export default function MapView({ features, selectedId, onFeatureClick }: MapViewProps) {
+export default function MapView({ features, selectedId, onFeatureClick, overlay }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
   const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
@@ -94,6 +104,38 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
   featuresRef.current = features;
   selectedIdRef.current = selectedId;
   onFeatureClickRef.current = onFeatureClick;
+
+  // 重ねた画像の表示と濃さ。地図を作り直しても（テーマ・言語の切り替え）引き継ぐ
+  const [overlayVisible, setOverlayVisible] = useState(true);
+  const [overlayOpacity, setOverlayOpacity] = useState(0.7);
+  const overlayRef = useRef(overlay);
+  const overlayStateRef = useRef({ visible: overlayVisible, opacity: overlayOpacity });
+  overlayRef.current = overlay;
+  overlayStateRef.current = { visible: overlayVisible, opacity: overlayOpacity };
+
+  // 画像を地図に貼る。四隅を指定すると、地図ライブラリがその間を埋めて描く。
+  // マーカーは地図の上に重なる別の要素なので、画像より常に手前に出る
+  const syncOverlay = () => {
+    const m = map.current;
+    if (!m || !mapReadyRef.current) return;
+    const current = overlayRef.current;
+    if (m.getLayer(OVERLAY_LAYER)) m.removeLayer(OVERLAY_LAYER);
+    if (m.getSource(OVERLAY_SOURCE)) m.removeSource(OVERLAY_SOURCE);
+    if (!current) return;
+    m.addSource(OVERLAY_SOURCE, {
+      type: 'image',
+      url: current.url,
+      coordinates: current.corners as [LngLat, LngLat, LngLat, LngLat],
+    });
+    const { visible, opacity } = overlayStateRef.current;
+    m.addLayer({
+      id: OVERLAY_LAYER,
+      type: 'raster',
+      source: OVERLAY_SOURCE,
+      layout: { visibility: visible ? 'visible' : 'none' },
+      paint: { 'raster-opacity': opacity, 'raster-fade-duration': 0 },
+    });
+  };
 
   // 言語コードをOpenMapTiles形式に変換
   const getMapLanguage = (loc: string) => {
@@ -201,6 +243,8 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
     if (!map.current || currentFeatures.length === 0) return;
     const bounds = new maplibregl.LngLatBounds();
     currentFeatures.forEach(f => bounds.extend(f.geometry.coordinates));
+    // 画像を重ねているときは、画像の全体も収める
+    overlayRef.current?.corners.forEach(c => bounds.extend(c));
     map.current.fitBounds(bounds, { padding: 50, maxZoom: 17, duration });
   };
   const fitAllRef = useRef(fitAll);
@@ -256,7 +300,8 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
 
       mapReadyRef.current = true;
 
-      // マップ準備完了後にマーカーを追加
+      // マップ準備完了後に画像とマーカーを追加
+      syncOverlay();
       addMarkersToMap();
     });
 
@@ -272,6 +317,19 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
     addMarkersToMap();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [features]);
+
+  // 重ねる画像が変わったら貼り直し、全体が見える縮尺に戻す
+  useEffect(() => {
+    syncOverlay();
+    fitAll(0);
+  }, [overlay?.url, overlay?.corners]);
+
+  useEffect(() => {
+    const m = map.current;
+    if (!m || !mapReadyRef.current || !m.getLayer(OVERLAY_LAYER)) return;
+    m.setLayoutProperty(OVERLAY_LAYER, 'visibility', overlayVisible ? 'visible' : 'none');
+    m.setPaintProperty(OVERLAY_LAYER, 'raster-opacity', overlayOpacity);
+  }, [overlayVisible, overlayOpacity]);
 
   // Update marker colors when selection changes
   useEffect(() => {
@@ -295,6 +353,32 @@ export default function MapView({ features, selectedId, onFeatureClick }: MapVie
   }, [selectedId, features]);
 
   return (
-    <div ref={mapContainer} className="w-full h-full" />
+    <div className="relative w-full h-full">
+      <div ref={mapContainer} className="w-full h-full" />
+      {overlay && (
+        <div className="absolute bottom-8 left-2 z-10 flex items-center gap-2 rounded-md bg-white/90 dark:bg-gray-800/90 px-3 py-2 shadow text-sm text-gray-700 dark:text-gray-200">
+          <label className="flex items-center gap-1.5 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={overlayVisible}
+              onChange={(e) => setOverlayVisible(e.target.checked)}
+            />
+            {t('overlayImage')}
+          </label>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.05}
+            value={overlayOpacity}
+            disabled={!overlayVisible}
+            onChange={(e) => setOverlayOpacity(Number(e.target.value))}
+            aria-label={t('overlayOpacity')}
+            title={t('overlayOpacity')}
+            className="w-24 disabled:opacity-40"
+          />
+        </div>
+      )}
+    </div>
   );
 }
