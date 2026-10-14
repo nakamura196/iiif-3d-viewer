@@ -1,19 +1,16 @@
 'use client';
 
 import { useLocale, useTranslations } from 'next-intl';
-import { contentParam } from '@nakamura196/iiif-viewer/core';
 import { Link } from '@/i18n/routing';
 import CommonLayout from '@/components/layout/Common';
-import { SAMPLES, type Sample } from '@/lib/samples';
+import { SAMPLES, sampleHref, sampleThumbnail, type Sample } from '@/lib/samples';
 
-const MEDIA_ORDER: Sample['media'][] = ['image', 'audio', 'video', '3d'];
+// 3D（アノテーションつき）が Kasane の中心の機能なので先に出す
+const MEDIA_ORDER: Sample['media'][] = ['3d', 'image', 'audio', 'video'];
 
 export default function SamplesContent() {
   const t = useTranslations('Samples');
   const locale = useLocale() === 'en' ? 'en' : 'ja';
-
-  const openHref = (s: Sample) =>
-    `/viewer?${contentParam(s.manifest)}${s.tab ? `&tab=${s.tab}` : ''}`;
 
   return (
     <CommonLayout>
@@ -33,37 +30,51 @@ export default function SamplesContent() {
                   {items.map((s) => (
                     <li
                       key={s.id}
-                      className="bg-[var(--ds-surface)] rounded-lg border border-[var(--ds-border)] p-4"
+                      className="bg-[var(--ds-surface)] rounded-lg border border-[var(--ds-border)] p-4 flex flex-col sm:flex-row gap-4"
                     >
-                      <div className="flex flex-wrap items-baseline gap-2">
-                        <span className="font-medium text-[var(--ds-fg)]">{s.title[locale]}</span>
-                        <span className="text-xs text-[var(--ds-fg-muted)]">
-                          {s.kind === 'cookbook' ? `Cookbook ${s.id}` : t('own')}
-                        </span>
-                      </div>
-                      <p className="mt-1 text-sm text-[var(--ds-fg-muted)]">{s.note[locale]}</p>
-                      <div className="mt-2 flex flex-wrap gap-4 text-sm">
-                        <Link href={openHref(s)} className="text-[var(--ds-primary)] hover:underline">
-                          {t('open')}
-                        </Link>
-                        <a
-                          href={s.manifest}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-[var(--ds-primary)] hover:underline"
-                        >
-                          {t('manifest')}
-                        </a>
-                        {s.source && (
+                      {/* 開いたときの画面。押すと開く */}
+                      <Link href={sampleHref(s)} className="shrink-0 sm:w-48" tabIndex={-1} aria-hidden="true">
+                        {/* eslint-disable-next-line @next/next/no-img-element -- 静的書き出しのため next/image は使わない */}
+                        <img
+                          src={sampleThumbnail(s)}
+                          alt=""
+                          width={640}
+                          height={400}
+                          loading="lazy"
+                          className="w-full aspect-[16/10] object-cover rounded border border-[var(--ds-border)] bg-[var(--ds-surface-2)]"
+                        />
+                      </Link>
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-baseline gap-2">
+                          <span className="font-medium text-[var(--ds-fg)]">{s.title[locale]}</span>
+                          <span className="text-xs text-[var(--ds-fg-muted)]">
+                            {s.kind === 'cookbook' ? `Cookbook ${s.id}` : t('own')}
+                          </span>
+                        </div>
+                        <p className="mt-1 text-sm text-[var(--ds-fg-muted)]">{s.note[locale]}</p>
+                        <div className="mt-2 flex flex-wrap gap-4 text-sm">
+                          <Link href={sampleHref(s)} className="text-[var(--ds-primary)] hover:underline">
+                            {t('open')}
+                          </Link>
                           <a
-                            href={s.source}
+                            href={s.manifest}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-[var(--ds-primary)] hover:underline"
                           >
-                            {t('recipe')}
+                            {t('manifest')}
                           </a>
-                        )}
+                          {s.source && (
+                            <a
+                              href={s.source}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-[var(--ds-primary)] hover:underline"
+                            >
+                              {t('recipe')}
+                            </a>
+                          )}
+                        </div>
                       </div>
                     </li>
                   ))}

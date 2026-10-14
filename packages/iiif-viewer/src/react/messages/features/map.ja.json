@@ -1,0 +1,19 @@
+{
+  "Info": {
+    "map": "地図"
+  },
+  "Map": {
+    "map": "場所の地図",
+    "zoomIn": "拡大",
+    "zoomOut": "縮小",
+    "fitAll": "すべての場所を表示",
+    "untitled": "名前のない場所",
+    "region": "範囲",
+    "openError": "開けませんでした",
+    "scope_manifest": "資料全体",
+    "scope_canvas": "ページ",
+    "scope_range": "目次の項目",
+    "scope_annotation": "注釈",
+    "scope_item": "収録資料"
+  }
+}

@@ -1,4 +1,6 @@
+import { contentParam } from '@nakamura196/iiif-viewer/core';
 import { withBasePath } from '@/lib/basePath';
+import type { ViewerTab } from '@/lib/viewerTabs';
 
 export type SampleKind = 'cookbook' | 'own';
 
@@ -10,7 +12,7 @@ export interface Sample {
   note: { ja: string; en: string };
   manifest: string;
   // 開いたあとに選ぶタブ
-  tab?: 'transcript' | 'annotations' | 'structure';
+  tab?: ViewerTab;
   // 出典ページ（Cookbook のレシピ）
   source?: string;
 }
@@ -23,6 +25,16 @@ const recipePage = (recipe: string) => `https://iiif.io/api/cookbook/recipe/${re
 
 // IIIF Cookbook のレシピ（Presentation API 4.0 の版）と、このサイトの検査用マニフェスト。
 export const SAMPLES: Sample[] = [
+  // 3D モデルへのアノテーションが Kasane の中心の機能なので、一覧の先頭に置く
+  {
+    id: 'globe-annotations', kind: 'own', media: '3d',
+    title: { ja: '地球儀とアノテーション', en: 'Globe with annotations' },
+    note: {
+      ja: '『石淵家地球儀』（菊池市立図書館所蔵）の 3D モデルの地名に、アノテーションを付けた例。一覧の地名を押すと、その場所へ視点が移ります',
+      en: 'Annotations on place names of a 3D model of the Ishibuchi family globe (Kikuchi City Library). Click a place in the list to move the view there',
+    },
+    manifest: withBasePath('/manifests/sample-manifest-with-annotations.json'), tab: 'annotations',
+  },
   {
     id: '0001', kind: 'cookbook', media: 'image',
     title: { ja: '画像 1 枚', en: 'Simplest image' },
@@ -111,7 +123,7 @@ export const SAMPLES: Sample[] = [
     id: '0021', kind: 'cookbook', media: 'image',
     title: { ja: 'タグづけ', en: 'Tagging' },
     note: { ja: '画像の一部にタグをつける', en: 'Tags attached to image regions' },
-    manifest: cookbookV3('0021-tagging'), tab: 'annotations', source: recipePage('0021-tagging'),
+    manifest: cookbookV3('0021-tagging'), tab: 'canvasAnnotations', source: recipePage('0021-tagging'),
   },
   {
     id: '0036', kind: 'cookbook', media: 'image',
@@ -135,7 +147,7 @@ export const SAMPLES: Sample[] = [
     id: '0103', kind: 'cookbook', media: 'audio',
     title: { ja: '音声とアノテーション', en: 'Poetry reading with annotations' },
     note: { ja: '朗読にアノテーションがつく', en: 'A reading with annotations' },
-    manifest: cookbookV3('0103-poetry-reading-annotations'), tab: 'annotations', source: recipePage('0103-poetry-reading-annotations'),
+    manifest: cookbookV3('0103-poetry-reading-annotations'), tab: 'annotationTranscript', source: recipePage('0103-poetry-reading-annotations'),
   },
   {
     id: 'video-transcript', kind: 'own', media: 'video',
@@ -147,3 +159,10 @@ export const SAMPLES: Sample[] = [
     manifest: withBasePath('/manifests/sample-manifest-video-transcript.json'), tab: 'transcript',
   },
 ];
+
+// 「開く」の行き先（/viewer）。一覧の画面と、サムネイルを撮るスクリプトの両方で使う
+export const sampleHref = (s: Sample): string =>
+  `/viewer?${contentParam(s.manifest)}${s.tab ? `&tab=${s.tab}` : ''}`;
+
+// サムネイル（scripts/capture-thumbnails.mjs で撮った画面）。public/ からのパス
+export const sampleThumbnail = (s: Sample): string => withBasePath(`/thumbnails/samples/${s.id}.webp`);

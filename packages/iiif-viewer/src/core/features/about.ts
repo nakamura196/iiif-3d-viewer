@@ -383,7 +383,7 @@ const placeOf = (
 };
 
 // A navPlace value is a FeatureCollection, a Feature, or a list of them.
-const featuresOf = (v: unknown): Json[] => {
+export const geoFeaturesOf = (v: unknown): Json[] => {
   const out: Json[] = [];
   for (const e of asList(v)) {
     if (!isObj(e)) continue;
@@ -402,7 +402,7 @@ const annotationPlaces = (container: Json, locale: string): AboutPlace[] => {
       if (!isObj(anno)) continue;
       const target = typeof anno.target === 'string' ? anno.target : isObj(anno.target) ? str(anno.target.id) : undefined;
       const fragment = target?.includes('#') ? target.slice(target.indexOf('#')) : undefined;
-      for (const body of featuresOf(anno.body)) {
+      for (const body of geoFeaturesOf(anno.body)) {
         const p = placeOf(body, locale, 'annotation', fragment);
         if (p) out.push(p);
       }
@@ -440,7 +440,7 @@ const scopeOf = (raw: Json, locale: string, withAnnotations: boolean): AboutScop
     .filter((t): t is string => !!t && /^https?:\/\//i.test(safeAboutUrl(t)));
 
   const navDateRaw = str(raw.navDate);
-  const places = featuresOf(raw.navPlace)
+  const places = geoFeaturesOf(raw.navPlace)
     .map((f) => placeOf(f, locale, 'navPlace'))
     .filter((p): p is AboutPlace => !!p);
   if (withAnnotations) places.push(...annotationPlaces(raw, locale));

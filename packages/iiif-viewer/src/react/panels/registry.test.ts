@@ -9,6 +9,7 @@ describe('PANELS', () => {
       'pages',
       'structure',
       'layers',
+      'map',
       'rights',
       'transcript',
       'annotationTranscript',
