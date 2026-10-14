@@ -63,6 +63,7 @@
     "empty": "Nothing to display",
     "imageError": "Could not load the image",
     "mediaError": "Could not load the media",
+    "waveform": "Waveform of the sound (click to move there; left and right arrow keys move 5 seconds)",
     "unsupportedContent": "This kind of content cannot be displayed",
     "containers": "Contents",
     "choice": "Choice",

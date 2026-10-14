@@ -39,12 +39,14 @@ import { AnnotationBoxes, MediaCover } from './ImageExtras';
 import ImageLayerView from './ImageTiles';
 import ImageView from './ImageView';
 import { useRawManifest } from './rawManifest';
+import Waveform from './Waveform';
 import { DISPLAYS } from './registry';
 import type { Display, DisplayProps } from './types';
 
 // Canvas 全体を「元の manifest のまま」読んで表示する。
 // 画像の Image API による深いズーム・回転・合成・Choice・画像を持つ注釈・placeholderCanvas・
 // accompanyingCanvas・サムネイル・画像が無い Canvas を扱う。
+// 音声は accompanyingCanvas（無ければ placeholderCanvas）の絵を出し、どちらも無ければ波形を出す（Waveform.tsx）。
 //
 // なぜ元の manifest を取り直すか: 読み込み時の変換（convertToV4）と ContainerInfo は、Canvas の
 // 大きさ・Image API の service・SpecificResource（回転や領域）・注釈の位置を落とすため。
@@ -249,6 +251,16 @@ function MediaBody({ props, images, kind }: { props: DisplayProps; images: Canva
         <div className={kind === 'Audio' ? 'shrink-0 flex flex-col' : 'flex-1 min-h-0 flex flex-col basis-1/2'}>
           <Next {...props} />
         </div>
+      </div>
+    );
+  }
+
+  // a sound with no picture to go with it: Kasane's own choice (the specification says nothing) is its waveform
+  const sound = kind === 'Audio' ? images.paintings.flatMap((p) => p.options).find((o) => o.kind === 'Audio') : undefined;
+  if (sound) {
+    return (
+      <div className="relative flex-1 min-h-0 min-w-0 flex flex-col">
+        <Waveform src={sound.url} player={<Next {...props} />} />
       </div>
     );
   }
