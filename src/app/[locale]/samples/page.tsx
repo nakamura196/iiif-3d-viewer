@@ -10,7 +10,7 @@ export default async function SamplesPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <SamplesContent />;
+  return <SamplesContent kind="cookbook" />;
 }
 
 export function generateStaticParams() {

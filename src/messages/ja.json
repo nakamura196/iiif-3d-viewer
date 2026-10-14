@@ -21,6 +21,7 @@
     "relatedOtherTools": "nakamura196 の他のツール",
     "developers": "中村 覚・小川 潤（東京大学）",
     "samplesAll": "Cookbook のサンプル",
+    "samplesOwn": "Kasane 独自のサンプル",
     "useCasesAll": "ユースケース",
     "search": "コレクションを検索"
   },
@@ -136,8 +137,6 @@
     "canvas": "Canvas"
   },
   "Samples": {
-    "title": "サンプル一覧",
-    "lead": "IIIF Cookbook のレシピと、このサイトの検査用マニフェストです。「ビューアで開く」で、表示できるかを確かめられます。",
     "media": {
       "image": "画像",
       "audio": "音声",
@@ -147,7 +146,18 @@
     "open": "ビューアで開く",
     "manifest": "マニフェスト",
     "recipe": "レシピ（Cookbook）",
-    "own": "このサイトの検査用"
+    "cookbook": {
+      "title": "Cookbook のサンプル",
+      "lead": "IIIF Cookbook のレシピです。「ビューアで開く」で、Kasane で表示できるかを確かめられます。",
+      "link": "Kasane 独自のサンプルはこちら",
+      "videoHeading": "Cookbook のレシピを Kasane で開いた様子",
+      "videoLead": "全レシピを順に Kasane で開いて確かめた動画です。チャプターからレシピを選べます。"
+    },
+    "own": {
+      "title": "Kasane 独自のサンプル",
+      "lead": "このサイトで用意した検査用のマニフェストです。Cookbook に無い使い方（3D へのアノテーション、時刻つき文字起こしなど）を確かめられます。",
+      "link": "IIIF Cookbook のサンプルはこちら"
+    }
   },
   "UseCases": {
     "title": "ユースケース",
