@@ -63,6 +63,7 @@
     "empty": "表示できる内容がありません",
     "imageError": "画像を読み込めませんでした",
     "mediaError": "メディアを読み込めませんでした",
+    "waveform": "音声の波形（押すとその位置へ移動。左右の矢印キーで 5 秒ずつ）",
     "unsupportedContent": "この形式の内容は表示できません",
     "containers": "表示する内容",
     "choice": "選択肢",
