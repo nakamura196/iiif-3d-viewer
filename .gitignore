@@ -43,3 +43,7 @@ next-env.d.ts
 .env
 # copied from node_modules at build time (scripts/copy-maplibre-worker.mjs)
 /public/maplibre/
+
+# playwright
+/test-results/
+/playwright-report/
