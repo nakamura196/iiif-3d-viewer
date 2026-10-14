@@ -126,6 +126,18 @@ export const SAMPLES: Sample[] = [
     manifest: cookbookV3('0021-tagging'), tab: 'canvasAnnotations', source: recipePage('0021-tagging'),
   },
   {
+    id: '0377', kind: 'cookbook', media: 'image',
+    title: { ja: '注釈の中の画像', en: 'Image in annotation' },
+    note: { ja: '注釈の本文に画像が入っている（右パネルに画像が出ます）', en: 'An annotation whose body contains a picture' },
+    manifest: cookbookV3('0377-image-in-annotation'), tab: 'canvasAnnotations', source: recipePage('0377-image-in-annotation'),
+  },
+  {
+    id: '0045', kind: 'cookbook', media: 'image',
+    title: { ja: '注釈の色分け（CSS）', en: 'Styling annotations with CSS' },
+    note: { ja: '注釈者ごとに色を変える（外部 CSS が読めないときはクラスごとの色で代用します）', en: 'Annotations styled per author (falls back to per-class colours when the external CSS cannot be read)' },
+    manifest: cookbookV3('0045-css'), tab: 'canvasAnnotations', source: recipePage('0045-css'),
+  },
+  {
     id: '0036', kind: 'cookbook', media: 'image',
     title: { ja: '複数の画像の合成', en: 'Composition from multiple images' },
     note: { ja: '複数の画像を 1 枚の Canvas に並べる', en: 'Several images placed on one canvas' },
