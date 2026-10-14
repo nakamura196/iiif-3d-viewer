@@ -25,6 +25,12 @@
     "openError": "開けませんでした",
     "dropHint": "iiif-content のリンクをここに落とすと開きます",
     "region": "指定された場所",
-    "continuous": "つながったページ"
+    "continuous": "つながったページ",
+    "collectionOrder": "並べ方",
+    "orderCollection": "コレクションの順",
+    "orderDate": "年代順",
+    "undated": "日付なし",
+    "itemCount": "{count} 件",
+    "timeline": "年表"
   }
 }
