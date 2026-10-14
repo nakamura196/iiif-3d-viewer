@@ -21,7 +21,7 @@ const MAX_FOLLOWED_PAGES = 5;
 // 取得は 1 回だけにする（失敗は覚えず、次に開いたとき取り直す）。
 const pageCache = new Map<string, Promise<unknown>>();
 
-const fetchPage = (url: string): Promise<unknown> => {
+export const fetchPage = (url: string): Promise<unknown> => {
   let p = pageCache.get(url);
   if (!p) {
     p = fetch(url, { headers: { Accept: 'application/ld+json, application/json' } }).then((r) => {
