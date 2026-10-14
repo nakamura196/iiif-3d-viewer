@@ -36,7 +36,7 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
   const [selected, setSelected] = useAtom(selectedCanvasAnnotationAtom);
 
   const drawn = annotations
-    .filter((a) => a.region.type !== 'canvas')
+    .filter((a) => a.region.type !== 'canvas' && !a.layer) // layer annotations are drawn by the layer itself
     .sort((a, b) => areaOf(b) - areaOf(a));
   if (drawn.length === 0 || !(canvasWidth > 0) || !(canvasHeight > 0)) return null;
 

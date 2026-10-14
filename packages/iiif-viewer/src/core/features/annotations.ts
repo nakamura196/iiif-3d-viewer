@@ -57,6 +57,11 @@ export interface CanvasAnnotation extends AnnotationStyleSource {
   collection?: AnnotationCollectionRef;
   /** The motivation is painting: the text is drawn on the Canvas itself. */
   painted?: boolean;
+  /**
+   * The annotation belongs to one image layer of a Choice (recipe 0326), not to the Canvas as a whole.
+   * The layer draws it itself, so the overlay on the Canvas skips it; the list shows it with the layer's name.
+   */
+  layer?: { id: string; label?: unknown };
 }
 
 const asList = (v: unknown): unknown[] => (Array.isArray(v) ? v : v == null ? [] : [v]);
@@ -211,6 +216,13 @@ const regionFromSelector = (sel: Json, w?: number, h?: number): AnnotationRegion
       const rings = svgRings(str(sel.value) ?? '');
       return rings.length ? { type: 'polygon', rings, bbox: bboxOf(rings) } : null;
     }
+    case 'ImageApiSelector': {
+      // pixels of the image (at `size` when given); the caller scales them onto the Canvas
+      const m = /^(-?[\d.]+),(-?[\d.]+),([\d.]+),([\d.]+)$/.exec(str(sel.region) ?? '');
+      if (!m) return null;
+      const [x, y, w, h] = m.slice(1).map(parseFloat);
+      return w > 0 && h > 0 ? { type: 'rect', x, y, w, h } : null;
+    }
     case 'FragmentSelector': {
       const box = parseXywh(str(sel.value) ?? '', w, h);
       return box ? { type: 'rect', ...box } : null;
@@ -269,6 +281,11 @@ const bodyItems = (body: unknown, out: AnnotationBodyItem[], counter: { n: numbe
       const value = str(raw.value) ?? '';
       if (!value) continue;
       out.push({ kind: 'text', value, format: str(raw.format), language: str(raw.language), ...c });
+    } else if (raw.type === 'SpecificResource' && isObj(raw.source) && raw.source.type === 'TextualBody') {
+      // a styled text (recipe 0045): the TextualBody is wrapped in a SpecificResource that carries the styleClass
+      const value = str(raw.source.value) ?? '';
+      if (!value) continue;
+      out.push({ kind: 'text', value, format: str(raw.source.format), language: str(raw.source.language), ...c });
     } else if (raw.type === 'SpecificResource') {
       const url = idOf(raw.source);
       if (!url) continue;
@@ -350,6 +367,33 @@ export interface CanvasAnnotationSources {
   references: string[];
 }
 
+// Annotations written inside an image of a Choice (recipe 0326: an X-ray layer with its own tags).
+// They target the image (or its service), not the Canvas, so each page is marked with the layer it belongs to.
+const layerPagesOf = (paintingPage: Json): Json[] => {
+  const out: Json[] = [];
+  const visit = (body: unknown, label: unknown) => {
+    for (const b of asList(body)) {
+      if (!isObj(b)) continue;
+      if (b.type === 'Choice') {
+        visit(b.items, undefined);
+        continue;
+      }
+      const inner = b.type === 'SpecificResource' && isObj(b.source) ? b.source : b;
+      const ids = [idOf(inner), ...asList(inner.service).map(idOf)].filter((x): x is string => !!x);
+      const layerLabel = b.label ?? inner.label ?? label;
+      for (const page of asList(inner.annotations)) {
+        if (!isObj(page) || !Array.isArray(page.items)) continue;
+        out.push({
+          ...page,
+          __layer: { ids, label: layerLabel, width: num(inner.width), height: num(inner.height) },
+        });
+      }
+    }
+  };
+  for (const anno of asList(paintingPage.items)) if (isObj(anno)) visit(anno.body, undefined);
+  return out;
+};
+
 export const annotationSourcesOf = (canvas: Json | undefined): CanvasAnnotationSources => {
   const pages: Json[] = [];
   const references: string[] = [];
@@ -365,7 +409,10 @@ export const annotationSourcesOf = (canvas: Json | undefined): CanvasAnnotationS
   }
   // text painted onto the Canvas (recipe 0561) sits among the painting annotations
   for (const page of asList(canvas.items)) {
-    if (isObj(page) && Array.isArray(page.items)) pages.push({ ...page, __painting: true });
+    if (isObj(page) && Array.isArray(page.items)) {
+      pages.push({ ...page, __painting: true });
+      pages.push(...layerPagesOf(page));
+    }
   }
   return { pages, references };
 };
@@ -391,8 +438,28 @@ export const readCanvasAnnotations = (
       bodyItems(raw.body, bodies, { n: 0 });
       const painting = motivations.includes('painting');
       if (painting && !bodies.some((b) => b.kind === 'text')) continue; // images etc. are painted elsewhere
+      const layerInfo = isObj(page.__layer) ? (page.__layer as Json) : undefined;
+      const layerIds = (layerInfo?.ids as string[] | undefined) ?? [];
       const target = parseTarget(raw.target, canvasSize?.width, canvasSize?.height);
-      if (!target || target.canvasId !== canvasId) continue;
+      if (!target) continue;
+      let layer: CanvasAnnotation['layer'];
+      if (layerInfo && target.canvasId !== undefined && layerIds.includes(target.canvasId)) {
+        // inside an image layer: the region is in pixels of that image; scale it onto the Canvas
+        const t = asList(raw.target)[0];
+        const sel = isObj(t) ? asList(t.selector).find(isObj) : undefined;
+        const size = /^\^?(\d+),(\d+)$/.exec(str(sel?.size) ?? '');
+        const iw = size ? Number(size[1]) : (layerInfo.width as number | undefined);
+        const ih = size ? Number(size[2]) : (layerInfo.height as number | undefined);
+        const cw = canvasSize?.width;
+        const ch = canvasSize?.height;
+        if (target.region.type === 'rect' && iw && ih && cw && ch) {
+          const r = target.region;
+          target.region = { type: 'rect', x: (r.x / iw) * cw, y: (r.y / ih) * ch, w: (r.w / iw) * cw, h: (r.h / ih) * ch };
+        }
+        layer = { id: layerIds[0], label: layerInfo.label };
+        target.canvasId = canvasId;
+      }
+      if (target.canvasId !== canvasId) continue;
       // supplementing on the whole Canvas (captions, transcripts) is shown elsewhere; on a region of the
       // image it is text read from that place (OCR), and is drawn like other annotations
       if (motivations.includes('supplementing') && target.region.type === 'canvas') continue;
@@ -412,6 +479,7 @@ export const readCanvasAnnotations = (
         bodies,
         ...(collection ? { collection } : {}),
         ...(painting ? { painted: true } : {}),
+        ...(layer ? { layer } : {}),
       });
     }
   }

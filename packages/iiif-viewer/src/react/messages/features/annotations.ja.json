@@ -6,6 +6,7 @@
     "canvasAnnotationsEmpty": "この画面には注釈がありません",
     "canvasAnnotationsCount": "{count} 件",
     "canvasAnnotationsAbout": "画像全体への注釈",
+    "canvasAnnotationsLayer": "レイヤー: {label}",
     "canvasAnnotationsOpen": "リンクを開く",
     "canvasAnnotationsCanvasLink": "この資料の別のページへのリンク",
     "canvasAnnotationsPainted": "画像の上の文字",

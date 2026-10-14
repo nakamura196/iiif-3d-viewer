@@ -5,6 +5,8 @@ import { useAtomValue } from 'jotai';
 import {
   annotationSourcesOf,
   annotationStyles,
+  fallbackStyleOf,
+  paletteOrderOf,
   parseAnnotationCss,
   type AnnotationStyles,
   type StyleRules,
@@ -133,6 +135,7 @@ export function useCanvasAnnotations(
   );
   const sheetKey = sheetUrls.join('|');
   const [sheets, setSheets] = useState<Record<string, StyleRules>>({});
+  const [failedSheets, setFailedSheets] = useState<Record<string, true>>({});
   useEffect(() => {
     let cancelled = false;
     for (const url of sheetUrls) {
@@ -140,7 +143,10 @@ export function useCanvasAnnotations(
         (rules) => {
           if (!cancelled) setSheets((prev) => (prev[url] ? prev : { ...prev, [url]: rules }));
         },
-        () => {}, // 取得できなければ、見た目の指定なしで表示する
+        // 取得できない（CORS など）ときは、下の styleOf で styleClass ごとの代わりの配色にする
+        () => {
+          if (!cancelled) setFailedSheets((prev) => (prev[url] ? prev : { ...prev, [url]: true }));
+        },
       );
     }
     return () => {
@@ -148,7 +154,19 @@ export function useCanvasAnnotations(
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sheetKey]);
-  const styleOf = useCallback((a: CanvasAnnotation) => annotationStyles(a, sheets), [sheets]);
+  const order = useMemo(() => paletteOrderOf(annotations), [annotations]);
+  const styleOf = useCallback(
+    (a: CanvasAnnotation) => {
+      const own = annotationStyles(a, sheets);
+      // 外部 stylesheet が読めなかった注釈だけ、クラスごとの代わりの配色にする
+      if (a.stylesheetUrl && failedSheets[a.stylesheetUrl]) {
+        const alt = fallbackStyleOf(a, order);
+        if (alt) return { target: { ...alt.target, ...own.target }, body: { ...alt.body, ...own.body } };
+      }
+      return own;
+    },
+    [sheets, failedSheets, order],
+  );
 
   return {
     styleOf,

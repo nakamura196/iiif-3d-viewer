@@ -6,6 +6,7 @@
     "canvasAnnotationsEmpty": "There are no annotations on this page",
     "canvasAnnotationsCount": "{count}",
     "canvasAnnotationsAbout": "About the whole image",
+    "canvasAnnotationsLayer": "On layer: {label}",
     "canvasAnnotationsOpen": "Open link",
     "canvasAnnotationsCanvasLink": "Link to another page of this item",
     "canvasAnnotationsPainted": "Text on the image",

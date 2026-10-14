@@ -1,7 +1,7 @@
 'use client';
 
 import { useAtom } from 'jotai';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   annotationSourcesOf,
   containersOf,
@@ -9,6 +9,9 @@ import {
   rawCanvasOf,
   labelIn,
   pickBodies,
+  pickWikidataLabel,
+  wikidataIdOf,
+  wikidataLabelUrl,
   sanitizeAnnotationHtml,
   type AnnotationBodyItem,
   type CanvasAnnotation,
@@ -18,6 +21,7 @@ import { useLocale, useTranslations } from '../env';
 import { useCanvasNavigation } from '../navigation';
 import { selectedCanvasAnnotationAtom } from '../overlays/canvasAnnotationState';
 import { useCanvasAnnotations } from '../overlays/useCanvasAnnotations';
+import AnnotationImages from '../annotation/AnnotationImages';
 import type { Panel, PanelContext } from './types';
 
 const KNOWN_MOTIVATIONS = new Set([
@@ -27,10 +31,46 @@ const KNOWN_MOTIVATIONS = new Set([
 
 const isHtml = (b: AnnotationBodyItem) => /html/i.test(b.format ?? '');
 
+// Wikidata のラベル。同じ項目は 1 回だけ取りに行く。失敗は覚えず、表示は URL のままにする。
+const wikidataCache = new Map<string, Promise<string | undefined>>();
+
+const fetchWikidataLabel = (id: string, locale: string): Promise<string | undefined> => {
+  const key = `${id}|${locale}`;
+  let p = wikidataCache.get(key);
+  if (!p) {
+    p = fetch(wikidataLabelUrl(id, locale), { credentials: 'omit', referrerPolicy: 'no-referrer' })
+      .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+      .then((json) => pickWikidataLabel(json, id, locale));
+    p.catch(() => wikidataCache.delete(key));
+    wikidataCache.set(key, p);
+  }
+  return p;
+};
+
+function useWikidataLabel(url: string, locale: string, enabled: boolean): string | undefined {
+  const id = enabled ? wikidataIdOf(url) : undefined;
+  const [label, setLabel] = useState<{ key: string; text: string } | null>(null);
+  useEffect(() => {
+    if (!id) return;
+    let cancelled = false;
+    fetchWikidataLabel(id, locale).then(
+      (text) => {
+        if (!cancelled && text) setLabel({ key: `${id}|${locale}`, text });
+      },
+      () => {}, // quietly keep the URL
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [id, locale]);
+  return id && label?.key === `${id}|${locale}` ? label.text : undefined;
+}
+
 export function Body({ body, canvasLabels }: { body: AnnotationBodyItem; canvasLabels: Map<string, string> }) {
   const t = useTranslations('Info');
   const locale = useLocale();
   const { goToCanvas } = useCanvasNavigation();
+  const wikidata = useWikidataLabel(body.url ?? '', locale, body.kind !== 'text' && !labelIn(body.label, locale));
   if (body.kind === 'text') {
     if (isHtml(body)) {
       // サニタイズ済み（許可したタグ・属性だけ）
@@ -51,7 +91,12 @@ export function Body({ body, canvasLabels }: { body: AnnotationBodyItem; canvasL
   const url = body.url ?? '';
   const isWeb = /^https?:\/\//i.test(url);
   const own = canvasLabels.get(url);
-  const label = labelIn(body.label, locale) || own || url;
+  const givenLabel = labelIn(body.label, locale) || own;
+  const label = givenLabel || wikidata || url;
+  if (isWeb && (body.resourceType === 'Image' || /^image\//i.test(body.format ?? ''))) {
+    // a picture in the annotation (recipe 0377): show it; the picture opens the full image
+    return <AnnotationImages images={[{ id: url, label: labelIn(body.label, locale) || undefined }]} />;
+  }
   if (own !== undefined) {
     // a Canvas of this item: the button moves the viewer there
     return (
@@ -128,6 +173,9 @@ function Item({
           </span>
         ) : null}
         <span>{where}</span>
+        {annotation.layer ? (
+          <span>{t('canvasAnnotationsLayer', { label: labelIn(annotation.layer.label, locale) || annotation.layer.id })}</span>
+        ) : null}
       </div>
       <div
         className={`space-y-1 ${bodyStyle?.color ? '[&_*]:!text-inherit' : ''}`}

@@ -145,6 +145,37 @@ export interface AnnotationStyles {
   body: StyleDeclarations;
 }
 
+// ---- 代わりの配色 -----------------------------------------------------------
+// 外部の stylesheet は、配信元が CORS を許していないと読めない（Recipe 0045 の
+// https://iiif.io/api/cookbook/recipe/0045-css/style.css がそうなる）。
+// 読めない原因はこちらでは直せず、サーバ側で代理取得（オープンプロキシ）するのは避ける。
+// 限界: 代わりに、styleClass ごとに固定のパレットから違う色を割り当てる。
+// 作者が本来指定した色とは一致しないが、クラスの違う注釈を見分けられるようにするのが目的。
+export const FALLBACK_PALETTE: readonly string[] = [
+  '#2563eb', '#dc2626', '#16a34a', '#9333ea', '#d97706', '#0891b2', '#db2777', '#4d7c0f',
+];
+
+/** 注釈が持つクラス（本文を優先、なければ領域）のうち最初のもの。色分けの単位。 */
+export const paletteKeyOf = (anno: AnnotationStyleSource): string | undefined =>
+  anno.bodyClasses?.[0] ?? anno.targetClasses?.[0];
+
+/** 色を割り当てる順番（初めて出た順、重複なし）。 */
+export const paletteOrderOf = (annos: AnnotationStyleSource[]): string[] => [
+  ...new Set(annos.map(paletteKeyOf).filter((k): k is string => !!k)),
+];
+
+/** 代わりの配色。クラスを持たない注釈は null（既定の見た目のまま）。 */
+export const fallbackStyleOf = (anno: AnnotationStyleSource, order: string[]): AnnotationStyles | null => {
+  const key = paletteKeyOf(anno);
+  const i = key ? order.indexOf(key) : -1;
+  if (i < 0) return null;
+  const c = FALLBACK_PALETTE[i % FALLBACK_PALETTE.length];
+  return {
+    target: { borderColor: c, backgroundColor: `${c}2e` },
+    body: { border: `2px solid ${c}`, borderRadius: '6px', padding: '4px 6px' },
+  };
+};
+
 /** 注釈の見た目。外部 stylesheet は `external`（URL → 読み済みの規則）に入っていれば使う。 */
 export const annotationStyles = (
   anno: AnnotationStyleSource,
