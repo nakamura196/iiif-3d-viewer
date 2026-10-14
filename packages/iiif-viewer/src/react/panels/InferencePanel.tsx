@@ -10,6 +10,7 @@ import { MODELS } from '../inference/models/registry';
 import type { InferenceModel } from '../inference/models/types';
 import { SourceImageError, baseImageLayerOf, loadSourceImage } from '../inference/sourceImage';
 import { inferenceResultsAtom, resultKey, type InferenceResult } from '../inference/state';
+import { usePointOutline } from '../inference/usePointOutline';
 import { localAnnotationPagesAtom, selectedCanvasAnnotationAtom } from '../overlays/canvasAnnotationState';
 import type { Panel, PanelContext } from './types';
 
@@ -165,6 +166,23 @@ function ModelCard({ model, container, manifest }: { model: InferenceModel; cont
     setStatus('none');
   };
 
+  const showError = (e: unknown) =>
+    setError(e instanceof SourceImageError ? t(`image_${e.reason}`) : t('runFailed', { message: String((e as Error).message ?? e) }));
+
+  const points = usePointOutline({
+    model,
+    container,
+    manifest,
+    locale,
+    labelOf: (n) => t('pointLabel', { n }),
+    newId,
+    onRunning: setRunning,
+    onError: (e) => {
+      setError(null);
+      showError(e);
+    },
+  });
+
   const run = async () => {
     setError(null);
     const layer = baseImageLayerOf(manifest, container);
@@ -195,7 +213,7 @@ function ModelCard({ model, container, manifest }: { model: InferenceModel; cont
       const source = `inference:${model.id}`;
       setLocal((ls) => [...ls.filter((l) => !(l.source === source && l.canvasId === container.id)), { source, canvasId: container.id, page }]);
     } catch (e) {
-      setError(e instanceof SourceImageError ? t(`image_${e.reason}`) : t('runFailed', { message: String((e as Error).message ?? e) }));
+      showError(e);
     } finally {
       setRunning(null);
     }
@@ -230,16 +248,30 @@ function ModelCard({ model, container, manifest }: { model: InferenceModel; cont
           )
         ) : (
           <>
-            <button type="button" className={PRIMARY} disabled={busy} onClick={run}>
-              {result ? t('runAgain') : t('run')}
-            </button>
-            <button type="button" className={BUTTON} disabled={busy} onClick={remove}>
+            {model.input === 'points' ? (
+              <>
+                <button type="button" className={PRIMARY} disabled={download !== null} onClick={points.armed ? points.stop : points.start}>
+                  {points.armed ? t('pointStop') : t('pointStart')}
+                </button>
+                {result ? (
+                  <button type="button" className={BUTTON} disabled={busy} onClick={points.undo}>
+                    {t('pointUndo')}
+                  </button>
+                ) : null}
+              </>
+            ) : (
+              <button type="button" className={PRIMARY} disabled={busy} onClick={run}>
+                {result ? t('runAgain') : t('run')}
+              </button>
+            )}
+            <button type="button" className={BUTTON} disabled={busy || points.armed} onClick={remove}>
               {t('remove')}
             </button>
           </>
         )}
       </div>
 
+      {points.armed ? <p className="mt-2 text-xs text-gray-600 dark:text-gray-300">{t('pointHint')}</p> : null}
       {download !== null ? (
         <div className="mt-2 space-y-1" role="status">
           <Progress value={download} />
@@ -261,7 +293,7 @@ function ModelCard({ model, container, manifest }: { model: InferenceModel; cont
           {error}
         </p>
       ) : null}
-      {result && !running ? <ResultView result={result} container={container} t={t} /> : null}
+      {result && (!running || model.input === 'points') ? <ResultView result={result} container={container} t={t} /> : null}
     </li>
   );
 }

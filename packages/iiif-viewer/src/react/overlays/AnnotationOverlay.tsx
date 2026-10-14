@@ -110,7 +110,9 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
                   className="pointer-events-auto cursor-pointer"
                   fill={isSel ? (storyOpen ? 'none' : 'rgba(249,115,22,0.30)') : (st.backgroundColor ?? 'rgba(37,99,235,0.15)')}
                   stroke={isSel ? '#f97316' : (st.borderColor ?? STROKE)}
-                  strokeWidth={2}
+                  // non-scaling-stroke keeps the width from the viewBox's stretch, but not from the stage's CSS
+                  // zoom (the same as the rectangles' outline below), so the width is divided by the zoom too.
+                  style={{ strokeWidth: 'calc(2px / var(--image-scale, 1))' }}
                   vectorEffect="non-scaling-stroke"
                   onClick={toggle}
                   onPointerDown={(e) => e.stopPropagation()}

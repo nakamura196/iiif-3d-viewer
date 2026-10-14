@@ -37,6 +37,22 @@ const viewer = (manifest: string, params: string) =>
 
 export const NEWS: NewsItem[] = [
   {
+    id: 'click-outline',
+    date: '2026-10-14',
+    title: {
+      ja: '推論タブに「クリックで切り出す」を足しました',
+      en: 'Click to outline, new in the Inference tab',
+    },
+    body: {
+      ja: '画像の中の物をクリックすると、SAM 2.1 がその輪郭を多角形の注釈にします。Shift+クリックで範囲を足し、Alt+クリックで削れます。',
+      en: 'Click a thing in the image and SAM 2.1 turns its outline into a polygon annotation. Shift+click adds to the shape, and Alt+click takes away from it.',
+    },
+    // 推論タブを開いた状態の例（face-detection と同じ花見のキュレーション。「クリックで切り出す」を選んで使う）
+    action: {
+      href: viewer('https://nakamura196.github.io/ndl-face-finder/curations/works/edonohanami.json', 'pos=2&tab=inference'),
+    },
+  },
+  {
     id: 'cookbook-video',
     date: '2026-10-14',
     title: {

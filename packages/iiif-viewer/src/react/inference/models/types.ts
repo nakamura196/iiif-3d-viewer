@@ -1,4 +1,4 @@
-import type { InferenceOutput } from '../../../core';
+import type { InferenceOutput, Sam2Box, Sam2Point } from '../../../core';
 import type { Backend, OrtModule, OrtSession } from '../ort';
 
 // ブラウザ内で動かすモデル 1 つ分の契約。新しいモデルは、このファイルの型で models/<名前>.ts を 1 つ足し、
@@ -30,6 +30,16 @@ export interface RunContext {
   session(name: string, prefer: Backend): Promise<{ session: OrtSession; backend: Backend }>;
   /** Progress of a step (`stage` is a key of Inference.stage.*). */
   progress(stage: string, done: number, total: number): void;
+  /** Where the viewer clicked, for models that take clicks (`input: 'points'`). */
+  prompt?: PointPrompt;
+  /** Names the image (the same key = the same pixels), so a runner may keep what it read from it. */
+  imageKey?: string;
+}
+
+/** Clicks on the image and the part of it to read (both in image pixels). */
+export interface PointPrompt {
+  points: Sam2Point[];
+  crop: Sam2Box;
 }
 
 export type ModelRunner = (ctx: RunContext) => Promise<InferenceOutput>;
@@ -46,5 +56,7 @@ export interface InferenceModel {
   files: ModelFile[];
   /** Longest side of the image to give the model (the image is fetched at this size or smaller). */
   imageLongSide: number;
+  /** `points`: the model is run by clicking on the image (each run gets `prompt`), not by a button. */
+  input?: 'points';
   load: () => Promise<{ run: ModelRunner }>;
 }

@@ -26,6 +26,13 @@
     "showOnImage": "画像に重ねる",
     "saveJson": "注釈を保存（JSON）",
     "saveText": "テキストを保存",
-    "discard": "結果を消す"
+    "discard": "結果を消す",
+    "pointStart": "画像をクリックして切り出す",
+    "pointStop": "クリックをやめる",
+    "pointUndo": "最後の 1 件を消す",
+    "pointHint": "画像の上の物をクリックすると、その形をなぞります。Shift を押しながらクリックすると直前の形に範囲を足し、Alt（Option）を押しながらだと削ります。拡大してからクリックすると、細かい形まで取れます。",
+    "pointLabel": "領域 {n}",
+    "stage_encode": "画像を読み取っています...",
+    "stage_segment": "形をなぞっています..."
   }
 }

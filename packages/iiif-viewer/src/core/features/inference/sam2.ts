@@ -49,6 +49,44 @@ export const sam2BoxInput = (b: Sam2Box, crop: Sam2Box): number[] => {
   return [(b.x0 - crop.x0) * sx, (b.y0 - crop.y0) * sy, (b.x1 - crop.x0) * sx, (b.y1 - crop.y0) * sy];
 };
 
+/** A click on the image (image pixels). `positive`: the thing is here; otherwise: the thing is not here. */
+export interface Sam2Point {
+  x: number;
+  y: number;
+  positive: boolean;
+}
+
+/**
+ * The part of the image to give SAM for clicks: the part shown on screen (image pixels), cut at the image edges and
+ * widened around its centre to at least `min` pixels. Zooming in before clicking gives SAM a sharper picture.
+ */
+export const sam2ViewCrop = (view: Sam2Box, w: number, h: number, min = 256): Sam2Box => {
+  const axis = (a0: number, a1: number, size: number): [number, number] => {
+    let lo = Math.max(0, Math.round(a0));
+    let hi = Math.min(size, Math.round(a1));
+    const need = Math.min(size, min);
+    if (hi - lo < need) {
+      const c = hi > lo ? (lo + hi) / 2 : Math.min(size, Math.max(0, (a0 + a1) / 2));
+      lo = Math.max(0, Math.min(size - need, Math.round(c - need / 2)));
+      hi = lo + need;
+    }
+    return [lo, hi];
+  };
+  const [x0, x1] = axis(view.x0, view.x1, w);
+  const [y0, y1] = axis(view.y0, view.y1, h);
+  return { x0, y0, x1, y1 };
+};
+
+/** Clicks in image pixels as SAM input: coordinates of the crop stretched to 1,024 square, labels 1 (in) / 0 (out). */
+export const sam2PointInput = (points: Sam2Point[], crop: Sam2Box): { coords: number[]; labels: number[] } => {
+  const sx = SAM2_SIZE / (crop.x1 - crop.x0);
+  const sy = SAM2_SIZE / (crop.y1 - crop.y0);
+  return {
+    coords: points.flatMap((p) => [(p.x - crop.x0) * sx, (p.y - crop.y0) * sy]),
+    labels: points.map((p) => (p.positive ? 1 : 0)),
+  };
+};
+
 /**
  * One 256-square mask (logits) scaled to the crop's pixels (bilinear, pixel centres as cv2 / PyTorch with
  * align_corners=false), then inside = logit > 0.
