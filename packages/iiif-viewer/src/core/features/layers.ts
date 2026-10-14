@@ -79,19 +79,69 @@ export const moveLayer = (ids: string[], id: string, to: number): string[] => {
 export const imageLayerCount = (painting: PaintingContent[]): number =>
   painting.reduce((n, p) => n + p.options.filter((o) => o.kind === 'Image').length, 0);
 
-// 再生: 重ねた画像を手前から 1 枚ずつ隠し、いちばん奥の 1 枚まで見せていく（起こし絵図をめくる見せ方）。
-// 第 k 段では手前の k 枚を隠す。段は 0 から count - 1 まで。
+// 再生: 重ねた画像を段ごとに見せる。2 つの向きがある。
+// - 組み立て（build）: いちばん奥から始め、段ごとに手前の画像を足していく（起こし絵図を起こしていく見せ方）
+// - 取り外し（peel）: すべてを重ねた状態から始め、手前の段から隠していく
+// 段は、ふつうは画像 1 枚ずつ。画像のファイル名が「…_003_1.tif」のように「段_番号」になっていれば、
+// 同じ段の画像をまとめて 1 段にする（東京大学の起こし絵図 utda/kaishi がこの名付け。段の情報は
+// マニフェストに無いので、名前から読む）。
 
-/** The step after `step` in a playback of `count` layers; null when it has ended. */
+export type PlaybackDirection = 'build' | 'peel';
+
+// 「_003_1.tif」「-3-12.jpg」: 末尾の 2 つの数のうち前のほうが段
+const STEP_IN_NAME = /[_-](\d+)[_-]\d+\.[a-z0-9]+$/i;
+
+/** The step number a file name gives, or null. */
+export const stepInName = (url: string): number | null => {
+  const path = url.split(/[?#]/)[0];
+  const m = STEP_IN_NAME.exec(decodeURIComponent(path.split('/').pop() ?? ''));
+  return m ? Number(m[1]) : null;
+};
+
+const nameOf = (item: LayerItem): string => item.layer.service?.id ?? item.layer.url;
+
+/**
+ * The playback step of each layer (bottom first): 0, 1, 2 … , never decreasing. Layers next to each
+ * other whose file names give the same step share one. Used only when every layer but the bottom
+ * one has such a name; otherwise every layer is a step of its own.
+ */
+export const playbackGroups = (items: LayerItem[]): number[] => {
+  const steps = items.map((it) => stepInName(nameOf(it)));
+  const named = steps.slice(1).every((n) => n !== null) && steps.length > 1;
+  if (!named) return items.map((_, i) => i);
+  const out: number[] = [];
+  steps.forEach((n, i) => {
+    out.push(i === 0 ? 0 : n !== null && n === steps[i - 1] ? out[i - 1] : out[i - 1] + 1);
+  });
+  return out;
+};
+
+/** How many steps a playback with these groups has. */
+export const playbackStepCount = (groups: number[]): number => (groups.length ? groups[groups.length - 1] + 1 : 0);
+
+/** The step after `step` in a playback of `count` steps; null when it has ended. */
 export const nextPlaybackStep = (step: number, count: number, loop: boolean): number | null =>
   step + 1 < count ? step + 1 : loop && count > 1 ? 0 : null;
 
-/** `settings` with the layers of `ids` (bottom first) shown or hidden as at playback step `step`. */
+/**
+ * `settings` with the layers of `ids` (bottom first, in steps `groups`) shown or hidden as at
+ * playback step `step`. Build: the steps up to `step` are shown. Peel: the front `step` steps are hidden.
+ */
 export const playbackSettings = (
   settings: Record<string, LayerSetting>,
   ids: string[],
+  groups: number[],
   step: number,
-): Record<string, LayerSetting> => ({
-  ...settings,
-  ...Object.fromEntries(ids.map((id, i) => [id, { ...settings[id], visible: i < ids.length - step }])),
-});
+  direction: PlaybackDirection,
+): Record<string, LayerSetting> => {
+  const count = playbackStepCount(groups);
+  return {
+    ...settings,
+    ...Object.fromEntries(
+      ids.map((id, i) => [
+        id,
+        { ...settings[id], visible: direction === 'build' ? groups[i] <= step : groups[i] < count - step },
+      ]),
+    ),
+  };
+};

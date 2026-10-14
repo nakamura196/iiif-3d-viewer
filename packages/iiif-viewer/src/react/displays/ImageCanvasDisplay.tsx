@@ -18,6 +18,7 @@ import {
   layerItemsOf,
   layerOpacity,
   nextPlaybackStep,
+  playbackStepCount,
   orderLayers,
   playbackSettings,
   type PaintingContent,
@@ -91,14 +92,15 @@ function ImageBody({
   useEffect(() => {
     if (!playing) return;
     const timer = setTimeout(() => {
-      const step = nextPlaybackStep(playing.step, playing.ids.length, loop);
+      const count = playbackStepCount(playing.groups);
+      const step = nextPlaybackStep(playing.step, count, loop);
       if (step === null) {
         setPlayback(null);
         return;
       }
-      setSettings((s) => playbackSettings(s, playing.ids, step));
-      // 繰り返さないときは、いちばん奥の 1 枚を出したところで止める
-      setPlayback(!loop && step === playing.ids.length - 1 ? null : { ...playing, step });
+      setSettings((s) => playbackSettings(s, playing.ids, playing.groups, step, playing.direction));
+      // 繰り返さないときは、最後の段を出したところで止める
+      setPlayback(!loop && step === count - 1 ? null : { ...playing, step });
     }, seconds * 1000);
     return () => clearTimeout(timer);
   }, [playing, seconds, loop, setSettings, setPlayback]);

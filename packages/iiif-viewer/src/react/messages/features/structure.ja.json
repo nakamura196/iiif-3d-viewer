@@ -11,6 +11,7 @@
     "spread": "{from}・{to} / {total}",
     "pages": "ページの一覧",
     "pageLabel": "{index}ページ目",
+    "noImage": "画像なし",
     "toc": "目次",
     "order": "ページ順",
     "orderDefault": "マニフェストの順",

@@ -11,7 +11,10 @@ import {
   moveLayer,
   nextPlaybackStep,
   orderLayers,
+  playbackGroups,
   playbackSettings,
+  playbackStepCount,
+  stepInName,
   type LayerItem,
 } from './layers';
 
@@ -81,13 +84,41 @@ describe('playback', () => {
     expect(nextPlaybackStep(2, 3, true)).toBe(0);
     expect(nextPlaybackStep(0, 1, true)).toBeNull();
   });
-  it('playbackSettings hides the front layers and keeps other settings', () => {
-    const s = playbackSettings({ c: { opacity: 0.5 }, x: { visible: false } }, ['a', 'b', 'c'], 1);
+  it('playbackSettings peel hides the front steps and keeps other settings', () => {
+    const s = playbackSettings({ c: { opacity: 0.5 }, x: { visible: false } }, ['a', 'b', 'c'], [0, 1, 2], 1, 'peel');
     expect(s).toEqual({ a: { visible: true }, b: { visible: true }, c: { opacity: 0.5, visible: false }, x: { visible: false } });
-    expect(playbackSettings({}, ['a', 'b', 'c'], 2)).toEqual({
+    expect(playbackSettings({}, ['a', 'b', 'c'], [0, 1, 2], 2, 'peel')).toEqual({
       a: { visible: true },
       b: { visible: false },
       c: { visible: false },
     });
+  });
+  it('playbackSettings build starts from the bottom and adds a whole step at a time', () => {
+    expect(playbackSettings({}, ['a', 'b', 'c', 'd'], [0, 1, 1, 2], 0, 'build')).toEqual({
+      a: { visible: true },
+      b: { visible: false },
+      c: { visible: false },
+      d: { visible: false },
+    });
+    expect(playbackSettings({}, ['a', 'b', 'c', 'd'], [0, 1, 1, 2], 1, 'build')).toEqual({
+      a: { visible: true },
+      b: { visible: true },
+      c: { visible: true },
+      d: { visible: false },
+    });
+  });
+  it('stepInName reads the step from "<step>_<piece>" file names', () => {
+    expect(stepInName('https://x/iiif/kaishi/7-2-24/7-2-24_003_1.tif')).toBe(3);
+    expect(stepInName('https://x/iiif/7-2-24_bs.tif')).toBeNull();
+    expect(stepInName('https://x/a/page.jpg')).toBeNull();
+  });
+  it('playbackGroups groups layers by the step in their names, else one per layer', () => {
+    const base = itemsOf('0036-composition-from-multiple-images')[0];
+    const it_ = (url: string) => ({ ...base, layer: { ...base.layer, url, service: undefined } });
+    const kaishi = ['k_bs.tif', 'k_001_1.tif', 'k_001_2.tif', 'k_002_1.tif', 'k_003_1.tif'].map(it_);
+    expect(playbackGroups(kaishi)).toEqual([0, 1, 1, 2, 3]);
+    expect(playbackStepCount(playbackGroups(kaishi))).toBe(4);
+    const plain = ['a.jpg', 'b.jpg', 'k_001_1.tif'].map(it_);
+    expect(playbackGroups(plain)).toEqual([0, 1, 2]);
   });
 });

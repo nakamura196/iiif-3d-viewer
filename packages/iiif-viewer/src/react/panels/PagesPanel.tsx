@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { containersOf, labelIn, pageThumbnailUrl } from '../../core';
+import { containersOf, labelIn, pagePlaceholderOf, pageThumbnailUrl } from '../../core';
 import { manifestAtom } from '../atoms';
 import { navRequestAtom, nextSeq, usePageOrder } from '../displays/structureState';
 import { useLocale, useTranslations } from '../env';
@@ -64,7 +64,7 @@ function PagesView({ container, manifest }: PanelContext) {
                     onError={() => setBroken((b) => ({ ...b, [c.id]: true }))}
                   />
                 ) : (
-                  <span className="text-xs text-gray-500 dark:text-gray-400">{c.kind}</span>
+                  <span className="text-xs text-gray-500 dark:text-gray-400">{pagePlaceholderOf(c) === 'empty' ? t('noImage') : c.kind}</span>
                 )}
               </span>
               <span className="min-w-0">
