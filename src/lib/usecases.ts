@@ -45,7 +45,7 @@ export type UseCaseOpen =
     };
 
 /** 何を見せる例か。一覧に札として出す。表示名は messages の UseCases.features */
-export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'search', 'ocr', 'auth'] as const;
+export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'search', 'ocr', 'auth', 'story'] as const;
 export type UseCaseFeature = (typeof USE_CASE_FEATURES)[number];
 
 export interface UseCase {
@@ -240,6 +240,24 @@ export const USE_CASES: UseCase[] = [
     },
     features: ['image', 'ocr'],
     site: 'https://dl.ndl.go.jp/pid/1288371',
+  },
+  {
+    id: 'wakozukan-story',
+    title: {
+      ja: '東京大学史料編纂所「倭寇図巻」（ストーリー）',
+      en: 'Wakō zukan, Historiographical Institute, The University of Tokyo (story)',
+    },
+    note: {
+      ja: '長さ 90,000 px を超える絵巻を、ストーリータブで開きます。「次へ」を押すと、場面ごとにその部分へ寄りながら説明を読み進められます。説明は IIIF のマニフェストに書かれた注釈そのもので、専用の形式は使っていません。',
+      en: 'A handscroll over 90,000 px long, opened in the Story tab. Press Next to glide to each scene and read its description. The tour is just the annotations written in the IIIF manifest, with no special format.',
+    },
+    open: {
+      page: 'viewer',
+      manifest: 'https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/cp/story/m.json',
+      tab: 'story',
+    },
+    features: ['image', 'annotations', 'story'],
+    site: 'https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/',
   },
   {
     id: 'wellcome-auth',

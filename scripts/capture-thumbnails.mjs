@@ -47,7 +47,11 @@ const OUT_WIDTH = 640;
 const PREPARE = {
   // 地球儀のピンは裏側にあるので、アノテーションの 1 件目を押して、その場所へ視点を移す
   'globe-annotations': `[...document.querySelectorAll('.cursor-pointer')].find((e) => e.textContent.includes('北海'))?.click()`,
+  // 開いた直後は巻物の全体なので、一覧の場面を 1 つ押して、そこへ寄った画面を撮る
+  'wakozukan-story': `[...document.querySelectorAll('nav button')].find((e) => e.textContent.includes('倭寇の上陸'))?.click()`,
 };
+// 操作のあと撮るまでの待ち時間（既定 3 秒）。深く寄ると、細かいタイルが届くまで時間がかかる
+const PREPARE_WAIT = { 'wakozukan-story': 12000 };
 
 const targets = [
   ...SAMPLES.map((s) => ({
@@ -128,7 +132,7 @@ for (const t of targets) {
     await sleep(t.wait);
     if (PREPARE[t.id]) {
       await send('Runtime.evaluate', { expression: PREPARE[t.id] }, sessionId);
-      await sleep(3000);
+      await sleep(PREPARE_WAIT[t.id] ?? 3000);
     }
     await send('Runtime.evaluate', { expression: SEEK_VIDEOS, awaitPromise: true }, sessionId);
     await sleep(500);

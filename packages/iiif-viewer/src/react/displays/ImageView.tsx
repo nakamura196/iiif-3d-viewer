@@ -1,9 +1,11 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react';
-import type { ContainerInfo } from '../../core';
+import { useAtomValue } from 'jotai';
+import type { ContainerInfo, Xywh } from '../../core';
 import { useTranslations } from '../env';
 import { OVERLAYS } from '../overlays/registry';
+import { focusAtom } from './structureState';
 
 const MIN = 0.2;
 const MAX = 20;
@@ -29,6 +31,28 @@ export interface ViewState {
 }
 
 export const INITIAL_VIEW: ViewState = { scale: 1, tx: 0, ty: 0 };
+
+/**
+ * The view that shows a region of the Canvas (`xywh` in Canvas pixels) in the middle of the box,
+ * filling `fill` of it. The stage is the Canvas fitted into the box (`stageW` × `stageH`).
+ */
+export function viewForRegion(
+  xywh: Xywh,
+  canvas: { w: number; h: number },
+  stage: { w: number; h: number },
+  box: { w: number; h: number },
+  limits: { min: number; max: number },
+  fill = 0.85,
+): ViewState {
+  const k = stage.w / canvas.w; // stage pixels per Canvas pixel
+  const rw = Math.max(xywh[2] * k, 1e-6);
+  const rh = Math.max(xywh[3] * k, 1e-6);
+  const scale = Math.min(limits.max, Math.max(limits.min, Math.min((box.w * fill) / rw, (box.h * fill) / rh)));
+  // the region centre, from the stage centre (the transform origin)
+  const cx = (xywh[0] + xywh[2] / 2) * k - stage.w / 2;
+  const cy = (xywh[1] + xywh[3] / 2) * k - stage.h / 2;
+  return { scale, tx: -cx * scale, ty: -cy * scale };
+}
 
 /** The CSS that places a stage in its box (the same for a second stage drawn over the first). */
 export const stageStyleOf = (s: StageInfo): CSSProperties => ({
@@ -158,6 +182,23 @@ export default function ImageView({
     maxRef.current = maxScale;
   }, [maxScale]);
 
+  // A move of the table of contents or a story step to a region of this Canvas: zoom there (once per move),
+  // with a short glide. Without `container` the view does not follow (compare views, previews).
+  const focus = useAtomValue(focusAtom);
+  const focusXywh = container && focus?.target.canvasId === container.id ? focus.target.xywh : undefined;
+  const focusSeq = focus?.seq ?? 0;
+  const doneFocus = useRef(0);
+  const [gliding, setGliding] = useState(false);
+  useEffect(() => {
+    if (!focusXywh || doneFocus.current === focusSeq || !cw || !ch || stageW <= 0) return;
+    doneFocus.current = focusSeq;
+    setGliding(true);
+    setView(
+      viewForRegion(focusXywh, { w: cw, h: ch }, { w: stageW, h: stageH }, size, { min: MIN, max: maxRef.current }),
+    );
+    window.setTimeout(() => setGliding(false), 700);
+  }, [focusXywh, focusSeq, cw, ch, stageW, stageH, size, setView]);
+
   useEffect(() => {
     const el = box.current;
     if (!el) return;
@@ -198,7 +239,7 @@ export default function ImageView({
     boxW: size.w,
     boxH: size.h,
   };
-  const stageStyle = stageStyleOf(stage);
+  const stageStyle = gliding ? { ...stageStyleOf(stage), transition: 'transform 600ms ease' } : stageStyleOf(stage);
 
   return (
     <div
@@ -206,6 +247,7 @@ export default function ImageView({
       className="relative w-full h-full overflow-hidden touch-none select-none cursor-grab active:cursor-grabbing"
       title={t('zoomHint')}
       onPointerDown={(e) => {
+        setGliding(false);
         e.currentTarget.setPointerCapture(e.pointerId);
         drag.current = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty };
       }}

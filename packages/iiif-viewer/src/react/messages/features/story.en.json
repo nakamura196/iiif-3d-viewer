@@ -1,0 +1,14 @@
+{
+  "Info": {
+    "story": "Story"
+  },
+  "Story": {
+    "prev": "Previous",
+    "next": "Next",
+    "position": "{n} / {total}",
+    "steps": "Steps",
+    "step": "Step {n}",
+    "whole": "Whole picture",
+    "frame": "Show the frame of the scene"
+  }
+}
