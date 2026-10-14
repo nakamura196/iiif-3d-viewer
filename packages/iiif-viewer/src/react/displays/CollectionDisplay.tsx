@@ -66,12 +66,13 @@ function CollectionDisplay(props: DisplayProps) {
     return <div className="p-4 text-sm text-[var(--ds-fg)]">{t('collectionEmpty')}</div>;
   }
 
-  const card = (e: CollectionEntry) => (
+  // grid: a card in the grid (as listed). row: one wide row in the timeline (thumbnail left, text right).
+  const card = (e: CollectionEntry, layout: 'grid' | 'row') => (
     <li key={e.id}>
       <button
         type="button"
         onClick={() => openEntry(e)}
-        className="w-full h-full text-left rounded border border-[var(--ds-border)] bg-[var(--ds-surface)] hover:bg-[var(--ds-surface-2)] p-2 text-sm text-[var(--ds-fg)] flex flex-col gap-1"
+        className={`w-full h-full text-left rounded border border-[var(--ds-border)] bg-[var(--ds-surface)] hover:bg-[var(--ds-surface-2)] p-2 text-sm text-[var(--ds-fg)] flex gap-1 ${layout === 'row' ? 'flex-row gap-3 items-start' : 'flex-col'}`}
       >
         {e.thumbnail ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -79,18 +80,22 @@ function CollectionDisplay(props: DisplayProps) {
             src={e.thumbnail}
             alt=""
             loading="lazy"
-            className="h-24 w-full object-contain bg-white/60"
+            className={`object-contain bg-white/60 ${layout === 'row' ? 'h-24 w-24 shrink-0' : 'h-24 w-full'}`}
           />
         ) : null}
-        <span className="font-medium break-words">{labelIn(e.label, locale) || e.id}</span>
-        {e.navDate ? (
-          <time dateTime={e.navDate} className="text-xs">
-            {navDateText(e.navDate, locale)}
-          </time>
-        ) : null}
-        <span className="text-xs opacity-70">
-          {e.type === 'Collection' ? t('subCollection') : t('manifest')}
-          {state?.id === e.id ? ` ・ ${t(state.kind === 'opening' ? 'opening' : 'openError')}` : ''}
+        <span className="flex min-w-0 flex-col gap-1">
+          <span className="font-medium break-words">{labelIn(e.label, locale) || e.id}</span>
+          {e.navDate ? (
+            <time dateTime={e.navDate} className="text-xs">
+              {navDateText(e.navDate, locale)}
+            </time>
+          ) : null}
+          <span className="text-xs opacity-70">
+            {e.type === 'Collection' ? t('subCollection') : t('manifest')}
+            {state?.id === e.id
+              ? ` ・ ${t(state.kind === 'opening' ? 'opening' : 'openError')}`
+              : ''}
+          </span>
         </span>
       </button>
     </li>
@@ -100,8 +105,11 @@ function CollectionDisplay(props: DisplayProps) {
       className="grid gap-2"
       style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(11rem, 1fr))' }}
     >
-      {list.map(card)}
+      {list.map((e) => card(e, 'grid'))}
     </ul>
+  );
+  const rows = (list: CollectionEntry[]) => (
+    <ul className="flex flex-col gap-2">{list.map((e) => card(e, 'row'))}</ul>
   );
 
   const dated = hasChronology(entries);
@@ -131,7 +139,11 @@ function CollectionDisplay(props: DisplayProps) {
         </div>
       ) : null}
       {chronology ? (
-        <ol aria-label={t('timeline')} className="border-l-2 border-[var(--ds-border)] ml-2">
+        // a timeline is read top to bottom: one centred column, as wide as the text pages (max-w-3xl)
+        <ol
+          aria-label={t('timeline')}
+          className="mx-auto max-w-3xl border-l-2 border-[var(--ds-border)] pl-0"
+        >
           {chronology.years.map((y) => (
             <li key={y.year} className="relative pl-4 pb-4">
               <span
@@ -146,7 +158,7 @@ function CollectionDisplay(props: DisplayProps) {
                   </span>
                 ) : null}
               </h3>
-              {grid(y.entries.map((d) => d.entry))}
+              {rows(y.entries.map((d) => d.entry))}
             </li>
           ))}
           {chronology.undated.length > 0 ? (
@@ -154,7 +166,7 @@ function CollectionDisplay(props: DisplayProps) {
               <h3 className="mb-2 text-sm font-semibold text-[var(--ds-fg)] opacity-70">
                 {t('undated')}
               </h3>
-              {grid(chronology.undated)}
+              {rows(chronology.undated)}
             </li>
           ) : null}
         </ol>
