@@ -44,6 +44,7 @@ export default function Footer() {
             // { label: t('sample4'), href: `/viewer?${contentParam(SAMPLE_REGION_TAGS)}&tab=annotations` },
             { label: t('useCasesAll'), href: '/usecases' },
             { label: t('samplesAll'), href: '/samples' },
+            { label: t('search'), href: '/search' },
           ],
         },
         // 4列目: 関連サイト（旧 References ページの外部リンク）
