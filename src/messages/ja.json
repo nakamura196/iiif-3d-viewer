@@ -165,6 +165,7 @@
       "georef": "位置情報",
       "curation": "キュレーション",
       "search": "検索",
+      "ocr": "OCR",
       "auth": "認証"
     }
   },

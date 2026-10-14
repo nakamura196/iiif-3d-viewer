@@ -61,6 +61,9 @@ describe('hrefOf', () => {
     expect(hrefOf({ page: 'viewer', manifest: m, tab: 'structure', pos: 4 })).toBe(
       `/viewer?iiif-content=${enc}&tab=structure&pos=4`,
     );
+    expect(hrefOf({ page: 'viewer', manifest: m, tab: 'inference', canvas: 6 })).toBe(
+      `/viewer?iiif-content=${enc}&tab=inference&canvas=6`,
+    );
   });
 
   it('compare は見比べ方を載せる', () => {
