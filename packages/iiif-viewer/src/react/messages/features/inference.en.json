@@ -1,0 +1,29 @@
+{
+  "Info": {
+    "inference": "Inference"
+  },
+  "Inference": {
+    "hint": "Download a model into this browser and read the image shown. The image is not sent anywhere. Results are drawn on the image as annotations and can be saved.",
+    "download": "Download ({size})",
+    "downloading": "Downloading {done} / {total}",
+    "cancel": "Cancel",
+    "remove": "Remove",
+    "run": "Run on this image",
+    "runAgain": "Run again",
+    "downloadFailed": "Could not download ({message})",
+    "runFailed": "Could not run ({message})",
+    "noImage": "This Canvas has no image.",
+    "image_noImage": "This Canvas has no image.",
+    "image_unsupported": "Cropped or rotated images are not supported yet.",
+    "image_fetch": "Could not load the image. Its server may not allow other sites to read it (CORS).",
+    "stage_image": "Loading the image...",
+    "stage_load": "Preparing the model...",
+    "stage_detect": "Detecting lines...",
+    "stage_read": "Reading line {done} / {total}",
+    "resultSummary": "{count} items ({seconds} s, {backend})",
+    "showOnImage": "Show on the image",
+    "saveJson": "Save annotations (JSON)",
+    "saveText": "Save text",
+    "discard": "Discard"
+  }
+}

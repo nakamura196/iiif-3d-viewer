@@ -150,6 +150,19 @@ describe('Cookbook のレシピ', () => {
     expect(annos).toHaveLength(1);
     expect(annos[0]).toMatchObject({ painted: true, region: { type: 'rect', x: 5500, y: 12200 } });
   });
+  it('supplementing: 画像の一部を指すもの（OCR の行）は出し、Canvas 全体のもの（字幕など）は出さない', () => {
+    const c = 'https://example.org/canvas/1';
+    const page = {
+      type: 'AnnotationPage',
+      items: [
+        { id: 'a1', type: 'Annotation', motivation: 'supplementing', body: { type: 'TextualBody', value: '行' }, target: `${c}#xywh=10,20,30,40` },
+        { id: 'a2', type: 'Annotation', motivation: 'supplementing', body: { type: 'TextualBody', value: '全体' }, target: c },
+      ],
+    };
+    const annos = readCanvasAnnotations(c, [page]);
+    expect(annos.map((a) => a.id)).toEqual(['a1']);
+    expect(annos[0].region).toEqual({ type: 'rect', x: 10, y: 20, w: 30, h: 40 });
+  });
 });
 
 describe('sanitizeAnnotationHtml', () => {
