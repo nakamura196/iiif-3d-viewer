@@ -1,10 +1,11 @@
-import { nms, yoloDecode, yoloTensor, yoloTiles } from '../../../core';
-import type { ModelRunner } from './types';
+import { nms, yoloDecode, yoloTensor, yoloTiles, type Detection } from '../../../core';
+import type { ModelRunner, RunContext } from './types';
 
 // 入力は 1,280 角の固定（書き出しが dynamic でない）。1 回に 1 枚ずつ流す
 const SIZE = 1280;
 
-export const run: ModelRunner = async ({ ort, bitmap, session, progress }) => {
+/** The faces in the image (boxes in image pixels). Also used by the outline model (kaokoreFaceOutline). */
+export const detectFaces = async ({ ort, bitmap, session, progress }: RunContext): Promise<Detection[]> => {
   const W = bitmap.width;
   const H = bitmap.height;
   const tiles = yoloTiles(W, H, SIZE);
@@ -29,7 +30,7 @@ export const run: ModelRunner = async ({ ort, bitmap, session, progress }) => {
   progress('scan', tiles.length, tiles.length);
   // 全体と切った分で同じ顔が重なるので、まとめて間引く（face-web と同じ 0.3）
   const keep = nms(boxes, scores, { iou: 0.3, scoreMin: 0.25 });
-  const items = keep.map((k) => ({
+  return keep.map((k) => ({
     x: boxes[k * 4],
     y: boxes[k * 4 + 1],
     w: boxes[k * 4 + 2] - boxes[k * 4],
@@ -37,5 +38,11 @@ export const run: ModelRunner = async ({ ort, bitmap, session, progress }) => {
     score: scores[k],
     label: 'face',
   }));
-  return { kind: 'regions', items, imageWidth: W, imageHeight: H };
 };
+
+export const run: ModelRunner = async (ctx) => ({
+  kind: 'regions',
+  items: await detectFaces(ctx),
+  imageWidth: ctx.bitmap.width,
+  imageHeight: ctx.bitmap.height,
+});

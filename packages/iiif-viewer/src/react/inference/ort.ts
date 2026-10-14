@@ -21,7 +21,14 @@ export type Backend = 'webgpu' | 'wasm';
 
 export interface OrtModule {
   InferenceSession: {
-    create(model: Uint8Array, options: { executionProviders: Backend[]; graphOptimizationLevel?: 'all' }): Promise<OrtSession>;
+    create(
+      model: Uint8Array,
+      options: {
+        executionProviders: Backend[];
+        graphOptimizationLevel?: 'all';
+        externalData?: { path: string; data: Uint8Array }[];
+      },
+    ): Promise<OrtSession>;
   };
   Tensor: {
     new (type: 'float32', data: Float32Array, dims: number[]): OrtTensor;
