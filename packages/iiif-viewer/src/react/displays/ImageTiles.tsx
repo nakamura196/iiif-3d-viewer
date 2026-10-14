@@ -117,6 +117,7 @@ export default function ImageLayerView({
     if (!given.auth && infoJson) setInfoProbe(probeServiceOf(infoJson, locale));
   }, [given.auth, infoJson, locale]);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  const hidden = !!auth && auth.state.phase !== 'ok';
 
   if (state.status === 'loading') {
     return (
@@ -149,6 +150,9 @@ export default function ImageLayerView({
     overflow: 'hidden' as const,
     ...(opacity < 1 ? { opacity } : {}),
     ...(turn ? { transform: turn, transformOrigin: 'center center' } : {}),
+    // not allowed yet (or still asking): some servers send the image anyway (Wellcome's content
+    // advisory), so blur it until the user agrees, as the server's own viewer hides it
+    ...(hidden ? { filter: 'blur(24px)' } : {}),
   };
 
   // no usable service: the image as the manifest gives it
@@ -156,7 +160,7 @@ export default function ImageLayerView({
     const own = bust(layer.url, epoch);
     if (failedUrl === own) return null;
     return (
-      <div style={frame}>
+      <div style={frame} data-auth-blurred={hidden || undefined}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={bust(layer.url, epoch)}
@@ -202,7 +206,7 @@ export default function ImageLayerView({
   }
 
   return (
-    <div style={frame}>
+    <div style={frame} data-auth-blurred={hidden || undefined}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={bust(base, epoch)}

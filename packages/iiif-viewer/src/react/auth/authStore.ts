@@ -116,6 +116,21 @@ class Controller {
       if (r && this.allowed(r)) return this.finishOk(r, reload);
       last = r ?? last;
     }
+    // Already logged in (a cookie from an earlier visit): the token service answers without any
+    // window, so ask it quietly before showing a prompt. The spec lets the client ask it at any time.
+    for (const a of this.probe.access) {
+      if (a.profile === 'external') continue; // tried below without a window anyway
+      const got = await this.fetchToken(a);
+      if (!live()) return;
+      if (!got.ok) continue;
+      const r = await this.probeOnce(got.token);
+      if (!live()) return;
+      if (r && this.allowed(r)) {
+        this.set({ logoutOf: a });
+        return this.finishOk(r, true);
+      }
+      last = r ?? last;
+    }
     let message = { heading: last?.heading, note: last?.note };
     for (const a of this.probe.access) {
       if (a.profile === 'active' || a.profile === 'kiosk') {

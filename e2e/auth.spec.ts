@@ -21,6 +21,8 @@ test('active login: prompt, popup login, full image, logout', async ({ page, con
   // the degraded image is drawn under the prompt
   await expect.poll(() => kinds.includes('degraded')).toBe(true);
   expect(kinds).not.toContain('full');
+  // blurred until the user logs in
+  await expect(page.locator('[data-auth-blurred]').first()).toBeVisible();
 
   const popupPromise = context.waitForEvent('page');
   await prompt.getByRole('button', { name: 'Log in' }).click();
@@ -30,6 +32,7 @@ test('active login: prompt, popup login, full image, logout', async ({ page, con
 
   await expect(prompt).toBeHidden();
   await expect.poll(() => kinds.includes('full')).toBe(true);
+  await expect(page.locator('[data-auth-blurred]')).toHaveCount(0);
 
   // logout: the link opens the logout window; afterwards the prompt comes back
   const out = page.locator('[data-auth-action="logout"]');
@@ -38,4 +41,20 @@ test('active login: prompt, popup login, full image, logout', async ({ page, con
   await out.click();
   await logoutPopup;
   await expect(page.locator('[data-auth-panel="prompt"]')).toBeVisible();
+});
+
+test('already logged in: no prompt, the full image at once', async ({ page }) => {
+  const kinds: string[] = [];
+  page.on('response', (r) => {
+    const k = r.headers()['x-auth-image'];
+    if (k && r.url().includes('/iiif/img/')) kinds.push(k);
+  });
+
+  // the session cookie of an earlier visit
+  await page.goto(`${MOCK}/login-do`);
+  await page.goto(`/ja/viewer/?iiif-content=${encodeURIComponent(`${MOCK}/manifest.json`)}`);
+
+  await expect.poll(() => kinds.includes('full')).toBe(true);
+  await expect(page.locator('[data-auth-panel="prompt"]')).toHaveCount(0);
+  await expect(page.locator('[data-auth-action="logout"]')).toBeVisible();
 });
