@@ -3,7 +3,7 @@ import type { ManifestV4 } from '../core';
 import type { PaintedModel } from '../core';
 import type { Annotation, InfoPanelContent, Annotation3 } from '../core';
 import { EMPTY_FILTER, filterAnnotations, type AnnotationFilter } from '../core';
-import type { LayerItem, LayerSetting } from '../core';
+import type { LayerItem, LayerSetting, PlaybackDirection } from '../core';
 
 export const infoPanelAtom = atom<InfoPanelContent | null>(null);
 
@@ -28,15 +28,21 @@ export const layerSettingsAtom = atom<Record<string, LayerSetting>>({});
 export const layerOrderAtom = atom<Record<string, string[]>>({});
 
 // レイヤーの再生。右パネルの別のタブに移っても止まらないよう、タブの外に置く。
-// タイマーは画像の表示（ImageCanvasDisplay）が動かす。ids は再生するレイヤー（下から）
+// タイマーは画像の表示（ImageCanvasDisplay）が動かす。ids は再生するレイヤー（下から）、groups はその段
 export interface LayerPlayback {
   canvasId: string;
   ids: string[];
+  groups: number[];
+  direction: PlaybackDirection;
   step: number;
 }
 export const layerPlaybackAtom = atom<LayerPlayback | null>(null);
-// 再生の間隔（秒）と繰り返し
-export const layerPlaybackOptionsAtom = atom<{ seconds: number; loop: boolean }>({ seconds: 1, loop: true });
+// 再生の間隔（秒）・繰り返し・向き（組み立て／取り外し）
+export const layerPlaybackOptionsAtom = atom<{ seconds: number; loop: boolean; direction: PlaybackDirection }>({
+  seconds: 1,
+  loop: true,
+  direction: 'build',
+});
 
 // 一覧の検索・絞り込みの条件。3D の印もこの結果だけを表示する
 export const annotationFilterAtom = atom<AnnotationFilter>(EMPTY_FILTER);

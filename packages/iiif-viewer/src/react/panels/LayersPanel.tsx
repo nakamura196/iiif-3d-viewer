@@ -10,7 +10,10 @@ import {
   layerThumbnailUrl,
   moveLayer,
   orderLayers,
+  playbackGroups,
   playbackSettings,
+  playbackStepCount,
+  type PlaybackDirection,
   type LayerItem,
 } from '../../core';
 import {
@@ -62,7 +65,7 @@ function LayersTab({ container }: PanelContext) {
   const [dragging, setDragging] = useState<string | null>(null);
   const [over, setOver] = useState<string | null>(null);
   const [playback, setPlayback] = useAtom(layerPlaybackAtom);
-  const [{ seconds, loop }, setOptions] = useAtom(layerPlaybackOptionsAtom);
+  const [{ seconds, loop, direction }, setOptions] = useAtom(layerPlaybackOptionsAtom);
   const playing = playback && playback.canvasId === container?.id ? playback : null;
 
   if (!container || !current || current.canvasId !== container.id) {
@@ -94,10 +97,12 @@ function LayersTab({ container }: PanelContext) {
       return;
     }
     // 表示中の画像だけを使う。2 枚に満たなければ、すべてを使う
-    const shown = bottomFirst.filter((it) => isLayerVisible(it, settings)).map((it) => it.id);
-    const playIds = shown.length >= 2 ? shown : ids;
-    setSettings((s) => playbackSettings(s, playIds, 0));
-    setPlayback({ canvasId, ids: playIds, step: 0 });
+    const shown = bottomFirst.filter((it) => isLayerVisible(it, settings));
+    const playItems = shown.length >= 2 ? shown : bottomFirst;
+    const playIds = playItems.map((it) => it.id);
+    const groups = playbackGroups(playItems);
+    setSettings((s) => playbackSettings(s, playIds, groups, 0, direction));
+    setPlayback({ canvasId, ids: playIds, groups, direction, step: 0 });
   };
 
   return (
@@ -123,6 +128,21 @@ function LayersTab({ container }: PanelContext) {
           {t(playing ? 'pause' : 'play')}
         </button>
         <label className="inline-flex items-center gap-1 text-xs">
+          {t('direction')}
+          <select
+            value={direction}
+            onChange={(e) => {
+              // 向きを変えたら、いったん止める（次の再生から新しい向き）
+              setPlayback(null);
+              setOptions((o) => ({ ...o, direction: e.target.value as PlaybackDirection }));
+            }}
+            className="rounded border border-[var(--ds-border)] bg-[var(--ds-surface)] px-1 py-0.5"
+          >
+            <option value="build">{t('directionBuild')}</option>
+            <option value="peel">{t('directionPeel')}</option>
+          </select>
+        </label>
+        <label className="inline-flex items-center gap-1 text-xs">
           {t('interval')}
           <select
             value={seconds}
@@ -143,7 +163,7 @@ function LayersTab({ container }: PanelContext) {
         </label>
         {playing && (
           <span className="text-xs text-gray-500 dark:text-gray-400" aria-live="polite">
-            {t('playStep', { n: playing.step + 1, total: playing.ids.length })}
+            {t('playStep', { n: playing.step + 1, total: playbackStepCount(playing.groups) })}
           </span>
         )}
       </div>
