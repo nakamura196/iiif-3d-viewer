@@ -24,6 +24,8 @@ export type UseCaseOpen =
       tab?: ViewerTab;
       // キュレーションの何番目の項目を開くか（1 始まり）
       pos?: number;
+      // 何コマ目を開くか（1 始まり）
+      canvas?: number;
     }
   | {
       page: 'compare';
@@ -43,7 +45,7 @@ export type UseCaseOpen =
     };
 
 /** 何を見せる例か。一覧に札として出す。表示名は messages の UseCases.features */
-export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'search', 'auth'] as const;
+export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'search', 'ocr', 'auth'] as const;
 export type UseCaseFeature = (typeof USE_CASE_FEATURES)[number];
 
 export interface UseCase {
@@ -76,6 +78,7 @@ export function hrefOf(open: UseCaseOpen): string {
     case 'viewer':
       if (open.tab) q.push(`tab=${open.tab}`);
       if (open.pos) q.push(`pos=${open.pos}`);
+      if (open.canvas) q.push(`canvas=${open.canvas}`);
       break;
     case 'compare':
       if (open.mode) q.push(`mode=${open.mode}`);
@@ -218,6 +221,25 @@ export const USE_CASES: UseCase[] = [
     video: { ja: 'aDwMzalPIxY' },
     site: 'https://utda.github.io/kaishi/',
     featured: true,
+  },
+  {
+    id: 'meizukushi-ocr',
+    title: {
+      ja: '国立国会図書館「銘尽」（ブラウザの中で古典籍 OCR）',
+      en: 'Meizukushi, National Diet Library (classical-text OCR in the browser)',
+    },
+    note: {
+      ja: '国立国会図書館デジタルコレクションの『銘尽』を、6 コマ目の推論タブで開きます。NDL古典籍OCR-Lite の「ダウンロード」を押してから実行すると、くずし字の行を読み取り、画像に枠と文字を重ねます。モデル（約 83MB）は初回にだけ読み込み、画像はどこにも送りません。',
+      en: 'Meizukushi from the NDL Digital Collections, opened at frame 6 in the Inference tab. Download NDL Kotenseki OCR-Lite and run it to read the cursive lines and overlay boxes and text on the image. The model (about 83 MB) downloads once, and the image is never sent anywhere.',
+    },
+    open: {
+      page: 'viewer',
+      manifest: 'https://dl.ndl.go.jp/api/iiif/1288371/manifest.json',
+      tab: 'inference',
+      canvas: 6,
+    },
+    features: ['image', 'ocr'],
+    site: 'https://dl.ndl.go.jp/pid/1288371',
   },
   {
     id: 'wellcome-auth',
