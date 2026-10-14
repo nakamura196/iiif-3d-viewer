@@ -10,7 +10,7 @@ export interface Sample {
   note: { ja: string; en: string };
   manifest: string;
   // 開いたあとに選ぶタブ
-  tab?: 'transcript' | 'annotations';
+  tab?: 'transcript' | 'annotations' | 'structure';
   // 出典ページ（Cookbook のレシピ）
   source?: string;
 }
@@ -76,6 +76,30 @@ export const SAMPLES: Sample[] = [
     title: { ja: '目次つきの本', en: 'Book with table of contents' },
     note: { ja: '目次（structure）から各ページへ移る', en: 'Jump to pages from the table of contents' },
     manifest: cookbookV3('0024-book-4-toc'), source: recipePage('0024-book-4-toc'),
+  },
+  {
+    id: '0010', kind: 'cookbook', media: 'image',
+    title: { ja: '右から左に読む本', en: 'Right-to-left book' },
+    note: { ja: '見開きを右から左へめくる（viewingDirection）', en: 'Pages turn from right to left (viewingDirection)' },
+    manifest: `${recipePage('0010-book-2-viewing-direction')}manifest-rtl.json`, source: recipePage('0010-book-2-viewing-direction'),
+  },
+  {
+    id: '0011', kind: 'cookbook', media: 'image',
+    title: { ja: '巻物のように続けて表示', en: 'Continuous scroll' },
+    note: { ja: '複数の Canvas を 1 本につなげて表示する（behavior: continuous。読み込みに 20 秒ほどかかります）', en: 'Canvases joined into one strip (behavior: continuous; takes about 20 seconds to load)' },
+    manifest: `${recipePage('0011-book-3-behavior')}manifest-continuous.json`, source: recipePage('0011-book-3-behavior'),
+  },
+  {
+    id: '0033', kind: 'cookbook', media: 'image',
+    title: { ja: '画像の切り替え', en: 'Choice of images' },
+    note: { ja: '同じ Canvas の別の画像（Choice）を切り替えて比べる', en: 'Switch between alternative images of one canvas (Choice)' },
+    manifest: cookbookV3('0033-choice'), source: recipePage('0033-choice'),
+  },
+  {
+    id: '0229', kind: 'cookbook', media: 'video',
+    title: { ja: 'サムネイルで移動する動画', en: 'Video navigation with thumbnails' },
+    note: { ja: '動画の区切り（Range）をサムネイルの一覧から選ぶ', en: 'Pick sections (Ranges) of a video from thumbnails' },
+    manifest: cookbookV3('0229-behavior-ranges'), tab: 'structure', source: recipePage('0229-behavior-ranges'),
   },
   {
     id: '0017', kind: 'cookbook', media: 'video',
