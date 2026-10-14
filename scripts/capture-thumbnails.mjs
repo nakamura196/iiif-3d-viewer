@@ -10,6 +10,7 @@
  *   node scripts/capture-thumbnails.mjs --only 0021,shelley
  *   node scripts/capture-thumbnails.mjs --base http://localhost:3838   # 手元の開発サーバを開く
  *   node scripts/capture-thumbnails.mjs --missing       # まだ無いものだけ撮る（サンプルを足したとき）
+ *   node scripts/capture-thumbnails.mjs --only curation --wait 40000   # 画像サーバが遅いとき、開いてから撮るまでを延ばす（ミリ秒）
  *
  * 前提: Google Chrome（別の場所なら CHROME=<実行ファイル> で指定）。Node 23.6 以降（TypeScript を直接読む）。
  * 開発サーバで撮ると、画面の隅に Next.js の印が写る。本番で撮るほうがきれい。
@@ -36,12 +37,22 @@ const arg = (name) => {
 const base = (arg('base') ?? 'https://kasane.ldas.jp').replace(/\/$/, '');
 const only = arg('only')?.split(',');
 const missingOnly = process.argv.includes('--missing');
+const waitArg = arg('wait') ? Number(arg('wait')) : undefined;
 
 // 撮る画面の大きさ。上端のサイトのヘッダー（HEADER px）は写さず、16:10 で残す
 const WIDTH = 1280;
 const HEIGHT = 800;
 const HEADER = 41;
 const OUT_WIDTH = 640;
+// ユースケースを撮るときの画面の幅（右の欄を除くと中央がおよそ 1280 px 残る）
+const STAGE_WIDTH = 1680;
+
+// 右の欄（SidePanel）の左端。幅を変える取っ手（cursor-col-resize）の親が欄そのもの。無ければ null
+const STAGE_RIGHT = `(() => {
+  const h = document.querySelector('.cursor-col-resize');
+  const r = h?.parentElement?.getBoundingClientRect();
+  return r && r.width > 0 ? Math.round(r.left) : null;
+})()`;
 
 // 撮る前にページで行う操作（id ごと）。画面を開いただけでは見どころが写らないものに使う
 const PREPARE = {
@@ -57,12 +68,19 @@ const targets = [
     // 開いてから撮るまでの待ち時間。3D は読み込みに 15〜20 秒かかる
     wait: s.media === '3d' ? 30000 : 10000,
   })),
-  ...USE_CASES.map((u) => ({
-    id: u.id,
-    file: `public/thumbnails/usecases/${u.id}.webp`,
-    href: hrefOf(u.open),
-    wait: 15000,
-  })),
+  // ユースケースはトップのカードに出すので、右の欄を除いたビューアの中央だけを、言語ごとに撮る
+  // （英語のページに日本語の画面が写らないように）。右の欄の分だけ画面を広くして、中央を 16:10 に近づける
+  ...USE_CASES.flatMap((u) =>
+    ['ja', 'en'].map((locale) => ({
+      id: u.id,
+      locale,
+      file: `public/thumbnails/usecases/${u.id}.${locale}.webp`,
+      href: hrefOf(u.open),
+      wait: 15000,
+      width: STAGE_WIDTH,
+      stage: true,
+    })),
+  ),
 ].filter((t) => (!only || only.includes(t.id)) && (!missingOnly || !existsSync(path.join(ROOT, t.file))));
 
 // Chrome を 1 つ立ち上げ、DevTools Protocol（外からページを操作する窓口）で各ページを開いて撮る。
@@ -119,30 +137,36 @@ const SEEK_VIDEOS = `Promise.all([...document.querySelectorAll('video')].map((v)
 
 let failed = 0;
 for (const t of targets) {
-  const url = `${base}/ja${t.href}`;
+  const url = `${base}/${t.locale ?? 'ja'}${t.href}`;
+  const width = t.width ?? WIDTH;
   const { targetId } = await send('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await send('Target.attachToTarget', { targetId, flatten: true });
   try {
-    await send('Emulation.setDeviceMetricsOverride', { width: WIDTH, height: HEIGHT + HEADER, deviceScaleFactor: 1, mobile: false }, sessionId);
+    await send('Emulation.setDeviceMetricsOverride', { width, height: HEIGHT + HEADER, deviceScaleFactor: 1, mobile: false }, sessionId);
     await send('Page.navigate', { url }, sessionId);
-    await sleep(t.wait);
+    await sleep(waitArg ?? t.wait);
     if (PREPARE[t.id]) {
       await send('Runtime.evaluate', { expression: PREPARE[t.id] }, sessionId);
       await sleep(3000);
     }
     await send('Runtime.evaluate', { expression: SEEK_VIDEOS, awaitPromise: true }, sessionId);
     await sleep(500);
-    const { data } = await send('Page.captureScreenshot', {
-      format: 'png',
-      clip: { x: 0, y: HEADER, width: WIDTH, height: HEIGHT, scale: 1 },
-    }, sessionId);
+    // 撮る範囲。stage のときは右の欄の手前まで、縦は 16:10 に収まるよう中央を残す
+    let clip = { x: 0, y: HEADER, width, height: HEIGHT, scale: 1 };
+    if (t.stage) {
+      const { result } = await send('Runtime.evaluate', { expression: STAGE_RIGHT, returnByValue: true }, sessionId);
+      const w = result.value ?? width;
+      const h = Math.min(HEIGHT, Math.round(w / 1.6));
+      clip = { x: 0, y: HEADER + Math.round((HEIGHT - h) / 2), width: w, height: h, scale: 1 };
+    }
+    const { data } = await send('Page.captureScreenshot', { format: 'png', clip }, sessionId);
     const out = path.join(ROOT, t.file);
     mkdirSync(path.dirname(out), { recursive: true });
     const info = await sharp(Buffer.from(data, 'base64'))
       .resize({ width: OUT_WIDTH })
       .webp({ quality: 72 })
       .toFile(out);
-    console.log(`${t.file}  ${Math.round(info.size / 1024)} KB  ← ${url}`);
+    console.log(`${t.file}  ${clip.width}x${clip.height}  ${Math.round(info.size / 1024)} KB  ← ${url}`);
   } catch (e) {
     failed++;
     console.error(`失敗: ${t.id} (${url}): ${e.message}`);

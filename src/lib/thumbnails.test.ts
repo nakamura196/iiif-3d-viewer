@@ -11,7 +11,10 @@ describe('サムネイル', () => {
   it.each(SAMPLES.map((s) => [s.id, sampleThumbnail(s)]))('サンプル %s の画像がある', (_id, src) => {
     expect(inPublic(src)).toBe(true);
   });
-  it.each(USE_CASES.map((u) => [u.id, thumbnailOf(u)]))('ユースケース %s の画像がある', (_id, src) => {
+  const useCaseThumbs = USE_CASES.flatMap((u) =>
+    (['ja', 'en'] as const).map((l) => [`${u.id} (${l})`, thumbnailOf(u, l)]),
+  );
+  it.each(useCaseThumbs)('ユースケース %s の画像がある', (_id, src) => {
     expect(inPublic(src)).toBe(true);
   });
 });

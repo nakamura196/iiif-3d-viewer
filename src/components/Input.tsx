@@ -84,14 +84,22 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
               >
                 {/* eslint-disable-next-line @next/next/no-img-element -- 静的書き出しのため next/image は使わない */}
                 <img
-                  src={thumbnailOf(u)}
+                  src={thumbnailOf(u, locale)}
                   alt=""
                   width={640}
                   height={400}
                   loading="lazy"
                   className="w-full aspect-[16/10] object-cover bg-[var(--ds-surface-2)]"
                 />
-                <span className="block p-2 text-[var(--ds-primary)] group-hover:underline">{u.title[locale]}</span>
+                {/* 見出しは「何ができるか」、その下に小さく資料の名前 */}
+                <span className="block p-2">
+                  <span className="block font-medium text-[var(--ds-primary)] group-hover:underline">
+                    {u.headline?.[locale] ?? u.title[locale]}
+                  </span>
+                  {u.headline ? (
+                    <span className="mt-0.5 block text-xs text-[var(--ds-fg-muted)]">{u.title[locale]}</span>
+                  ) : null}
+                </span>
               </Link>
             </li>
           ))}

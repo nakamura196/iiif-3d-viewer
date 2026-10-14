@@ -25,6 +25,12 @@ describe('USE_CASES', () => {
     }
   });
 
+  it('トップに出す例には、日英の見出しがある', () => {
+    for (const u of FEATURED_USE_CASES) {
+      for (const s of [u.headline?.ja, u.headline?.en]) expect(s?.trim(), u.id).toBeTruthy();
+    }
+  });
+
   it('マニフェストと元のページは https の URL', () => {
     for (const u of USE_CASES) {
       expect(new URL(sourceOf(u.open)).protocol).toBe('https:');
