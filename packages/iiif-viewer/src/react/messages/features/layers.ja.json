@@ -15,6 +15,12 @@
     "up": "「{name}」を 1 つ手前へ",
     "down": "「{name}」を 1 つ奥へ",
     "opacity": "不透明度",
-    "opacityOf": "「{name}」の不透明度（%）"
+    "opacityOf": "「{name}」の不透明度（%）",
+    "play": "再生",
+    "pause": "停止",
+    "interval": "間隔",
+    "seconds": "秒",
+    "loop": "繰り返し",
+    "playStep": "{n} / {total}"
   }
 }

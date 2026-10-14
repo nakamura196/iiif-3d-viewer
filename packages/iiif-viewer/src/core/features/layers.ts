@@ -78,3 +78,20 @@ export const moveLayer = (ids: string[], id: string, to: number): string[] => {
 /** How many images a Canvas can show as layers (decides whether the Layers tab is offered). */
 export const imageLayerCount = (painting: PaintingContent[]): number =>
   painting.reduce((n, p) => n + p.options.filter((o) => o.kind === 'Image').length, 0);
+
+// 再生: 重ねた画像を手前から 1 枚ずつ隠し、いちばん奥の 1 枚まで見せていく（起こし絵図をめくる見せ方）。
+// 第 k 段では手前の k 枚を隠す。段は 0 から count - 1 まで。
+
+/** The step after `step` in a playback of `count` layers; null when it has ended. */
+export const nextPlaybackStep = (step: number, count: number, loop: boolean): number | null =>
+  step + 1 < count ? step + 1 : loop && count > 1 ? 0 : null;
+
+/** `settings` with the layers of `ids` (bottom first) shown or hidden as at playback step `step`. */
+export const playbackSettings = (
+  settings: Record<string, LayerSetting>,
+  ids: string[],
+  step: number,
+): Record<string, LayerSetting> => ({
+  ...settings,
+  ...Object.fromEntries(ids.map((id, i) => [id, { ...settings[id], visible: i < ids.length - step }])),
+});

@@ -15,6 +15,12 @@
     "up": "Move \"{name}\" forward",
     "down": "Move \"{name}\" backward",
     "opacity": "Opacity",
-    "opacityOf": "Opacity of \"{name}\" (%)"
+    "opacityOf": "Opacity of \"{name}\" (%)",
+    "play": "Play",
+    "pause": "Stop",
+    "interval": "Every",
+    "seconds": "s",
+    "loop": "Repeat",
+    "playStep": "{n} / {total}"
   }
 }

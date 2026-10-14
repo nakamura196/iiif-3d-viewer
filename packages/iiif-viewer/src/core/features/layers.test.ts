@@ -9,7 +9,9 @@ import {
   layerItemsOf,
   layerOpacity,
   moveLayer,
+  nextPlaybackStep,
   orderLayers,
+  playbackSettings,
   type LayerItem,
 } from './layers';
 
@@ -68,5 +70,24 @@ describe('order and opacity', () => {
     expect(layerOpacity(items[0], {})).toBe(1);
     expect(layerOpacity(items[0], { a: { opacity: 0.4 } })).toBe(0.4);
     expect(layerOpacity(items[0], { a: { opacity: 3 } })).toBe(1);
+  });
+});
+
+describe('playback', () => {
+  it('nextPlaybackStep walks to the bottom layer, then ends or starts again', () => {
+    expect(nextPlaybackStep(0, 3, false)).toBe(1);
+    expect(nextPlaybackStep(1, 3, false)).toBe(2);
+    expect(nextPlaybackStep(2, 3, false)).toBeNull();
+    expect(nextPlaybackStep(2, 3, true)).toBe(0);
+    expect(nextPlaybackStep(0, 1, true)).toBeNull();
+  });
+  it('playbackSettings hides the front layers and keeps other settings', () => {
+    const s = playbackSettings({ c: { opacity: 0.5 }, x: { visible: false } }, ['a', 'b', 'c'], 1);
+    expect(s).toEqual({ a: { visible: true }, b: { visible: true }, c: { opacity: 0.5, visible: false }, x: { visible: false } });
+    expect(playbackSettings({}, ['a', 'b', 'c'], 2)).toEqual({
+      a: { visible: true },
+      b: { visible: false },
+      c: { visible: false },
+    });
   });
 });
