@@ -1,7 +1,7 @@
 'use client';
 
 import type { NextPage } from 'next';
-import { Suspense, useEffect } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from 'next-intl';
@@ -11,7 +11,7 @@ import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { Link } from '@/i18n/routing';
-import { contentParam, manifestFromParams } from '@nakamura196/iiif-viewer/core';
+import { contentParam, convertToV4, fetchManifest, manifestFromParams, parseManifestV4 } from '@nakamura196/iiif-viewer/core';
 import { isViewerTab } from '@/lib/viewerTabs';
 
 // /viewer?iiif-content=...&tab=...（?manifest=... も読む）: ビューア本体はパッケージの Viewer。
@@ -24,11 +24,28 @@ const ViewerContent: NextPage = () => {
   const locale = useLocale();
   const { resolvedTheme } = useTheme();
   const tc = useTranslations('Compare');
+  const tg = useTranslations('GeoRef');
+  // 地図に重ねられる Canvas（georeferencing の注釈つき）があるか
+  const [hasGeoCanvas, setHasGeoCanvas] = useState(false);
 
   useEffect(() => {
     const manifestParam = manifestFromParams(new URLSearchParams(window.location.search));
     if (manifestParam) setManifestUrl(manifestParam);
   }, [setManifestUrl]);
+
+  useEffect(() => {
+    setHasGeoCanvas(false);
+    if (!manifestUrl) return;
+    let cancelled = false;
+    fetchManifest(manifestUrl)
+      .then((raw) => {
+        if (!cancelled && raw) setHasGeoCanvas(!!parseManifestV4(convertToV4(raw)).geoCanvasId);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [manifestUrl]);
 
   const tabParam = searchParams?.get('tab');
   const tab = isViewerTab(tabParam) ? tabParam : undefined;
@@ -44,7 +61,7 @@ const ViewerContent: NextPage = () => {
     // h-dvh: スマホではブラウザのツールバーの分だけ 100vh が見える範囲より高く、下端が隠れるため
     <div className="flex flex-col h-dvh">
       <Header compact />
-      <main className="flex-1 flex overflow-hidden">
+      <main className="flex-1 flex overflow-hidden relative">
         {manifestUrl ? (
           <Viewer
             iiifContent={manifestUrl}
@@ -68,6 +85,14 @@ const ViewerContent: NextPage = () => {
           <div className="w-full h-full flex items-center justify-center">
             <ManifestInput onSubmit={(url: string) => setManifestUrl(url)} />
           </div>
+        )}
+        {manifestUrl && hasGeoCanvas && (
+          <Link
+            href={`/georef?${contentParam(manifestUrl)}`}
+            className="absolute bottom-4 left-4 z-10 text-sm px-3 py-1.5 bg-[var(--ds-surface)] rounded-lg shadow-md border border-[var(--ds-border)] text-[var(--ds-fg)] hover:bg-[var(--ds-surface-2)]"
+          >
+            {tg('viewOnMap')}
+          </Link>
         )}
       </main>
       {!manifestUrl && <Footer />}

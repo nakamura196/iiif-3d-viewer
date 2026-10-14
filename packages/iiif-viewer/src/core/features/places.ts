@@ -2,7 +2,7 @@
 // React に依存しない。この機能の担当だけがこのファイルを書く。
 // - navPlace（Manifest・Canvas・Range・Collection の items。Cookbook 0154・0240・0318）
 // - GeoJSON の Feature を本文に持つ tagging Annotation（Cookbook 0139）
-import { geoFeaturesOf, htmlToText } from './about';
+import { geoFeaturesOf, htmlToText, isGeoreferencing } from './about';
 import { labelIn } from '../services/paintedModels';
 
 type Json = Record<string, unknown>;
@@ -167,7 +167,7 @@ export const mapPlacesOf = (resource: unknown, locale: string): MapPlace[] => {
     for (const page of asList(c.annotations)) {
       if (!isObj(page)) continue;
       for (const anno of asList(page.items)) {
-        if (!isObj(anno)) continue;
+        if (!isObj(anno) || isGeoreferencing(anno)) continue;
         const { fragment } = fragmentOf(anno.target);
         placesFrom(geoFeaturesOf(anno.body), { scope: 'annotation', containerId, ownerLabel, target: fragment }, locale, out);
       }

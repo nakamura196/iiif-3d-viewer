@@ -65,6 +65,7 @@
     "title": "Terms of Service"
   },
   "GeoRef": {
+    "viewOnMap": "View on the map",
     "map": "Map",
     "viewer3d": "3D",
     "image": "Image",
