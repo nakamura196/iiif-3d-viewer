@@ -4,6 +4,7 @@
 
 import type {
   AnnotationLinkV4,
+  CanvasV4,
   AnnotationPageV4,
   AnnotationV4,
   ManifestV4,
@@ -34,9 +35,12 @@ export interface GeoFeatureDepiction {
 
 export interface GeoFeature {
   '@id': string;
+  /** GeoJSON の id（`@id` が無い地物で使う）。 */
+  id?: string;
   type: 'Feature';
   geometry: { coordinates: [number, number]; type: 'Point' };
-  properties: { title: string; resourceCoords: [number, number, number] };
+  /** resourceCoords: 3D の模型なら [x, y, z]、画像なら Canvas 座標の [x, y]。 */
+  properties: { title: string; resourceCoords: [number, number] | [number, number, number] };
   names?: GeoFeatureName[];
   links?: GeoFeatureLink[];
   depictions?: GeoFeatureDepiction[];
@@ -46,6 +50,8 @@ export interface ParsedManifest {
   modelUrl: string | null;
   annotations: Annotation[];
   geoFeatures: GeoFeature[];
+  /** 地点が画像（Canvas）に付いているとき、その Canvas の id。3D の Scene に付いているときは無い。 */
+  geoCanvasId?: string;
 }
 
 const ZERO: [number, number, number] = [0, 0, 0];
@@ -339,9 +345,29 @@ const buildAnnotation = (
   };
 };
 
-// Reads the Scene `sceneId` (default: the first Scene).
+// The first Canvas that carries a georeferencing Annotation (a georeferenced map or picture).
+const geoCanvasOf = (manifest: ManifestV4): CanvasV4 | undefined =>
+  (manifest.items ?? []).find(
+    (c): c is CanvasV4 =>
+      (c as { type?: string })?.type === 'Canvas' &&
+      extractGeoFeatures(flattenAllPages((c as CanvasV4).annotations)).length > 0
+  );
+
+// Reads the Scene `sceneId` (default: the first Scene). A Manifest without a Scene gives the
+// places of its first georeferenced Canvas (geoCanvasId) instead.
 export const parseManifestV4 = (manifest: ManifestV4, sceneId?: string | null): ParsedManifest => {
   const scene = sceneOf(manifest, sceneId);
+  if (!scene) {
+    const canvas = geoCanvasOf(manifest);
+    if (canvas) {
+      return {
+        modelUrl: null,
+        annotations: [],
+        geoFeatures: extractGeoFeatures(flattenAllPages(canvas.annotations)),
+        geoCanvasId: canvas.id,
+      };
+    }
+  }
   const modelUrl = extractModelUrl(scene);
 
   const sceneAnnotations = flattenAllPages(scene?.annotations);
@@ -363,11 +389,16 @@ export const parseManifestV4 = (manifest: ManifestV4, sceneId?: string | null): 
   return { modelUrl, annotations: out, geoFeatures };
 };
 
+// The id the map, the list and the picture select a feature by.
+export const geoFeatureIdOf = (feature: GeoFeature, idx: number): string =>
+  feature['@id'] || feature.id || `geo-feature-${idx}`;
+
 export const geoFeaturesToAnnotations = (features: GeoFeature[]): Annotation[] =>
   features.map((feature, idx) => {
-    const coords = feature.properties.resourceCoords;
+    const [x, y, z = 0] = feature.properties.resourceCoords;
+    const coords: [number, number, number] = [x, y, z];
     return {
-      id: feature['@id'] || `geo-feature-${idx}`,
+      id: geoFeatureIdOf(feature, idx),
       creator: '',
       title: feature.properties.title,
       description: '',

@@ -67,6 +67,7 @@
   "GeoRef": {
     "map": "Map",
     "viewer3d": "3D",
+    "image": "Image",
     "annotations": "Annotations",
     "searchPlaceholder": "Search...",
     "noAnnotations": "No annotations",
