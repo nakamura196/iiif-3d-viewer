@@ -1,6 +1,7 @@
 // Custom IIIF primitive components to replace @samvera/clover-iiif/primitives
 import React from 'react';
 import { sanitizeAboutHtml } from '../../core';
+import { LINK_CLASS } from '../panels/SafeHtml';
 
 export type IIIFLabel = string | string[] | Record<string, string | string[]>;
 
@@ -76,7 +77,7 @@ export function Summary({ summary, className = '' }: SummaryProps) {
     }
   }
   
-  return <div className={className} dangerouslySetInnerHTML={{ __html: sanitizeAboutHtml(displayText) }} />;
+  return <div className={`${LINK_CLASS} ${className ?? ''}`} dangerouslySetInnerHTML={{ __html: sanitizeAboutHtml(displayText) }} />;
 }
 
 export interface MetadataItem {
@@ -140,7 +141,7 @@ export function Metadata({ metadata, className = '' }: MetadataProps) {
             <dt className="font-medium text-gray-700 dark:text-gray-300">
               {labelText}
             </dt>
-            <dd className="text-gray-900 dark:text-gray-100" dangerouslySetInnerHTML={{ __html: sanitizeAboutHtml(valueText) }} />
+            <dd className={`text-gray-900 dark:text-gray-100 ${LINK_CLASS}`} dangerouslySetInnerHTML={{ __html: sanitizeAboutHtml(valueText) }} />
           </div>
         );
       })}
