@@ -128,7 +128,7 @@ export const USE_CASES: UseCase[] = [
     },
     open: { page: 'compare', manifest: 'https://nakamura196.github.io/hongo-campus-iiif/ueno.json' },
     features: ['3d', 'compare'],
-    video: { ja: 'Sb7m0J6pRTM' },
+    video: { ja: 'Sb7m0J6pRTM', en: 'wOh2JiaHkS8' },
     featured: true,
   },
   {
