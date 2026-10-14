@@ -1,6 +1,6 @@
 // ダウンロードしたモデルの置き場所（ブラウザの Cache Storage）。画面からも Worker からも使う。
 // 住所は版を固定してあるので、置いた物が古くなることは無い。モデルを差し替えたら住所が変わり、別の物として取り直す。
-import type { InferenceModel, ModelFile } from './models/types';
+import type { InferenceModel } from './models/types';
 
 const CACHE = 'kasane-inference-models';
 
@@ -20,16 +20,20 @@ const looksLikeHtml = (b: Uint8Array): boolean => {
   return false;
 };
 
+/** Every download of a model: each file, and its weights file when kept apart. */
+const downloadsOf = (model: InferenceModel): { url: string; bytes: number }[] =>
+  model.files.flatMap((f) => (f.data ? [f, f.data] : [f]));
+
 export type ModelStatus = 'none' | 'partial' | 'ready';
 
 export const modelStatus = async (model: InferenceModel): Promise<ModelStatus> => {
   const cache = await openCache();
   if (!cache) return 'none';
-  const hits = await Promise.all(model.files.map((f) => cache.match(f.url).then((r) => !!r)));
+  const hits = await Promise.all(downloadsOf(model).map((f) => cache.match(f.url).then((r) => !!r)));
   return hits.every(Boolean) ? 'ready' : hits.some(Boolean) ? 'partial' : 'none';
 };
 
-export const totalBytes = (model: InferenceModel): number => model.files.reduce((n, f) => n + f.bytes, 0);
+export const totalBytes = (model: InferenceModel): number => downloadsOf(model).reduce((n, f) => n + f.bytes, 0);
 
 /** Downloads the files that are not stored yet. `onProgress` gets bytes of the whole model. */
 export const downloadModel = async (
@@ -41,7 +45,7 @@ export const downloadModel = async (
   if (!cache) throw new Error('Cache Storage is not available');
   const total = totalBytes(model);
   let done = 0;
-  for (const f of model.files) {
+  for (const f of downloadsOf(model)) {
     if (!(await cache.match(f.url))) {
       const buf = await fetchWithProgress(f, (n) => onProgress(done + n, total), signal);
       await cache.put(f.url, new Response(buf, { headers: { 'Content-Type': 'application/octet-stream' } }));
@@ -51,7 +55,7 @@ export const downloadModel = async (
   }
 };
 
-const fetchWithProgress = async (f: ModelFile, onBytes: (n: number) => void, signal?: AbortSignal): Promise<Uint8Array<ArrayBuffer>> => {
+const fetchWithProgress = async (f: { url: string; bytes: number }, onBytes: (n: number) => void, signal?: AbortSignal): Promise<Uint8Array<ArrayBuffer>> => {
   const res = await fetch(f.url, { mode: 'cors', credentials: 'omit', signal });
   if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}: ${f.url}`);
   const reader = res.body.getReader();
@@ -74,8 +78,8 @@ const fetchWithProgress = async (f: ModelFile, onBytes: (n: number) => void, sig
   return out;
 };
 
-/** The stored bytes of a file (Worker side). */
-export const readModelFile = async (f: ModelFile): Promise<Uint8Array> => {
+/** The stored bytes of a download (Worker side). */
+export const readModelFile = async (f: { url: string }): Promise<Uint8Array> => {
   const cache = await openCache();
   const hit = await cache?.match(f.url);
   if (!hit) throw new Error(`Not downloaded: ${f.url}`);
@@ -85,5 +89,5 @@ export const readModelFile = async (f: ModelFile): Promise<Uint8Array> => {
 export const removeModel = async (model: InferenceModel): Promise<void> => {
   const cache = await openCache();
   if (!cache) return;
-  await Promise.all(model.files.map((f) => cache.delete(f.url)));
+  await Promise.all(downloadsOf(model).map((f) => cache.delete(f.url)));
 };

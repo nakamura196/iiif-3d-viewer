@@ -19,15 +19,16 @@ const sessionOf = (file: ModelFile, prefer: Backend) => {
     s = (async () => {
       const ort = await loadOrt();
       const bytes = await readModelFile(file);
+      const externalData = file.data ? [{ path: file.data.path, data: await readModelFile(file.data) }] : undefined;
       if (prefer === 'webgpu' && (await (gpu ??= hasWebGpu()))) {
         try {
-          const session = await ort.InferenceSession.create(bytes, { executionProviders: ['webgpu'], graphOptimizationLevel: 'all' });
+          const session = await ort.InferenceSession.create(bytes, { executionProviders: ['webgpu'], graphOptimizationLevel: 'all', externalData });
           return { session, backend: 'webgpu' as const };
         } catch {
           // WebGPU で落ちる演算のある端末では、wasm で作り直す
         }
       }
-      const session = await ort.InferenceSession.create(bytes, { executionProviders: ['wasm'], graphOptimizationLevel: 'all' });
+      const session = await ort.InferenceSession.create(bytes, { executionProviders: ['wasm'], graphOptimizationLevel: 'all', externalData });
       return { session, backend: 'wasm' as const };
     })();
     s.catch(() => sessions.delete(key));
