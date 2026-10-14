@@ -15,6 +15,11 @@ export interface ModelFile {
   /** Pinned address (a fixed revision, so a cached file never goes stale). */
   url: string;
   bytes: number;
+  /**
+   * The weights kept beside the graph (an `.onnx_data` file, for models over 2 GB or exported that way). `path` is
+   * the name the graph refers to.
+   */
+  data?: { path: string; url: string; bytes: number };
 }
 
 export interface RunContext {

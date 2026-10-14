@@ -20,6 +20,8 @@
     "stage_load": "Preparing the model...",
     "stage_detect": "Detecting lines...",
     "stage_read": "Reading line {done} / {total}",
+    "stage_scan": "Scanning part {done} / {total}",
+    "stage_outline": "Tracing outline {done} / {total}",
     "resultSummary": "{count} items ({seconds} s, {backend})",
     "showOnImage": "Show on the image",
     "saveJson": "Save annotations (JSON)",

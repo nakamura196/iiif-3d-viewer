@@ -19,6 +19,12 @@ export default function HomeContent() {
   // 新しいものが上。表示は直近の 8 件まで（古い項目は文言ごと消す）
   const newsItems = [
     {
+      date: tNews('item16Date'),
+      title: tNews('item16Title'),
+      // 推論タブを開いた状態の例（NDL「江戸名所」、ndl-face-finder の花見のキュレーション）
+      href: `/viewer/?iiif-content=${encodeURIComponent('https://nakamura196.github.io/ndl-face-finder/curations/works/edonohanami.json')}&pos=2&tab=inference`,
+    },
+    {
       date: tNews('item15Date'),
       title: tNews('item15Title'),
       href: '/samples',
@@ -64,10 +70,6 @@ export default function HomeContent() {
     {
       date: tNews('item8Date'),
       title: tNews('item8Title'),
-    },
-    {
-      date: tNews('item7Date'),
-      title: tNews('item7Title'),
     },
     // 同じ場所の注釈・キー付きタグ（研究段階）の告知。掲載の了承が得られたら戻す
     // {

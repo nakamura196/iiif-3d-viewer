@@ -13,6 +13,8 @@ export interface Detection {
   label?: string;
   /** Text read from the region (OCR). */
   text?: string;
+  /** Outline of the thing inside the box (x, y in image pixels), when the model gives one. */
+  polygon?: [number, number][];
 }
 
 export interface InferenceOutput {

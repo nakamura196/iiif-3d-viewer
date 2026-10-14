@@ -1,6 +1,7 @@
 // 推論の結果（推論に渡した画像の画素）を、Canvas 座標の W3C / IIIF の AnnotationPage にする。
 // OCR の行は motivation "supplementing"（画像の一部の文字起こし。textGranularity "line"）、
 // 領域は "tagging"（本文は区分名）。どのモデルで作ったかは generator に書く。
+// 輪郭（polygon）のある領域は、枠（#xywh）ではなく SvgSelector の多角形を target にする。
 import type { InferenceOutput } from './types';
 
 /** How a pixel of the inferred image maps to the Canvas: canvas = offset + pixel * scale. */
@@ -39,6 +40,13 @@ export interface AnnotationPageOptions {
 
 const round = (n: number) => Math.round(n);
 
+/** A polygon in image pixels as an SVG on the Canvas (one decimal: enough for a Canvas of thousands of units). */
+const svgPolygon = (pts: [number, number][], map: ImageToCanvas): string => {
+  const f = (n: number) => String(Math.round(n * 10) / 10);
+  const points = pts.map(([px, py]) => `${f(map.x + px * map.scaleX)},${f(map.y + py * map.scaleY)}`).join(' ');
+  return `<svg xmlns='http://www.w3.org/2000/svg'><polygon points='${points}'/></svg>`;
+};
+
 export const toAnnotationPage = (out: InferenceOutput, o: AnnotationPageOptions): Record<string, unknown> => {
   const { map } = o;
   const generator = { id: o.generator.id, type: 'Software', name: o.generator.name };
@@ -49,7 +57,13 @@ export const toAnnotationPage = (out: InferenceOutput, o: AnnotationPageOptions)
       const y = round(map.y + d.y * map.scaleY);
       const w = Math.max(1, round(d.w * map.scaleX));
       const h = Math.max(1, round(d.h * map.scaleY));
-      const target = `${o.canvasId}#xywh=${x},${y},${w},${h}`;
+      const target = d.polygon && d.polygon.length >= 3
+        ? {
+            type: 'SpecificResource',
+            source: { id: o.canvasId, type: 'Canvas' },
+            selector: { type: 'SvgSelector', value: svgPolygon(d.polygon, map) },
+          }
+        : `${o.canvasId}#xywh=${x},${y},${w},${h}`;
       return out.kind === 'lines'
         ? {
             id: o.newId(),
