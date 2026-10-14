@@ -9,3 +9,4 @@ export * from './curation';
 export * from './annotationStyle';
 export * from './search';
 export * from './places';
+export * from './inference';

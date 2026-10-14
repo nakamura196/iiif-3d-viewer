@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   imageLayerCount,
@@ -9,7 +9,9 @@ import {
   layerOpacity,
   layerThumbnailUrl,
   moveLayer,
+  nextPlaybackStep,
   orderLayers,
+  playbackSettings,
   type LayerItem,
 } from '../../core';
 import { canvasLayersAtom, layerOrderAtom, layerSettingsAtom } from '../atoms';
@@ -19,6 +21,7 @@ import type { Panel, PanelContext } from './types';
 // 重なった画像（合成の画像・Choice の候補）を 1 枚ずつ、表示・非表示、不透明度、重ね順で操作する。
 // 一覧は上が手前（画像編集ソフトのレイヤーと同じ向き）。重ね順はドラッグか ▲▼ で変える。
 // Mirador の Layers パネルと同じ操作をそろえた。
+// ▶ で、表示中の画像を手前から 1 枚ずつ隠していく（起こし絵図をめくるように見せる）。
 
 const BUTTON =
   'shrink-0 grid place-items-center w-7 h-7 rounded text-[var(--ds-fg)] hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-30 disabled:hover:bg-transparent';
@@ -33,6 +36,24 @@ function EyeIcon({ open }: { open: boolean }) {
   );
 }
 
+function PlayIcon({ playing }: { playing: boolean }) {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true">
+      {playing ? <path d="M6 5h4v14H6zM14 5h4v14h-4z" /> : <path d="M7 4.5v15l12-7.5z" />}
+    </svg>
+  );
+}
+
+// 再生の間隔（秒）
+const INTERVALS = [0.5, 1, 1.5, 2, 3, 5];
+
+interface Playback {
+  canvasId: string;
+  /** The layers played, bottom first. */
+  ids: string[];
+  step: number;
+}
+
 function LayersTab({ container }: PanelContext) {
   const t = useTranslations('Layers');
   const locale = useLocale();
@@ -41,6 +62,26 @@ function LayersTab({ container }: PanelContext) {
   const [orders, setOrders] = useAtom(layerOrderAtom);
   const [dragging, setDragging] = useState<string | null>(null);
   const [over, setOver] = useState<string | null>(null);
+  const [playback, setPlayback] = useState<Playback | null>(null);
+  const [seconds, setSeconds] = useState(1);
+  const [loop, setLoop] = useState(true);
+  // 別の Canvas に移ったら止める
+  const playing = playback && playback.canvasId === container?.id ? playback : null;
+
+  useEffect(() => {
+    if (!playing) return;
+    const timer = setTimeout(() => {
+      const step = nextPlaybackStep(playing.step, playing.ids.length, loop);
+      if (step === null) {
+        setPlayback(null);
+        return;
+      }
+      setSettings((s) => playbackSettings(s, playing.ids, step));
+      // 繰り返さないときは、いちばん奥の 1 枚を出したところで止める
+      setPlayback(!loop && step === playing.ids.length - 1 ? null : { ...playing, step });
+    }, seconds * 1000);
+    return () => clearTimeout(timer);
+  }, [playing, seconds, loop, setSettings]);
 
   if (!container || !current || current.canvasId !== container.id) {
     return <div className="p-4 text-sm text-[var(--ds-fg)]">{t('loading')}</div>;
@@ -57,11 +98,25 @@ function LayersTab({ container }: PanelContext) {
     setSettings((s) => ({ ...s, [id]: { ...s[id], ...change } }));
   const moveTo = (id: string, to: number) => setOrders((o) => ({ ...o, [canvasId]: moveLayer(ids, id, to) }));
   const reset = () => {
+    setPlayback(null);
     setSettings((s) => Object.fromEntries(Object.entries(s).filter(([k]) => !items.some((it) => it.id === k))));
     setOrders((o) => Object.fromEntries(Object.entries(o).filter(([k]) => k !== canvasId)));
   };
-  const showAll = () =>
+  const showAll = () => {
+    setPlayback(null);
     setSettings((s) => ({ ...s, ...Object.fromEntries(items.map((it) => [it.id, { ...s[it.id], visible: true }])) }));
+  };
+  const togglePlay = () => {
+    if (playing) {
+      setPlayback(null);
+      return;
+    }
+    // 表示中の画像だけを使う。2 枚に満たなければ、すべてを使う
+    const shown = bottomFirst.filter((it) => isLayerVisible(it, settings)).map((it) => it.id);
+    const playIds = shown.length >= 2 ? shown : ids;
+    setSettings((s) => playbackSettings(s, playIds, 0));
+    setPlayback({ canvasId, ids: playIds, step: 0 });
+  };
 
   return (
     <div className="p-3 text-sm text-[var(--ds-fg)]">
@@ -73,6 +128,42 @@ function LayersTab({ container }: PanelContext) {
         <button type="button" onClick={reset} className="text-xs underline">
           {t('reset')}
         </button>
+      </div>
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mb-2 rounded border border-[var(--ds-border)] p-2">
+        <button
+          type="button"
+          onClick={togglePlay}
+          aria-pressed={!!playing}
+          title={t(playing ? 'pause' : 'play')}
+          className="inline-flex items-center gap-1 rounded border border-[var(--ds-border)] px-2 py-1 text-xs hover:bg-gray-100 dark:hover:bg-gray-800"
+        >
+          <PlayIcon playing={!!playing} />
+          {t(playing ? 'pause' : 'play')}
+        </button>
+        <label className="inline-flex items-center gap-1 text-xs">
+          {t('interval')}
+          <select
+            value={seconds}
+            onChange={(e) => setSeconds(Number(e.target.value))}
+            className="rounded border border-[var(--ds-border)] bg-[var(--ds-surface)] px-1 py-0.5"
+          >
+            {INTERVALS.map((v) => (
+              <option key={v} value={v}>
+                {v}
+              </option>
+            ))}
+          </select>
+          {t('seconds')}
+        </label>
+        <label className="inline-flex items-center gap-1 text-xs">
+          <input type="checkbox" checked={loop} onChange={(e) => setLoop(e.target.checked)} />
+          {t('loop')}
+        </label>
+        {playing && (
+          <span className="text-xs text-gray-500 dark:text-gray-400" aria-live="polite">
+            {t('playStep', { n: playing.step + 1, total: playing.ids.length })}
+          </span>
+        )}
       </div>
       <ol className="space-y-2">
         {topFirst.map((it) => {

@@ -2,6 +2,7 @@
 //
 // 読むもの: Canvas の `annotations`（AnnotationPage の並び）と、テキストを画像に描く
 // painting の注釈。painting（画像など）と supplementing（字幕など）は別の場所で扱うので除く。
+// ただし画像の一部を指す supplementing（OCR の行など）は、ほかの注釈と同じに出す。
 // 領域は Canvas 座標の「矩形・点・多角形・Canvas 全体」にそろえる。
 
 import type { ManifestV4 } from '../types/iiif';
@@ -386,13 +387,15 @@ export const readCanvasAnnotations = (
     for (const raw of asList(page.items)) {
       if (!isObj(raw)) continue;
       const motivations = motivationsOf(raw);
-      if (motivations.includes('supplementing')) continue;
       const bodies: AnnotationBodyItem[] = [];
       bodyItems(raw.body, bodies, { n: 0 });
       const painting = motivations.includes('painting');
       if (painting && !bodies.some((b) => b.kind === 'text')) continue; // images etc. are painted elsewhere
       const target = parseTarget(raw.target, canvasSize?.width, canvasSize?.height);
       if (!target || target.canvasId !== canvasId) continue;
+      // supplementing on the whole Canvas (captions, transcripts) is shown elsewhere; on a region of the
+      // image it is text read from that place (OCR), and is drawn like other annotations
+      if (motivations.includes('supplementing') && target.region.type === 'canvas') continue;
       const id = str(raw.id) ?? `${canvasId}#annotation-${out.length}`;
       if (seen.has(id)) continue;
       seen.add(id);

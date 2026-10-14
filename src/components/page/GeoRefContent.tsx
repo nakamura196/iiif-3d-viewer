@@ -4,15 +4,15 @@ import type { NextPage } from 'next';
 import { Suspense } from 'react';
 import { annotationsAtom, manifestUrlAtom, selectedAnnotationIdAtom } from '@nakamura196/iiif-viewer';
 import { useAtom } from 'jotai';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useMemo, useState, useRef } from 'react';
 import { fetchManifest } from '@nakamura196/iiif-viewer/core';
 import { manifestAtom } from '@nakamura196/iiif-viewer';
-import { CanvasComponent } from '@nakamura196/iiif-viewer';
+import { CanvasComponent, GeoImageView, useCanvasImages } from '@nakamura196/iiif-viewer';
 import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
 import MapView from '@/components/map/MapView';
 import { convertToV4 } from '@nakamura196/iiif-viewer/core';
-import { parseManifestV4, geoAnnotations, type GeoFeature } from '@nakamura196/iiif-viewer/core';
+import { parseManifestV4, geoAnnotations, geoFeatureIdOf, type GeoFeature } from '@nakamura196/iiif-viewer/core';
 import { AnnotationCard } from '@nakamura196/iiif-viewer';
 import { SidePanel } from '@nakamura196/iiif-viewer';
 import { useTranslations, useLocale } from 'next-intl';
@@ -34,6 +34,9 @@ const GeoRefContent: NextPage = () => {
   const [manifestUrl, setManifestUrl] = useAtom(manifestUrlAtom);
   const [, setManifest] = useAtom(manifestAtom);
   const [glbUrl, setGlbUrl] = useState<string | null>(null);
+  // 地点が画像（絵図・古地図）に付いているときは、その Canvas を 3D の代わりに出す
+  const [geoCanvasId, setGeoCanvasId] = useState<string | undefined>(undefined);
+  const geoCanvas = useCanvasImages(geoCanvasId ? manifestUrl : null, geoCanvasId);
   const [attribution, setAttribution] = useState<string | undefined>(undefined);
   const [annotations, setAnnotations] = useAtom(annotationsAtom);
   const [selectedAnnotationId, setSelectedAnnotationId] = useAtom(selectedAnnotationIdAtom);
@@ -54,8 +57,9 @@ const GeoRefContent: NextPage = () => {
     fetchManifest(manifestUrl).then((raw) => {
       if (!raw) return;
       const manifest = convertToV4(raw);
-      const { modelUrl, geoFeatures, annotations } = parseManifestV4(manifest);
+      const { modelUrl, geoFeatures, annotations, geoCanvasId } = parseManifestV4(manifest);
       setGlbUrl(modelUrl);
+      setGeoCanvasId(geoCanvasId);
       setManifest(manifest);
       setAttribution(getAttribution(manifest as unknown as Record<string, unknown>, locale));
       setAnnotations(geoAnnotations(geoFeatures, annotations));
@@ -66,6 +70,17 @@ const GeoRefContent: NextPage = () => {
   const handleManifestSubmit = async (manifestUrl: string) => {
     setManifestUrl(manifestUrl);
   };
+
+  const imagePoints = useMemo(
+    () =>
+      geoFeatures.map((f, idx) => ({
+        id: geoFeatureIdOf(f, idx),
+        title: f.properties.title,
+        x: f.properties.resourceCoords[0],
+        y: f.properties.resourceCoords[1],
+      })),
+    [geoFeatures]
+  );
 
   const handleFeatureClick = (id: string) => {
     setSelectedAnnotationId(id);
@@ -98,11 +113,19 @@ const GeoRefContent: NextPage = () => {
                 onFeatureClick={handleFeatureClick}
               />
             </div>
-            {/* 3D Viewer */}
+            {/* 3D Viewer, or the georeferenced picture */}
             <div className="flex-1 min-h-0 lg:h-full lg:flex-[2] relative bg-gray-100 dark:bg-gray-900 border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700">
               <div className="absolute top-4 left-4 z-10 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow text-sm font-medium text-gray-700 dark:text-gray-300">
-                {t('viewer3d')}
+                {geoCanvasId ? t('image') : t('viewer3d')}
               </div>
+              {geoCanvas && (
+                <GeoImageView
+                  canvas={geoCanvas}
+                  points={imagePoints}
+                  selectedId={selectedAnnotationId}
+                  onSelect={handleFeatureClick}
+                />
+              )}
               {glbUrl && (
                 <Suspense
                   fallback={

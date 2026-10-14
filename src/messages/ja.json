@@ -67,6 +67,7 @@
   "GeoRef": {
     "map": "地図",
     "viewer3d": "3D",
+    "image": "画像",
     "annotations": "アノテーション",
     "searchPlaceholder": "検索...",
     "noAnnotations": "アノテーションがありません",

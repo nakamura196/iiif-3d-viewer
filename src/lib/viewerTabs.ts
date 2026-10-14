@@ -10,6 +10,7 @@ export const VIEWER_TABS = [
   'annotationTranscript',
   'canvasAnnotations',
   'annotations',
+  'inference',
 ] as const;
 
 export type ViewerTab = (typeof VIEWER_TABS)[number];

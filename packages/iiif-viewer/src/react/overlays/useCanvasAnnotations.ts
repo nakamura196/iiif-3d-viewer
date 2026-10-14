@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useAtomValue } from 'jotai';
 import {
   annotationSourcesOf,
   annotationStyles,
@@ -14,6 +15,7 @@ import {
   type ContainerInfo,
   type ManifestV4,
 } from '../../core';
+import { localAnnotationPagesAtom } from './canvasAnnotationState';
 
 const MAX_FOLLOWED_PAGES = 5;
 
@@ -21,7 +23,7 @@ const MAX_FOLLOWED_PAGES = 5;
 // 取得は 1 回だけにする（失敗は覚えず、次に開いたとき取り直す）。
 const pageCache = new Map<string, Promise<unknown>>();
 
-const fetchPage = (url: string): Promise<unknown> => {
+export const fetchPage = (url: string): Promise<unknown> => {
   let p = pageCache.get(url);
   if (!p) {
     p = fetch(url, { headers: { Accept: 'application/ld+json, application/json' } }).then((r) => {
@@ -68,6 +70,7 @@ export interface CanvasAnnotationsState {
 }
 
 // Canvas の注釈。マニフェストに書かれたものはすぐ、参照だけのページは取得してから足す。
+// 閲覧者の手元で作ったページ（localAnnotationPagesAtom）も足す。
 export function useCanvasAnnotations(
   manifest: ManifestV4 | null | undefined,
   container: ContainerInfo | undefined,
@@ -112,12 +115,17 @@ export function useCanvasAnnotations(
   }, [canvasId, key, sources, width, height]);
 
   const current = fetched?.key === key ? fetched : null;
+  const local = useAtomValue(localAnnotationPagesAtom);
   const annotations = useMemo(
     () =>
       canvasId
-        ? readCanvasAnnotations(canvasId, [...sources.pages, ...(current?.pages ?? [])], { width, height })
+        ? readCanvasAnnotations(
+            canvasId,
+            [...sources.pages, ...(current?.pages ?? []), ...local.filter((l) => l.canvasId === canvasId).map((l) => l.page)],
+            { width, height },
+          )
         : [],
-    [canvasId, sources, current, width, height],
+    [canvasId, sources, current, local, width, height],
   );
   const sheetUrls = useMemo(
     () => [...new Set(annotations.map((a) => a.stylesheetUrl).filter((u): u is string => !!u))].slice(0, 5),

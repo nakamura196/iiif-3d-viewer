@@ -9,6 +9,7 @@
 | 画像の上に重ねる表示 | `src/react/overlays/<名前>Overlay.tsx`（型は `overlays/types.ts`） | `overlays/registry.ts` に 1 行 |
 | 読み取り（React に依存しない） | `src/core/features/<機能>.ts` と `<機能>.test.ts` | 無し（`features/index.ts` に用意済み） |
 | 文言 | `src/react/messages/features/<機能>.{ja,en}.json` | 無し（`messages/index.ts` が足し合わせる） |
+| 推論のモデル（ブラウザ内の OCR など） | `src/react/inference/models/<名前>.ts`（型は `models/types.ts`。重い処理は `load()` の先の `<名前>.run.ts`）。React に依存しない前処理・後処理は `src/core/features/inference/` | `models/registry.ts` に 1 行 |
 
 機能の枠（用意済み）: `image`（画像・深いズーム・重ね表示）、`structure`（ページ送り・目次）、`temporal`（時間の指定・複数メディア）、`about`（来歴・権利・リンク）、`annotations`（Canvas 上の注釈）。
 

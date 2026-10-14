@@ -7,12 +7,11 @@ import {
   imageRequestUrl,
   intersect,
   parseImageInfo,
-  pickScaleFactor,
   placementOf,
   resolveRegion,
   singleImageUrl,
   tileSchemeOf,
-  tilesCovering,
+  tilesForView,
   type ImageInfo,
   type ImageLayer,
   type ImageServiceRef,
@@ -153,7 +152,7 @@ export default function ImageLayerView({
     : imageRequestUrl(service, region, baseWidth);
 
   // tiles for what is visible now
-  let tiles: ReturnType<typeof tilesCovering> = [];
+  let tiles: ReturnType<typeof tilesForView> = [];
   const scheme = tileSchemeOf(info);
   if (scheme && stage.boxW > 0 && stage.stageW > 0) {
     const toCanvas = canvasWidth / stage.stageW;
@@ -165,8 +164,7 @@ export default function ImageLayerView({
     const local = canvasRectToLayer(place, visibleCanvas);
     const visible = intersect({ x: local.x + region.x, y: local.y + region.y, w: local.w, h: local.h }, region);
     if (visible) {
-      const sf = pickScaleFactor(scheme.scaleFactors, screenPerSource);
-      tiles = tilesCovering(service, info, scheme, sf, visible);
+      tiles = tilesForView(service, info, scheme, screenPerSource, visible);
     }
   }
 
