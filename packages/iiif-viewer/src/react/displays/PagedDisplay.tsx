@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import type { ContainerInfo } from '../../core';
 import { labelIn } from '../../core';
 import { useLocale } from '../env';
@@ -195,7 +195,11 @@ function PagedDisplay(props: DisplayProps) {
   const { viewing, order, groups } = usePageOrder(manifest, containers);
   const host = useRef<HTMLDivElement>(null);
   useSeekOnFocus(container);
-  const compare = useAtomValue(compareAtom);
+  const [compare, setCompare] = useAtom(compareAtom);
+  // ページ一覧など go を通らない移動で先頭から離れたら、並べた表示をやめる（戻っても再び並べない）
+  useEffect(() => {
+    if (compare.length > 0 && compare[0] !== selectedIndex) setCompare([]);
+  }, [compare, selectedIndex, setCompare]);
 
   // 0540: content state が複数の Canvas を指しているときは、指された順に並べる（先頭が選択中のとき）
   const comparing = compare.length >= 2 && compare[0] === selectedIndex;
