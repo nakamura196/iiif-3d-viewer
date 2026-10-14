@@ -12,6 +12,7 @@ import {
 import { manifestAtom } from '../atoms';
 import { useLocale } from '../env';
 import { selectedCanvasAnnotationAtom } from './canvasAnnotationState';
+import { storyFrameAtom, storyOpenAtom } from './storyState';
 import type { Overlay, OverlayProps } from './types';
 import { useCanvasAnnotations } from './useCanvasAnnotations';
 
@@ -34,9 +35,13 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
   const manifest = useAtomValue(manifestAtom);
   const { annotations, styleOf } = useCanvasAnnotations(manifest, container);
   const [selected, setSelected] = useAtom(selectedCanvasAnnotationAtom);
+  // While a story is read, only the current scene may be framed (thin line, no fill), and only when asked.
+  const storyOpen = useAtomValue(storyOpenAtom);
+  const storyFrame = useAtomValue(storyFrameAtom);
 
   const drawn = annotations
     .filter((a) => a.region.type !== 'canvas' && !a.layer) // layer annotations are drawn by the layer itself
+    .filter((a) => !storyOpen || (storyFrame && a.id === selected))
     .sort((a, b) => areaOf(b) - areaOf(a));
   if (drawn.length === 0 || !(canvasWidth > 0) || !(canvasHeight > 0)) return null;
 
@@ -78,7 +83,8 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
                 ...st,
                 left: `${p.left}%`,
                 top: `${p.top}%`,
-                transform: 'translate(-50%, -50%)',
+                // keep the mark the same size on screen at any zoom
+                transform: 'translate(-50%, -50%) scale(calc(1 / var(--image-scale, 1)))',
               }}
             />
           );
@@ -102,7 +108,7 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
                   {...common}
                   points={ring.map((pt) => pt.join(',')).join(' ')}
                   className="pointer-events-auto cursor-pointer"
-                  fill={isSel ? 'rgba(249,115,22,0.30)' : (st.backgroundColor ?? 'rgba(37,99,235,0.15)')}
+                  fill={isSel ? (storyOpen ? 'none' : 'rgba(249,115,22,0.30)') : (st.backgroundColor ?? 'rgba(37,99,235,0.15)')}
                   stroke={isSel ? '#f97316' : (st.borderColor ?? STROKE)}
                   strokeWidth={2}
                   vectorEffect="non-scaling-stroke"
@@ -129,11 +135,21 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') toggle(e);
               }}
-              className={`absolute pointer-events-auto cursor-pointer overflow-hidden border-2 ${
-                isSel ? 'border-orange-500 bg-orange-500/25' : 'border-blue-600 bg-blue-600/10'
+              className={`absolute pointer-events-auto cursor-pointer overflow-hidden ${
+                isSel ? (storyOpen ? '' : 'bg-orange-500/10') : 'bg-blue-600/10'
               }`}
               style={{
                 ...st,
+                // The outline is an inset shadow divided by the zoom, so it stays 2px on screen.
+                // A CSS border never gets thinner than one pixel before the stage is magnified (at 100x it
+                // is 100px wide), and an svg non-scaling-stroke does not see the CSS transform either.
+                // A border the manifest's stylesheet asks for (recipe 0045) is kept as it is.
+                ...(!isSel && (st.border || st.borderStyle || st.borderWidth)
+                  ? {}
+                  : {
+                      borderStyle: 'none',
+                      boxShadow: `inset 0 0 0 calc(2px / var(--image-scale, 1)) ${isSel ? '#f97316' : (st.borderColor ?? STROKE)}`,
+                    }),
                 left: `${b.left}%`,
                 top: `${b.top}%`,
                 width: `${b.width}%`,

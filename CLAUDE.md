@@ -1,0 +1,19 @@
+@AGENTS.md
+
+# Kasane で作業するときの決まり
+
+機能の足し方（ファイルの置き場所・並行作業の決まり）は `packages/iiif-viewer/EXTENDING.md` にある。
+
+## 新しい機能を足したら、紹介の場所に載せるかを必ず検討する（標準の作業）
+
+機能を作っただけでは、サイトを訪れた人は気づかない。新しい機能・目に見える改善を足したときは、
+PR を出す前に次の 3 つを 1 つずつ検討し、**載せるか・載せないかと、その理由を PR の本文に書く**。
+載せないと決めるのはかまわない（小さな修正・内部の作り替えなど）。検討を飛ばさない。
+
+1. **ユースケース** — `src/lib/usecases.ts` に 1 件足す。実在の資料を、その機能が効く開き方（`tab=` など）で開く。
+   サムネイルは `scripts/capture-thumbnails.mjs` で撮る（`public/thumbnails/usecases/<id>.webp`）
+2. **お知らせ** — トップページの一覧。`src/components/page/HomeContent.tsx` の `newsItems` と、
+   `src/messages/{ja,en}.json` の `News.item<N>{Date,Title}` に足す（新しいものを上に）
+3. **サンプル** — 機能を試せる短いマニフェストがあるなら `src/lib/samples.ts`（IIIF Cookbook のレシピなど）
+
+あわせて、使い方の動画（ユースケースの `video`）が要るかも一言添える。作るかどうかは本人が決める。

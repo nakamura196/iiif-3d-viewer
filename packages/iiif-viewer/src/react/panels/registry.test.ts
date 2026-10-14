@@ -6,6 +6,7 @@ describe('PANELS', () => {
   it('collects the panels from the folder, ordered by order', () => {
     expect(PANEL_IDS).toEqual([
       'metadata',
+      'story',
       'pages',
       'structure',
       'layers',

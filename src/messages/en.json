@@ -45,7 +45,9 @@
     "item12Date": "2026-10-14",
     "item12Title": "More maps: a Map tab in the side panel, georeferencing for manifests whose points sit on the image, and placing georeferenced pictures over the map",
     "item13Date": "2026-10-14",
-    "item13Title": "New Inference tab: runs NDL Kotenseki OCR-Lite and NDLOCR-Lite in your browser to read the text of the image on screen. The image is never sent anywhere"
+    "item13Title": "New Inference tab: runs NDL Kotenseki OCR-Lite and NDLOCR-Lite in your browser to read the text of the image on screen. The image is never sent anywhere",
+    "item14Date": "2026-10-14",
+    "item14Title": "New Story tab: step through the annotations of a manifest, gliding to each scene as you read. Existing tour manifests such as the Wakō zukan story open as they are"
   },
   "Input": {
     "title": "Open an IIIF manifest",
@@ -176,7 +178,8 @@
       "curation": "Curation",
       "search": "Search",
       "ocr": "OCR",
-      "auth": "Authentication"
+      "auth": "Authentication",
+      "story": "Story"
     }
   },
   "Search": {

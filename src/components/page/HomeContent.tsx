@@ -19,6 +19,12 @@ export default function HomeContent() {
   // 新しいものが上。表示は直近の 8 件まで（古い項目は文言ごと消す）
   const newsItems = [
     {
+      date: tNews('item14Date'),
+      title: tNews('item14Title'),
+      // ストーリータブを開いた状態の例（倭寇図巻）
+      href: `/viewer/?iiif-content=${encodeURIComponent('https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/cp/story/m.json')}&tab=story`,
+    },
+    {
       date: tNews('item13Date'),
       title: tNews('item13Title'),
       // 推論タブを開いた状態の例（NDL「銘尽」6 コマ目）

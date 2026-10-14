@@ -1,0 +1,189 @@
+{
+ "@context": [
+  "http://iiif.io/api/presentation/3/context.json",
+  "http://www.w3.org/ns.anno.jsonld"
+ ],
+ "behavior": [
+  "individuals"
+ ],
+ "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/manifest.json",
+ "items": [
+  {
+   "annotations": [
+    {
+     "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/annopage/p1",
+     "items": [
+      {
+       "body": {
+        "format": "text/html",
+        "type": "TextualBody",
+        "value": "\n        \n            <h2 class=\"annotatedzoom-annotation-detail__label\">\n            （１）倭寇船の登場\n        </h2>\n        \n        <div class=\"annotatedzoom-annotation-detail__content\">\n            \n            <p>\n                画面右端から小・中・大と、三隻の倭寇船が描かれ、遠い海上からだんだん近づいてきているさまが表現される。\n            </p>\n            \n            \n        </div>"
+       },
+       "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1/m4",
+       "motivation": "describing",
+       "target": {
+        "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1#xywh=80503,638,9211,5359",
+        "type": "Canvas"
+       },
+       "type": "Annotation"
+      },
+      {
+       "body": {
+        "format": "text/html",
+        "type": "TextualBody",
+        "value": "\n        \n        <div class=\"annotatedzoom-annotation-detail__content\">\n            \n            <p>\n                倭寇船（小）\n            </p>\n            \n            \n        </div>"
+       },
+       "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1/m5",
+       "motivation": "describing",
+       "target": {
+        "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1#xywh=88931,868,366,308",
+        "type": "Canvas"
+       },
+       "type": "Annotation"
+      },
+      {
+       "body": {
+        "format": "text/html",
+        "type": "TextualBody",
+        "value": "\n        \n        <div class=\"annotatedzoom-annotation-detail__content\">\n            \n            <p>\n                倭寇船（中）\n            </p>\n            \n            \n        </div>"
+       },
+       "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1/m6",
+       "motivation": "describing",
+       "target": {
+        "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1#xywh=88398,1108,599,468",
+        "type": "Canvas"
+       },
+       "type": "Annotation"
+      },
+      {
+       "body": {
+        "format": "text/html",
+        "type": "TextualBody",
+        "value": "\n        \n        <div class=\"annotatedzoom-annotation-detail__content\">\n            \n            <p>\n                倭寇船（大）\n            </p>\n            \n            \n        </div>"
+       },
+       "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1/m7",
+       "motivation": "describing",
+       "target": {
+        "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1#xywh=85240,1822,2620,2231",
+        "type": "Canvas"
+       },
+       "type": "Annotation"
+      },
+      {
+       "body": {
+        "format": "text/html",
+        "type": "TextualBody",
+        "value": "\n        \n            <h2 class=\"annotatedzoom-annotation-detail__label\">\n            （２）倭寇の上陸\n        </h2>\n        \n        <div class=\"annotatedzoom-annotation-detail__content\">\n            \n            <p>\n                倭寇船が二隻着岸している。船の上には、筵旗を巻き武器を確認するなど、上陸の準備をしている者たちの姿が描かれ、陸には、すでに船から下り、武器を携え駆けだしていく者たちも見える。手前の船には女性が二人乗っている。どこかから掠奪されてきた女性であろうか。\n            </p>\n            \n            \n        </div>"
+       },
+       "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1/m9",
+       "motivation": "describing",
+       "target": {
+        "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1#xywh=71906,632,8489,5461",
+        "type": "Canvas"
+       },
+       "type": "Annotation"
+      },
+      {
+       "body": {
+        "format": "text/html",
+        "type": "TextualBody",
+        "value": "\n        \n        <div class=\"annotatedzoom-annotation-detail__content\">\n            \n            <p>\n                ざんばら髪に裸足で、日本刀や長弓を持ち、また日本風の兜を被る者たち。これらの風体により倭人であることが示されている。\n            </p>\n            \n            \n        </div>"
+       },
+       "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1/m10",
+       "motivation": "describing",
+       "target": {
+        "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1#xywh=72067,3622,2211,2335",
+        "type": "Canvas"
+       },
+       "type": "Annotation"
+      },
+      {
+       "body": {
+        "format": "text/html",
+        "type": "TextualBody",
+        "value": "\n        \n            <h2 class=\"annotatedzoom-annotation-detail__label\">\n            （３）形勢観望\n        </h2>\n        \n        <div class=\"annotatedzoom-annotation-detail__content\">\n            \n            <p>\n                岩の上で、一人の肩の上にもう一人が立ち、長槍を支えに高所から形勢を眺めている。岩の下には刀を手にした者たちがたむろし、弓矢で鳥を狙っている者もいる。注目されるのは、鉄砲らしき物を持っている者がいることで、これが図巻冒頭部に弘治年号が発見されるまで、本図巻が16世紀の後期倭寇を描いたものであるという説の根拠となっていた。\n            </p>\n            \n            \n        </div>"
+       },
+       "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1/m15",
+       "motivation": "describing",
+       "target": {
+        "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1#xywh=59273,573,12588,5549",
+        "type": "Canvas"
+       },
+       "type": "Annotation"
+      }
+     ],
+     "type": "AnnotationPage"
+    }
+   ],
+   "height": 6615,
+   "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1",
+   "items": [
+    {
+     "items": [
+      {
+       "body": {
+        "format": "image/jpeg",
+        "height": 6615,
+        "id": "https://cantaloupe.lab.hi.u-tokyo.ac.jp/iiif/2/clioimg%2Fwakozukan.tif/full/2000,/0/default.jpg",
+        "service": [
+         {
+          "id": "https://cantaloupe.lab.hi.u-tokyo.ac.jp/iiif/2/clioimg%2Fwakozukan.tif",
+          "profile": "level0",
+          "type": "ImageService2"
+         }
+        ],
+        "type": "Image",
+        "width": 90916
+       },
+       "motivation": "painting",
+       "target": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/iiif/wakozukan/canvas/p1",
+       "type": "Annotation"
+      }
+     ],
+     "type": "AnnotationPage"
+    }
+   ],
+   "label": {
+    "en": [
+     "Image 1"
+    ],
+    "ja": [
+     "画像 1"
+    ]
+   },
+   "type": "Canvas",
+   "width": 90916
+  }
+ ],
+ "label": {
+  "en": [
+   "Wako Zukan"
+  ],
+  "ja": [
+   "倭寇図巻"
+  ]
+ },
+ "metadata": [
+  {
+   "label": {
+    "en": [
+     "test_label"
+    ]
+   },
+   "value": {
+    "en": [
+     "test_value"
+    ]
+   }
+  }
+ ],
+ "seeAlso": [
+  {
+   "@format": "application/ld+json",
+   "id": "https://collections.vam.ac.uk/item/O1023003.jsonld",
+   "type": "Dataset"
+  }
+ ],
+ "type": "Manifest",
+ "viewingDirection": "left-to-right"
+}

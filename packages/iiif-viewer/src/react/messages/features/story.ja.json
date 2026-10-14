@@ -1,0 +1,14 @@
+{
+  "Info": {
+    "story": "ストーリー"
+  },
+  "Story": {
+    "prev": "前へ",
+    "next": "次へ",
+    "position": "{n} / {total}",
+    "steps": "場面の一覧",
+    "step": "場面 {n}",
+    "whole": "全体を見る",
+    "frame": "場面の枠を表示"
+  }
+}

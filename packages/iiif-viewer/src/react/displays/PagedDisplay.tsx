@@ -8,6 +8,7 @@ import { useLocale } from '../env';
 import { usePlayback } from '../playback';
 import { flatDisplay } from './FlatDisplay';
 import { imageCanvasDisplay } from './ImageCanvasDisplay';
+import { storyOpenAtom } from '../overlays/storyState';
 import { compareAtom, compareMultiAtom, focusAtom, usePageOrder } from './structureState';
 import type { Display, DisplayProps } from './types';
 
@@ -135,9 +136,11 @@ function Strip({
 
 // Draws the region that a content state / table of contents entry points to, over the image.
 // The image element is measured every frame, so the box follows zooming and moving.
+// Not while the story tab is open: the story zooms to its scenes and draws its own frame only on request.
 function RegionHighlight({ host, container }: { host: React.RefObject<HTMLDivElement | null>; container: ContainerInfo }) {
   const focus = useAtomValue(focusAtom);
-  const xywh = focus && focus.target.canvasId === container.id ? focus.target.xywh : undefined;
+  const storyOpen = useAtomValue(storyOpenAtom);
+  const xywh = !storyOpen && focus && focus.target.canvasId === container.id ? focus.target.xywh : undefined;
   const [box, setBox] = useState<{ left: number; top: number; width: number; height: number } | null>(null);
   const cw = container.width;
   const ch = container.height;
