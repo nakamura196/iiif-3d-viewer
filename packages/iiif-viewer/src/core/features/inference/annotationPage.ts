@@ -1,6 +1,6 @@
 // 推論の結果（推論に渡した画像の画素）を、Canvas 座標の W3C / IIIF の AnnotationPage にする。
 // OCR の行は motivation "supplementing"（画像の一部の文字起こし。textGranularity "line"）、
-// 領域は "tagging"（本文は区分名）。どのモデルで作ったかは generator に書く。
+// 領域は "tagging"（本文は区分名）、画像全体の説明文は "describing"。どのモデルで作ったかは generator に書く。
 // 輪郭（polygon）のある領域は、枠（#xywh）ではなく SvgSelector の多角形を target にする。
 import type { InferenceOutput } from './types';
 
@@ -51,7 +51,7 @@ export const toAnnotationPage = (out: InferenceOutput, o: AnnotationPageOptions)
   const { map } = o;
   const generator = { id: o.generator.id, type: 'Software', name: o.generator.name };
   const items = out.items
-    .filter((d) => (out.kind === 'lines' ? !!d.text : !!d.label))
+    .filter((d) => (out.kind === 'regions' ? !!d.label : !!d.text))
     .map((d) => {
       const x = round(map.x + d.x * map.scaleX);
       const y = round(map.y + d.y * map.scaleY);
@@ -64,13 +64,17 @@ export const toAnnotationPage = (out: InferenceOutput, o: AnnotationPageOptions)
             selector: { type: 'SvgSelector', value: svgPolygon(d.polygon, map) },
           }
         : `${o.canvasId}#xywh=${x},${y},${w},${h}`;
+      const textBody = { type: 'TextualBody', value: d.text, format: 'text/plain', ...(out.language ? { language: out.language } : {}) };
+      if (out.kind === 'description') {
+        return { id: o.newId(), type: 'Annotation', motivation: 'describing', body: textBody, target, generator };
+      }
       return out.kind === 'lines'
         ? {
             id: o.newId(),
             type: 'Annotation',
             motivation: 'supplementing',
             textGranularity: 'line',
-            body: { type: 'TextualBody', value: d.text, format: 'text/plain', ...(out.language ? { language: out.language } : {}) },
+            body: textBody,
             target,
             generator,
           }

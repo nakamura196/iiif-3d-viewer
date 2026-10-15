@@ -18,8 +18,11 @@ export interface Detection {
 }
 
 export interface InferenceOutput {
-  /** `lines`: OCR text lines, in reading order. `regions`: boxes with a class name. */
-  kind: 'lines' | 'regions';
+  /**
+   * `lines`: OCR text lines, in reading order. `regions`: boxes with a class name. `description`: text about the
+   * whole image (one item, its box the whole image).
+   */
+  kind: 'lines' | 'regions' | 'description';
   items: Detection[];
   /** Size of the image the model was given (the coordinates of `items`). */
   imageWidth: number;

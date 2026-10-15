@@ -4,13 +4,22 @@
 import { modelById } from './models/registry';
 import type { ModelFile } from './models/types';
 import { readModelFile } from './modelStore';
-import { hasWebGpu, loadOrt, type Backend, type OrtSession } from './ort';
+import { hasWebGpu, loadOrt, type Backend, type OrtModule, type OrtSession } from './ort';
 import type { FromWorker, ToWorker } from './protocol';
 
 const post = (m: FromWorker) => (self as unknown as Worker).postMessage(m);
 
 const sessions = new Map<string, Promise<{ session: OrtSession; backend: Backend }>>();
 let gpu: Promise<boolean> | null = null;
+
+/** Stands in for onnxruntime-web for the models that do not use it (engine `transformers`). */
+const noOrt = new Proxy({} as OrtModule, {
+  // then は Promise.all が「待つ物か」を確かめに見るので、無いと答える
+  get: (_, key) => {
+    if (key === 'then') return undefined;
+    throw new Error('onnxruntime-web is not loaded for this model');
+  },
+});
 
 const sessionOf = (file: ModelFile, prefer: Backend) => {
   const key = `${file.url}|${prefer}`;
@@ -42,7 +51,8 @@ const run = async ({ job, modelId, bitmap, prompt, imageKey }: ToWorker) => {
     const model = modelById(modelId);
     if (!model) throw new Error(`Unknown model: ${modelId}`);
     post({ type: 'progress', job, stage: 'load', done: 0, total: 1 });
-    const [{ run: runner }, ort] = await Promise.all([model.load(), loadOrt()]);
+    // transformers.js のモデルは、自前の onnxruntime-web を持つので、こちらの分は読まない
+    const [{ run: runner }, ort] = await Promise.all([model.load(), model.engine === 'transformers' ? noOrt : loadOrt()]);
     const backends = new Set<Backend>();
     const t0 = performance.now();
     const output = await runner({
@@ -56,6 +66,7 @@ const run = async ({ job, modelId, bitmap, prompt, imageKey }: ToWorker) => {
         backends.add(s.backend);
         return s;
       },
+      usedBackend: (b) => backends.add(b),
       progress: (stage, done, total) => post({ type: 'progress', job, stage, done, total }),
       prompt,
       imageKey,
