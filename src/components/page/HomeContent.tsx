@@ -33,6 +33,7 @@ export default function HomeContent() {
     { key: 'specP3', href: 'https://iiif.io/api/presentation/3.0/' },
     { key: 'specImage', href: 'https://iiif.io/api/image/3.0/' },
     { key: 'specContentState', href: 'https://iiif.io/api/content-state/1.0/' },
+    { key: 'specAuth', href: 'https://iiif.io/api/auth/2.0/' },
     { key: 'specGeoref', href: 'https://iiif.io/api/extension/georef/' },
     // 研究段階のため公開ページには出さない（掲載の了承が得られたら戻す）
     // { key: 'specRegionTag', href: 'https://github.com/nakamura196/iiif-region-tag-extension' },
