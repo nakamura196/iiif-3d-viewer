@@ -392,3 +392,5 @@ export function contentSearchAnnotationPage(canvasId: string, matches: ContentSe
 
 /** Text Granularity の決まった単位。大きい順。 */
 export const TEXT_GRANULARITIES = ['page', 'block', 'paragraph', 'line', 'word', 'glyph'] as const;
+
+export * from './local';

@@ -113,3 +113,72 @@ test('見開きの両ページにも当たりの印を出す（MDZ の 2・3 コ
     await expect(layer.locator('[data-annotation-id]').first()).toBeVisible();
   }
 });
+
+// 手元の注釈を探す。窓口の無い資料（1 ページ目は注釈を書き込み、2 ページ目は参照だけのページ）と、
+// 窓口のある資料で「探す先」を切り替える。
+test('手元の注釈: 窓口が無くても、書かれた注釈と参照先の注釈を探せる', async ({ page }) => {
+  await serveBook(page);
+  const line = (n: number, id: string, value: string, xywh: string) => ({
+    id: `${BASE}/local/${id}`,
+    type: 'Annotation',
+    motivation: 'supplementing',
+    textGranularity: 'line',
+    body: { type: 'TextualBody', value, format: 'text/plain' },
+    target: `${BASE}/canvas/p${n}#xywh=${xywh}`,
+  });
+  const plain = {
+    ...manifest,
+    id: `${BASE}/plain`,
+    service: undefined,
+    items: [
+      { ...canvas(1), annotations: [{ id: `${BASE}/p1/notes`, type: 'AnnotationPage', items: [line(1, 'a', '源氏物語 桐壺', '100,100,400,50')] }] },
+      { ...canvas(2), annotations: [{ id: `${BASE}/p2/notes`, type: 'AnnotationPage' }] },
+    ],
+  };
+  const json = (body: unknown) => ({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(body) });
+  await page.route(`${BASE}/plain`, (r) => r.fulfill(json(plain)));
+  await page.route(`${BASE}/p2/notes`, (r) =>
+    r.fulfill(json({ id: `${BASE}/p2/notes`, type: 'AnnotationPage', items: [line(2, 'b', '源氏物語 帚木', '50,300,500,60')] })),
+  );
+  await page.goto(`/ja/viewer/?iiif-content=${encodeURIComponent(`${BASE}/plain`)}&tab=contentSearch`);
+
+  // 窓口が無いので「探す先」は出ない
+  await expect(page.getByRole('group', { name: '探す先' })).toHaveCount(0);
+  const box = page.getByPlaceholder('資料の中の文字を探す');
+  await box.fill('源氏');
+  await box.press('Enter');
+  await expect(page.getByText('「源氏」: 2 件（全 2 件）')).toBeVisible();
+  // 2 ページ目（参照先から取った注釈）を押すと移る
+  await page.getByRole('button', { name: /帚木/ }).click();
+  await expect(page.getByText('2 / 2')).toBeVisible();
+  await expect(page.locator(`[data-overlay="annotations"] [data-annotation-id^="${BASE}/local/b#search"]`)).toBeVisible();
+});
+
+test('手元の注釈: 窓口のある資料では「探す先」で切り替える', async ({ page }) => {
+  await serveBook(page);
+  const withNotes = {
+    ...manifest,
+    id: `${BASE}/both`,
+    items: [
+      {
+        ...canvas(1),
+        annotations: [
+          {
+            id: `${BASE}/p1/notes`,
+            type: 'AnnotationPage',
+            items: [{ id: `${BASE}/note`, type: 'Annotation', motivation: 'commenting', body: { type: 'TextualBody', value: 'A Bird on the roof' }, target: `${BASE}/canvas/p1#xywh=1,1,10,10` }],
+          },
+        ],
+      },
+      canvas(2),
+    ],
+  };
+  await page.route(`${BASE}/both`, (r) =>
+    r.fulfill({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body: JSON.stringify(withNotes) }),
+  );
+  await page.goto(`/ja/viewer/?iiif-content=${encodeURIComponent(`${BASE}/both`)}&tab=contentSearch&q=bird`);
+  await expect(page.getByText('「bird」: 2 件（全 5 件）')).toBeVisible();
+  await page.getByRole('group', { name: '探す先' }).getByRole('button', { name: 'このビューアの注釈' }).click();
+  await expect(page.getByText('「bird」: 1 件（全 1 件）')).toBeVisible();
+  await expect(page.locator('mark', { hasText: 'Bird' })).toBeVisible();
+});

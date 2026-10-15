@@ -6,6 +6,9 @@ import type { ContainerInfo, ManifestV4 } from '../../../core';
 import { useTranslations } from '../../env';
 import { PANELS } from '../../panels/registry';
 import { annotationsAtom } from '../../atoms';
+import { inferenceResultsAtom } from '../../inference/state';
+import { localAnnotationPagesAtom } from '../../overlays/canvasAnnotationState';
+import { CONTENT_SEARCH_SOURCE } from '../../panels/ContentSearchPanel';
 
 // 既知のタブ名。機能を足すと増えるので、任意の文字列も受ける。
 export type InfoTab = 'metadata' | 'annotations' | 'transcript' | (string & {});
@@ -30,7 +33,11 @@ const Info = ({ tab, onTabChange, container, manifest }: Props) => {
   const t = useTranslations('Info');
   const [inner, setInner] = useState<InfoTab | null>(null);
   const annotationCount = useAtomValue(annotationsAtom).length;
-  const ctx = { container, manifest, annotationCount };
+  const localPages = useAtomValue(localAnnotationPagesAtom);
+  const inferenceCount = Object.keys(useAtomValue(inferenceResultsAtom)).length;
+  // 文字の検索の印そのものは数えない（印だけが残ってタブが消えなくなるため）
+  const localAnnotationCount = localPages.filter((l) => l.source !== CONTENT_SEARCH_SOURCE).length + inferenceCount;
+  const ctx = { container, manifest, annotationCount, localAnnotationCount };
   const available = PANELS.filter((p) => p.available(ctx));
   const ids = available.map((p) => p.id);
   // 「資料情報」は前の「資料情報（about）」タブも兼ねる。古いリンクの ?tab=about はそこへ

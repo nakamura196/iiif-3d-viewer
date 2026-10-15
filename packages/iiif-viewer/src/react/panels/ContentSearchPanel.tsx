@@ -1,16 +1,21 @@
 'use client';
 
-import { atom, useAtom, useSetAtom } from 'jotai';
+import { atom, useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   TEXT_GRANULARITIES,
+  collectManifestAnnotations,
   containersOf,
   contentSearchAnnotationPage,
   fetchContentSearchTerms,
   findContentSearchService,
   groupMatchesByCanvas,
   labelIn,
+  manifestHasCanvasAnnotations,
+  readCanvasAnnotations,
   runContentSearch,
+  searchLocalAnnotations,
+  type LocalSearchSource,
   type ContentSearchMatch,
   type ContentSearchResult,
   type ContentSearchService,
@@ -18,14 +23,19 @@ import {
 } from '../../core';
 import { navRequestAtom, nextSeq } from '../displays/structureState';
 import { useLocale, useTranslations } from '../env';
-import { localAnnotationPagesAtom, selectedCanvasAnnotationAtom } from '../overlays/canvasAnnotationState';
+import { inferenceResultsAtom } from '../inference/state';
+import { localAnnotationPagesAtom, selectedCanvasAnnotationAtom, type LocalAnnotationPage } from '../overlays/canvasAnnotationState';
+import { fetchPage } from '../overlays/useCanvasAnnotations';
 import type { Panel, PanelContext } from './types';
 
-// 資料の中の文字を探す（IIIF Content Search API 1.0 / 2.0）。窓口はマニフェストの service に書かれたもの。
+// 資料の中の文字を探す。探す先は 2 つ:
+// - 窓口（IIIF Content Search API 1.0 / 2.0）。マニフェストの service に書かれたもの
+// - 手元の注釈。マニフェストの注釈（参照だけのページは取りに行く）と、ブラウザ内の推論の結果
 // 当たりは一覧に出し、画像の上にも印を出す（推論の結果と同じ「手元の注釈」の仕組みを使う）。
 // 押すとそのページに移り、当たった所へ寄る。単位（行・語）が書いてあれば、それで絞り込める。
 
-const SOURCE = 'content-search';
+export const CONTENT_SEARCH_SOURCE = 'content-search';
+const SOURCE = CONTENT_SEARCH_SOURCE;
 const MAX_PAGES = 20;
 const MAX_MATCHES = 2000;
 /** 一覧に一度に出す数（Wellcome は 1 回で 1,753 件を返すことがある） */
@@ -35,14 +45,22 @@ const BUTTON =
   'px-2.5 py-1 rounded border border-gray-300 dark:border-gray-600 text-xs hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-40';
 const PRIMARY = 'px-3 py-1 rounded text-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-40';
 
+/** service: 提供元の窓口。local: 手元の注釈 */
+type Scope = 'service' | 'local';
+
 interface SearchState {
   /** 何回目の検索か。古い検索の応答が後から届いても、新しい結果を上書きしない */
   run: number;
   /** どのマニフェストの検索か（別の資料を開いたら捨てる） */
   manifestId: string;
   q: string;
+  scope: Scope;
   status: 'running' | 'done' | 'error';
   result?: ContentSearchResult;
+  /** 手元の注釈: 取りに行く注釈のページの進み具合 */
+  progress?: { done: number; total: number };
+  /** 手元の注釈: 取りに行けなかった・上限で取りに行かなかったページの数 */
+  missed?: number;
 }
 
 /** 検索の結果。タブを切り替えても残す。Viewer に 1 つ（jotai store ごと）。 */
@@ -51,6 +69,8 @@ let runCounter = 0;
 /** 絞り込む単位（null はすべて） */
 const granularityAtom = atom<string | null>(null);
 const showMarksAtom = atom<boolean>(true);
+/** 選んだ探す先（null は既定: 窓口があれば窓口） */
+const scopeAtom = atom<Scope | null>(null);
 
 const fetchJson = async (url: string): Promise<unknown> => {
   const r = await fetch(url, { headers: { Accept: 'application/ld+json, application/json' }, credentials: 'omit' });
@@ -58,10 +78,25 @@ const fetchJson = async (url: string): Promise<unknown> => {
   return r.json();
 };
 
-const urlQuery = (): string => {
+const urlParam = (name: string): string => {
   if (typeof window === 'undefined') return '';
-  return new URLSearchParams(window.location.search).get('q')?.trim() ?? '';
+  return new URLSearchParams(window.location.search).get(name)?.trim() ?? '';
 };
+const urlQuery = () => urlParam('q');
+
+/** 手元の注釈のうち、検索の対象にするもの（検索の印そのものは除く）。推論の結果は、画像に出していなくても探す。 */
+const localSearchPages = (local: LocalAnnotationPage[], inference: Record<string, { canvasId: string; modelId: string; page: unknown }>) => {
+  const out = local.filter((l) => l.source !== SOURCE);
+  for (const r of Object.values(inference)) {
+    const source = `inference:${r.modelId}`;
+    if (!out.some((l) => l.source === source && l.canvasId === r.canvasId)) out.push({ source, canvasId: r.canvasId, page: r.page });
+  }
+  return out;
+};
+
+/** 手元の注釈で探せるか（タブを出すか）。3D の Scene では探さない。 */
+const canSearchLocal = ({ container, manifest, localAnnotationCount }: PanelContext) =>
+  container?.kind === 'Canvas' && (manifestHasCanvasAnnotations(manifest) || (localAnnotationCount ?? 0) > 0);
 
 const granularityRank = (g: string) => {
   const i = (TEXT_GRANULARITIES as readonly string[]).indexOf(g);
@@ -99,39 +134,65 @@ function MatchText({ match }: { match: ContentSearchMatch }) {
   );
 }
 
-export function ContentSearchPanelBody({ container, manifest }: PanelContext) {
+export function ContentSearchPanelBody(ctx: PanelContext) {
+  const { container, manifest } = ctx;
   const t = useTranslations('ContentSearch');
   const locale = useLocale();
   const service = useMemo(() => findContentSearchService(manifest), [manifest]);
+  const localOk = canSearchLocal(ctx);
   const manifestId = manifest?.id ?? '';
   const [state, setState] = useAtom(contentSearchAtom);
+  const [scopeChoice, setScopeChoice] = useAtom(scopeAtom);
+  const local = useAtomValue(localAnnotationPagesAtom);
+  const inference = useAtomValue(inferenceResultsAtom);
   const [granularity, setGranularity] = useAtom(granularityAtom);
   const [showMarks, setShowMarks] = useAtom(showMarksAtom);
   const setLocal = useSetAtom(localAnnotationPagesAtom);
   const [selected, setSelected] = useAtom(selectedCanvasAnnotationAtom);
   const setRequest = useSetAtom(navRequestAtom);
   const current = state && state.manifestId === manifestId ? state : null;
+  // 窓口があれば窓口から。URL の scope=local か、選び直したときは手元の注釈
+  const wantedScope: Scope = scopeChoice ?? (urlParam('scope') === 'local' ? 'local' : 'service');
+  const scope: Scope = !service ? 'local' : !localOk ? 'service' : wantedScope;
   const [text, setText] = useState(() => current?.q ?? urlQuery());
   const [limit, setLimit] = useState(LIST_STEP);
   const [copied, setCopied] = useState(false);
   const abort = useRef<AbortController | null>(null);
-  const terms = useAutocomplete(service, text);
+  const terms = useAutocomplete(scope === 'service' ? service : undefined, text);
 
-  const search = (q: string) => {
+  const search = (q: string, where: Scope = scope) => {
     const word = q.trim();
     abort.current?.abort();
-    if (!service || !word) return;
+    if (!word || (where === 'service' && !service) || (where === 'local' && !localOk)) return;
     const ctl = new AbortController();
     abort.current = ctl;
     const run = ++runCounter;
     // この検索がまだ最新のときだけ書く（タブを開き直すと abort.current は別物になるため、番号でも見る）
-    const put = (next: Omit<SearchState, 'run' | 'manifestId' | 'q'>) =>
-      setState((prev) => (ctl.signal.aborted || prev?.run !== run ? prev : { run, manifestId, q: word, ...next }));
+    const put = (next: Omit<SearchState, 'run' | 'manifestId' | 'q' | 'scope'>) =>
+      setState((prev) => (ctl.signal.aborted || prev?.run !== run ? prev : { run, manifestId, q: word, scope: where, ...next }));
     setLimit(LIST_STEP);
     setGranularity(null);
     setSelected(null);
-    setState({ run, manifestId, q: word, status: 'running' });
-    runContentSearch(service, word, fetchJson, {
+    setState({ run, manifestId, q: word, scope: where, status: 'running' });
+    if (where === 'local') {
+      const pages = localSearchPages(local, inference);
+      collectManifestAnnotations(manifest, fetchPage, {
+        signal: ctl.signal,
+        onProgress: (done, total) => total > 0 && put({ status: 'running', progress: { done, total } }),
+      }).then(
+        ({ sources, failed, skipped }) => {
+          const fromLocal: LocalSearchSource[] = pages.map((l) => ({
+            canvasId: l.canvasId,
+            annotations: readCanvasAnnotations(l.canvasId, [l.page]),
+          }));
+          const matches = searchLocalAnnotations([...sources, ...fromLocal], word, MAX_MATCHES);
+          put({ status: 'done', result: { matches, truncated: matches.length >= MAX_MATCHES }, missed: failed + skipped });
+        },
+        () => put({ status: 'error' }),
+      );
+      return;
+    }
+    runContentSearch(service!, word, fetchJson, {
       maxPages: MAX_PAGES,
       maxMatches: MAX_MATCHES,
       signal: ctl.signal,
@@ -146,13 +207,13 @@ export function ContentSearchPanelBody({ container, manifest }: PanelContext) {
   // ?q= があれば、開いたときに 1 回だけ探す
   const fromUrl = useRef(false);
   useEffect(() => {
-    if (fromUrl.current || !service) return;
+    if (fromUrl.current || (!service && !localOk)) return;
     fromUrl.current = true;
     const q = urlQuery();
     // eslint-disable-next-line react-hooks/set-state-in-effect -- URL はブラウザでしか読めない
-    if (q && current?.q !== q) search(q);
+    if (q && (current?.q !== q || current.scope !== scope)) search(q);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [service]);
+  }, [service, localOk]);
 
   // タブを閉じても検索は止めない（結果は Viewer の状態に残り、印も出し続ける）。
   // 止めるのは、次の検索を始めたときと「消す」を押したときだけ。
@@ -216,6 +277,8 @@ export function ContentSearchPanelBody({ container, manifest }: PanelContext) {
     const u = new URL(window.location.href);
     u.searchParams.set('tab', contentSearchPanel.id);
     u.searchParams.set('q', current.q);
+    if (current.scope === 'local') u.searchParams.set('scope', 'local');
+    else u.searchParams.delete('scope');
     try {
       await navigator.clipboard.writeText(u.toString());
       setCopied(true);
@@ -225,8 +288,9 @@ export function ContentSearchPanelBody({ container, manifest }: PanelContext) {
     }
   };
 
-  if (!service) return null;
+  if (!service && !localOk) return null;
   const result = current?.result;
+  const shownScope = current?.scope ?? scope;
   const listId = `content-search-terms-${manifestId.length}`;
 
   return (
@@ -259,8 +323,32 @@ export function ContentSearchPanelBody({ container, manifest }: PanelContext) {
           {t('search')}
         </button>
       </form>
+      {service && localOk ? (
+        <div className="flex flex-wrap items-center gap-1 text-xs" role="group" aria-label={t('scope')}>
+          <span className="text-gray-500 dark:text-gray-300 mr-1">{t('scope')}</span>
+          {(['service', 'local'] as const).map((s) => (
+            <button
+              key={s}
+              type="button"
+              aria-pressed={scope === s}
+              onClick={() => {
+                setScopeChoice(s);
+                // 探した語があれば、選び直した先で探し直す
+                if (current && current.scope !== s) search(current.q, s);
+              }}
+              className={`px-2 py-0.5 rounded-full border ${
+                scope === s
+                  ? 'border-blue-600 bg-blue-600 text-white'
+                  : 'border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800'
+              }`}
+            >
+              {t(s === 'service' ? 'scopeService' : 'scopeLocal')}
+            </button>
+          ))}
+        </div>
+      ) : null}
       <p className="text-xs text-gray-500 dark:text-gray-300">
-        {t('about', { version: service.version === 2 ? '2.0' : '1.0' })}
+        {scope === 'service' && service ? t('about', { version: service.version === 2 ? '2.0' : '1.0' }) : t('aboutLocal')}
       </p>
 
       {current?.status === 'error' ? (
@@ -272,11 +360,16 @@ export function ContentSearchPanelBody({ container, manifest }: PanelContext) {
         <div className="space-y-2" aria-live="polite">
           <p className="text-sm">
             {current.status === 'running' && !result
-              ? t('running')
+              ? current.progress
+                ? t('loadingAnnotations', { done: current.progress.done, total: current.progress.total })
+                : t('running')
               : t('count', { count: matches.length, total: result?.total ?? matches.length, q: current.q })}
             {current.status === 'running' && result ? ` ${t('loadingMore')}` : null}
           </p>
           {result?.truncated ? <p className="text-xs text-gray-500 dark:text-gray-300">{t('truncated', { count: matches.length })}</p> : null}
+          {shownScope === 'local' && current.missed ? (
+            <p className="text-xs text-gray-500 dark:text-gray-300">{t('missedPages', { count: current.missed })}</p>
+          ) : null}
           {result && matches.length > 0 ? (
             <div className="flex flex-wrap items-center gap-2">
               <label className="inline-flex items-center gap-1 text-xs">
@@ -357,12 +450,13 @@ export function ContentSearchPanelBody({ container, manifest }: PanelContext) {
   );
 }
 
-// 文字の検索。マニフェストに検索の窓口（SearchService2 / SearchService1）が書かれているときだけ出す。
+// 文字の検索。マニフェストに検索の窓口（SearchService2 / SearchService1）が書かれているか、
+// 手元に探せる注釈（マニフェストの注釈・推論の結果）があるときに出す。
 export const contentSearchPanel: Panel = {
   id: 'contentSearch',
   // 書き起こし（70）と Canvas の注釈（80）の間
   order: 75,
-  available: ({ manifest }) => !!findContentSearchService(manifest),
+  available: (ctx) => !!findContentSearchService(ctx.manifest) || canSearchLocal(ctx),
   Component: ContentSearchPanelBody,
 };
 
