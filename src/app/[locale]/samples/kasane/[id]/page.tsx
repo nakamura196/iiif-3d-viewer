@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import SampleDetailContent from '@/components/page/SampleDetailContent';
 import { setRequestLocale } from 'next-intl/server';
 import { LOCALES, alternatesFor } from '@/lib/site';
-import { SAMPLES, sampleById, sampleThumbnail } from '@/lib/samples';
+import { SAMPLES, sampleById, sampleThumbnailPath } from '@/lib/samples';
 import type { Metadata } from 'next';
 
 export default async function SampleDetailPage({
@@ -31,7 +31,7 @@ export async function generateMetadata({
   if (!s) return {};
   const lang = locale === 'en' ? 'en' : 'ja';
   const alternates = alternatesFor(locale, `samples/kasane/${id}/`);
-  const image = { url: sampleThumbnail(s), width: 640, height: 400, alt: s.title[lang] };
+  const image = { url: sampleThumbnailPath(s), width: 640, height: 400, alt: s.title[lang] };
   return {
     title: s.title[lang],
     description: s.note[lang],

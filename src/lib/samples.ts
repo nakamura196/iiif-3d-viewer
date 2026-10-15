@@ -50,6 +50,8 @@ export const sampleHref = (s: Sample): string =>
   `/viewer?${contentParam(s.manifest)}${s.tab ? `&tab=${s.tab}` : ''}`;
 
 // サムネイル（scripts/capture-thumbnails.mjs で撮った画面）。public/ からのパス
-export const sampleThumbnail = (s: Sample): string => withBasePath(`/thumbnails/samples/${s.id}.webp`);
+// sampleThumbnailPath は basePath なし（og:image など metadataBase からの URL 用）、sampleThumbnail は画面の <img> 用
+export const sampleThumbnailPath = (s: Sample): string => `/thumbnails/samples/${s.id}.webp`;
+export const sampleThumbnail = (s: Sample): string => withBasePath(sampleThumbnailPath(s));
 
 export const sampleById = (id: string): Sample | undefined => SAMPLES.find((s) => s.id === id);
