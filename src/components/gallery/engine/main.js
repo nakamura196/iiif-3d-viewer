@@ -36,7 +36,9 @@ export function startGallery(root, { lang, basePath = "" } = {}) {
   return init(lang).catch((err) => {
     if (stopped) return;
     console.error(err);
-    $("#loading").innerHTML = `<div class="err">${t("loadFailed")}<br>${err.message}</div>`;
+    $("#loading").innerHTML = `<div class="err">${t("loadFailed")}<br>${escapeHtml(err.message)}</div>`;
+    $("#loading").style.display = "flex";
+    $("#entrance-back")?.classList.add("show");
   });
 }
 
@@ -165,6 +167,7 @@ async function enterByUrl(url, { selections, limit, startMode } = {}) {
     if (stopped) return;
     $("#loading").innerHTML = `<div class="err">${t("loadFailed")}<br>${escapeHtml(url)}<br>${escapeHtml(err.message)}</div>`;
     $("#loading").style.display = "flex";
+    $("#entrance-back").classList.add("show"); // 失敗しても入口へ戻れるように
     return;
   }
   const multiSelectionCuration =

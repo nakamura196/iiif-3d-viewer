@@ -7,6 +7,26 @@
 // IIIF Image API も Presentation API も v2/v3 の両方を相手にする。
 
 /** 末尾の /info.json や / を落として image service の base id にそろえる */
+import { t } from "./i18n.js";
+
+// 外部サーバを待つ上限。応答しないサーバ（接続も拒否もしない）でも、ここで打ち切って
+// 「読み込めません」を出す。打ち切らないとブラウザがあきらめるまで数分、黒い画面のままになる。
+const FETCH_TIMEOUT_MS = 15000;
+
+/** 待ち時間の上限つき fetch。打ち切り・通信失敗は、どのサーバかが分かる文言の Error にする */
+export async function fetchWithTimeout(url, opts = {}) {
+  let host = url;
+  try { host = new URL(url, location.href).host; } catch {}
+  try {
+    return await fetch(url, { mode: "cors", ...opts, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+  } catch (err) {
+    if (err?.name === "TimeoutError" || err?.name === "AbortError") {
+      throw new Error(t("serverTimeout").replace("{host}", host));
+    }
+    throw new Error(t("serverUnreachable").replace("{host}", host));
+  }
+}
+
 export function imageServiceBase(idOrInfo) {
   return idOrInfo.replace(/\/info\.json$/i, "").replace(/\/$/, "");
 }
@@ -34,7 +54,7 @@ export async function resolveSource(source) {
   if (type === "iiif") {
     const base = imageServiceBase(source.id || source.infoJson || source.url);
     const infoUrl = base + "/info.json";
-    const info = await fetch(infoUrl, { mode: "cors" }).then((r) => {
+    const info = await fetchWithTimeout(infoUrl).then((r) => {
       if (!r.ok) throw new Error(`info.json ${r.status}: ${infoUrl}`);
       return r.json();
     });
@@ -172,7 +192,7 @@ function isImageService(s) {
 }
 
 export async function fetchJson(url) {
-  const r = await fetch(url, { mode: "cors" });
+  const r = await fetchWithTimeout(url);
   if (!r.ok) throw new Error(`${r.status}: ${url}`);
   return r.json();
 }
@@ -223,7 +243,7 @@ function parseManifestDoc(m, { limit = 24 } = {}) {
 
 /** Collection URL → 各 Manifest の代表(先頭)画像を1枚ずつ集めて壁ソース配列に */
 export async function loadCollection(url, { limit = 24 } = {}) {
-  const col = await fetch(url, { mode: "cors" }).then((r) => {
+  const col = await fetchWithTimeout(url).then((r) => {
     if (!r.ok) throw new Error(`collection ${r.status}: ${url}`);
     return r.json();
   });
@@ -274,12 +294,15 @@ async function parseCurationDoc(cur, { selections = null, limit = 64 } = {}) {
 async function resolveCurationMembers(members, { limit = 64 } = {}) {
   const manifestCache = new Map();
   const getManifest = (u) => {
-    if (!manifestCache.has(u)) manifestCache.set(u, fetch(u, { mode: "cors" }).then((r) => r.json()));
+    if (!manifestCache.has(u)) manifestCache.set(u, fetchJson(u));
     return manifestCache.get(u);
   };
   // 異なる manifest を多数含む curation でも速いよう、ユニークな manifest を先に並列取得
   const uniqueManifests = [...new Set(members.map((m) => m.manifest).filter(Boolean))];
-  await Promise.allSettled(uniqueManifests.map(getManifest));
+  const settled = await Promise.allSettled(uniqueManifests.map(getManifest));
+  // manifest が 1 つも取れなければ、「画像を抽出できません」ではなく取れなかった理由を出す
+  const firstFailure = settled.find((r) => r.status === "rejected");
+  if (firstFailure && settled.every((r) => r.status === "rejected")) throw firstFailure.reason;
 
   const walls = [];
   for (const m of members) {

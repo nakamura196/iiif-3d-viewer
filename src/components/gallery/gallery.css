@@ -162,7 +162,7 @@
 
 /* 入口に戻るボタン */
 #entrance-back { top: 16px; left: 18px; display: none; }
-#entrance-back.show { display: block; }
+#entrance-back.show { display: block; z-index: 60; } /* 読み込み失敗の表示（#loading）より上に出して入口へ戻れるように */
 
 /* 一人称モードの開始プロンプト */
 #walk-prompt { position: absolute; inset: 0; z-index: 15; display: none;
