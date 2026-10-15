@@ -4,7 +4,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import ja from '@/messages/ja.json';
 import en from '@/messages/en.json';
-import { FEATURED_USE_CASES, USE_CASES, USE_CASE_FEATURES, hrefOf, sourcesOf, usecaseById, videoOf } from './usecases';
+import { FEATURED_USE_CASES, USE_CASES, USE_CASE_FEATURES, byNewest, hrefOf, sourcesOf, usecaseById, videoOf } from './usecases';
 import { isViewerTab } from './viewerTabs';
 
 describe('USE_CASES', () => {
@@ -118,6 +118,12 @@ describe('usecaseById', () => {
         expect(existsSync(join(__dirname, '../../public/thumbnails/usecases', `${u.id}.${l}.webp`)), `${u.id}.${l}`).toBe(true);
       }
     }
+  });
+
+  it('追加日は YYYY-MM-DD で、新しい順に並べられる', () => {
+    for (const u of USE_CASES) expect(u.added, u.id).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+    const sorted = byNewest(USE_CASES);
+    for (let i = 1; i < sorted.length; i++) expect(sorted[i - 1].added >= sorted[i].added).toBe(true);
   });
 
   it('id で引ける。無い id は undefined', () => {

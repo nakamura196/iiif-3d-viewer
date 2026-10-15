@@ -236,7 +236,13 @@
     "compareHintLink": "ヘルプ「比較の画面を URL で開く」",
     "copied": "コピーしました",
     "others": "ほかのユースケース",
-    "newsHeading": "この例を取り上げたお知らせ"
+    "newsHeading": "この例を取り上げたお知らせ",
+    "filter": "札で絞り込む",
+    "all": "すべて",
+    "sort": "並べ方",
+    "sortDefault": "おすすめ順",
+    "sortNewest": "新しい順",
+    "added": "追加"
   },
   "InferenceModels": {
     "title": "推論タブのモデル",
