@@ -103,11 +103,11 @@ export default function HomeContent() {
           <section className="relative isolate text-center mb-16 py-12 md:py-16">
             <div
               aria-hidden="true"
-              className="absolute inset-0 -z-10 overflow-hidden pointer-events-none opacity-[0.2] dark:opacity-[0.22]"
+              className="absolute inset-0 -z-10 overflow-hidden pointer-events-none opacity-[0.32] dark:opacity-[0.3]"
               style={{
-                maskImage: 'radial-gradient(ellipse 50% 50% at 50% 50%, #000 30%, transparent 100%)',
+                maskImage: 'radial-gradient(ellipse 50% 50% at 50% 50%, #000 50%, transparent 100%)',
                 WebkitMaskImage:
-                  'radial-gradient(ellipse 50% 50% at 50% 50%, #000 30%, transparent 100%)',
+                  'radial-gradient(ellipse 50% 50% at 50% 50%, #000 50%, transparent 100%)',
               }}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
