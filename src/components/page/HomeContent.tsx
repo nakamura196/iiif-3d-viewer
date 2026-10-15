@@ -31,10 +31,13 @@ export default function HomeContent() {
   const specs = [
     { key: 'specP4', href: 'https://iiif.io/api/presentation/4.0/' },
     { key: 'specP3', href: 'https://iiif.io/api/presentation/3.0/' },
+    { key: 'specP2', href: 'https://iiif.io/api/presentation/2.1/' },
     { key: 'specImage', href: 'https://iiif.io/api/image/3.0/' },
     { key: 'specContentState', href: 'https://iiif.io/api/content-state/1.0/' },
     { key: 'specAuth', href: 'https://iiif.io/api/auth/2.0/' },
     { key: 'specGeoref', href: 'https://iiif.io/api/extension/georef/' },
+    { key: 'specNavPlace', href: 'https://iiif.io/api/extension/navplace/' },
+    { key: 'specCuration', href: 'https://codh.rois.ac.jp/iiif/curation/' },
     // 研究段階のため公開ページには出さない（掲載の了承が得られたら戻す）
     // { key: 'specRegionTag', href: 'https://github.com/nakamura196/iiif-region-tag-extension' },
   ] as const;
@@ -107,11 +110,9 @@ export default function HomeContent() {
           </section>
 
           <section className="mb-16">
-            <VideoEmbed videoId={demoVideoId} title={t('title')} />
-          </section>
-
-          <section className="mb-16">
-            <ManifestInput onSubmit={handleManifestSubmit} />
+            <ManifestInput onSubmit={handleManifestSubmit}>
+              <VideoEmbed videoId={demoVideoId} title={t('title')} />
+            </ManifestInput>
           </section>
 
           <News

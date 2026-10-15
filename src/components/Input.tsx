@@ -6,7 +6,14 @@ import { buttonClass } from '@nakamura196/react-ui';
 import { FEATURED_USE_CASES, clipOf, hrefOf, thumbnailOf } from '@/lib/usecases';
 import UseCaseClip from '@/components/usecases/UseCaseClip';
 
-const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => void }) => {
+const ManifestInput = ({
+  onSubmit,
+  children
+}: {
+  onSubmit: (url: string, tab?: string) => void;
+  // フォームとユースケース一覧のあいだに差し込む内容（トップページのデモ動画など）
+  children?: React.ReactNode;
+}) => {
   const t = useTranslations('Input');
   const locale = useLocale() === 'en' ? 'en' : 'ja';
   const [url, setUrl] = useState('');
@@ -72,6 +79,8 @@ const ManifestInput = ({ onSubmit }: { onSubmit: (url: string, tab?: string) => 
           </button>
         </form>
       </div>
+
+      {children ? <div className="mt-12">{children}</div> : null}
 
       <div className="mt-8 text-sm text-[var(--ds-fg-muted)]">
         <h3 className="font-medium mb-2">{t('sampleManifest')}:</h3>
