@@ -1,5 +1,13 @@
 @AGENTS.md
 
+## 最初に: あなたは誰の Claude か
+
+`gh api user --jq .login` で、いま GitHub にログインしている人を確かめる。
+
+- **`nakamura196` 以外なら、このファイルの以下ではなく [`CONTRIBUTING.md`](CONTRIBUTING.md) に従う。** 作業はプルリクエストを出すところまで。main への push・マージ・本番への反映はしない
+- `nakamura196` なら、以下に従う
+- 分からないときは、できることが少ない側（`CONTRIBUTING.md`）に倒す
+
 # Kasane で作業するときの決まり
 
 機能の足し方（ファイルの置き場所・並行作業の決まり）は `packages/iiif-viewer/EXTENDING.md` にある。
