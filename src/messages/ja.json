@@ -58,6 +58,7 @@
   },
   "GeoRef": {
     "viewOnMap": "地図に重ねて見る",
+    "openInViewer": "ビューアで開く",
     "map": "地図",
     "viewer3d": "3D",
     "image": "画像",
@@ -129,6 +130,7 @@
     "topView": "上",
     "noChoice": "この manifest には切り替えられる模型（Choice）がありません",
     "open": "比較",
+    "openInViewer": "ビューアで開く",
     "zoom": "拡大",
     "opacity": "B の濃さ",
     "canvas": "Canvas",

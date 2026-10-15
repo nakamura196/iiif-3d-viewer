@@ -51,7 +51,7 @@ async function loadSource(url: string, locale: string, member = false): Promise<
     const parts = await Promise.all(memberManifestUrlsOf(v3).map((u) => loadSource(u, locale, true)));
     return { candidates: parts.flatMap((p) => p.candidates), collection: true };
   }
-  return { candidates: candidatesOfManifest(v3, locale), collection: false };
+  return { candidates: candidatesOfManifest(v3, locale).map((c) => ({ ...c, manifest: url })), collection: false };
 }
 
 /**
