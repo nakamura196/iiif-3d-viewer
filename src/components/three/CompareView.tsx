@@ -18,6 +18,7 @@ import {
   pointInBox,
   type CompareMode,
   type PlacedModel,
+  type SwipeDirection,
   type ViewHandle,
 } from '@nakamura196/iiif-viewer';
 
@@ -118,11 +119,13 @@ export default function CompareView({
   urls,
   labels,
   extraModels,
+  swipeDirection = 'horizontal',
 }: {
   mode: CompareMode3D;
   urls: [string | null, string | null];
   labels: [string, string];
   extraModels: PlacedModel[];
+  swipeDirection?: SwipeDirection;
 }) {
   const t = useTranslations('Compare');
   const shared = useRef<SharedCamera>({
@@ -139,7 +142,7 @@ export default function CompareView({
   const topRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
-  const split = useRef(50); // swipe line, % from the left
+  const split = useRef(50); // swipe line, % from the left (from the top when vertical)
   const lens = useRef<{ x: number; y: number } | null>(null);
 
   // The second pane's clip is set on the element directly: the pointer moves it
@@ -149,10 +152,13 @@ export default function CompareView({
     if (!top) return;
     const box = boxRef.current;
     const p = lens.current ?? (box ? { x: box.clientWidth / 2, y: box.clientHeight / 2 } : { x: 0, y: 0 });
-    top.style.clipPath = compareClipOf(mode, split.current, p);
-    if (mode === 'swipe' && lineRef.current) lineRef.current.style.left = `${split.current}%`;
+    top.style.clipPath = compareClipOf(mode, split.current, p, swipeDirection);
+    if (mode === 'swipe' && lineRef.current) {
+      if (swipeDirection === 'vertical') lineRef.current.style.top = `${split.current}%`;
+      else lineRef.current.style.left = `${split.current}%`;
+    }
     if (mode === 'spyglass' && ringRef.current) Object.assign(ringRef.current.style, lensRingPositionOf(p));
-  }, [mode]);
+  }, [mode, swipeDirection]);
 
   useEffect(applyClip, [applyClip]);
 
@@ -184,7 +190,11 @@ export default function CompareView({
         {side && <CompareChip className="left-3">B: {labels[1]}</CompareChip>}
       </div>
       {/* outside the clipped pane, so that the label stays visible */}
-      {!side && <CompareChip className="right-3">B: {labels[1]}</CompareChip>}
+      {!side && (
+        <CompareChip className={mode === 'swipe' && swipeDirection === 'vertical' ? 'left-3' : 'right-3'} bottom={mode === 'swipe' && swipeDirection === 'vertical'}>
+          B: {labels[1]}
+        </CompareChip>
+      )}
       {mode === 'spyglass' && <LensRing ringRef={ringRef} />}
       {mode === 'swipe' && (
         <SwipeHandle
@@ -192,6 +202,7 @@ export default function CompareView({
           handleRef={lineRef}
           split={split.current}
           label={t('swipeHandle')}
+          direction={swipeDirection}
           onSplit={(v) => {
             split.current = v;
             applyClip();

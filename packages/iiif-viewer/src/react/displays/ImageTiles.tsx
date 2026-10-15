@@ -117,6 +117,8 @@ export default function ImageLayerView({
     if (!given.auth && infoJson) setInfoProbe(probeServiceOf(infoJson, locale));
   }, [given.auth, infoJson, locale]);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
+  // the base image whose `full` request failed and is asked again as pixels (see below)
+  const [retriedBase, setRetriedBase] = useState<string | null>(null);
   const hidden = !!auth && auth.state.phase !== 'ok';
 
   if (state.status === 'loading') {
@@ -184,9 +186,15 @@ export default function ImageLayerView({
 
   // the base image: the whole shown region, small
   const baseWidth = Math.min(region.w, Math.max(256, Math.ceil(region.w * place.k * (stage.stageW / canvasWidth) * dpr)), 1024);
-  const base = fullRegion
-    ? singleImageUrl(service, info, baseWidth)
-    : imageRequestUrl(service, region, baseWidth);
+  const fullBase = fullRegion ? singleImageUrl(service, info, baseWidth) : null;
+  // Some servers (e.g. the National Archives of Japan) answer 403 to the keyword `full` but serve the
+  // same area given as pixels. When the `full` base image fails, ask once more with the explicit region.
+  const retrying = fullBase !== null && retriedBase === fullBase;
+  const base = fullBase === null
+    ? imageRequestUrl(service, region, baseWidth)
+    : retrying
+      ? imageRequestUrl(service, { x: 0, y: 0, w: info.width, h: info.height }, baseWidth)
+      : fullBase;
 
   // tiles for what is visible now
   let tiles: ReturnType<typeof tilesForView> = [];
@@ -214,7 +222,8 @@ export default function ImageLayerView({
         draggable={false}
         className="absolute inset-0 w-full h-full"
         onError={() => {
-          if (failedUrl !== base) onFailed?.();
+          if (fullBase !== null && !retrying) setRetriedBase(fullBase);
+          else if (failedUrl !== base) onFailed?.();
         }}
       />
       {tiles.map((tile) => (

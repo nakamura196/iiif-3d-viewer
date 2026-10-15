@@ -1,15 +1,7 @@
 'use client';
 
 import { useMemo, useRef, useState } from 'react';
-import {
-  canvasImagesOf,
-  chosenLayersOf,
-  detailWidthOf,
-  paintsImage,
-  rawCanvasOf,
-  type CanvasImages,
-  type CanvasPainting,
-} from '../../core';
+import { canvasImagesOf, compareDetailWidthOf, fitSide, rawCanvasOf, type CanvasImages, type CompareSide } from '../../core';
 import {
   CompareChip,
   CompareHint,
@@ -19,12 +11,14 @@ import {
   pointInBox,
   type CompareMode,
   type LensPoint,
+  type SwipeDirection,
 } from '../compare/CompareParts';
 import { ImageLayers } from './ImageTiles';
 import ImageView, { INITIAL_VIEW, stageStyleOf, zoomStageAt, type StageInfo, type ViewState } from './ImageView';
 import { useRawManifest } from './rawManifest';
 
-// 1 つの Canvas の Choice（例: 元画像と透過光画像）から 2 つを選び、見比べる。
+// 2 つの画像（Choice の 2 つの候補、または別々の資料の画像）を見比べる。
+// 枠は A の大きさ。B は縦横比を保って A の枠に収め、中央に置く（大きさの違う 2 枚でも、拡大・移動が揃う）。
 // 左右に並べる: 2 つの ImageView が同じ view（拡大・移動）を共有する。
 // スワイプ・スパイグラス・重ねる: 1 つの ImageView に A を描き、その上に同じ大きさの舞台で B を描いて、
 // B を clip-path（線の右側・丸い窓）か不透明度で切る。スパイグラスは窓の中だけ B を拡大できる（虫眼鏡）。
@@ -40,11 +34,8 @@ export function useCanvasImages(iiifContent: string | null, canvasId: string | u
 }
 
 export interface ImageCompareViewProps {
-  images: CanvasImages;
-  /** The painting whose candidates are compared (see `imageChoiceOf`). */
-  choice: CanvasPainting;
-  /** Indexes of the two candidates (A, B). */
-  pick: [number, number];
+  /** The two sides (A, B). A's size is the frame; see `choiceSidesOf` for a Choice of one Canvas. */
+  sides: [CompareSide, CompareSide];
   mode: CompareMode;
   labels: [string, string];
   /** Spyglass magnification of B (1 = the same scale as A). */
@@ -54,29 +45,29 @@ export interface ImageCompareViewProps {
   /** Accessible name of the swipe line, and the hint shown in spyglass mode. */
   swipeHandleLabel?: string;
   spyglassHint?: string;
+  /** Swipe: B is right of a vertical line (default) or below a horizontal line. */
+  swipeDirection?: SwipeDirection;
 }
 
 export default function ImageCompareView({
-  images,
-  choice,
-  pick,
+  sides,
   mode,
   labels,
   zoom = 1,
   opacity = 0.5,
   swipeHandleLabel,
   spyglassHint,
+  swipeDirection = 'horizontal',
 }: ImageCompareViewProps) {
   const boxRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState<ViewState>(INITIAL_VIEW);
   const [split, setSplit] = useState(50); // swipe line, % from the left
   const [lens, setLens] = useState<LensPoint | null>(null);
 
-  const { width, height } = images;
-  // one side: the chosen candidate of the compared painting, the first of the others
-  const paintings = images.paintings.filter(paintsImage);
-  const layers = ([0, 1] as const).map((side) => chosenLayersOf(paintings, (p) => (p.id === choice.id ? pick[side] : 0)));
-  const detail = detailWidthOf(layers.flat());
+  const { width, height } = sides[0];
+  const b = useMemo(() => fitSide(sides[1], sides[0]), [sides]);
+  const layers = [sides[0].layers, b.layers];
+  const detail = compareDetailWidthOf(sides[0], b);
 
   if (!width || !height) return null;
 
@@ -109,7 +100,7 @@ export default function ImageCompareView({
       // swipe and spyglass hide A inside the cut, also where B paints nothing; overlay only fades B in
       <div
         className={`absolute inset-0 pointer-events-none ${mode === 'overlay' ? '' : 'bg-gray-100 dark:bg-gray-900'}`}
-        style={mode === 'overlay' ? { opacity } : { clipPath: compareClipOf(mode, split, at) }}
+        style={mode === 'overlay' ? { opacity } : { clipPath: compareClipOf(mode, split, at, swipeDirection) }}
         data-iiif-compare-b
       >
         <div style={stageStyleOf(s)}>{draw(1, s)}</div>
@@ -129,9 +120,17 @@ export default function ImageCompareView({
         {(stage) => draw(0, stage)}
       </ImageView>
       <CompareChip className="left-3">A: {labels[0]}</CompareChip>
-      <CompareChip className="right-3">B: {labels[1]}</CompareChip>
+      {mode === 'swipe' && swipeDirection === 'vertical' ? (
+        <CompareChip className="left-3" bottom>
+          B: {labels[1]}
+        </CompareChip>
+      ) : (
+        <CompareChip className="right-3">B: {labels[1]}</CompareChip>
+      )}
       {mode === 'spyglass' && <LensRing lens={lens} />}
-      {mode === 'swipe' && <SwipeHandle boxRef={boxRef} split={split} onSplit={setSplit} label={swipeHandleLabel} />}
+      {mode === 'swipe' && (
+        <SwipeHandle boxRef={boxRef} split={split} onSplit={setSplit} label={swipeHandleLabel} direction={swipeDirection} />
+      )}
       {mode === 'spyglass' && spyglassHint && <CompareHint>{spyglassHint}</CompareHint>}
     </div>
   );

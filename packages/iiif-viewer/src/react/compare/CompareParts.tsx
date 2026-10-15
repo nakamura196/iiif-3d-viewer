@@ -7,6 +7,9 @@ import type { CSSProperties, ReactNode, RefObject } from 'react';
 // ポインタの下に丸い窓で B を見せるスパイグラス。重ねる（不透明度）は画像だけ。
 export type CompareMode = 'side' | 'swipe' | 'spyglass' | 'overlay';
 
+/** Which way the swipe line runs: horizontal = B right of a vertical line (dragged sideways), vertical = B below a horizontal line (dragged up and down). */
+export type SwipeDirection = 'horizontal' | 'vertical';
+
 /** Radius of the spyglass window, in CSS pixels. */
 export const LENS_RADIUS = 140;
 
@@ -16,8 +19,13 @@ export interface LensPoint {
 }
 
 /** The clip-path that leaves B visible: right of the swipe line, or inside the spyglass window. */
-export const compareClipOf = (mode: CompareMode, split: number, lens: LensPoint): string =>
-  mode === 'swipe' ? `inset(0 0 0 ${split}%)` : mode === 'spyglass' ? `circle(${LENS_RADIUS}px at ${lens.x}px ${lens.y}px)` : '';
+export const compareClipOf = (
+  mode: CompareMode,
+  split: number,
+  lens: LensPoint,
+  direction: SwipeDirection = 'horizontal',
+): string =>
+  mode === 'swipe' ? (direction === 'vertical' ? `inset(${split}% 0 0 0)` : `inset(0 0 0 ${split}%)`) : mode === 'spyglass' ? `circle(${LENS_RADIUS}px at ${lens.x}px ${lens.y}px)` : '';
 
 /** Where the spyglass ring is drawn (its top left corner); without a point, the centre of the box. */
 export const lensRingPositionOf = (lens: LensPoint | null | undefined): { left: string; top: string } =>
@@ -31,17 +39,25 @@ export const pointInBox = (box: HTMLElement, e: { clientX: number; clientY: numb
   return { x: e.clientX - r.left, y: e.clientY - r.top };
 };
 
-/** The name of a side ("A: …"), at the top left or right of its pane. */
-export const CompareChip = ({ children, className = '' }: { children: ReactNode; className?: string }) => (
+/** The name of a side ("A: …"), at the top (or `bottom`) left or right of its pane. */
+export const CompareChip = ({
+  children,
+  className = '',
+  bottom = false,
+}: {
+  children: ReactNode;
+  className?: string;
+  bottom?: boolean;
+}) => (
   <div
-    className={`absolute top-3 z-10 max-w-[45%] truncate bg-[var(--ds-surface)] px-3 py-1 rounded-full shadow text-xs font-medium text-[var(--ds-fg)] border border-[var(--ds-border)] pointer-events-none ${className}`}
+    className={`absolute ${bottom ? 'bottom-3' : 'top-3'} z-10 max-w-[45%] truncate bg-[var(--ds-surface)] px-3 py-1 rounded-full shadow text-xs font-medium text-[var(--ds-fg)] border border-[var(--ds-border)] pointer-events-none ${className}`}
   >
     {children}
   </div>
 );
 
 /**
- * The swipe line. Dragging it reports the new position (% from the left of `boxRef`).
+ * The swipe line. Dragging it reports the new position (% from the left of `boxRef`; from the top when vertical).
  * `handleRef` lets a caller move it without re-rendering (the 3D panes should not re-render).
  */
 export function SwipeHandle({
@@ -50,13 +66,16 @@ export function SwipeHandle({
   onSplit,
   label,
   handleRef,
+  direction = 'horizontal',
 }: {
   boxRef: RefObject<HTMLElement | null>;
   split: number;
   onSplit: (percent: number) => void;
   label?: string;
   handleRef?: RefObject<HTMLDivElement | null>;
+  direction?: SwipeDirection;
 }) {
+  const vertical = direction === 'vertical';
   const drag = (e: React.PointerEvent) => {
     const box = boxRef.current;
     if (!box) return;
@@ -64,7 +83,8 @@ export function SwipeHandle({
     e.stopPropagation();
     const move = (ev: PointerEvent) => {
       const r = box.getBoundingClientRect();
-      onSplit(Math.min(100, Math.max(0, ((ev.clientX - r.left) / r.width) * 100)));
+      const percent = vertical ? ((ev.clientY - r.top) / r.height) * 100 : ((ev.clientX - r.left) / r.width) * 100;
+      onSplit(Math.min(100, Math.max(0, percent)));
     };
     const up = () => {
       window.removeEventListener('pointermove', move);
@@ -78,14 +98,16 @@ export function SwipeHandle({
       ref={handleRef}
       onPointerDown={drag}
       role="separator"
-      aria-orientation="vertical"
+      aria-orientation={vertical ? 'horizontal' : 'vertical'}
       aria-label={label}
-      className="absolute top-0 bottom-0 z-20 w-4 -ml-2 cursor-ew-resize flex items-center justify-center touch-none"
-      style={{ left: `${split}%` }}
+      className={`absolute z-20 flex items-center justify-center touch-none ${
+        vertical ? 'left-0 right-0 h-4 -mt-2 cursor-ns-resize' : 'top-0 bottom-0 w-4 -ml-2 cursor-ew-resize'
+      }`}
+      style={vertical ? { top: `${split}%` } : { left: `${split}%` }}
     >
-      <div className="w-0.5 h-full bg-white shadow-[0_0_4px_rgba(0,0,0,0.6)]" />
+      <div className={`bg-white shadow-[0_0_4px_rgba(0,0,0,0.6)] ${vertical ? 'h-0.5 w-full' : 'w-0.5 h-full'}`} />
       <div className="absolute w-7 h-7 rounded-full bg-white shadow flex items-center justify-center text-gray-700 text-xs select-none">
-        ⇔
+        {vertical ? '⇕' : '⇔'}
       </div>
     </div>
   );
