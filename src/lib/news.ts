@@ -171,6 +171,7 @@ export const NEWS: NewsItem[] = [
     },
     action: { href: hrefOfUseCase('wellcome-auth') },
     usecases: ['wellcome-auth'],
+    video: { ja: 'Trl4ksr5TBU', en: 'etqp6liTkFo' },
   },
   {
     id: 'cookbook-recipes',
