@@ -6,6 +6,8 @@ import type { ContainerInfo, ManifestV4 } from '../../core';
 export interface PanelContext {
   container?: ContainerInfo;
   manifest?: ManifestV4 | null;
+  /** Number of 3D annotations loaded (annotationsAtom). Used when no container is given (compare page). */
+  annotationCount?: number;
 }
 
 export interface Panel {
