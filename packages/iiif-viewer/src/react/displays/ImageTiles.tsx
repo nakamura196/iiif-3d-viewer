@@ -91,6 +91,7 @@ export default function ImageLayerView({
   stage,
   opacity = 1,
   onFailed,
+  onLoaded,
 }: {
   layer: ImageLayer;
   canvasWidth: number;
@@ -99,6 +100,8 @@ export default function ImageLayerView({
   /** 0 to 1 (the Layers tab). */
   opacity?: number;
   onFailed?: () => void;
+  /** The image (the base image with a service) was read: clears an earlier failure, e.g. before signing in. */
+  onLoaded?: () => void;
 }) {
   const t = useTranslations('Viewer');
   const locale = useLocale();
@@ -169,6 +172,7 @@ export default function ImageLayerView({
           alt=""
           draggable={false}
           className="absolute inset-0 w-full h-full"
+          onLoad={onLoaded}
           onError={() => {
             setFailedUrl(own);
             onFailed?.();
@@ -221,6 +225,7 @@ export default function ImageLayerView({
         alt=""
         draggable={false}
         className="absolute inset-0 w-full h-full"
+        onLoad={onLoaded}
         onError={() => {
           if (fullBase !== null && !retrying) setRetriedBase(fullBase);
           else if (failedUrl !== base) onFailed?.();
