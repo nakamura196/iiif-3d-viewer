@@ -230,6 +230,12 @@ describe('tiles', () => {
     expect(scheme.scaleFactors).toEqual([1, 2, 4, 8]);
   });
 
+  it('imageRequestUrl: the whole image can be asked as pixels (servers that refuse `full`)', () => {
+    const region = { x: 0, y: 0, w: 40427, h: 27112 };
+    expect(imageRequestUrl({ id: 'u', version: 2 }, region, 1024)).toBe('u/0,0,40427,27112/1024,/0/default.jpg');
+    expect(imageRequestUrl({ id: 'u', version: 1 }, region, 1024)).toBe('u/0,0,40427,27112/1024,/0/native.jpg');
+  });
+
   it('imageRequestUrl: v2 gets w, and v1 asks for native', () => {
     expect(imageRequestUrl({ id: 'u', version: 2 }, 'full', 100, 50)).toBe('u/full/100,/0/default.jpg');
     expect(imageRequestUrl({ id: 'u', version: 1 }, 'full', 100)).toBe('u/full/100,/0/native.jpg');
