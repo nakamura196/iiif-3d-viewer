@@ -3,6 +3,9 @@
   "framework": null,
   "buildCommand": "true",
   "outputDirectory": "vercel-static",
+  "git": {
+    "deploymentEnabled": false
+  },
   "redirects": [
     {
       "source": "/:rest(.*)",
