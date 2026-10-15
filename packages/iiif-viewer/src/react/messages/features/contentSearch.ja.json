@@ -24,6 +24,12 @@
     "granularity_word": "語",
     "granularity_glyph": "文字",
     "page": "{label}（{count} 件）",
-    "more": "さらに表示（残り {count} 件）"
+    "more": "さらに表示（残り {count} 件）",
+    "scope": "探す先",
+    "scopeService": "提供元の検索",
+    "scopeLocal": "このビューアの注釈",
+    "aboutLocal": "このビューアに読み込んだ注釈（資料に付いた注釈と、推論タブの文字認識などの結果）から探します。大文字と小文字、全角と半角は区別しません。",
+    "loadingAnnotations": "注釈を読み込んでいます（{done} / {total}）…",
+    "missedPages": "注釈のページのうち {count} 件は読み込めなかったので、探していません。"
   }
 }

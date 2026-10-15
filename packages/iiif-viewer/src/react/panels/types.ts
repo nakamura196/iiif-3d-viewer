@@ -8,6 +8,8 @@ export interface PanelContext {
   manifest?: ManifestV4 | null;
   /** Number of 3D annotations loaded (annotationsAtom). Used when no container is given (compare page). */
   annotationCount?: number;
+  /** Number of annotation pages made in the browser (inference results etc.), not counting search marks. */
+  localAnnotationCount?: number;
 }
 
 export interface Panel {
