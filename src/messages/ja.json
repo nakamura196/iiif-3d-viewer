@@ -1,5 +1,6 @@
 {
   "Header": {
+    "source": "ソースコード（GitHub）",
     "title": "IIIF Kasane",
     "download": "ダウンロード",
     "downloadShort": "DL",
@@ -72,6 +73,7 @@
     "noResults": "結果が見つかりません"
   },
   "Home": {
+    "heroCredit": "背景：『東海道 : 広重画五拾三次現状写真対照』の日本橋、広重画と大正期の写真（1918、国立国会図書館）",
     "developers": "開発者",
     "developerNames": "中村 覚・小川 潤（東京大学）",
     "title": "IIIF Kasane",

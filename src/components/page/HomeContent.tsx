@@ -10,6 +10,7 @@ import PageContainer from '@/components/layout/PageContainer';
 import { SectionHeading, News, VideoEmbed } from '@nakamura196/react-ui';
 import { contentParam } from '@nakamura196/iiif-viewer/core';
 import { NEWS, NEWS_ON_HOME } from '@/lib/news';
+import { withBasePath } from '@/lib/basePath';
 
 export default function HomeContent() {
   const router = useRouter();
@@ -97,16 +98,48 @@ export default function HomeContent() {
       <Header />
       <main className="flex-1">
         <PageContainer>
-          <section className="text-center mb-16">
+          {/* 背景は同じ日本橋の広重画と大正期の写真を、ずらして薄く重ねる（Kasane = 重ね）。
+              出典は NDL『東海道 : 広重画五拾三次現状写真対照』（1918、パブリックドメイン） */}
+          <section className="relative isolate text-center mb-16 py-12 md:py-16">
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 -z-10 overflow-hidden pointer-events-none opacity-[0.32] dark:opacity-[0.3]"
+              style={{
+                maskImage: 'radial-gradient(ellipse 50% 50% at 50% 50%, #000 50%, transparent 100%)',
+                WebkitMaskImage:
+                  'radial-gradient(ellipse 50% 50% at 50% 50%, #000 50%, transparent 100%)',
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={withBasePath('/home/nihonbashi-print.webp')}
+                alt=""
+                className="absolute left-[4%] top-[6%] w-[58%] max-w-[640px] rotate-[-2deg] grayscale-[30%]"
+              />
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={withBasePath('/home/nihonbashi-photo.webp')}
+                alt=""
+                className="absolute right-[4%] bottom-[2%] w-[52%] max-w-[580px] rotate-[2deg] mix-blend-multiply dark:mix-blend-screen"
+              />
+            </div>
             <h1
               className="text-4xl md:text-5xl font-bold text-[var(--ds-fg)] mb-6"
               style={{ fontFamily: 'var(--ds-font-serif)' }}
             >
               {t('title')}
             </h1>
-            <p className="text-lg md:text-xl text-[var(--ds-fg-muted)] mb-8">
+            <p className="text-lg md:text-xl text-[var(--ds-fg-muted)] mb-6">
               {t('subtitle')}
             </p>
+            <a
+              href="https://dl.ndl.go.jp/pid/1873421"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xs text-[var(--ds-fg-muted)] hover:underline"
+            >
+              {t('heroCredit')}
+            </a>
           </section>
 
           <section className="mb-16">
