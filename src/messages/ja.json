@@ -230,6 +230,8 @@
     "back": "ユースケースの一覧へ",
     "details": "詳しく見る",
     "copyLink": "リンクをコピー",
+    "compareHint": "ほかの資料と比べるには、URL に src= を足します。",
+    "compareHintLink": "ヘルプ「比較の画面を URL で開く」",
     "copied": "コピーしました",
     "others": "ほかのユースケース",
     "newsHeading": "この例を取り上げたお知らせ"
