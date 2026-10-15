@@ -4,7 +4,8 @@ import type { InferenceModel } from './models/types';
 
 const CACHE = 'kasane-inference-models';
 
-const openCache = (): Promise<Cache | null> =>
+/** The cache the models are kept in (also given to transformers.js, which looks files up by the same addresses). */
+export const openCache = (): Promise<Cache | null> =>
   typeof caches === 'undefined' ? Promise.resolve(null) : caches.open(CACHE).catch(() => null);
 
 /**

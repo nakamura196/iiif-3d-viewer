@@ -95,6 +95,17 @@ describe('AnnotationPage への書き出し', () => {
   it('テキスト', () => {
     expect(toPlainText(out)).toBe('一行目');
   });
+  it('画像全体の説明文は describing、target は画像全体', () => {
+    const desc = toAnnotationPage(
+      { kind: 'description', items: [{ x: 0, y: 0, w: 100, h: 200, score: 1, text: 'A street.' }], imageWidth: 100, imageHeight: 200, language: 'en' },
+      { canvasId, map: imageToCanvasOf({ rotation: 0, mirror: false }, { width: 1000, height: 2000 }, 100, 200)!, newId: () => 'urn:test:d', generator: { id: 'x', name: 'M' } },
+    );
+    expect((desc.items as Record<string, unknown>[])[0]).toMatchObject({
+      motivation: 'describing',
+      target: `${canvasId}#xywh=0,0,1000,2000`,
+      body: { value: 'A street.', language: 'en' },
+    });
+  });
   it('切り抜き・回転した画像は扱わない', () => {
     expect(imageToCanvasOf({ rotation: 90, mirror: false }, { width: 1, height: 1 }, 1, 1)).toBeNull();
     expect(imageToCanvasOf({ regionSpec: '0,0,10,10', rotation: 0, mirror: false }, { width: 1, height: 1 }, 1, 1)).toBeNull();

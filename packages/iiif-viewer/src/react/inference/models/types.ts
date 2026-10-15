@@ -28,6 +28,8 @@ export interface RunContext {
   bitmap: ImageBitmap;
   /** The session of one of the model's files. `prefer` falls back to wasm when WebGPU is missing or fails. */
   session(name: string, prefer: Backend): Promise<{ session: OrtSession; backend: Backend }>;
+  /** For runners that make their sessions themselves (engine `transformers`): the backend they ran on. */
+  usedBackend?(backend: Backend): void;
   /** Progress of a step (`stage` is a key of Inference.stage.*). */
   progress(stage: string, done: number, total: number): void;
   /** Where the viewer clicked, for models that take clicks (`input: 'points'`). */
@@ -58,5 +60,10 @@ export interface InferenceModel {
   imageLongSide: number;
   /** `points`: the model is run by clicking on the image (each run gets `prompt`), not by a button. */
   input?: 'points';
+  /**
+   * `transformers`: the runner uses transformers.js (which brings its own onnxruntime-web), not `ctx.ort` /
+   * `ctx.session`. The worker then does not load onnxruntime-web for it.
+   */
+  engine?: 'transformers';
   load: () => Promise<{ run: ModelRunner }>;
 }

@@ -88,7 +88,7 @@ function ResultView({ result, container, t }: { result: InferenceResult; contain
         >
           {t('saveJson')}
         </button>
-        {result.output.kind === 'lines' ? (
+        {result.output.kind !== 'regions' ? (
           <button type="button" className={BUTTON} onClick={() => saveFile(`${stem}.txt`, `${toPlainText(result.output)}\n`, 'text/plain')}>
             {t('saveText')}
           </button>
@@ -97,6 +97,13 @@ function ResultView({ result, container, t }: { result: InferenceResult; contain
           {t('discard')}
         </button>
       </div>
+      {result.output.kind === 'description'
+        ? result.output.items.map((d, i) => (
+            <p key={i} className="rounded border border-gray-200 dark:border-gray-700 px-2 py-1 text-sm" lang={result.output.language}>
+              {d.text}
+            </p>
+          ))
+        : null}
       {result.output.kind === 'lines' && items.length > 0 ? (
         <ol className="max-h-72 overflow-auto rounded border border-gray-200 dark:border-gray-700 text-sm divide-y divide-gray-100 dark:divide-gray-800">
           {result.output.items

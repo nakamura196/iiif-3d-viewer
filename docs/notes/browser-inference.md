@@ -290,3 +290,52 @@ NDL デジタルコレクション「銘尽」（https://dl.ndl.go.jp/api/iiif/1
 - 傾いた紙面（polygon になる行）の表示
 - wasm だけの端末、Safari・Firefox、スマートフォン
 - 公式の PP-OCRv5 には文書の向き・行の向きの判定（別のモデル）があるが、入れていない
+
+## 2026-10-14 Florence-2（説明文・物の検出）を足した
+
+### 何をしたか
+
+- Microsoft の Florence-2 base-ft を、transformers.js 4.3.1 で動かすモデルとして 2 つ足した。
+  「絵の説明文」（`<MORE_DETAILED_CAPTION>`、英語の段落）と「物の検出」（`<OD>`、英語の名前の付いた枠）。ファイルは共有
+- 重みは onnx-community/Florence-2-base-ft（rev e88a44e、MIT。元の microsoft/Florence-2-* も MIT）。
+  軽量化の組み合わせは公式デモ（Xenova/florence2-webgpu）と同じ: 画像の読み取りと語の表は fp16、encoder / decoder は q4。合計約 357MB
+- 結果の種類に `description`（画像全体の説明文）を足した。注釈は motivation "describing"、target は画像全体の xywh
+- モデルの部品に `engine: 'transformers'` を足した。この種のモデルでは、Worker が onnxruntime-web 1.26 を読まない
+  （transformers.js は自分の onnxruntime-web 1.31.0-dev を CDN から読む。二重に読まないため）
+
+### 決めたこと・やめた案
+
+- **transformers.js を使い、デコーダを自前で書かない。** 文章を 1 語ずつ作る処理（KV キャッシュ付き）、BART のトークナイザ、
+  出力の `<loc_*>` を座標に戻す処理を全部書くことになり、重い。transformers.js は CDN から読み、同梱しない（ort.ts と同じ理由）
+- **ダウンロードは推論タブの仕組みのまま。** transformers.js が取りに行く住所（huggingface.co/<repo>/resolve/<rev>/<file>）を、
+  推論タブの保存場所（Cache Storage）の鍵と同じにした。transformers.js の custom cache と custom fetch を差し替え、
+  保存場所に無いモデルのファイルは取りに行かずに 404 と答える。transformers.js からの書き込みは止めた（「削除」で消せない物が残るため）
+- large-ft はやめた（4 ビットでも約 580MB）。全部 q4f16 にすると約 223MB になるが、公式デモの組み合わせを優先した（精度を比べていない）
+- WebGPU は GPU が半精度（shader-f16）に対応しているときだけ使い、無ければ wasm
+
+### 実測（Chrome、dev、WebGPU）
+
+| 画像 | 説明文 | 物の検出 |
+|---|---|---|
+| IIIF Cookbook 0005 のゲッティンゲンの写真（長辺 1,024px） | 2.0 秒。広場・建物・自転車・噴水・白い傘・旗を正しく挙げた | 0.8 秒、25 件（person・umbrella・building・bicycle など）。枠は物に重なった |
+| ndl-face-finder「江戸の花見」2 番目（浮世絵） | 1.7 秒。"people riding horses … large body of water" — 外れ | 0.3 秒、2 件（poster＝全体、person） |
+
+- 浮世絵には向かない。説明文にも「古い絵は外すこともあります」と書いた
+- 車の写真（transformers.js の例）では、公式の例とほぼ同じ文が出た
+
+### 自明でなかったこと
+
+- **transformers.js 4.3.1 は、トークナイザの有無を確かめるとき版の指定を無視する**（`get_tokenizer_files` が `resolve/main/` の
+  tokenizer_config.json を見る）。版を固定した保存場所では「無い」になり、`tokenizer_class` を読めずに落ちる。
+  `resolve/main/` を固定した版の住所に読み替えて引くようにした
+- transformers.js は `allowLocalModels` と `allowRemoteModels` を両方 false にすると、設定の誤りとして止まる。
+  ネットに出さない制御は custom fetch で行う
+- Worker で onnxruntime-web の代わりに渡す Proxy は、`then` を読まれても例外を投げてはいけない（Promise.all が「待つ物か」を確かめに読む）
+- 説明文の注釈は画像全体を囲む枠として描かれる（重ねると画像全体が薄く色づく）
+
+### 確かめていないこと
+
+- wasm だけの端末（shader-f16 の無い GPU）、Safari・Firefox、スマートフォン
+- 初回の準備時間（シェーダの用意）。今回はページで一度動かした後に測った
+- 他のタスク（`<OCR_WITH_REGION>`、`<DENSE_REGION_CAPTION>`、言葉で探す `<CAPTION_TO_PHRASE_GROUNDING>`）
+- q4f16 だけの組み合わせ（約 223MB）との精度の比較
