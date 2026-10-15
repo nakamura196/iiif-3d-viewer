@@ -283,7 +283,12 @@ const CompareContent: NextPage = () => {
   let noChoice: string | null = null;
   if (is3D && options.length < 2) noChoice = t('noChoice');
   else if (multi && found.ready && found.candidates.length < 2) noChoice = t('noSources');
-  else if (!multi && !is3D && images && !imageChoice) noChoice = t('noImageChoice');
+  else if (!multi && !is3D && found.ready && images && !imageChoice) noChoice = t('addAnother');
+  // one source with nothing to compare in it: open the list so that another can be added
+  const needMore = noChoice === t('addAnother') || (multi && found.ready && found.candidates.length < 2);
+  useEffect(() => {
+    if (needMore) setShowSources(true);
+  }, [needMore]);
 
   return (
     <div className="flex flex-col h-dvh">
@@ -347,7 +352,7 @@ const CompareContent: NextPage = () => {
                     <span className="w-9 text-right tabular-nums">{opacity}%</span>
                   </label>
                 )}
-                {noChoice && <span className="text-xs text-[var(--ds-fg)]">{noChoice}</span>}
+                {noChoice && <span className="text-sm font-medium text-[var(--ds-fg)]">{noChoice}</span>}
                 <button
                   type="button"
                   onClick={() => setShowSources((v) => !v)}
