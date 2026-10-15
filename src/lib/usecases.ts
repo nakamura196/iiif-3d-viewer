@@ -182,6 +182,7 @@ export const USE_CASES: UseCase[] = [
       en: "The official copy of the Ōmi Province map held by the National Archives of Japan, and a copy of the same size made a year earlier, held by Stanford University Libraries. Open a Collection of the two Manifests and drag the divider to compare what they record. Holders: National Archives of Japan, Stanford University Libraries.",
     },
     open: { page: 'compare', manifest: 'https://pocket.cultural.jp/data/kuniezu.json', mode: 'swipe' },
+    video: { ja: 'kWFXPKhW9Tc', en: 'OPX9OJ8voDc' },
     features: ['image', 'compare'],
   },
   {
