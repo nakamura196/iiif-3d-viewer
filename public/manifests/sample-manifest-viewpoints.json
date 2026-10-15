@@ -1,0 +1,630 @@
+{
+  "@context": "http://iiif.io/api/presentation/4/context.json",
+  "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json",
+  "type": "Manifest",
+  "label": {
+    "ja": [
+      "石淵家地球儀（視点つき）"
+    ],
+    "en": [
+      "Ishibuchi Family Globe (with viewpoints)"
+    ]
+  },
+  "metadata": [
+    {
+      "label": {
+        "none": [
+          "Title"
+        ]
+      },
+      "value": {
+        "none": [
+          "石淵家地球儀"
+        ]
+      }
+    },
+    {
+      "label": {
+        "none": [
+          "Description"
+        ]
+      },
+      "value": {
+        "none": [
+          "『石淵家地球儀』（菊池市立図書館所蔵）を改変<br />\n<br />\nhttps://adeac.jp/kikuchi-city/catalog/e0001<br />\n<br />\n石淵萬寿(いしぶちばんじゅ：1837-1902)は水次村(みつぎむら)で家業の医を営みながら、地域の子弟に対する儒学教育を志し、私塾「楽只堂(らくしどう)」を開いた。本地球儀は、楽只堂で利用された教材と目されている。製作者を萬壽と仮定すると、安政後期から明治初年(1857-70)頃の作と推定できる。 画像中央に描かれた「大日本」を始め、様々な地名が散見される。当時、作成者がどういった形で世界を理解していたか、うかがい知ることが出来る。"
+        ]
+      }
+    }
+  ],
+  "rights": "https://creativecommons.org/licenses/by-nc/4.0/deed.ja",
+  "requiredStatement": {
+    "label": {
+      "ja": [
+        "帰属表示"
+      ],
+      "en": [
+        "Attribution"
+      ]
+    },
+    "value": {
+      "ja": [
+        "『石淵家地球儀』（菊池市立図書館所蔵）を改変"
+      ],
+      "en": [
+        "Modified from 'Ishibuchi Family Globe' (Kikuchi City Library Collection)"
+      ]
+    }
+  },
+  "items": [
+    {
+      "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#scene-p1",
+      "type": "Scene",
+      "label": {
+        "none": [
+          "1"
+        ]
+      },
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-page-12",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-12",
+              "type": "Annotation",
+              "motivation": [
+                "painting"
+              ],
+              "body": {
+                "id": "https://kasane.ldas.jp/models/ishibuchi-globe.glb",
+                "type": "Model",
+                "format": "model/gltf-binary"
+              },
+              "target": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#scene-p1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                  }
+                ]
+              }
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#camera-japan",
+              "type": "Annotation",
+              "motivation": [
+                "painting"
+              ],
+              "body": {
+                "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#camera-japan/body",
+                "type": "PerspectiveCamera",
+                "label": {
+                  "ja": [
+                    "日本"
+                  ],
+                  "en": [
+                    "Japan"
+                  ]
+                },
+                "lookAt": {
+                  "type": "PointSelector",
+                  "x": 0,
+                  "y": 0,
+                  "z": 0
+                }
+              },
+              "target": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#scene-p1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": -1.104,
+                    "y": 1.502,
+                    "z": 2.601
+                  }
+                ]
+              }
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#camera-europe",
+              "type": "Annotation",
+              "motivation": [
+                "painting"
+              ],
+              "body": {
+                "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#camera-europe/body",
+                "type": "PerspectiveCamera",
+                "label": {
+                  "ja": [
+                    "ヨーロッパ"
+                  ],
+                  "en": [
+                    "Europe"
+                  ]
+                },
+                "lookAt": {
+                  "type": "PointSelector",
+                  "x": 0,
+                  "y": 0,
+                  "z": 0
+                }
+              },
+              "target": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#scene-p1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": -0.79,
+                    "y": 2.287,
+                    "z": -2.094
+                  }
+                ]
+              }
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#camera-top",
+              "type": "Annotation",
+              "motivation": [
+                "painting"
+              ],
+              "body": {
+                "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#camera-top/body",
+                "type": "PerspectiveCamera",
+                "label": {
+                  "ja": [
+                    "真上"
+                  ],
+                  "en": [
+                    "From above"
+                  ]
+                },
+                "lookAt": {
+                  "type": "PointSelector",
+                  "x": 0,
+                  "y": 0,
+                  "z": 0
+                }
+              },
+              "target": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#scene-p1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": 0,
+                    "y": 3.8,
+                    "z": 0.05
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-page-georef",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-georef",
+              "type": "Annotation",
+              "motivation": [
+                "georeferencing"
+              ],
+              "target": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#scene-p1",
+                    "type": "Scene"
+                  }
+                ]
+              },
+              "body": {
+                "type": "FeatureCollection",
+                "features": [
+                  {
+                    "@id": "annotation-5PQUNskDnZwuoTmQrCUq",
+                    "type": "Feature",
+                    "geometry": {
+                      "coordinates": [
+                        3.5,
+                        56.0
+                      ],
+                      "type": "Point"
+                    },
+                    "properties": {
+                      "title": "北海",
+                      "resourceCoords": [
+                        -0.2557678207152946,
+                        0.7615613040808595,
+                        -0.5854673025803923
+                      ]
+                    },
+                    "names": [
+                      {
+                        "toponym": "北海",
+                        "lang": "ja",
+                        "citations": [
+                          {
+                            "label": "石淵家地球儀",
+                            "@id": "https://kasane.ldas.jp/manifests/sample-manifest.json"
+                          }
+                        ]
+                      },
+                      {
+                        "toponym": "North Sea",
+                        "lang": "en",
+                        "citations": [
+                          {
+                            "label": "Wikipedia",
+                            "@id": "https://en.wikipedia.org/wiki/North_Sea"
+                          }
+                        ]
+                      }
+                    ],
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "http://www.wikidata.org/entity/Q1693"
+                      },
+                      {
+                        "type": "primaryTopicOf",
+                        "identifier": "https://en.wikipedia.org/wiki/North_Sea"
+                      }
+                    ]
+                  },
+                  {
+                    "@id": "annotation-9CdwCGrf1ZlWQqjxJhVT",
+                    "type": "Feature",
+                    "geometry": {
+                      "coordinates": [
+                        -0.1276,
+                        51.5074
+                      ],
+                      "type": "Point"
+                    },
+                    "properties": {
+                      "title": "イギリス",
+                      "resourceCoords": [
+                        -0.2056713368677782,
+                        0.7115841685636456,
+                        -0.6593850997323897
+                      ]
+                    },
+                    "names": [
+                      {
+                        "toponym": "イギリス",
+                        "lang": "ja",
+                        "citations": [
+                          {
+                            "label": "石淵家地球儀",
+                            "@id": "https://kasane.ldas.jp/manifests/sample-manifest.json"
+                          }
+                        ]
+                      },
+                      {
+                        "toponym": "United Kingdom",
+                        "lang": "en",
+                        "citations": [
+                          {
+                            "label": "Wikipedia",
+                            "@id": "https://en.wikipedia.org/wiki/United_Kingdom"
+                          }
+                        ]
+                      }
+                    ],
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "http://www.wikidata.org/entity/Q145"
+                      },
+                      {
+                        "type": "primaryTopicOf",
+                        "identifier": "https://en.wikipedia.org/wiki/United_Kingdom"
+                      }
+                    ],
+                    "depictions": [
+                      {
+                        "@id": "http://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_the_United_Kingdom.svg?width=300"
+                      }
+                    ]
+                  },
+                  {
+                    "@id": "annotation-DAWUDcrCTQLfiBUMLDMc",
+                    "type": "Feature",
+                    "geometry": {
+                      "coordinates": [
+                        2.3522,
+                        48.8566
+                      ],
+                      "type": "Point"
+                    },
+                    "properties": {
+                      "title": "フランス",
+                      "resourceCoords": [
+                        -0.2733104982705924,
+                        0.6521283770526259,
+                        -0.701585131297753
+                      ]
+                    },
+                    "names": [
+                      {
+                        "toponym": "フランス",
+                        "lang": "ja",
+                        "citations": [
+                          {
+                            "label": "石淵家地球儀",
+                            "@id": "https://kasane.ldas.jp/manifests/sample-manifest.json"
+                          }
+                        ]
+                      },
+                      {
+                        "toponym": "France",
+                        "lang": "en",
+                        "citations": [
+                          {
+                            "label": "Wikipedia",
+                            "@id": "https://en.wikipedia.org/wiki/France"
+                          }
+                        ]
+                      }
+                    ],
+                    "links": [
+                      {
+                        "type": "closeMatch",
+                        "identifier": "http://www.wikidata.org/entity/Q142"
+                      },
+                      {
+                        "type": "primaryTopicOf",
+                        "identifier": "https://en.wikipedia.org/wiki/France"
+                      }
+                    ],
+                    "depictions": [
+                      {
+                        "@id": "http://commons.wikimedia.org/wiki/Special:FilePath/Flag_of_France.svg?width=300"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-page-comments",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-5PQUNskDnZwuoTmQrCUq",
+              "type": "Annotation",
+              "motivation": [
+                "commenting"
+              ],
+              "body": {
+                "type": "TextualBody",
+                "value": "<p></p>",
+                "label": "北海"
+              },
+              "target": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#scene-p1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": -0.2557678207152946,
+                    "y": 0.7615613040808595,
+                    "z": -0.5854673025803923
+                  }
+                ]
+              },
+              "cameraAnnotation": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-5PQUNskDnZwuoTmQrCUq/camera"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-9CdwCGrf1ZlWQqjxJhVT",
+              "type": "Annotation",
+              "motivation": [
+                "commenting"
+              ],
+              "body": {
+                "type": "TextualBody",
+                "value": "<p></p>",
+                "label": "イギリス"
+              },
+              "target": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#scene-p1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": -0.2056713368677782,
+                    "y": 0.7115841685636456,
+                    "z": -0.6593850997323897
+                  }
+                ]
+              },
+              "cameraAnnotation": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-9CdwCGrf1ZlWQqjxJhVT/camera"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-DAWUDcrCTQLfiBUMLDMc",
+              "type": "Annotation",
+              "motivation": [
+                "commenting"
+              ],
+              "body": {
+                "type": "TextualBody",
+                "value": "<p></p>",
+                "label": "フランス"
+              },
+              "target": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#scene-p1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": -0.2733104982705924,
+                    "y": 0.6521283770526259,
+                    "z": -0.701585131297753
+                  }
+                ]
+              },
+              "cameraAnnotation": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-DAWUDcrCTQLfiBUMLDMc/camera"
+            }
+          ]
+        },
+        {
+          "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-page-cameras",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-5PQUNskDnZwuoTmQrCUq/camera",
+              "type": "Annotation",
+              "motivation": [
+                "painting"
+              ],
+              "body": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "type": "PerspectiveCamera"
+                  }
+                ]
+              },
+              "target": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#scene-p1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": -0.3782648431244856,
+                    "y": 0.874079497767241,
+                    "z": -0.9111313450003292
+                  }
+                ]
+              }
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-9CdwCGrf1ZlWQqjxJhVT/camera",
+              "type": "Annotation",
+              "motivation": [
+                "painting"
+              ],
+              "body": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "type": "PerspectiveCamera"
+                  }
+                ]
+              },
+              "target": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#scene-p1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": -0.37826484312621145,
+                    "y": 0.8740794977624307,
+                    "z": -0.9111313450033702
+                  }
+                ]
+              }
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#annotation-DAWUDcrCTQLfiBUMLDMc/camera",
+              "type": "Annotation",
+              "motivation": [
+                "painting"
+              ],
+              "body": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "type": "PerspectiveCamera"
+                  }
+                ]
+              },
+              "target": {
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://kasane.ldas.jp/manifests/sample-manifest-viewpoints.json#scene-p1",
+                    "type": "Scene"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "PointSelector",
+                    "x": -0.5110838501217312,
+                    "y": 0.7650802836070401,
+                    "z": -0.9555411915129721
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "ja": [
+      "『石淵家地球儀』の Scene に、3 つの視点（PerspectiveCamera）を書いた例。最初の視点で開き、視点のボタンで切り替えられます。"
+    ],
+    "en": [
+      "The Ishibuchi family globe with three viewpoints (PerspectiveCamera) in its Scene. It opens at the first one; the viewpoint buttons switch between them."
+    ]
+  }
+}

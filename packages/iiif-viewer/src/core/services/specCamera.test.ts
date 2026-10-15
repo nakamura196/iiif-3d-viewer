@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { ManifestV4 } from '../types/iiif';
 import { defaultCameraOf, parseManifestV4, sceneCamerasOf } from './manifestParser';
+import viewpointsSample from '../../../../../public/manifests/sample-manifest-viewpoints.json';
 
 // Presentation 4.0 style, as written by train-bodies: Cameras are painted into
 // Scene.items (body.type PerspectiveCamera, hidden ones for the notes), and each
@@ -136,5 +137,24 @@ describe('a Scene other than the first', () => {
       expect(parseManifestV4(two, id).modelUrl).toBe('https://example.org/car.glb');
       expect(defaultCameraOf(two, id)?.position).toEqual([-110, 70, 150]);
     }
+  });
+});
+
+// public/manifests/sample-manifest-viewpoints.json: the globe with three Cameras in its Scene
+// (the sample /samples/kasane shows, and the one the usage video opens)
+
+describe('the viewpoints sample manifest', () => {
+  const m = viewpointsSample as unknown as ManifestV4;
+  it('has three Scene Cameras with ja and en labels, in order', () => {
+    const cams = sceneCamerasOf(m);
+    expect(cams.map((c) => (c.label as { en: string[] }).en[0])).toEqual(['Japan', 'Europe', 'From above']);
+    expect(cams.map((c) => (c.label as { ja: string[] }).ja[0])).toEqual(['日本', 'ヨーロッパ', '真上']);
+    expect(cams.every((c) => c.lookAt?.every((v) => v === 0))).toBe(true);
+  });
+  it('opens at the first one (Japan)', () => {
+    expect(defaultCameraOf(m)?.position).toEqual(sceneCamerasOf(m)[0].position);
+  });
+  it('keeps the annotations of the copied globe (the Cameras are not notes)', () => {
+    expect(parseManifestV4(m).annotations.map((a) => a.title)).toEqual(['北海', 'イギリス', 'フランス']);
   });
 });
