@@ -309,6 +309,7 @@ export const USE_CASES: UseCase[] = [
     open: { page: 'viewer', manifest: 'https://iiif.wellcomecollection.org/presentation/v3/b18659135' },
     features: ['image', 'auth'],
     site: 'https://wellcomecollection.org/works/a222zvge',
+    video: { ja: 'Trl4ksr5TBU', en: 'etqp6liTkFo' },
   },
 ];
 
