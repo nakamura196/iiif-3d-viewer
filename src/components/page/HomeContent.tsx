@@ -33,6 +33,7 @@ export default function HomeContent() {
     { key: 'specP3', href: 'https://iiif.io/api/presentation/3.0/' },
     { key: 'specImage', href: 'https://iiif.io/api/image/3.0/' },
     { key: 'specContentState', href: 'https://iiif.io/api/content-state/1.0/' },
+    { key: 'specAuth', href: 'https://iiif.io/api/auth/2.0/' },
     { key: 'specGeoref', href: 'https://iiif.io/api/extension/georef/' },
     // 研究段階のため公開ページには出さない（掲載の了承が得られたら戻す）
     // { key: 'specRegionTag', href: 'https://github.com/nakamura196/iiif-region-tag-extension' },
@@ -82,6 +83,8 @@ export default function HomeContent() {
       // 構造・共有・埋め込み (code)
       titleKey: 'feature6Title',
       descKey: 'feature6Description',
+      // 説明ページ（実例・URL の書き方・埋め込みのコード）へ
+      href: '/structure-share-embed',
       path: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
     },
   ] as const;
@@ -153,6 +156,11 @@ export default function HomeContent() {
                   <p className="text-[var(--ds-fg-muted)]">
                     {t(card.descKey)}
                   </p>
+                  {'href' in card ? (
+                    <Link href={card.href} className="mt-3 inline-block text-sm text-[var(--ds-primary)] hover:underline">
+                      {t('featureMore')} →
+                    </Link>
+                  ) : null}
                 </div>
               ))}
             </div>

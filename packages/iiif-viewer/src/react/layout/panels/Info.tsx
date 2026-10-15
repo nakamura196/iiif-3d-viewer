@@ -1,9 +1,11 @@
 'use client';
 
 import { useState } from 'react';
+import { useAtomValue } from 'jotai';
 import type { ContainerInfo, ManifestV4 } from '../../../core';
 import { useTranslations } from '../../env';
 import { PANELS } from '../../panels/registry';
+import { annotationsAtom } from '../../atoms';
 
 // 既知のタブ名。機能を足すと増えるので、任意の文字列も受ける。
 export type InfoTab = 'metadata' | 'annotations' | 'transcript' | (string & {});
@@ -12,7 +14,7 @@ type Props = {
   /** Controlled tab. Without it the component keeps the tab in its own state. */
   tab?: InfoTab;
   onTabChange?: (tab: InfoTab) => void;
-  /** The container that is shown. Without it: metadata and annotations (compare page). */
+  /** The container that is shown. Without it: metadata, and annotations when any are loaded (compare page). */
   container?: ContainerInfo;
   manifest?: ManifestV4 | null;
 };
@@ -27,7 +29,8 @@ const TAB_CLASS = (active: boolean) =>
 const Info = ({ tab, onTabChange, container, manifest }: Props) => {
   const t = useTranslations('Info');
   const [inner, setInner] = useState<InfoTab | null>(null);
-  const ctx = { container, manifest };
+  const annotationCount = useAtomValue(annotationsAtom).length;
+  const ctx = { container, manifest, annotationCount };
   const available = PANELS.filter((p) => p.available(ctx));
   const ids = available.map((p) => p.id);
   // 「資料情報」は前の「資料情報（about）」タブも兼ねる。古いリンクの ?tab=about はそこへ
