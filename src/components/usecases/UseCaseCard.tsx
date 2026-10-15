@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl';
 import { buttonClass } from '@nakamura196/react-ui';
 import { Link } from '@/i18n/routing';
 import UseCaseMedia from '@/components/usecases/UseCaseMedia';
-import { hrefOf, sourceOf, type Locale, type UseCase } from '@/lib/usecases';
+import { hrefOf, sourcesOf, type Locale, type UseCase } from '@/lib/usecases';
 
 const linkClass = 'text-[var(--ds-primary)] hover:underline';
 
@@ -38,9 +38,12 @@ export default function UseCaseCard({ useCase: u, locale }: { useCase: UseCase; 
         <Link href={`/usecases/${u.id}`} className={linkClass}>
           {t('details')}
         </Link>
-        <a href={sourceOf(u.open)} target="_blank" rel="noopener noreferrer" className={linkClass}>
-          {t('manifest')}
-        </a>
+        {sourcesOf(u.open).map((s, i, all) => (
+          <a key={s} href={s} target="_blank" rel="noopener noreferrer" className={linkClass}>
+            {t('manifest')}
+            {all.length > 1 && ` ${i + 1}`}
+          </a>
+        ))}
         {u.site && (
           <a href={u.site} target="_blank" rel="noopener noreferrer" className={linkClass}>
             {t('site')}

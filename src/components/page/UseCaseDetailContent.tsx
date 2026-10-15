@@ -8,7 +8,7 @@ import PageContainer from '@/components/layout/PageContainer';
 import CopyLinkButton from '@/components/page/CopyLinkButton';
 import UseCaseMedia from '@/components/usecases/UseCaseMedia';
 import { newsAboutUseCase } from '@/lib/news';
-import { USE_CASES, hrefOf, sourceOf, thumbnailOf, usecaseById } from '@/lib/usecases';
+import { USE_CASES, hrefOf, sourcesOf, thumbnailOf, usecaseById } from '@/lib/usecases';
 
 const linkClass = 'text-[var(--ds-primary)] hover:underline';
 
@@ -49,9 +49,12 @@ export default function UseCaseDetailContent({ id }: { id: string }) {
         <p className="leading-relaxed text-[var(--ds-fg)]">{u.note[locale]}</p>
 
         <div className="flex flex-wrap items-center gap-4 text-sm">
-          <a href={sourceOf(u.open)} target="_blank" rel="noopener noreferrer" className={linkClass}>
-            {t('manifest')}
-          </a>
+          {sourcesOf(u.open).map((s, i, all) => (
+            <a key={s} href={s} target="_blank" rel="noopener noreferrer" className={linkClass}>
+              {t('manifest')}
+              {all.length > 1 && ` ${i + 1}`}
+            </a>
+          ))}
           {u.site && (
             <a href={u.site} target="_blank" rel="noopener noreferrer" className={linkClass}>
               {t('site')}

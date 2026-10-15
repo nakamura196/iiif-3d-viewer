@@ -4,7 +4,7 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import ja from '@/messages/ja.json';
 import en from '@/messages/en.json';
-import { FEATURED_USE_CASES, USE_CASES, USE_CASE_FEATURES, hrefOf, sourceOf, usecaseById, videoOf } from './usecases';
+import { FEATURED_USE_CASES, USE_CASES, USE_CASE_FEATURES, hrefOf, sourcesOf, usecaseById, videoOf } from './usecases';
 import { isViewerTab } from './viewerTabs';
 
 describe('USE_CASES', () => {
@@ -35,7 +35,7 @@ describe('USE_CASES', () => {
 
   it('マニフェストと元のページは https の URL', () => {
     for (const u of USE_CASES) {
-      expect(new URL(sourceOf(u.open)).protocol).toBe('https:');
+      for (const s of sourcesOf(u.open)) expect(new URL(s).protocol).toBe('https:');
       if (u.site) expect(new URL(u.site).protocol).toBe('https:');
     }
   });
@@ -78,12 +78,13 @@ describe('hrefOf', () => {
     expect(hrefOf({ page: 'compare', manifest: m, mode: 'swipe' })).toBe(`/compare?iiif-content=${enc}&mode=swipe`);
   });
 
-  it('kuniezu は、2 つの資料をまとめた Collection を swipe で開く', () => {
+  it('kuniezu は、2 つのマニフェストを src= で並べて swipe で開く', () => {
     const u = USE_CASES.find((x) => x.id === 'kuniezu');
     expect(u?.features).toEqual(['image', 'compare']);
-    expect(hrefOf(u!.open)).toBe(
-      `/compare?iiif-content=${encodeURIComponent('https://pocket.cultural.jp/data/kuniezu.json')}&mode=swipe`,
-    );
+    const na = 'https://www.digital.archives.go.jp/api/iiif/764297/manifest.json';
+    const su = 'https://purl.stanford.edu/hs631zg4177/iiif/manifest';
+    expect(hrefOf(u!.open)).toBe(`/compare?src=${encodeURIComponent(na)}&src=${encodeURIComponent(su)}&mode=swipe`);
+    expect(sourcesOf(u!.open)).toEqual([na, su]);
   });
 });
 
