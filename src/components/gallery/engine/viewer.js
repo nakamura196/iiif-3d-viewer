@@ -41,8 +41,13 @@ function renderPanel(wallCfg) {
   info.style.display = has ? "" : "none"; // 情報が無ければ ⓘ を隠す
 }
 
+// フェードの長さ(gallery.css の #osd-overlay の transition と揃える)
+const FADE_MS = 250;
+let fadeTimer = null;
+
 export function openViewer(wallCfg, resolved) {
-  $("#osd-overlay").classList.add("show");
+  clearTimeout(fadeTimer); // 閉じるフェードの途中で開き直した場合
+  $("#osd-overlay").classList.add("show"); // CSS で FADE_MS かけて現れる
   $("#osd-title").innerHTML = labelHtml(wallCfg);
   renderPanel(wallCfg);
   $("#osd-panel").classList.remove("show"); // 既定は閉じる(ⓘで開く)
@@ -81,8 +86,14 @@ export function openViewer(wallCfg, resolved) {
 }
 
 export function closeViewer(fromGesture = true) {
-  $("#osd-overlay").classList.remove("show");
+  $("#osd-overlay").classList.remove("show"); // CSS で FADE_MS かけて消える
   $("#osd-panel").classList.remove("show"); // パネルも一緒に閉じる
+  // 消え終わったら画像を外す。残すと、次に別の作品を開いた時のフェードインで
+  // 前の作品が一瞬見える。途中で開き直したら外さない。
+  clearTimeout(fadeTimer);
+  fadeTimer = setTimeout(() => {
+    if (!isOverlayOpen() && G.osd) G.osd.close();
+  }, FADE_MS);
   if (G.mode === "walk") {
     // 歩行モードに復帰。視点ロックには必ずユーザー操作が要る。
     // × クリック(fromGesture)なら即ロックを試み、成功すればプロンプトは出ない。

@@ -173,9 +173,16 @@
 #walk-prompt .sub { font-size: 13px; color: #9aa3b2; }
 
 /* 深ズーム(OpenSeadragon)オーバーレイ */
+/* 開閉は 0.25 秒のフェード。閉じる時は透明になってから visibility を落とす
+   (display: none だと transition が効かないため)。 */
 #osd-overlay { position: absolute; inset: 0; z-index: 100; background: #0c0d10;
-  display: none; }
-#osd-overlay.show { display: block; }
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .25s ease, visibility 0s linear .25s; }
+#osd-overlay.show { opacity: 1; visibility: visible; pointer-events: auto;
+  transition: opacity .25s ease, visibility 0s; }
+@media (prefers-reduced-motion: reduce) {
+  #osd-overlay, #osd-overlay.show { transition: none; }
+}
 #osd { position: absolute; inset: 0; }
 #osd-title { position: absolute; top: 16px; left: 20px; z-index: 2; font-size: 15px;
   background: rgba(12,13,16,.6); padding: 8px 14px; border-radius: 8px; max-width: 70vw;
