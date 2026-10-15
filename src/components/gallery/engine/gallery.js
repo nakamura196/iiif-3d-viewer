@@ -2,6 +2,7 @@
 // 壁配列に解決し、G.galleryRoot を作り直す。展示の切替もここを通る。
 
 import { G, $ } from "./state.js";
+import { t } from "./i18n.js";
 import { resolveSource, loadManifest, loadCollection, loadCuration, loadAuto } from "./iiif.js";
 import { layoutWalls, buildRoom, addArtwork } from "./room.js";
 import { buildIndex } from "./index.js";
@@ -10,20 +11,22 @@ const loading = () => $("#loading");
 
 // 単一ソース → 壁配列に解決
 export async function resolveWalls(src) {
+  // 入口から入ると #loading は隠れたまま。外部サーバを待つ間も「読み込み中」が見えるよう先に出す
+  loading().style.display = "flex";
   if (src.auto) {
-    loading().textContent = "読み込み中…";
+    loading().textContent = t("loading");
     return loadAuto(src.auto, { selections: src.selections || null, limit: src.limit ?? 64 });
   }
   if (src.curation) {
-    loading().textContent = "Curation を読み込み中…";
+    loading().textContent = t("loadingCuration");
     return loadCuration(src.curation, { selections: src.selections || null, limit: src.limit ?? 64 });
   }
   if (src.manifest) {
-    loading().textContent = "Manifest を読み込み中…";
+    loading().textContent = t("loadingManifest");
     return loadManifest(src.manifest, { limit: src.manifestLimit ?? src.limit ?? 24 });
   }
   if (src.collection) {
-    loading().textContent = "Collection を読み込み中…";
+    loading().textContent = t("loadingCollection");
     return loadCollection(src.collection, { limit: src.collectionLimit ?? src.limit ?? 24 });
   }
   return src.walls || [];
@@ -31,7 +34,7 @@ export async function resolveWalls(src) {
 
 export async function buildGalleryFromSource(src, opts = {}) {
   const walls = await resolveWalls(src);
-  if (!walls.length) throw new Error("表示する画像がありません");
+  if (!walls.length) throw new Error(t("noImages"));
   G.entrySource = src; // 画質トグルのリロード後に同じ展示室へ復帰するため記録
   await buildGallery(walls, opts);
 }
@@ -45,8 +48,9 @@ export async function buildGallery(walls, { resetView = true } = {}) {
   G.walkBounds = Math.max(2, (placements[0]?.apothem || 8) - 0.8);
   buildRoom(placements);
 
-  loading().textContent = `画像を配置中… (0/${walls.length})`;
+  loading().textContent = `${t("placing")} (0/${walls.length})`;
   let done = 0;
+  let firstError = null;
   const arts = new Array(walls.length);
   await Promise.all(
     walls.map(async (w, i) => {
@@ -55,12 +59,15 @@ export async function buildGallery(walls, { resetView = true } = {}) {
         arts[i] = addArtwork(w, resolved, placements[i]); // 添字を保って展示順を維持
       } catch (err) {
         console.warn(`wall ${i} (${w.label}) skip:`, err.message);
+        firstError ??= err;
       } finally {
-        loading().textContent = `画像を配置中… (${++done}/${walls.length})`;
+        loading().textContent = `${t("placing")} (${++done}/${walls.length})`;
       }
     })
   );
   G.artworks = arts.filter(Boolean); // 解決できた作品を展示順で保持
+  // 1 枚も掛けられなかったら、空の部屋ではなく理由を出す（画像サーバが応答しない等）
+  if (walls.length && !G.artworks.length) throw firstError || new Error(t("noImages"));
   buildIndex(); // 目次(作品一覧)を作り直す
 
   if (resetView) resetCamera();

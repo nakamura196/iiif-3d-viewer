@@ -223,6 +223,7 @@ export async function selectExhibition(ex, mode) {
     console.error(err);
     $("#loading").innerHTML = `<div class="err">${t("loadFailed")}<br>${escapeHtml(err.message)}</div>`;
     $("#loading").style.display = "flex";
+    $("#entrance-back").classList.add("show"); // 失敗しても入口へ戻れるように
     return;
   }
   $("#entrance-back").classList.add("show"); // 入口経由で来たら「戻る」を出す
