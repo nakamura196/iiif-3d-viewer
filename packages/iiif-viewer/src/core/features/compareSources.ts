@@ -26,6 +26,9 @@ export interface CompareSide {
 export interface CompareCandidate {
   label: string;
   side: CompareSide;
+  /** Where the image is, to open it in the viewer: the Manifest URL and the Canvas index (0-based). Not set for a bare info.json. */
+  manifest?: string;
+  canvas?: number;
 }
 
 type Json = Record<string, unknown>;
@@ -93,6 +96,7 @@ export const candidatesOfManifest = (raw: unknown, locale: string, fallbackLabel
     out.push({
       label: canvases.length > 1 ? `${manifestLabel} — ${own}` : manifestLabel || own,
       side: { layers, width: images.width, height: images.height },
+      canvas: i,
     });
   });
   return out;

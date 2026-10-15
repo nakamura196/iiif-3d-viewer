@@ -58,6 +58,7 @@
   },
   "GeoRef": {
     "viewOnMap": "View on the map",
+    "openInViewer": "Open in the viewer",
     "map": "Map",
     "viewer3d": "3D",
     "image": "Image",
@@ -129,6 +130,7 @@
     "topView": "Top",
     "noChoice": "This manifest has no Choice of models to compare",
     "open": "Compare",
+    "openInViewer": "Open in the viewer",
     "zoom": "Zoom",
     "opacity": "Opacity of B",
     "canvas": "Canvas",

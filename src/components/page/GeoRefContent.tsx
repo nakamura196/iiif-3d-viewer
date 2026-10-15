@@ -10,13 +10,14 @@ import { manifestAtom } from '@nakamura196/iiif-viewer';
 import { CanvasComponent, GeoImageView, useCanvasImages } from '@nakamura196/iiif-viewer';
 import ManifestInput from '@/components/Input';
 import Header from '@/components/Header';
+import { Link } from '@/i18n/routing';
 import MapView, { type MapImageOverlay } from '@/components/map/MapView';
 import { convertToV4 } from '@nakamura196/iiif-viewer/core';
 import { parseManifestV4, geoAnnotations, geoFeatureIdOf, overlayCorners, type GeoFeature, type ImageLayer } from '@nakamura196/iiif-viewer/core';
 import { AnnotationCard } from '@nakamura196/iiif-viewer';
 import { SidePanel } from '@nakamura196/iiif-viewer';
 import { useTranslations, useLocale } from 'next-intl';
-import { manifestFromParams } from '@nakamura196/iiif-viewer/core';
+import { contentParam, manifestFromParams } from '@nakamura196/iiif-viewer/core';
 
 // マニフェストからattributionを取得するヘルパー関数
 const getAttribution = (manifest: Record<string, unknown>, locale: string): string | undefined => {
@@ -145,8 +146,17 @@ const GeoRefContent: NextPage = () => {
             </div>
             {/* 3D Viewer, or the georeferenced picture */}
             <div className="flex-1 min-h-0 lg:h-full lg:flex-[2] relative bg-gray-100 dark:bg-gray-900 border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700">
-              <div className="absolute top-4 left-4 z-10 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow text-sm font-medium text-gray-700 dark:text-gray-300">
-                {geoCanvasId ? t('image') : t('viewer3d')}
+              <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+                <div className="bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {geoCanvasId ? t('image') : t('viewer3d')}
+                </div>
+                {/* back to the ordinary viewer, at the Canvas shown here */}
+                <Link
+                  href={`/viewer?${contentParam(manifestUrl)}${geoCanvasId ? `&canvas=${encodeURIComponent(geoCanvasId)}` : ''}`}
+                  className="bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                >
+                  {t('openInViewer')}
+                </Link>
               </div>
               {geoCanvas && (
                 <GeoImageView

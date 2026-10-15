@@ -18,9 +18,10 @@ import {
   type SwipeDirection,
 } from '@nakamura196/iiif-viewer';
 import Header from '@/components/Header';
+import { Link } from '@/i18n/routing';
 import ManifestInput from '@/components/Input';
 import CompareView, { type CompareMode3D } from '@/components/three/CompareView';
-import { choiceSidesOf, containersOf, imageChoiceOf, labelIn } from '@nakamura196/iiif-viewer/core';
+import { choiceSidesOf, containersOf, contentParam, imageChoiceOf, labelIn } from '@nakamura196/iiif-viewer/core';
 import { manifestFromParams } from '@nakamura196/iiif-viewer/core';
 
 const MODES: CompareMode[] = ['side', 'swipe', 'spyglass', 'overlay'];
@@ -273,6 +274,16 @@ const CompareContent: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [multi, found.candidates, images, imageChoice, pick, entries.length]);
 
+  // back to the ordinary viewer, at the image shown as A (its own Manifest when sources are compared;
+  // none for a bare info.json). The viewer counts canvas= from 1, this page from 0.
+  const viewerHref = useMemo(() => {
+    const [url, index] = multi
+      ? [found.candidates[clamp(pick[0])]?.manifest, found.candidates[clamp(pick[0])]?.canvas ?? 0]
+      : [manifestUrl, is3D ? 0 : canvasIndex];
+    return url ? `/viewer?${contentParam(url)}${index > 0 ? `&canvas=${index + 1}` : ''}` : null;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [multi, found.candidates, pick, manifestUrl, is3D, canvasIndex, entries.length]);
+
   const select = (side: 0 | 1, value: number) =>
     setPick((p) => (side === 0 ? [value, p[1]] : [p[0], value]));
 
@@ -361,6 +372,14 @@ const CompareContent: NextPage = () => {
                 >
                   {t('sources', { count: sources.length })}
                 </button>
+                {viewerHref && (
+                  <Link
+                    href={viewerHref}
+                    className="text-sm px-3 py-1 rounded border border-[var(--ds-border)] text-[var(--ds-fg)] hover:bg-[var(--ds-surface-2)]"
+                  >
+                    {t('openInViewer')}
+                  </Link>
+                )}
               </div>
               {showSources && (
                 <SourceList
