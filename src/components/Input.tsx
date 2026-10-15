@@ -8,9 +8,12 @@ import UseCaseClip from '@/components/usecases/UseCaseClip';
 
 const ManifestInput = ({
   onSubmit,
-  children
+  children,
+  compact = false,
 }: {
   onSubmit: (url: string, tab?: string) => void;
+  // トップページ用: 大きなアイコンを出さず、入力欄とボタンを 1 行に並べる
+  compact?: boolean;
   // フォームとユースケース一覧のあいだに差し込む内容（トップページのデモ動画など）
   children?: React.ReactNode;
 }) => {
@@ -36,34 +39,39 @@ const ManifestInput = ({
 
   return (
     <div className="w-full">
-      <div className="max-w-md mx-auto">
-        <div className="mb-8 text-center">
-          <div className="inline-block p-4 bg-[var(--ds-surface-2)] rounded-full mb-4">
-            <svg
-              className="w-16 h-16 text-[var(--ds-primary)]"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={1.5}
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-              />
-            </svg>
-          </div>
+      <div className={compact ? 'max-w-xl mx-auto' : 'max-w-md mx-auto'}>
+        <div className={compact ? 'mb-4 text-center' : 'mb-8 text-center'}>
+          {!compact && (
+            <div className="inline-block p-4 bg-[var(--ds-surface-2)] rounded-full mb-4">
+              <svg
+                className="w-16 h-16 text-[var(--ds-primary)]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
+                />
+              </svg>
+            </div>
+          )}
           <h2
-            className="text-2xl font-bold text-[var(--ds-fg)] mb-2"
+            className={`${compact ? 'text-xl' : 'text-2xl'} font-bold text-[var(--ds-fg)] mb-2`}
             style={{ fontFamily: 'var(--ds-font-serif)' }}
           >
             {t('title')}
           </h2>
-          <p className="text-[var(--ds-fg-muted)]">{t('description')}</p>
+          <p className={`text-[var(--ds-fg-muted)] ${compact ? 'text-sm' : ''}`}>{t('description')}</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+        <form
+          onSubmit={handleSubmit}
+          className={compact ? 'flex flex-col gap-3 sm:flex-row sm:items-start' : 'space-y-4'}
+        >
+          <div className={compact ? 'flex-1' : undefined}>
             <input
               type="text"
               value={url}
@@ -74,13 +82,20 @@ const ManifestInput = ({
             {error && <p className="mt-2 text-sm text-red-600 dark:text-red-400">{error}</p>}
           </div>
 
-          <button type="submit" className={buttonClass('primary', 'md', 'w-full')}>
+          <button
+            type="submit"
+            className={buttonClass(
+              'primary',
+              'md',
+              compact ? 'w-full sm:w-auto shrink-0' : 'w-full'
+            )}
+          >
             {t('submit')}
           </button>
         </form>
       </div>
 
-      {children ? <div className="mt-12">{children}</div> : null}
+      {children ? <div className={compact ? 'mt-10' : 'mt-12'}>{children}</div> : null}
 
       <div className="mt-8 text-sm text-[var(--ds-fg-muted)]">
         <h3 className="font-medium mb-2">{t('sampleManifest')}:</h3>
@@ -100,7 +115,9 @@ const ManifestInput = ({
                     {u.headline?.[locale] ?? u.title[locale]}
                   </span>
                   {u.headline ? (
-                    <span className="mt-0.5 block text-xs text-[var(--ds-fg-muted)]">{u.title[locale]}</span>
+                    <span className="mt-0.5 block text-xs text-[var(--ds-fg-muted)]">
+                      {u.title[locale]}
+                    </span>
                   ) : null}
                 </span>
               </Link>
