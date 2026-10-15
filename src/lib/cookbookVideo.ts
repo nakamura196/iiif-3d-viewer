@@ -44,3 +44,11 @@ export function cookbookVideoUrl(id: string, lang: Lang): string | null {
   const start = START[lang][id];
   return start === undefined ? null : `https://www.youtube.com/watch?v=${COOKBOOK_VIDEO_ID[lang]}&t=${start}s`;
 }
+
+/** 詳細ページに埋め込むための、動画の ID とレシピの場面の始まり・終わり（秒）。終わりは次のレシピの始まり。動画に無ければ null */
+export function cookbookVideoClip(id: string, lang: Lang): { videoId: string; start: number; end?: number } | null {
+  const start = START[lang][id];
+  if (start === undefined) return null;
+  const later = Object.values(START[lang]).filter((s) => s > start);
+  return { videoId: COOKBOOK_VIDEO_ID[lang], start, end: later.length ? Math.min(...later) : undefined };
+}

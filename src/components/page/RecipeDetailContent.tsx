@@ -6,7 +6,7 @@ import { Link } from '@/i18n/routing';
 import CommonLayout from '@/components/layout/Common';
 import PageContainer from '@/components/layout/PageContainer';
 import CopyLinkButton from '@/components/page/CopyLinkButton';
-import { cookbookVideoUrl } from '@/lib/cookbookVideo';
+import { cookbookVideoClip } from '@/lib/cookbookVideo';
 import { COOKBOOK_RECIPES, recipeById, recipeHref, recipePage } from '@/lib/cookbookRecipes';
 
 const linkClass = 'text-[var(--ds-primary)] hover:underline';
@@ -18,7 +18,7 @@ export default function RecipeDetailContent({ id }: { id: string }) {
   const r = recipeById(id);
   if (!r) return null;
 
-  const video = cookbookVideoUrl(r.id, locale);
+  const clip = cookbookVideoClip(r.id, locale);
   // 同じ分類の中での前後（番号順）
   const same = COOKBOOK_RECIPES.filter((x) => x.category === r.category);
   const i = same.findIndex((x) => x.id === r.id);
@@ -48,6 +48,20 @@ export default function RecipeDetailContent({ id }: { id: string }) {
           </p>
         </header>
 
+        {clip && (
+          // 紹介動画（全レシピを通した 1 本）のうち、このレシピの場面だけを再生する
+          <div className="w-full overflow-hidden rounded-xl border border-[var(--ds-border)] bg-black shadow-md">
+            <iframe
+              className="aspect-video w-full"
+              src={`https://www.youtube-nocookie.com/embed/${clip.videoId}?start=${clip.start}${clip.end ? `&end=${clip.end}` : ''}`}
+              title={`${r.id} ${r.title[locale]}`}
+              referrerPolicy="strict-origin-when-cross-origin"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          </div>
+        )}
+
         {r.note && <p className="leading-relaxed text-[var(--ds-fg)]">{r.note[locale]}</p>}
 
         {r.links.length === 0 ? (
@@ -70,11 +84,6 @@ export default function RecipeDetailContent({ id }: { id: string }) {
         )}
 
         <div className="flex flex-wrap items-center gap-4 text-sm">
-          {video && (
-            <a href={video} target="_blank" rel="noopener noreferrer" className={linkClass}>
-              {t('video')}
-            </a>
-          )}
           <a href={recipePage(r.id)} target="_blank" rel="noopener noreferrer" className={linkClass}>
             {t('recipe')}
           </a>
