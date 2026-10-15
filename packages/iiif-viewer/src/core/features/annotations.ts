@@ -71,6 +71,11 @@ export interface CanvasAnnotation extends AnnotationStyleSource {
   time?: { start: number; end?: number; instant?: true };
   /** Text Granularity extension: the unit of text the annotation stands for (line, word …). */
   granularity?: string;
+  /**
+   * Shared Region extension: the id of the target Specific Resource. Annotations with the same regionId
+   * annotate the same region and are drawn as one box.
+   */
+  regionId?: string;
 }
 
 const asList = (v: unknown): unknown[] => (Array.isArray(v) ? v : v == null ? [] : [v]);
@@ -259,7 +264,8 @@ const parseTarget = (target: unknown, w?: number, h?: number): ParsedTarget | nu
     return { canvasId: stripFragment(t), region: box ? { type: 'rect', ...box } : { type: 'canvas' } };
   }
   if (!isObj(t)) return null;
-  const source = t.source ?? t.id;
+  // the Shared Region extension writes `source` as a list (as the 3D form does)
+  const source = asList(t.source)[0] ?? t.id;
   const sourceId = idOf(source);
   if (!sourceId) return null;
   let region: AnnotationRegion | null = null;
@@ -273,6 +279,10 @@ const parseTarget = (target: unknown, w?: number, h?: number): ParsedTarget | nu
   }
   return { canvasId: stripFragment(sourceId), region: region ?? { type: 'canvas' } };
 };
+
+// Shared Region extension: only a Specific Resource target carries a region id.
+const regionIdOf = (target: unknown): string | undefined =>
+  isObj(target) && target.type === 'SpecificResource' ? str(target.id) : undefined;
 
 // ---- bodies ------------------------------------------------------------------
 
@@ -508,6 +518,7 @@ export const readCanvasAnnotations = (
           ? { time: { start: time.start, ...(time.end !== undefined ? { end: time.end } : {}), ...(instant ? { instant: true as const } : {}) } }
           : {}),
         ...(str(raw.textGranularity) ? { granularity: str(raw.textGranularity) } : {}),
+        ...(regionIdOf(rawTarget) ? { regionId: regionIdOf(rawTarget) } : {}),
       });
     }
   }

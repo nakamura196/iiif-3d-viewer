@@ -3,6 +3,7 @@
 import { useAtom, useAtomValue } from 'jotai';
 import {
   bboxOf,
+  groupByRegion,
   pickBodies,
   pointPercent,
   regionBoxPercent,
@@ -40,11 +41,13 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
   const storyFrame = useAtomValue(storyFrameAtom);
   const granularity = useAtomValue(canvasAnnotationGranularityAtom);
 
-  const drawn = annotations
+  // Annotations that share a region (Shared Region extension) are drawn as one box, in the order of the list.
+  const shown = annotations
     .filter((a) => a.region.type !== 'canvas' && !a.layer) // layer annotations are drawn by the layer itself
     .filter((a) => !storyOpen || (storyFrame && a.id === selected))
     .filter((a) => !granularity || a.granularity === granularity || a.motivations.includes('highlighting'))
-    .sort((a, b) => areaOf(b) - areaOf(a));
+    ;
+  const drawn = groupByRegion(shown).sort((a, b) => areaOf(b.annotations[0]) - areaOf(a.annotations[0]));
   if (drawn.length === 0 || !(canvasWidth > 0) || !(canvasHeight > 0)) return null;
 
   const titleOf = (a: CanvasAnnotation) =>
@@ -55,9 +58,11 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
 
   return (
     <div className="absolute inset-0 pointer-events-none" data-overlay="annotations">
-      {drawn.map((a) => {
+      {drawn.map((g) => {
+        const a = g.annotations[0];
+        const count = g.annotations.length;
         const r = a.region;
-        const isSel = selected === a.id;
+        const isSel = g.annotations.some((m) => m.id === selected);
         const toggle = (e: { stopPropagation: () => void }) => {
           e.stopPropagation();
           setSelected(isSel ? null : a.id);
@@ -65,19 +70,20 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
         // 見た目の指定（許可した性質だけ）。選択中は既定の強調を優先する。
         const st = isSel ? {} : styleOf(a).target;
         const common = {
-          title: titleOf(a) || undefined,
+          title: g.annotations.map(titleOf).filter(Boolean).join(' / ') || undefined,
+          ...(count > 1 ? { 'data-annotation-count': count } : {}),
           'data-annotation-id': a.id,
         };
         if (r.type === 'point') {
           const p = pointPercent(r.x, r.y, canvasWidth, canvasHeight);
           return (
             <button
-              key={a.id}
+              key={g.key}
               type="button"
               {...common}
               onClick={toggle}
               onPointerDown={(e) => e.stopPropagation()}
-              aria-label={titleOf(a) || undefined}
+              aria-label={common.title}
               className={`absolute pointer-events-auto rounded-full border-2 border-white shadow ${
                 isSel ? 'bg-orange-500 w-5 h-5' : 'bg-blue-600 w-4 h-4'
               }`}
@@ -98,7 +104,7 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
           const pad = 0;
           return (
             <svg
-              key={a.id}
+              key={g.key}
               className="absolute pointer-events-none overflow-visible"
               style={{ left: `${b.left}%`, top: `${b.top}%`, width: `${b.width}%`, height: `${b.height}%` }}
               viewBox={`${box.x - pad} ${box.y - pad} ${box.w || 1} ${box.h || 1}`}
@@ -130,7 +136,7 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
             : undefined;
           return (
             <div
-              key={a.id}
+              key={g.key}
               {...common}
               role="button"
               tabIndex={0}
@@ -161,6 +167,14 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
                 ...(html ? { containerType: 'size' as const } : {}),
               }}
             >
+              {count > 1 ? (
+                <span
+                  className="absolute left-0 top-0 rounded-br bg-blue-600 px-1 text-white leading-tight"
+                  style={{ fontSize: '12px', transformOrigin: 'top left', scale: 'calc(1 / var(--image-scale, 1))' }}
+                >
+                  {count}
+                </span>
+              ) : null}
               {html ? (
                 <div
                   className="text-white bg-black/50 w-full h-full break-words"

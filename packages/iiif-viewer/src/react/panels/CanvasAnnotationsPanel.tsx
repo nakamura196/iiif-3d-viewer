@@ -6,6 +6,7 @@ import {
   annotationSourcesOf,
   containersOf,
   embeddedCanvasAnnotations,
+  groupByRegion,
   isAnnotationAt,
   rawCanvasOf,
   labelIn,
@@ -139,6 +140,7 @@ export function Body({ body, canvasLabels }: { body: AnnotationBodyItem; canvasL
 
 function Item({
   annotation,
+  more = [],
   selected,
   onSelect,
   canvasLabels,
@@ -147,6 +149,8 @@ function Item({
 }: {
   bodyStyle?: StyleDeclarations;
   annotation: CanvasAnnotation;
+  /** The other annotations of the same region (Shared Region extension), shown under the first. */
+  more?: CanvasAnnotation[];
   selected: boolean;
   /** The annotation's time contains the current position of the video or audio. */
   playing?: boolean;
@@ -213,6 +217,13 @@ function Item({
       >
         {bodies.map((b, i) => (
           <Body key={i} body={b} canvasLabels={canvasLabels} />
+        ))}
+        {more.map((m) => (
+          <div key={m.id} className="space-y-1 border-t border-gray-200 dark:border-gray-700 pt-1" data-annotation-id={m.id}>
+            {pickBodies(m.bodies, locale).map((b, i) => (
+              <Body key={i} body={b} canvasLabels={canvasLabels} />
+            ))}
+          </div>
         ))}
       </div>
     </li>
@@ -295,22 +306,27 @@ export function CanvasAnnotationsPanelBody({ container, manifest }: PanelContext
             </h3>
           ) : null}
           <ul className="space-y-2">
-            {g.items.map((a) => (
-              <Item
-                key={a.id}
-                annotation={a}
-                selected={selected === a.id}
-                onSelect={() => {
-                  // an annotation on a moment of a video or audio: go there, so that its frame is shown
-                  // (a little past the start: a seek may land a hair before the asked position)
-                  if (a.time && selected !== a.id) seek(a.time.start + 0.01);
-                  setSelected(selected === a.id ? null : a.id);
-                }}
-                playing={timed && !!a.time && isAnnotationAt(a, currentTime)}
-                canvasLabels={canvasLabels}
-                bodyStyle={styleOf(a).body}
-              />
-            ))}
+            {groupByRegion(g.items).map((rg) => {
+              const a = rg.annotations[0];
+              const isSelected = rg.annotations.some((m) => m.id === selected);
+              return (
+                <Item
+                  key={rg.key}
+                  annotation={a}
+                  more={rg.annotations.slice(1)}
+                  selected={isSelected}
+                  onSelect={() => {
+                    // an annotation on a moment of a video or audio: go there, so that its frame is shown
+                    // (a little past the start: a seek may land a hair before the asked position)
+                    if (a.time && !isSelected) seek(a.time.start + 0.01);
+                    setSelected(isSelected ? null : a.id);
+                  }}
+                  playing={timed && !!a.time && isAnnotationAt(a, currentTime)}
+                  canvasLabels={canvasLabels}
+                  bodyStyle={styleOf(a).body}
+                />
+              );
+            })}
           </ul>
         </section>
       ))}
