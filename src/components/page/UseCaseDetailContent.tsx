@@ -65,6 +65,14 @@ export default function UseCaseDetailContent({ id }: { id: string }) {
           </Link>
           <CopyLinkButton label={t('copyLink')} done={t('copied')} />
         </div>
+        {u.open.page === 'compare' && u.features.includes('image') && (
+          <p className="text-sm text-[var(--ds-fg-muted)]">
+            {t('compareHint')}{' '}
+            <Link href="/help" className={linkClass}>
+              {t('compareHintLink')}
+            </Link>
+          </p>
+        )}
 
         {news.length > 0 && (
           <section className="space-y-2">

@@ -29,6 +29,29 @@ You can write the resource to open into the viewer URL. This is useful for links
 - Add `&tab=map`, for example, to open with that tab selected in the panel on the right.
 - The older form `?manifest=<URL>` still works. Kasane also reads `?curation=<URL>` and `&pos=<number>`, as used by IIIF Curation Viewer.
 
+### Open the compare page from a URL
+
+The compare page (`/en/compare/`) lets you compare images of different resources, even ones held by different institutions.
+
+- Repeat `src=` for each thing to compare: `?src=<URL>&src=<URL>`. Each URL is a manifest or the info.json of a single image (IIIF Image API image information). You can mix the two.
+- Give a Collection as `?iiif-content=<URL>`; all its manifests are read. You can add `src=` after it.
+- The images of everything you give are put in one list, in order. `&a=0&b=1` says which items of that list are shown as A and B, counting from 0.
+- `&mode=` chooses the view: `side` (side by side), `swipe`, `spyglass` or `overlay`. Add `&dir=v` for a horizontal swipe divider.
+- Encode the URLs (`/` as `%2F`, `:` as `%3A`). An info.json URL that already contains `%2F` becomes `%252F`.
+- Adding or removing items under "Sources" on the page updates `src=` in the URL. The easiest way is to build the comparison on the page and then copy its URL.
+
+Example: compare the manifests of the National Archives of Japan and Stanford University Libraries with a swipe
+
+```
+/en/compare/?src=https%3A%2F%2Fwww.digital.archives.go.jp%2Fapi%2Fiiif%2F764297%2Fmanifest.json&src=https%3A%2F%2Fpurl.stanford.edu%2Fhs631zg4177%2Fiiif%2Fmanifest&a=0&b=1&mode=swipe
+```
+
+Example: compare a manifest with the info.json of a single image
+
+```
+/en/compare/?src=https%3A%2F%2Fwww.digital.archives.go.jp%2Fapi%2Fiiif%2F764297%2Fmanifest.json&src=https%3A%2F%2Fstacks.stanford.edu%2Fimage%2Fiiif%2Fhs631zg4177%252Fhs631zg4177_00_0001%2Finfo.json&a=0&b=1&mode=swipe
+```
+
 ### Drop a link
 
 Once a resource is open, you can drag another link and drop it on the viewer to open it. You can drop a manifest URL or a link that contains `iiif-content=`. If the link points to a place in the resource that is already open, the viewer moves to that page.

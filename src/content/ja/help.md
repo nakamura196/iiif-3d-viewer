@@ -29,6 +29,29 @@ Presentation API 4.0（草案）と 3.0 のマニフェストを表示できま�
 - `&tab=map` のように足すと、右の説明欄でそのタブを選んだ状態で開きます。
 - 以前の形の `?manifest=<URL>` も使えます。IIIF Curation Viewer と同じ `?curation=<URL>` と `&pos=<番号>` も読みます。
 
+### 比較の画面を URL で開く
+
+比較の画面（`/ja/compare/`）では、別々の資料の画像を見比べられます。所蔵機関の違う資料どうしでも構いません。
+
+- `?src=<URL>&src=<URL>` のように、`src=` を比べたいものの数だけ繰り返します。URL には、マニフェストか、画像 1 枚の info.json（IIIF Image API の画像情報）を書きます。混ぜても構いません。
+- コレクションは `?iiif-content=<URL>` で指定します。収録されたマニフェストがまとめて読み込まれます。そのあとに `src=` を足すこともできます。
+- 指定したものに入っている画像は、頭から順に 1 列に並びます。`&a=0&b=1` は、その列の何番目を A と B に出すかです。数は 0 から数えます。
+- `&mode=` で見せ方を選びます。`side`（左右に並べる）、`swipe`（スワイプ）、`spyglass`（スパイグラス）、`overlay`（重ねる）です。スワイプの境目を横にするときは `&dir=v` を足します。
+- URL は符号化して書きます（`/` は `%2F`、`:` は `%3A`）。info.json の URL に元から `%2F` が入っているときは、`%252F` になります。
+- 画面の「資料」から追加・削除すると、URL の `src=` も書き換わります。比べたい組み合わせを画面で作ってから、URL をコピーして渡すのが簡単です。
+
+例: 国立公文書館とスタンフォード大学図書館のマニフェストを、スワイプで見比べる
+
+```
+/ja/compare/?src=https%3A%2F%2Fwww.digital.archives.go.jp%2Fapi%2Fiiif%2F764297%2Fmanifest.json&src=https%3A%2F%2Fpurl.stanford.edu%2Fhs631zg4177%2Fiiif%2Fmanifest&a=0&b=1&mode=swipe
+```
+
+例: マニフェストと、画像 1 枚の info.json を見比べる
+
+```
+/ja/compare/?src=https%3A%2F%2Fwww.digital.archives.go.jp%2Fapi%2Fiiif%2F764297%2Fmanifest.json&src=https%3A%2F%2Fstacks.stanford.edu%2Fimage%2Fiiif%2Fhs631zg4177%252Fhs631zg4177_00_0001%2Finfo.json&a=0&b=1&mode=swipe
+```
+
 ### リンクを落として開く
 
 資料を開いたあと、ビューアの画面に別のリンクをドラッグして落とすと、それを開きます。落とせるのは、マニフェストの URL と、`iiif-content=` の付いたリンクです。いま開いている資料の中の場所を指すリンクなら、そのページに移ります。

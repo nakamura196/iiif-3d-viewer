@@ -230,6 +230,8 @@
     "back": "Back to all use cases",
     "details": "Details",
     "copyLink": "Copy link",
+    "compareHint": "To compare with other resources, add src= to the URL.",
+    "compareHintLink": "Help: Open the compare page from a URL",
     "copied": "Copied",
     "others": "More use cases",
     "newsHeading": "News about this example"
