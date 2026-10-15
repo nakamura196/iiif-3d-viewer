@@ -5,8 +5,8 @@
   ],
   "@id": "https://nakamura196.github.io/iiif-vr/curation/genelib-vm-sample",
   "@type": "cr:Curation",
-  "label": "IIIF VR 美術館サンプル（東京大学総合図書館バーチャルミュージアムより）",
-  "description": "https://utda.github.io/tenjiroom/ の genelib_vm2020-01 から、写真帖『東京帝國大學』とアラカルトを抜粋・再構成したデモ用キュレーション。",
+  "label": "IIIF VR 美術館サンプル（東京大学総合図書館バーチャルミュージアム・国立国会図書館デジタルコレクションより）",
+  "description": "https://utda.github.io/tenjiroom/ の genelib_vm2020-01 から、写真帖『東京帝國大學』とアラカルトを抜粋・再構成したデモ用キュレーション。あわせて、国立国会図書館デジタルコレクションの『東海道 : 広重画五拾三次現状写真対照』（1918年、パブリックドメイン）から、広重の絵と同じ場所の写真を対にした 6 か所を加えた。",
   "selections": [
     {
       "@id": "https://nakamura196.github.io/iiif-vr/curation/genelib-vm-sample/range/shashincho",
@@ -418,6 +418,97 @@
               }
             }
           ]
+        }
+      ]
+    },
+    {
+      "@id": "https://nakamura196.github.io/iiif-vr/curation/genelib-vm-sample/range/tokaido",
+      "@type": "sc:Range",
+      "label": "広重の東海道と大正の写真（国立国会図書館）",
+      "members": [
+        {
+          "@id": "https://dl.ndl.go.jp/api/iiif/1873421/canvas/20#xywh=413,878,3844,2414",
+          "@type": "sc:Canvas",
+          "label": "1：日本橋（広重画）",
+          "description": "『東海道 : 広重画五拾三次現状写真対照』（東光園、1918年）から",
+          "manifest": "https://dl.ndl.go.jp/api/iiif/1873421/manifest.json"
+        },
+        {
+          "@id": "https://dl.ndl.go.jp/api/iiif/1873421/canvas/21#xywh=913,728,3581,2607",
+          "@type": "sc:Canvas",
+          "label": "2：日本橋（大正期の写真）",
+          "description": "『東海道 : 広重画五拾三次現状写真対照』（東光園、1918年）から",
+          "manifest": "https://dl.ndl.go.jp/api/iiif/1873421/manifest.json"
+        },
+        {
+          "@id": "https://dl.ndl.go.jp/api/iiif/1873421/canvas/23#xywh=869,834,3809,2387",
+          "@type": "sc:Canvas",
+          "label": "3：品川（広重画）",
+          "description": "『東海道 : 広重画五拾三次現状写真対照』（東光園、1918年）から",
+          "manifest": "https://dl.ndl.go.jp/api/iiif/1873421/manifest.json"
+        },
+        {
+          "@id": "https://dl.ndl.go.jp/api/iiif/1873421/canvas/22#xywh=544,720,3625,2615",
+          "@type": "sc:Canvas",
+          "label": "4：品川（大正期の写真）",
+          "description": "『東海道 : 広重画五拾三次現状写真対照』（東光園、1918年）から",
+          "manifest": "https://dl.ndl.go.jp/api/iiif/1873421/manifest.json"
+        },
+        {
+          "@id": "https://dl.ndl.go.jp/api/iiif/1873421/canvas/27#xywh=790,790,3835,2387",
+          "@type": "sc:Canvas",
+          "label": "5：神奈川（広重画）",
+          "description": "『東海道 : 広重画五拾三次現状写真対照』（東光園、1918年）から",
+          "manifest": "https://dl.ndl.go.jp/api/iiif/1873421/manifest.json"
+        },
+        {
+          "@id": "https://dl.ndl.go.jp/api/iiif/1873421/canvas/26#xywh=527,878,3616,2440",
+          "@type": "sc:Canvas",
+          "label": "6：神奈川（大正期の写真）",
+          "description": "『東海道 : 広重画五拾三次現状写真対照』（東光園、1918年）から",
+          "manifest": "https://dl.ndl.go.jp/api/iiif/1873421/manifest.json"
+        },
+        {
+          "@id": "https://dl.ndl.go.jp/api/iiif/1873421/canvas/40#xywh=439,807,3835,2414",
+          "@type": "sc:Canvas",
+          "label": "7：箱根（広重画）",
+          "description": "『東海道 : 広重画五拾三次現状写真対照』（東光園、1918年）から",
+          "manifest": "https://dl.ndl.go.jp/api/iiif/1873421/manifest.json"
+        },
+        {
+          "@id": "https://dl.ndl.go.jp/api/iiif/1873421/canvas/41#xywh=922,702,3581,2607",
+          "@type": "sc:Canvas",
+          "label": "8：箱根（大正期の写真）",
+          "description": "『東海道 : 広重画五拾三次現状写真対照』（東光園、1918年）から",
+          "manifest": "https://dl.ndl.go.jp/api/iiif/1873421/manifest.json"
+        },
+        {
+          "@id": "https://dl.ndl.go.jp/api/iiif/1873421/canvas/51#xywh=816,834,3818,2414",
+          "@type": "sc:Canvas",
+          "label": "9：蒲原（広重画）",
+          "description": "『東海道 : 広重画五拾三次現状写真対照』（東光園、1918年）から",
+          "manifest": "https://dl.ndl.go.jp/api/iiif/1873421/manifest.json"
+        },
+        {
+          "@id": "https://dl.ndl.go.jp/api/iiif/1873421/canvas/50#xywh=553,816,3598,2589",
+          "@type": "sc:Canvas",
+          "label": "10：蒲原（大正期の写真）",
+          "description": "『東海道 : 広重画五拾三次現状写真対照』（東光園、1918年）から",
+          "manifest": "https://dl.ndl.go.jp/api/iiif/1873421/manifest.json"
+        },
+        {
+          "@id": "https://dl.ndl.go.jp/api/iiif/1873421/canvas/128#xywh=562,658,3844,2431",
+          "@type": "sc:Canvas",
+          "label": "11：京師（広重画）",
+          "description": "『東海道 : 広重画五拾三次現状写真対照』（東光園、1918年）から",
+          "manifest": "https://dl.ndl.go.jp/api/iiif/1873421/manifest.json"
+        },
+        {
+          "@id": "https://dl.ndl.go.jp/api/iiif/1873421/canvas/129#xywh=983,790,3598,2633",
+          "@type": "sc:Canvas",
+          "label": "12：京師（大正期の写真）",
+          "description": "『東海道 : 広重画五拾三次現状写真対照』（東光園、1918年）から",
+          "manifest": "https://dl.ndl.go.jp/api/iiif/1873421/manifest.json"
         }
       ]
     }
