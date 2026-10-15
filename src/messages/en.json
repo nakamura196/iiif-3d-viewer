@@ -100,6 +100,8 @@
     "specImageNote": "Used for deep zoom, rotation and thumbnails.",
     "specContentStateTitle": "IIIF Content State API 1.0",
     "specContentStateNote": "The iiif-content parameter selects the resource, Canvas and region to open.",
+    "specAuthTitle": "IIIF Authorization Flow API 2.0",
+    "specAuthNote": "Shows images that need consent or a login before viewing (active, kiosk and external profiles). Images only for now.",
     "specGeorefTitle": "IIIF Georeference Extension",
     "specGeorefNote": "Used by the map viewer. The format, defined for 2D images, is extended to 3D coordinates.",
     "specRegionTagTitle": "Shared Region and Keyed Tag Extension (own extension, draft)",
