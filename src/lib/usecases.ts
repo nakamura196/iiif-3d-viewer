@@ -58,6 +58,9 @@ export interface UseCase {
   features: UseCaseFeature[];
   // 紹介動画（YouTube の videoId）。片方の言語しか無いときは、それを両方の言語で出す
   video?: Partial<Localized>;
+  // 動画の前に Kasane 自身の画面（thumbnailOf）を出し、押したら再生する。
+  // 元のアプリでも使っている動画は、YouTube 側のサムネイルに旧アプリ名が出ているため
+  ownPoster?: boolean;
   // 元のプロジェクトのページ
   site?: string;
   // トップの入力欄のサンプルにも出す
@@ -146,6 +149,7 @@ export const USE_CASES: UseCase[] = [
     open: { page: 'georef', manifest: `${SITE_URL}/manifests/geo-hongo-buildings.json` },
     features: ['image', 'georef'],
     video: { ja: '3qsZbPXC9qg', en: 'RoE5Mm6vSFE' },
+    ownPoster: true,
     site: 'https://geo.ldas.jp/',
     featured: true,
     headline: { ja: '古地図を現在の地図に重ねる', en: 'Lay an old map over today’s map' },
@@ -180,6 +184,7 @@ export const USE_CASES: UseCase[] = [
     open: { page: 'compare', manifest: 'https://nakamura196.github.io/hongo-campus-iiif/ueno.json' },
     features: ['3d', 'compare'],
     video: { ja: 'Sb7m0J6pRTM', en: 'wOh2JiaHkS8' },
+    ownPoster: true,
     featured: true,
     headline: { ja: '2 つの 3D モデルを見比べる', en: 'Compare two 3D models' },
   },
