@@ -11,6 +11,7 @@
     "description": "A viewer that layers 3D models, images, audio, video and annotations, based on the IIIF Manifest.",
     "guideHeading": "Help & Legal",
     "help": "Help",
+    "inferenceModels": "Inference models",
     "privacy": "Privacy Policy",
     "terms": "Terms of Service",
     "samplesHeading": "Samples",
@@ -188,6 +189,22 @@
       "auth": "Authentication",
       "story": "Story"
     }
+  },
+  "InferenceModels": {
+    "title": "Models in the Inference tab",
+    "lead": "The machine-learning models you can use in the viewer's Inference tab ({count} models). Each one is downloaded to your browser and runs there. Images are not sent anywhere.",
+    "howTo": "How to use: open an image in the viewer, then download a model and run it in the Inference tab on the right. A downloaded model is kept in the browser, so it is ready next time. The results are shown on the image as annotations and can be saved as JSON.",
+    "backend": "Models run fast in browsers with WebGPU (Chrome, Edge and others). Without it they run on WebAssembly, which takes longer.",
+    "input": "How to run",
+    "inputButton": "A button (reads the whole image)",
+    "inputPoints": "Click on the image",
+    "size": "Download size",
+    "imageSize": "Image size read",
+    "imageSizeValue": "Up to {px} px on the long side",
+    "engine": "Runtime",
+    "license": "License",
+    "credit": "Made by",
+    "files": "Files ({count})"
   },
   "Search": {
     "title": "Search a collection or curation",

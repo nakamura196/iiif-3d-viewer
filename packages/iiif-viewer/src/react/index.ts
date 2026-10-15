@@ -32,3 +32,6 @@ export {
   type GeoImagePoint,
   type GeoImageViewProps,
 } from './georef/GeoImageView';
+// 推論タブのモデルの定義（一覧ページ用。重い処理は load() の先にあるので、読み込んでも動き出さない）
+export { MODELS as INFERENCE_MODELS } from './inference/models/registry';
+export type { InferenceModel } from './inference/models/types';
