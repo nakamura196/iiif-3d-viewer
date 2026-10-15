@@ -362,6 +362,7 @@ export const USE_CASES: UseCase[] = [
     },
     open: { page: 'viewer', manifest: `${SITE_URL}/manifests/sample-manifest-video-objects.json`, tab: 'canvasAnnotations' },
     features: ['annotations'],
+    video: { ja: 'LvrLzdqbCfk', en: '4_zBRW-oS1w' },
     site: 'https://ab.ldas.jp/ja/na-kamura-1263/video',
   },
 ];
