@@ -1,5 +1,7 @@
 import { isCuration, resolveCuration } from '../features/curation';
 import { upgradeToV3 } from './upgradeV2';
+import { isImageInfoJson } from '../features/compareSources';
+import { manifestFromImageInfo } from './imageInfoManifest';
 import { inlineSharedServices } from './sharedServices';
 
 const getJson = async (url: string): Promise<unknown> => {
@@ -24,6 +26,12 @@ export const fetchJson = async (url: string): Promise<unknown> => {
 export const fetchManifest = async (manifestUrl: string) => {
   try {
     const raw = await fetchJson(manifestUrl);
+    // 画像 1 枚の info.json は、その画像だけを載せた仮のマニフェストにする
+    if (isImageInfoJson(raw)) {
+      const built = manifestFromImageInfo(raw, manifestUrl);
+      if (!built) throw new Error('The image information could not be read');
+      return built;
+    }
     // キュレーション（cr:Curation）は、元のマニフェストを取ってきて 1 冊の仮のマニフェストにする
     if (isCuration(raw)) {
       const built = await resolveCuration(raw, fetchJson);

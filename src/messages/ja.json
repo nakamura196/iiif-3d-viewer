@@ -39,7 +39,7 @@
   },
   "Input": {
     "title": "IIIF マニフェストを表示",
-    "description": "IIIFマニフェストのURLを入力してください",
+    "description": "マニフェスト・コレクション・キュレーション・info.json の URL を入力してください",
     "submit": "表示する",
     "sampleManifest": "ユースケース",
     "sampleManifestAll": "画像・音声・動画・3D のサンプル一覧（IIIF Cookbook など）",
