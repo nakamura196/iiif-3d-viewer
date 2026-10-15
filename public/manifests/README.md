@@ -11,6 +11,8 @@ v4 form directly (Scene, PointSelector / WKTSelector, PerspectiveCamera).
 
 - `sample-manifest.json` - 石淵家地球儀 (Ishibuchi Family Globe)
 - `sample-manifest-with-annotations.json` - 石淵家地球儀 (Ishibuchi Family Globe) - With Annotations
+- `sample-manifest-viewpoints.json` - 石淵家地球儀 - 上の複製の Scene に視点（PerspectiveCamera）を 3 つ（日本・ヨーロッパ・真上）足したもの。
+  最初の視点で開き、ビューアの視点ボタンで切り替わることを試す。注釈の視点（cameraAnnotation）とは別
 - `sample-manifest-region-tags.json` - 石淵家地球儀 - Shared Region and Keyed Tag Extension の例。
   正本は [iiif-region-tag-extension](https://github.com/nakamura196/iiif-region-tag-extension) の
   `examples/manifest.json`。拡張の例を変えたら、ここにも複製し直す（試験がこのファイルを読む）

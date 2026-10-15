@@ -26,6 +26,15 @@ export const SAMPLES: Sample[] = [
     manifest: withBasePath('/manifests/sample-manifest-with-annotations.json'), tab: 'annotations',
   },
   {
+    id: 'globe-viewpoints', media: '3d',
+    title: { ja: '地球儀と視点', en: 'Globe with viewpoints' },
+    note: {
+      ja: '同じ地球儀の Scene に、3 つの視点（PerspectiveCamera）を書いた例。最初の視点「日本」で開き、右上のボタンで「ヨーロッパ」「真上」に切り替えられます',
+      en: 'The same globe with three viewpoints (PerspectiveCamera) in its Scene. It opens at the first one, Japan; the buttons at the top right switch to Europe and From above',
+    },
+    manifest: withBasePath('/manifests/sample-manifest-viewpoints.json'),
+  },
+  {
     id: 'video-transcript', media: 'video',
     title: { ja: '動画と時刻つき文字起こし', en: 'Video with timed transcript' },
     note: {
