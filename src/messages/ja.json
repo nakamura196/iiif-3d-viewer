@@ -131,7 +131,16 @@
     "zoom": "拡大",
     "opacity": "B の濃さ",
     "noImageChoice": "この Canvas には切り替えられる画像（Choice）がありません",
-    "canvas": "Canvas"
+    "canvas": "Canvas",
+    "sources": "資料（{count}）",
+    "addSource": "資料を足す",
+    "addPlaceholder": "Manifest・Collection・info.json の URL",
+    "add": "足す",
+    "removeSource": "この資料を外す",
+    "imageCount": "画像 {count} 枚",
+    "unreadable": "読めませんでした",
+    "invalidUrl": "URL の形になっていません",
+    "alreadyAdded": "この資料はもう入っています"
   },
   "Samples": {
     "media": {

@@ -131,7 +131,16 @@
     "zoom": "Zoom",
     "opacity": "Opacity of B",
     "noImageChoice": "This Canvas has no Choice of images to compare",
-    "canvas": "Canvas"
+    "canvas": "Canvas",
+    "sources": "Sources ({count})",
+    "addSource": "Add a source",
+    "addPlaceholder": "URL of a Manifest, Collection or info.json",
+    "add": "Add",
+    "removeSource": "Remove this source",
+    "imageCount": "{count, plural, one {# image} other {# images}}",
+    "unreadable": "Could not be read",
+    "invalidUrl": "This is not a URL",
+    "alreadyAdded": "This source is already in the list"
   },
   "Samples": {
     "media": {
