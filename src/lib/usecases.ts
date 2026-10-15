@@ -143,6 +143,7 @@ export const USE_CASES: UseCase[] = [
     },
     open: { page: 'georef', manifest: `${SITE_URL}/manifests/sample-manifest-with-annotations.json` },
     features: ['3d', 'georef'],
+    video: { ja: 'NAVE09zRedo', en: 'b8qKqzuNNZY' },
   },
   {
     id: 'iiif-geo',
