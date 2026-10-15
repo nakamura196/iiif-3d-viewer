@@ -2,6 +2,7 @@ import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html, Environment } from '@react-three/drei';
 import { Suspense, useEffect, useState, useRef, useImperativeHandle, forwardRef, useCallback, useMemo } from 'react';
 import Scene, { type PlacedModel, type ViewHandle } from '../three/Scene';
+import ModelErrorBoundary from './ModelErrorBoundary';
 import { useAtom, useAtomValue } from 'jotai';
 import { manifestAtom, modelAnimationAtom, sceneIdAtom } from '../atoms';
 import { sceneCamerasOf } from '../../core';
@@ -152,6 +153,9 @@ const CanvasComponent = ({ glbUrl, extraModels, attribution }: CanvasComponentPr
   const locale = useLocale();
   // one button per Camera painted into the Scene (hidden ones belong to notes)
   const cameras = useMemo(() => sceneCamerasOf(manifest, sceneId), [manifest, sceneId]);
+  // the main model could not be loaded: say so over the (empty) 3D view
+  const [loadError, setLoadError] = useState<{ url: string; message: string } | null>(null);
+  const failedUrl = loadError?.url === glbUrl ? loadError : null;
 
   useEffect(() => {
     setMounted(true);
@@ -201,7 +205,12 @@ const CanvasComponent = ({ glbUrl, extraModels, attribution }: CanvasComponentPr
         }}
       >
         <Suspense fallback={<LoadingScreen loadingText={t('loading')} />}>
-          <Scene glbUrl={glbUrl} extraModels={extraModels} viewRef={viewRef} />
+          <ModelErrorBoundary
+            key={glbUrl}
+            onError={(e) => setLoadError({ url: glbUrl, message: e.message })}
+          >
+            <Scene glbUrl={glbUrl} extraModels={extraModels} viewRef={viewRef} />
+          </ModelErrorBoundary>
           <OrbitControls
             ref={controlsRef}
             makeDefault
@@ -225,6 +234,14 @@ const CanvasComponent = ({ glbUrl, extraModels, attribution }: CanvasComponentPr
           <directionalLight position={[10, 10, 5]} intensity={isDark ? 0.5 : 0.7} />
         </Suspense>
       </Canvas>
+      {failedUrl && (
+        <div role="alert" className="absolute inset-0 z-10 flex items-center justify-center p-4 pointer-events-none">
+          <div className="max-w-md bg-white/90 dark:bg-gray-800/90 p-4 rounded-lg shadow text-center pointer-events-auto">
+            <p className="font-medium text-gray-800 dark:text-gray-200">{t('modelError')}</p>
+            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400 break-all">{failedUrl.message}</p>
+          </div>
+        </div>
+      )}
       {/* ズームボタン（MapLibre GL風） */}
       <div className="absolute top-4 right-4 z-10 flex flex-col rounded overflow-hidden shadow">
         <button

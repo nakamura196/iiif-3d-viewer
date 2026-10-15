@@ -61,6 +61,7 @@
     "loadingManifest": "Loading manifest...",
     "manifestError": "Could not load the manifest",
     "empty": "Nothing to display",
+    "modelError": "Could not load the 3D model",
     "imageError": "Could not load the image",
     "mediaError": "Could not load the media",
     "waveform": "Waveform of the sound (click to move there; left and right arrow keys move 5 seconds)",
