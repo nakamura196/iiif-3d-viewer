@@ -1,0 +1,236 @@
+/* IIIF VR Gallery（元: nakamura196/iiif-vr-gallery の docs/index.html）の見た目 */
+/* Kasane のヘッダーの下に置く枠。元は画面全体(position: absolute)だった部品を、この枠基準(absolute)にした */
+#vrg { position: absolute; inset: 0; overflow: hidden; background: #15171c; color-scheme: dark;
+  font-family: -apple-system, "Hiragino Sans", "Yu Gothic", sans-serif; color: #eaecef; }
+#vrg * { box-sizing: border-box; }
+#scene { position: absolute; inset: 0; }
+#scene canvas { display: block; }
+
+/* 起動時のローディング */
+#loading { position: absolute; inset: 0; display: flex; align-items: center;
+  justify-content: center; background: #15171c; z-index: 50; font-size: 15px;
+  letter-spacing: .04em; }
+#loading .err { color: #ff8080; text-align: center; line-height: 1.7; }
+
+/* ホバー時の作品名 HUD */
+#hud { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%) translateY(12px);
+  background: rgba(20,23,28,.85); backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,.08); border-radius: 10px;
+  padding: 8px 10px 8px 18px; font-size: 14px; opacity: 0; pointer-events: none;
+  transition: opacity .18s, transform .18s; white-space: nowrap; max-width: 92vw;
+  display: flex; align-items: center; gap: 14px; }
+#hud.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+#hud .by { color: #9aa3b2; margin-left: 6px; }
+#hud #hud-text { overflow: hidden; text-overflow: ellipsis; }
+#hud .hint { color: #8d96a8; font-size: 12px; }
+#hud-zoom { pointer-events: auto; cursor: pointer; flex: none;
+  background: #c9a44c; color: #1a1408; border: 0; border-radius: 7px;
+  padding: 7px 15px; font-size: 13px; letter-spacing: .04em; transition: background .15s; }
+#hud-zoom:hover { background: #dcc079; }
+
+/* 操作ヒント(画面隅) */
+#help { position: absolute; top: 52px; left: 16px; font-size: 12px; color: #8b93a4;
+  line-height: 1.6; pointer-events: none; }
+
+/* モード切替ボタン */
+/* 上部の操作ボタン(共通の上品なスタイル) */
+#mode-toggle, #quality-toggle, #entrance-back, #tour-toggle, #tour-toggle-3p, #look-toggle, #index-toggle {
+  position: absolute; z-index: 20; cursor: pointer;
+  background: rgba(14,15,19,.72); backdrop-filter: blur(10px);
+  border: 1px solid rgba(201,164,76,.30); border-radius: 999px;
+  padding: 8px 18px; font-size: 12px; letter-spacing: .14em; color: #e6e2d6;
+  transition: border-color .15s, background .15s, color .15s; }
+#mode-toggle:hover, #quality-toggle:hover, #entrance-back:hover, #tour-toggle:hover, #tour-toggle-3p:hover, #look-toggle:hover, #index-toggle:hover {
+  border-color: #c9a44c; color: #f4efe3; background: rgba(22,24,29,.85); }
+/* 目次ボタン: モード切替の左隣。展示入室中のみ表示。 */
+#index-toggle { top: 16px; right: 96px; display: none; }
+#index-toggle.show { display: block; }
+#mode-toggle { top: 16px; right: 18px; }
+#quality-toggle { top: 58px; right: 18px; display: none; padding: 6px 14px; font-size: 11px; color: #c8c2b2; }
+#quality-toggle.show { display: block; }
+#tour-toggle, #tour-toggle-3p { display: none; right: 18px; padding: 6px 14px; font-size: 11px; color: #c8c2b2; }
+#tour-toggle.show, #tour-toggle-3p.show { display: block; }
+#tour-toggle { top: 92px; }
+#tour-toggle-3p { top: 126px; }
+#tour-toggle.recording, #tour-toggle-3p.recording { border-color: #e0584f; color: #f4b0aa; background: rgba(40,18,18,.85); }
+#tour-toggle:disabled, #tour-toggle-3p:disabled { opacity: .4; cursor: default; }
+#look-toggle { top: 160px; right: 18px; display: none; padding: 6px 14px; font-size: 11px; color: #c8c2b2; }
+#look-toggle.show { display: block; }
+
+/* バーチャルコントローラ(スマホ用ジョイスティック) */
+#joystick { position: absolute; left: 24px; bottom: 24px; width: 124px; height: 124px;
+  border-radius: 50%; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.18);
+  z-index: 18; display: none; touch-action: none; }
+#joystick.show { display: block; }
+#joystick-knob { position: absolute; left: 50%; top: 50%; width: 54px; height: 54px;
+  border-radius: 50%; transform: translate(-50%, -50%);
+  background: rgba(255,255,255,.26); border: 1px solid rgba(255,255,255,.45); }
+
+/* 一人称モードの照準(十字) */
+#crosshair { position: absolute; top: 50%; left: 50%; width: 18px; height: 18px;
+  transform: translate(-50%, -50%); opacity: 0; pointer-events: none; z-index: 10; }
+#crosshair.show { opacity: .8; }
+#crosshair::before, #crosshair::after { content: ""; position: absolute;
+  background: rgba(255,255,255,.85); }
+#crosshair::before { left: 50%; top: 0; width: 2px; height: 100%; transform: translateX(-50%); }
+#crosshair::after { top: 50%; left: 0; height: 2px; width: 100%; transform: translateY(-50%); }
+
+/* 入口(ロビー): 展示を選ぶ */
+#entrance { position: absolute; inset: 0; z-index: 30; display: none; flex-direction: column;
+  align-items: center; justify-content: safe center; gap: 26px; padding: 40px;
+  overflow-y: auto; -webkit-overflow-scrolling: touch;
+  background: radial-gradient(1200px 800px at 50% 30%, #16181d 0%, #0a0b0d 70%); }
+#entrance.show { display: flex; }
+/* 展示数が多い時は中身を上詰めにしてスクロール可能に */
+#entrance.scroll { justify-content: flex-start; }
+#entrance-cards { max-height: none; }
+#entrance h1 { margin: 0; font-size: 30px; font-weight: 400; letter-spacing: .18em; text-align: center;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; color: #f1ece1; }
+#entrance h1::after { content: ""; display: block; width: 44px; height: 1px; margin: 16px auto 0;
+  background: linear-gradient(90deg, transparent, #c9a44c, transparent); }
+#entrance .lead { margin: 2px 0 6px; font-size: 12px; color: #9aa3b2; letter-spacing: .14em; }
+#entrance-modes, #entrance-chars { display: flex; gap: 10px; }
+#entrance-chars { margin-top: -8px; }
+.mode-pick { background: rgba(255,255,255,.06); color: #c4cad6; cursor: pointer;
+  border: 1px solid rgba(255,255,255,.14); border-radius: 999px; padding: 8px 18px; font-size: 13px; }
+.mode-pick.on { background: rgba(201,164,76,.16); color: #e9d6a6; border-color: #c9a44c; }
+#entrance-cards { display: flex; gap: 22px; flex-wrap: wrap; justify-content: center; max-width: 980px; }
+#entrance-enter { margin-top: 8px; background: #c9a44c; color: #1a1408; border: 0; cursor: pointer;
+  border-radius: 999px; padding: 13px 40px; font-size: 15px; font-weight: 600; letter-spacing: .08em;
+  transition: background .15s, transform .15s; }
+#entrance-enter:hover { background: #dcc079; transform: translateY(-1px); }
+#entrance-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; justify-content: center; }
+/* VRで入室: 枠線ボタン。非対応時は disabled でグレーアウト。 */
+#entrance-enter-vr { margin-top: 8px; background: transparent; color: #c9a44c; cursor: pointer;
+  border: 1px solid #c9a44c; border-radius: 999px; padding: 12px 32px; font-size: 15px;
+  font-weight: 600; letter-spacing: .08em; transition: background .15s, transform .15s, opacity .15s; }
+#entrance-enter-vr:hover:not(:disabled) { background: rgba(201,164,76,.14); transform: translateY(-1px); }
+#entrance-enter-vr:disabled { color: #6b6f78; border-color: #3a3d44; cursor: not-allowed; opacity: .7; }
+#entrance-url { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center;
+  margin-top: 10px; max-width: 720px; }
+#entrance-url .lbl { font-size: 12px; color: #9aa3b2; width: 100%; text-align: center; }
+#entrance-url-input { flex: 1; min-width: min(320px, 100%); background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.16); border-radius: 8px; padding: 9px 12px; color: #eaecef; font-size: 13px; }
+#entrance-url-go { background: rgba(255,255,255,.1); color: #eaecef; cursor: pointer;
+  border: 1px solid rgba(255,255,255,.18); border-radius: 8px; padding: 9px 16px; font-size: 13px; }
+#entrance-url-go:hover { background: rgba(255,255,255,.2); }
+#entrance-url-example { margin-top: 8px; background: none; border: 0; cursor: pointer;
+  color: #9aa3b2; font-size: 12px; letter-spacing: .04em; text-decoration: underline;
+  text-underline-offset: 3px; transition: color .15s; }
+#entrance-url-example:hover { color: #d8bd78; }
+/* 使い方動画カード(サムネ + 再生ボタン) */
+#entrance-tut, #entrance-tour { position: relative; margin-top: 12px; width: 300px; max-width: 86vw; aspect-ratio: 16 / 9;
+  flex: none; padding: 0; cursor: pointer; overflow: hidden; border-radius: 12px; color: #fff;
+  border: 1px solid rgba(201,164,76,.35); background-size: cover; background-position: center;
+  box-shadow: 0 8px 28px rgba(0,0,0,.45); transition: transform .15s, border-color .15s; }
+#entrance-tut { margin-top: 14px; width: 360px; }
+#entrance-tut:hover, #entrance-tour:hover { transform: translateY(-2px); border-color: #c9a44c; }
+#entrance-tut::after, #entrance-tour::after { content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.6), rgba(0,0,0,.04) 55%); }
+#entrance-tut .play, #entrance-tour .play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); z-index: 2;
+  width: 56px; height: 56px; border-radius: 50%; background: rgba(201,164,76,.94); color: #1a1408;
+  display: flex; align-items: center; justify-content: center; font-size: 21px; padding-left: 3px;
+  box-shadow: 0 4px 14px rgba(0,0,0,.4); }
+#entrance-tut .cap, #entrance-tour .cap { position: absolute; left: 13px; bottom: 10px; z-index: 2; font-size: 12.5px;
+  letter-spacing: .06em; color: #f4efe3; text-shadow: 0 1px 4px rgba(0,0,0,.7); }
+/* 使い方動画モーダル */
+#tut-modal { position: absolute; inset: 0; z-index: 120; display: none; align-items: center;
+  justify-content: center; padding: 4vmin; background: rgba(6,7,9,.86); backdrop-filter: blur(6px); }
+#tut-modal.show { display: flex; }
+#tut-frame { width: min(1100px, 94vw); aspect-ratio: 16 / 9; max-height: 88vh; border-radius: 12px;
+  overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.6); border: 1px solid rgba(201,164,76,.25); }
+#tut-embed, #tut-embed iframe { width: 100%; height: 100%; border: 0; display: block; }
+#tut-close { position: absolute; top: 20px; right: 22px; width: 42px; height: 42px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.18); background: rgba(12,13,16,.7); color: #eaecef; font-size: 22px;
+  line-height: 1; cursor: pointer; }
+#tut-close:hover { background: rgba(40,44,52,.9); }
+.ex-card { position: relative; width: 300px; height: 210px; border-radius: 14px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,.12); cursor: pointer; padding: 0; color: #fff;
+  background-size: cover; background-position: center; background-color: #1b1e24;
+  transition: transform .15s, border-color .15s; }
+.ex-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,.35); }
+.ex-card.on { border-color: #c9a44c; box-shadow: 0 0 0 1px #c9a44c, 0 8px 28px rgba(0,0,0,.5); }
+.ex-card .ex-meta { position: absolute; inset: auto 0 0 0; text-align: left; padding: 14px 16px;
+  background: linear-gradient(to top, rgba(8,9,11,.92), rgba(8,9,11,0)); }
+.ex-card .ex-title { font-size: 17px; font-weight: 700; }
+.ex-card .ex-sub { font-size: 12px; color: #c4cad6; margin-top: 3px; }
+
+/* Enter VR ボタン(VRButton 既定の下部中央 → 上部中央へ。HUD と重ねない) */
+#vr-button { top: 14px !important; bottom: auto !important; }
+/* ロビー(入口)では隠す。空の部屋で VR に入って真っ暗になるのを防ぐ。 */
+#vr-button.vr-hidden { display: none !important; }
+
+/* 入口に戻るボタン */
+#entrance-back { top: 16px; left: 18px; display: none; }
+#entrance-back.show { display: block; }
+
+/* 一人称モードの開始プロンプト */
+#walk-prompt { position: absolute; inset: 0; z-index: 15; display: none;
+  align-items: center; justify-content: center; flex-direction: column; gap: 8px;
+  background: rgba(10,11,13,.55); cursor: pointer; }
+#walk-prompt.show { display: flex; }
+#walk-prompt .big { font-size: 18px; letter-spacing: .05em; }
+#walk-prompt .sub { font-size: 13px; color: #9aa3b2; }
+
+/* 深ズーム(OpenSeadragon)オーバーレイ */
+#osd-overlay { position: absolute; inset: 0; z-index: 100; background: #0c0d10;
+  display: none; }
+#osd-overlay.show { display: block; }
+#osd { position: absolute; inset: 0; }
+#osd-title { position: absolute; top: 16px; left: 20px; z-index: 2; font-size: 15px;
+  background: rgba(12,13,16,.6); padding: 8px 14px; border-radius: 8px; max-width: 70vw;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#osd-title .by { color: #9aa3b2; margin-left: 8px; font-size: 13px; }
+#osd-close { position: absolute; top: 16px; right: 18px; z-index: 4; width: 40px; height: 40px;
+  border-radius: 50%; border: 1px solid rgba(255,255,255,.15); background: rgba(12,13,16,.6);
+  color: #eaecef; font-size: 22px; cursor: pointer; line-height: 1; }
+#osd-close:hover { background: rgba(40,44,52,.9); }
+#osd-info { position: absolute; top: 16px; right: 66px; z-index: 4; width: 40px; height: 40px;
+  border-radius: 50%; border: 1px solid rgba(201,164,76,.35); background: rgba(12,13,16,.6);
+  color: #d8bd78; font-size: 19px; cursor: pointer; line-height: 38px; text-align: center;
+  font-family: "Hiragino Mincho ProN", Georgia, serif; font-style: italic; transition: border-color .15s; }
+#osd-info:hover { border-color: #c9a44c; background: rgba(22,24,29,.85); }
+/* 権利・メタデータ パネル(右からスライドイン) */
+#osd-panel { position: absolute; top: 0; right: 0; bottom: 0; width: 360px; max-width: 86vw; z-index: 3;
+  background: rgba(12,13,16,.94); backdrop-filter: blur(10px); border-left: 1px solid rgba(201,164,76,.25);
+  transform: translateX(100%); transition: transform .25s ease; overflow-y: auto;
+  padding: 64px 22px 24px; font-size: 13px; line-height: 1.7; color: #d7d9de; }
+#osd-panel.show { transform: translateX(0); }
+#osd-panel h3 { margin: 0 0 4px; font-size: 17px; font-weight: 400; color: #f1ece1;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; letter-spacing: .04em; }
+#osd-panel .by { color: #9aa3b2; font-size: 12px; margin-bottom: 14px; }
+#osd-panel .sec { margin-top: 16px; }
+#osd-panel .sec > .k { color: #c9a44c; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+#osd-panel .md { display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; margin-top: 6px; }
+#osd-panel .md .k { color: #9aa3b2; }
+#osd-panel a { color: #d8bd78; text-decoration: none; word-break: break-all; }
+#osd-panel a:hover { text-decoration: underline; }
+
+/* 目次(作品一覧)オーバーレイ */
+#index-overlay { position: absolute; inset: 0; z-index: 110; display: none; flex-direction: column;
+  background: rgba(8,9,11,.94); backdrop-filter: blur(8px); }
+#index-overlay.show { display: flex; }
+#index-head { flex: none; display: flex; align-items: center; justify-content: center; position: relative;
+  padding: 20px 16px 14px; border-bottom: 1px solid rgba(201,164,76,.18); }
+#index-title { font-size: 17px; letter-spacing: .12em; color: #f1ece1;
+  font-family: "Hiragino Mincho ProN", "Yu Mincho", Georgia, serif; }
+#index-close { position: absolute; top: 12px; right: 16px; width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.15); background: rgba(12,13,16,.6); color: #eaecef; font-size: 22px;
+  line-height: 1; cursor: pointer; }
+#index-close:hover { background: rgba(40,44,52,.9); }
+#index-grid { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 22px;
+  display: grid; gap: 18px; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); align-content: start; }
+.ix-card { position: relative; cursor: pointer; padding: 0; color: #eaecef; text-align: left;
+  background: #16181d; border: 1px solid rgba(255,255,255,.10); border-radius: 12px; overflow: hidden;
+  transition: transform .15s, border-color .15s; }
+.ix-card:hover { transform: translateY(-3px); border-color: #c9a44c; }
+.ix-thumb { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; display: block; background: #23262d; }
+.ix-num { position: absolute; top: 8px; left: 8px; z-index: 2; min-width: 22px; height: 22px; padding: 0 6px;
+  border-radius: 11px; background: rgba(8,9,11,.78); color: #d8bd78; font-size: 12px; line-height: 22px;
+  text-align: center; }
+.ix-meta { padding: 9px 11px 11px; }
+.ix-label { font-size: 13px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.ix-by { margin-top: 3px; font-size: 11px; color: #9aa3b2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#index-empty { grid-column: 1 / -1; text-align: center; color: #9aa3b2; padding: 40px 0; font-size: 14px; }
+  

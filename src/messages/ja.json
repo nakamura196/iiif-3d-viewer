@@ -24,7 +24,8 @@
     "developers": "中村 覚・小川 潤（東京大学）",
     "samplesAll": "Cookbook のサンプル",
     "samplesOwn": "Kasane 独自のサンプル",
-    "useCasesAll": "ユースケース"
+    "useCasesAll": "ユースケース",
+    "gallery": "IIIF バーチャル美術館"
   },
   "News": {
     "heading": "お知らせ",
@@ -282,5 +283,8 @@
       "curation": "キュレーション",
       "collection": "コレクション"
     }
+  },
+  "Gallery": {
+    "openInGallery": "3D の美術館で見る"
   }
 }

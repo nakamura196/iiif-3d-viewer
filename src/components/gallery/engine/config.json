@@ -1,0 +1,104 @@
+{
+  "$comment": "==== 3D IIIF Gallery 設定 ===========================================",
+  "$comment_howto": "壁の中身は manifest / collection / walls のどれか1つで決める(この優先順)。",
+  "title": "IIIF VR Gallery — どんな IIIF も 3D 仮想美術館で歩いて鑑賞・超高精細ズーム",
+
+  "$comment_tutorial": "ロビーに使い方/ツアー動画を埋め込む(空なら非表示)。文字列か {ja,en} で言語別に指定可。",
+  "tutorialVideoId": { "ja": "JMBn4cuI-Yw", "en": "91AhCgI7TXY" },
+  "tourVideoId": { "ja": "B0JyLEAgH64", "en": "9ZuyMcZWOWY" },
+
+  "$comment_example": "「自分の IIIF を見る」フォーム下の例ボタンが入力する URL(空なら非表示)。",
+  "exampleIiifUrl": "https://iiif.io/api/cookbook/recipe/0032-collection/collection.json",
+
+  "$comment_quality": "描画品質と負荷。auto=端末性能で自動 / high / medium / low。?quality= でも上書き可。",
+  "quality": "auto",
+
+  "$comment_room": "暗い美術館ギャラリーの見た目。広い空間に絵を鑑賞の基準線の高さで掛ける。",
+  "room": {
+    "height": 5.5,
+    "bgColor": "#0a0b0d",
+    "wallColor": "#1b1e24",
+    "floorColor": "#101216",
+    "ceilingColor": "#0c0d11",
+    "ambient": 0.34,
+    "hemi": 0.42,
+    "exposure": 1.2,
+    "fog": 0.012,
+    "floorGlow": true,
+    "hangCenter": 1.55,
+    "artMaxHeight": 1.9,
+    "artMaxWidth": 2.4,
+    "reflectiveFloor": false,
+    "spotlights": true,
+    "glowStrength": 0.95,
+    "lightColor": "#ffe9c4",
+    "downlights": true,
+    "downlightCount": 6,
+    "downlightIntensity": 80,
+    "furniture": true
+  },
+
+  "$comment_bloom": "照明やハイライトのふんわりした発光。重ければ enabled:false に。",
+  "bloom": { "enabled": true, "strength": 0.4, "radius": 0.5, "threshold": 0.86 },
+
+  "$comment_motion": "演出。autoRotate=放置で自動回転 / plates=作品の銘板 / flyDuration=近づく秒数",
+  "autoRotate": true,
+  "autoRotateSpeed": 0.6,
+  "plates": true,
+  "flyDuration": 0.9,
+
+  "$comment_control": "操作モード: orbit=見回す(放置で自動回転) / walk=一人称で歩く(WASD)。画面右上で切替可。",
+  "controlMode": "thirdperson",
+  "walkSpeed": 5.5,
+  "$comment_char": "三人称キャラ。characterForwardOffset=モデル正面の補正(rad)。-Z正面のモデルは 3.14159。",
+  "characterScale": 1,
+  "characterForwardOffset": 0,
+  "$comment_vc": "バーチャルコントローラ(スマホ用ジョイスティック): auto=タッチ端末のみ / always / off",
+  "virtualController": "auto",
+
+  "camera": {
+    "fov": 60,
+    "start": [0, 1.6, 0.2],
+    "minDistance": 0.4,
+    "maxDistance": 60
+  },
+
+  "$comment_layout": "polygon=正多角形の閉じた部屋に自動配置 / explicit=各wallのposition,rotationを使う",
+  "$comment_polygon": "wallWidth+gap が1辺の幅=絵の間隔。大きいほど部屋が広く、絵がゆったり並ぶ。eyeHeight=立った視点高さ。",
+  "layout": "polygon",
+  "polygon": { "wallWidth": 4.0, "gap": 2.2, "eyeHeight": 1.6 },
+
+  "wallTexturePx": 1024,
+
+  "$comment_source": "入力は標準IIIFのURL1本。?u=URL で上書き可(?u=... [&selections=0,1] [&mode=walk|thirdperson])。",
+  "$comment_source2": "Curation で selection が複数なら入口(展示選択)を自動表示。単一/Manifest/Collection なら直接入室。",
+  "source": "./sample/genelib-curation.json",
+
+  "$comment_fallback": "(source も ?u= も無い場合のフォールバック)",
+  "manifest": null,
+  "collection": null,
+  "curation": null,
+
+  "walls": [
+    { "label": "A clergyman", "by": "Oil painting",
+      "source": { "type": "iiif", "id": "https://iiif.wellcomecollection.org/image/V0017788" } },
+    { "label": "John Belchier", "by": "Oil painting (after O. Humphry)",
+      "source": { "type": "iiif", "id": "https://iiif.wellcomecollection.org/image/V0017789" } },
+    { "label": "Joseph Hume", "by": "Oil painting",
+      "source": { "type": "iiif", "id": "https://iiif.wellcomecollection.org/image/V0017904" } },
+    { "label": "Florence Nightingale", "by": "Oil painting",
+      "source": { "type": "iiif", "id": "https://iiif.wellcomecollection.org/image/V0017992" } },
+    { "label": "The smith Jan Lutma", "by": "Portrait",
+      "source": { "type": "iiif", "id": "https://iiif.wellcomecollection.org/image/V0017973" } },
+    { "label": "Sarah Biffin", "by": "Watercolour, 1812",
+      "source": { "type": "iiif", "id": "https://iiif.wellcomecollection.org/image/V0048051" } },
+    { "label": "Francesco Ravai (il Bajocco)", "by": "Watercolour",
+      "source": { "type": "iiif", "id": "https://iiif.wellcomecollection.org/image/V0017110" } },
+    { "label": "Ginkgo biloba", "by": "Botanical",
+      "source": { "type": "iiif", "id": "https://iiif.wellcomecollection.org/image/V0043766EL" } },
+    { "label": "Gabriele Falloppio", "by": "Portrait",
+      "source": { "type": "iiif", "id": "https://iiif.wellcomecollection.org/image/M0011972" } },
+    { "label": "John Brown (1735-1788)", "by": "Portrait",
+      "source": { "type": "iiif", "id": "https://iiif.wellcomecollection.org/image/M0006694" } }
+  ]
+}
