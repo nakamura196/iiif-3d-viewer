@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseProbeResult, parseTokenMessage, probeServiceOf } from './auth';
+import { authorizedUrl, parseProbeResult, parseTokenMessage, probeServiceOf } from './auth';
 
 const label = (t: string) => ({ en: [t] });
 const probe = {
@@ -89,5 +89,31 @@ describe('parseTokenMessage', () => {
   it('ignores unrelated messages', () => {
     expect(parseTokenMessage({ foo: 1 }, 'm1')).toBeNull();
     expect(parseTokenMessage(null, 'm1')).toBeNull();
+  });
+});
+
+describe('authorizedUrl', () => {
+  const url = 'https://example.org/model.glb';
+  it('loads the resource itself when it has no probe', () => {
+    expect(authorizedUrl(url, undefined)).toBe(url);
+  });
+  it('waits while the user is not let in', () => {
+    for (const phase of ['probing', 'prompt', 'working', 'denied']) expect(authorizedUrl(url, { phase })).toBeNull();
+  });
+  it('loads the probe location (e.g. a signed URL) once allowed, or the resource itself', () => {
+    const signed = 'https://example.org/files/model.glb?exp=1&sig=x';
+    expect(authorizedUrl(url, { phase: 'ok', location: { id: signed, type: 'Model' } })).toBe(signed);
+    expect(authorizedUrl(url, { phase: 'ok' })).toBe(url);
+  });
+});
+
+describe('probeServiceOf on a Model', () => {
+  it('reads an AuthProbeService2 written directly on the Model body', () => {
+    const model = {
+      id: 'https://example.org/files/m.glb',
+      type: 'Model',
+      service: [{ id: 'https://example.org/probe/m.glb', type: 'AuthProbeService2', service: [] }],
+    };
+    expect(probeServiceOf(model)?.id).toBe('https://example.org/probe/m.glb');
   });
 });

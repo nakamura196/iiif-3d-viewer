@@ -8,6 +8,8 @@ import type { SceneV4 } from '../types/iiif';
 export interface ModelOption {
   url: string;
   label: unknown; // IIIF language map or string, as in the manifest
+  // the Model resource as written in the manifest (its services, e.g. an AuthProbeService2)
+  body: unknown;
 }
 
 export interface PaintedModel {
@@ -30,7 +32,7 @@ const isPainting = (anno: Json) => asList(anno.motivation).includes('painting');
 const modelOption = (body: unknown): ModelOption | null => {
   const b = body as Json | undefined;
   if (b?.type !== 'Model' || typeof b.id !== 'string') return null;
-  return { url: b.id, label: b.label };
+  return { url: b.id, label: b.label, body };
 };
 
 const positionOf = (anno: Json): [number, number, number] => {
@@ -69,11 +71,15 @@ export const paintedModelsOf = (scene: SceneV4 | undefined): PaintedModel[] => {
   return out;
 };
 
-// The URL shown for a painted model: the chosen option, or the first (the default).
-export const chosenUrl = (model: PaintedModel, choices: Record<string, number>): string => {
+// The option shown for a painted model: the chosen one, or the first (the default).
+export const chosenOption = (model: PaintedModel, choices: Record<string, number>): ModelOption => {
   const i = choices[model.id] ?? 0;
-  return (model.options[i] ?? model.options[0]).url;
+  return model.options[i] ?? model.options[0];
 };
+
+// The URL shown for a painted model.
+export const chosenUrl = (model: PaintedModel, choices: Record<string, number>): string =>
+  chosenOption(model, choices).url;
 
 // A IIIF label in the reader's language: the locale, then "none", then any.
 export const labelIn = (label: unknown, locale: string): string => {

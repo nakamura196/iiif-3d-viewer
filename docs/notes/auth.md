@@ -33,7 +33,7 @@ access service を試す順番は external → kiosk → active。
 - 実際のサーバでは試していない（モックだけ）。
 - 画像サーバが別サイトのとき、ブラウザの第三者 Cookie 制限で `<img>` に Cookie が付かない。
   モックは localhost のポート違い（same-site）なので、この問題は出ない。
-- 音声・動画・3D は未対応（画像だけ）。
+- 音声・動画は未対応（3D は 2026-10-15 に対応）。
 - info.json が Cookie なしで 401 を返すサーバでは、manifest に Probe が無いと検出できない。
 - substitute（401 で別リソースを返す段階的アクセス）と、substitute 側の Probe は扱っていない。
   `location`（30x）の代替画像だけ置き換える。
@@ -62,3 +62,12 @@ access service を試す順番は external → kiosk → active。
 - 変更 2: 許可が出るまで（確認中・案内・作業中・拒否）、画像を `blur(24px)` でぼかす。キャッシュの写しや、確かめずに画像を返すサーバでも中身が見えないように。
 - 確認（Claude in Chrome、普段の Chrome）: 同意前は注意書きのみ → Accept → Submit → 画像表示 → 再読み込みで注意書きが出ず、すぐ画像とログアウトのリンクが出た。
 - E2E: モックで「Cookie が残っていれば案内なしで鮮明な画像」を足し、ぼかしの有無も確かめる。7 件通過。
+
+## 2026-10-15 3D モデルの認証に対応した
+
+- 実物は RailClass（https://railclass.ldas.jp/iiif/mk1/manifest.json）。Model の body に AuthProbeService2 を直に書いている。probe は許可すると status 302 と `location`（期限つきの署名つき URL）を返す。ファイルそのものは署名なしだと 403。
+- 3D は GLB を丸ごと 1 回取るだけなので、画像のように「劣化版を描きながら案内を重ねる」ことはしない。probe が通るまでは読み込まず、案内だけを出す。通ったら `location` があればそれを、無ければ Model の id を読む（core の `authorizedUrl`）。
+- Scene の Model は数が変わる（地面などの追加モデル、Choice）。hook を数ぶん呼べないので、probe の並びを受け取る `useAuthStates` を authStore に足した。Controller は画像と同じ registry を使うので、同じ probe なら画像と 3D で共有される。
+- ModelOption に manifest の Model そのもの（`body`）を持たせ、`probeServiceOf` で読む。
+- 確認: localhost:3838 で上のマニフェストを Chrome で開く → 「ログインしてください」の案内 → ログイン（Cloudflare Access のセッションが残っていたので窓はすぐ閉じた）→ モデルが表示、右下にログアウト。ブリッジの `allowedOrigins` に https://kasane.ldas.jp と http://localhost:3838 を足して配り直してから試した。
+- 限界: 署名つき URL の期限（ブリッジは正時まで、最短 5 分）が切れた後に別の Choice へ切り替えると、古い `location` は probe し直さないので 403 になりうる（未確認）。localhost は ldas.jp と別サイトなので、Cookie の第三者制限が厳しいブラウザでは token の iframe が通らないかもしれない（Chrome では通った）。

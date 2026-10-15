@@ -2,7 +2,7 @@
 
 import { lazy, Suspense, useEffect, useMemo } from 'react';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { chosenUrl, paintedModelsOf, parseManifestV4, sceneOf } from '../../core';
+import { authorizedUrl, chosenOption, paintedModelsOf, parseManifestV4, probeServiceOf, sceneOf } from '../../core';
 import {
   annotationsAtom,
   modelChoicesAtom,
@@ -10,7 +10,9 @@ import {
   sceneIdAtom,
   selectedAnnotationIdAtom,
 } from '../atoms';
-import { useTranslations } from '../env';
+import { useLocale, useTranslations } from '../env';
+import AuthPrompt from '../auth/AuthPrompt';
+import { useAuthStates } from '../auth/authStore';
 import ModelChoice from '../three/ModelChoice';
 import type { Display, DisplayProps } from './types';
 
@@ -19,6 +21,7 @@ const CanvasComponent = lazy(() => import('../three/Canvas'));
 
 function SceneDisplay({ container, manifest, iiifContent, renderActions, selectedIndex }: DisplayProps) {
   const t = useTranslations('Viewer');
+  const locale = useLocale();
   const paintedModels = useAtomValue(paintedModelsAtom);
   const setPaintedModels = useSetAtom(paintedModelsAtom);
   const setAnnotations = useSetAtom(annotationsAtom);
@@ -38,10 +41,22 @@ function SceneDisplay({ container, manifest, iiifContent, renderActions, selecte
 
   // The first painted model is the main one (framing, annotation occlusion);
   // the others are drawn alongside. A Choice shows its chosen (default: first) Model.
-  const glbUrl = paintedModels[0] ? chosenUrl(paintedModels[0], modelChoices) : null;
+  // A Model behind IIIF Auth 2.0 (an AuthProbeService2 on the Model) is loaded only once the
+  // probe lets the user in, from the probe's `location` when it gives one (e.g. a signed URL).
+  const chosen = useMemo(() => paintedModels.map((m) => chosenOption(m, modelChoices)), [paintedModels, modelChoices]);
+  const probes = useMemo(() => chosen.map((o) => probeServiceOf(o.body, locale)), [chosen, locale]);
+  const authStates = useAuthStates(probes, locale);
+  const urls = chosen.map((o, i) => authorizedUrl(o.url, authStates[i]));
+  const glbUrl = urls[0] ?? null;
+  const extraKey = urls.slice(1).join('\n');
   const extraModels = useMemo(
-    () => paintedModels.slice(1).map((m) => ({ url: chosenUrl(m, modelChoices), position: m.position })),
-    [paintedModels, modelChoices],
+    () =>
+      paintedModels
+        .slice(1)
+        .map((m, i) => ({ url: urls[i + 1], position: m.position }))
+        .filter((m): m is { url: string; position: [number, number, number] } => !!m.url),
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- urls is rebuilt each render; extraKey holds its content
+    [paintedModels, extraKey],
   );
   const hasChoices = (paintedModels[0]?.options.length ?? 0) > 1;
 
@@ -53,6 +68,7 @@ function SceneDisplay({ container, manifest, iiifContent, renderActions, selecte
           <CanvasComponent key={sceneId} glbUrl={glbUrl} extraModels={extraModels} />
         </Suspense>
       )}
+      <AuthPrompt />
       <div className="absolute bottom-4 left-4 z-10 flex items-end gap-2">
         <ModelChoice />
         {renderActions?.({ iiifContent, hasChoices, selectedIndex })}
