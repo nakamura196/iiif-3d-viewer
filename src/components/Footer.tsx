@@ -26,6 +26,7 @@ export default function Footer() {
           heading: t('guideHeading'),
           links: [
             { label: t('help'), href: '/help' },
+            { label: t('inferenceModels'), href: '/inference-models' },
             { label: t('privacy'), href: '/privacy' },
             { label: t('terms'), href: '/terms' },
           ],
