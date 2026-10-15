@@ -328,6 +328,20 @@ export const USE_CASES: UseCase[] = [
     site: 'https://wellcomecollection.org/works/a222zvge',
     video: { ja: 'Trl4ksr5TBU', en: 'etqp6liTkFo' },
   },
+  {
+    id: 'video-objects',
+    title: {
+      ja: '信州デジタルコモンズ「芦の尻の道祖神祭り」（動画の中の物体の枠）',
+      en: 'Ashinoshiri Dosojin Festival, Shinshu Digital Commons (boxes on objects in a video)',
+    },
+    note: {
+      ja: '県立長野図書館の記録映像に、ArchiveBase の Video Search が AI で見つけた人物などの枠を、IIIF の注釈（時間と範囲を指す #t=…&xywh=…）として重ねた例です。枠はその時間だけ動画の上に出ます。一覧の注釈を押すと、その時刻へ移ります。タグは生成 AI の出力で、検証していません。',
+      en: 'A documentary film from the Nagano Prefectural Library, with boxes on people and things that ArchiveBase Video Search found with AI, written as IIIF annotations on a time and a region (#t=…&xywh=…). Each box appears over the video only at its time. Click an annotation in the list to go there. The tags are AI output and have not been checked.',
+    },
+    open: { page: 'viewer', manifest: `${SITE_URL}/manifests/sample-manifest-video-objects.json`, tab: 'canvasAnnotations' },
+    features: ['annotations'],
+    site: 'https://ab.ldas.jp/ja/na-kamura-1263/video',
+  },
 ];
 
 export const FEATURED_USE_CASES = USE_CASES.filter((u) => u.featured);

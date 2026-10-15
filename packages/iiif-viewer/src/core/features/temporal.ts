@@ -473,7 +473,8 @@ export interface TimedText {
 
 /**
  * Annotations whose body is text and whose target has a time ("#t=702,705"), in time
- * order. Painting Annotations are not included (they are shown on the canvas).
+ * order. Painting Annotations are not included (they are shown on the canvas), nor those that also
+ * point at a region ("#t=5,6&xywh=...": drawn over the video).
  */
 export const timedTextsOf = (container: unknown): TimedText[] => {
   const c = obj(container);
@@ -486,6 +487,9 @@ export const timedTextsOf = (container: unknown): TimedText[] => {
       if (!anno || motivationsOf(anno).includes('painting')) continue;
       const time = targetTimeOf(anno.target);
       if (!time) continue;
+      // a time and a place in the picture (an object seen in a video) is drawn over the video and listed
+      // with the other annotations, not read as a line of the transcript
+      if (targetRegionOf(anno.target)) continue;
       const values = asList(anno.body)
         .map(obj)
         .filter((b): b is Json => !!b && b.type === 'TextualBody')

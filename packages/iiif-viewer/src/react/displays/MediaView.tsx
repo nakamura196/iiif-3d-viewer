@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, type MutableRefObject } from 'react';
+import { useRef, useState, type MutableRefObject, type ReactNode } from 'react';
 import { useTranslations } from '../env';
 
 export interface CaptionTrack {
@@ -21,13 +21,18 @@ interface Props {
   /** Filled with the media element so that a transcript can move the position. */
   mediaRef: MutableRefObject<HTMLMediaElement | null>;
   onTimeUpdate?: (seconds: number) => void;
+  /**
+   * Drawn over the picture of a video, in a box of the picture's own size (from `width` / `height`),
+   * so that positions given as percentages of the Canvas land on the right place.
+   */
+  overlay?: ReactNode;
 }
 
 /** Where a video is moved before playing, so that its first frame is drawn (seconds). */
 export const FIRST_FRAME = 0.001;
 
 // <video controls> (with captions as <track>) or <audio controls>.
-export default function MediaView({ kind, src, format, tracks = [], mediaRef, onTimeUpdate }: Props) {
+export default function MediaView({ kind, src, format, width, height, tracks = [], mediaRef, onTimeUpdate, overlay }: Props) {
   const t = useTranslations('Viewer');
   const [failed, setFailed] = useState<string | null>(null);
   // 再生前の動画が黒いままにならないよう、読み込んだら少しだけ進めて最初のフレームを描かせる。
@@ -71,37 +76,52 @@ export default function MediaView({ kind, src, format, tracks = [], mediaRef, on
     );
   }
 
-  return (
-    <div className="w-full h-full flex items-center justify-center bg-black">
-      <video
-        key={src}
-        ref={(el) => {
-          mediaRef.current = el;
-        }}
-        className="w-full h-full object-contain"
-        crossOrigin="anonymous"
-        preload="metadata"
-        onLoadedMetadata={(e) => {
-          const el = e.currentTarget;
-          if (el.paused && el.currentTime === 0) {
-            nudging.current = true;
-            el.currentTime = FIRST_FRAME;
-          }
-        }}
-        {...common}
-      >
-        <source src={src} type={format} />
-        {tracks.map((tr, i) => (
-          <track
-            key={tr.url}
-            kind={tr.kind ?? 'captions'}
-            src={tr.url}
-            srcLang={tr.language}
-            label={tr.label}
-            default={i === 0}
-          />
-        ))}
-      </video>
-    </div>
+  const video = (
+    <video
+      key={src}
+      ref={(el) => {
+        mediaRef.current = el;
+      }}
+      className="w-full h-full object-contain"
+      crossOrigin="anonymous"
+      preload="metadata"
+      onLoadedMetadata={(e) => {
+        const el = e.currentTarget;
+        if (el.paused && el.currentTime === 0) {
+          nudging.current = true;
+          el.currentTime = FIRST_FRAME;
+        }
+      }}
+      {...common}
+    >
+      <source src={src} type={format} />
+      {tracks.map((tr, i) => (
+        <track
+          key={tr.url}
+          kind={tr.kind ?? 'captions'}
+          src={tr.url}
+          srcLang={tr.language}
+          label={tr.label}
+          default={i === 0}
+        />
+      ))}
+    </video>
   );
+
+  if (overlay && width && height) {
+    // 動画と同じ縦横比で、枠いっぱいに収まる箱（黒い余白を除いた絵の部分）。重ねる物はこの中に置く。
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-black" style={{ containerType: 'size' }}>
+        <div
+          className="relative"
+          style={{ width: `min(100cqw, calc(100cqh * ${width / height}))`, aspectRatio: `${width} / ${height}` }}
+        >
+          {video}
+          {overlay}
+        </div>
+      </div>
+    );
+  }
+
+  return <div className="w-full h-full flex items-center justify-center bg-black">{video}</div>;
 }

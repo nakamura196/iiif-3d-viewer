@@ -130,12 +130,17 @@ const send = (method, params = {}, sessionId) =>
   });
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// ページに入っている動画を、長さの 1/4 の位置で止める（読み込めていない動画は放っておく）
-const SEEK_VIDEOS = `Promise.all([...document.querySelectorAll('video')].map((v) => new Promise((done) => {
+// ページに入っている動画を、長さの 1/4 の位置で止める（読み込めていない動画は放っておく）。
+// SEEK_AT に秒があるものは、その位置で止める（見せたい場面が 1/4 の位置に無いとき）
+const SEEK_AT = {
+  // 物体の枠は最初の 35 秒にだけある。5 秒すぎは 4 人の枠が並ぶ
+  'video-objects': 5.3,
+};
+const seekVideos = (at) => `Promise.all([...document.querySelectorAll('video')].map((v) => new Promise((done) => {
   if (!(v.duration > 0)) return done();
   v.pause();
   v.addEventListener('seeked', () => done(), { once: true });
-  v.currentTime = v.duration / 4;
+  v.currentTime = ${at ?? 'v.duration / 4'};
   setTimeout(done, 5000);
 })))`;
 
@@ -153,7 +158,7 @@ for (const t of targets) {
       await send('Runtime.evaluate', { expression: PREPARE[t.id] }, sessionId);
       await sleep(PREPARE_WAIT[t.id] ?? 3000);
     }
-    await send('Runtime.evaluate', { expression: SEEK_VIDEOS, awaitPromise: true }, sessionId);
+    await send('Runtime.evaluate', { expression: seekVideos(SEEK_AT[t.id]), awaitPromise: true }, sessionId);
     await sleep(500);
     // 撮る範囲。stage のときは右の欄の手前まで、縦は 16:10 に収まるよう中央を残す
     let clip = { x: 0, y: HEADER, width, height: HEIGHT, scale: 1 };
