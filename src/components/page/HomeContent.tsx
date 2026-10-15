@@ -82,6 +82,8 @@ export default function HomeContent() {
       // 構造・共有・埋め込み (code)
       titleKey: 'feature6Title',
       descKey: 'feature6Description',
+      // 説明ページ（実例・URL の書き方・埋め込みのコード）へ
+      href: '/structure-share-embed',
       path: 'M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4',
     },
   ] as const;
@@ -153,6 +155,11 @@ export default function HomeContent() {
                   <p className="text-[var(--ds-fg-muted)]">
                     {t(card.descKey)}
                   </p>
+                  {'href' in card ? (
+                    <Link href={card.href} className="mt-3 inline-block text-sm text-[var(--ds-primary)] hover:underline">
+                      {t('featureMore')} →
+                    </Link>
+                  ) : null}
                 </div>
               ))}
             </div>
