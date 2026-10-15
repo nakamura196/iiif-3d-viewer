@@ -116,7 +116,12 @@
       "spyglass": "Spyglass",
       "overlay": "Overlay"
     },
-    "swipeHandle": "Divider (drag sideways)",
+    "swipeHandle": "Divider (drag to move)",
+    "swipeDirection": "Divider direction",
+    "directions": {
+      "h": "Left–right",
+      "v": "Up–down"
+    },
     "spyglassHint": "B is shown inside the circle",
     "fitAll": "Fit",
     "topView": "Top",

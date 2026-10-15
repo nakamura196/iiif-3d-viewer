@@ -19,6 +19,7 @@ import {
   pointInBox,
   type CompareMode,
   type LensPoint,
+  type SwipeDirection,
 } from '../compare/CompareParts';
 import { ImageLayers } from './ImageTiles';
 import ImageView, { INITIAL_VIEW, stageStyleOf, zoomStageAt, type StageInfo, type ViewState } from './ImageView';
@@ -54,6 +55,8 @@ export interface ImageCompareViewProps {
   /** Accessible name of the swipe line, and the hint shown in spyglass mode. */
   swipeHandleLabel?: string;
   spyglassHint?: string;
+  /** Swipe: B is right of a vertical line (default) or below a horizontal line. */
+  swipeDirection?: SwipeDirection;
 }
 
 export default function ImageCompareView({
@@ -66,6 +69,7 @@ export default function ImageCompareView({
   opacity = 0.5,
   swipeHandleLabel,
   spyglassHint,
+  swipeDirection = 'horizontal',
 }: ImageCompareViewProps) {
   const boxRef = useRef<HTMLDivElement>(null);
   const [view, setView] = useState<ViewState>(INITIAL_VIEW);
@@ -109,7 +113,7 @@ export default function ImageCompareView({
       // swipe and spyglass hide A inside the cut, also where B paints nothing; overlay only fades B in
       <div
         className={`absolute inset-0 pointer-events-none ${mode === 'overlay' ? '' : 'bg-gray-100 dark:bg-gray-900'}`}
-        style={mode === 'overlay' ? { opacity } : { clipPath: compareClipOf(mode, split, at) }}
+        style={mode === 'overlay' ? { opacity } : { clipPath: compareClipOf(mode, split, at, swipeDirection) }}
         data-iiif-compare-b
       >
         <div style={stageStyleOf(s)}>{draw(1, s)}</div>
@@ -129,9 +133,17 @@ export default function ImageCompareView({
         {(stage) => draw(0, stage)}
       </ImageView>
       <CompareChip className="left-3">A: {labels[0]}</CompareChip>
-      <CompareChip className="right-3">B: {labels[1]}</CompareChip>
+      {mode === 'swipe' && swipeDirection === 'vertical' ? (
+        <CompareChip className="left-3" bottom>
+          B: {labels[1]}
+        </CompareChip>
+      ) : (
+        <CompareChip className="right-3">B: {labels[1]}</CompareChip>
+      )}
       {mode === 'spyglass' && <LensRing lens={lens} />}
-      {mode === 'swipe' && <SwipeHandle boxRef={boxRef} split={split} onSplit={setSplit} label={swipeHandleLabel} />}
+      {mode === 'swipe' && (
+        <SwipeHandle boxRef={boxRef} split={split} onSplit={setSplit} label={swipeHandleLabel} direction={swipeDirection} />
+      )}
       {mode === 'spyglass' && spyglassHint && <CompareHint>{spyglassHint}</CompareHint>}
     </div>
   );

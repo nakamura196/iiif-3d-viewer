@@ -14,6 +14,7 @@ import {
   useCanvasImages,
   useManifest,
   type CompareMode,
+  type SwipeDirection,
 } from '@nakamura196/iiif-viewer';
 import Header from '@/components/Header';
 import ManifestInput from '@/components/Input';
@@ -62,7 +63,7 @@ function Segmented<T extends string | number>({
 // Compare two candidates of a Choice: two models of the first painted Choice of a 3D Scene
 // (e.g. LiDAR points and textured buildings of the same area; other painted models are drawn
 // on both sides), or two images of a Canvas (e.g. a letter in ordinary and transmitted light).
-// The URL keeps what is shown: ?iiif-content=...&canvas=0&a=0&b=1&mode=swipe(&zoom=2)(&opacity=50)
+// The URL keeps what is shown: ?iiif-content=...&canvas=0&a=0&b=1&mode=swipe(&zoom=2)(&opacity=50)(&dir=v)
 const CompareContent: NextPage = () => {
   const t = useTranslations('Compare');
   const locale = useLocale();
@@ -74,6 +75,7 @@ const CompareContent: NextPage = () => {
   const [canvas, setCanvas] = useState(0);
   const [zoom, setZoom] = useState(1);
   const [opacity, setOpacity] = useState(50); // %
+  const [direction, setDirection] = useState<SwipeDirection>('horizontal');
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -90,6 +92,7 @@ const CompareContent: NextPage = () => {
     if (ZOOMS.includes(z)) setZoom(z);
     const o = Number(params.get('opacity') ?? 50);
     if (o >= 0 && o <= 100) setOpacity(o);
+    if (params.get('dir') === 'v') setDirection('vertical');
   }, [setManifestUrl]);
 
   useManifest(manifestUrl);
@@ -114,8 +117,9 @@ const CompareContent: NextPage = () => {
     keep('canvas', is3D || canvasIndex === 0 ? null : String(canvasIndex));
     keep('zoom', !is3D && mode === 'spyglass' && zoom !== 1 ? String(zoom) : null);
     keep('opacity', !is3D && mode === 'overlay' ? String(opacity) : null);
+    keep('dir', mode === 'swipe' && direction === 'vertical' ? 'v' : null);
     window.history.replaceState(null, '', `?${params.toString()}`);
-  }, [manifestUrl, pick, mode, is3D, canvasIndex, zoom, opacity]);
+  }, [manifestUrl, pick, mode, is3D, canvasIndex, zoom, opacity, direction]);
 
   const main = paintedModels[0];
   const options = useMemo(
@@ -153,6 +157,15 @@ const CompareContent: NextPage = () => {
             <div className="flex-1 min-h-0 min-w-0 flex flex-col">
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-3 py-2 border-b border-[var(--ds-border)] bg-[var(--ds-surface)]">
                 <Segmented label={t('mode')} items={modes} value={shownMode} onChange={setMode} text={(m) => t(`modes.${m}`)} />
+                {shownMode === 'swipe' && (
+                  <Segmented
+                    label={t('swipeDirection')}
+                    items={['horizontal', 'vertical'] as SwipeDirection[]}
+                    value={direction}
+                    onChange={setDirection}
+                    text={(d) => t(`directions.${d === 'vertical' ? 'v' : 'h'}`)}
+                  />
+                )}
                 {!is3D && containers.length > 1 && (
                   <label className={labelClass}>
                     {t('canvas')}
@@ -206,6 +219,7 @@ const CompareContent: NextPage = () => {
                     urls={[at(pick[0])?.url ?? null, at(pick[1])?.url ?? null]}
                     labels={[nameOf(pick[0]), nameOf(pick[1])]}
                     extraModels={extraModels}
+                    swipeDirection={direction}
                   />
                 ) : (
                   images &&
@@ -220,6 +234,7 @@ const CompareContent: NextPage = () => {
                       opacity={opacity / 100}
                       swipeHandleLabel={t('swipeHandle')}
                       spyglassHint={t('spyglassHint')}
+                      swipeDirection={direction}
                     />
                   )
                 )}
