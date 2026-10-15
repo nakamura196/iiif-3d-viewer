@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useSyncExternalStore } from 'react';
+import { useEffect, useMemo, useSyncExternalStore } from 'react';
 import {
   parseProbeResult,
   parseTokenMessage,
@@ -296,6 +296,30 @@ function getController(probe: AuthProbeRef, locale: string): Controller {
   }
   return c;
 }
+
+/**
+ * The auth state of several resources at once (e.g. the models of a 3D Scene, whose number varies),
+ * one entry per probe; undefined where the resource has no probe.
+ */
+export function useAuthStates(probes: (AuthProbeRef | undefined)[], locale: string): (AuthState | undefined)[] {
+  const key = probes.map((p) => p?.id ?? '').join('\n');
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- the probe ids (key) decide which controllers are used
+  const cs = useMemo(() => probes.map((p) => (p ? getController(p, locale) : undefined)), [key, locale]);
+  useEffect(() => {
+    const used = cs.filter((c): c is Controller => !!c);
+    used.forEach((c) => c.retain());
+    return () => used.forEach((c) => c.release());
+  }, [cs]);
+  useSyncExternalStore(subscribeAll, () => version, () => 0);
+  return cs.map((c) => c?.state);
+}
+
+const subscribeAll = (fn: () => void) => {
+  globalListeners.add(fn);
+  return () => {
+    globalListeners.delete(fn);
+  };
+};
 
 /** Controllers in use right now that need the user's attention (a prompt, an error, a logout link). */
 export function useAuthPanels(): { state: AuthState; controller: Controller }[] {

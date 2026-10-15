@@ -172,3 +172,17 @@ export const parseTokenMessage = (data: unknown, messageId: string, locale = 'en
   }
   return null;
 };
+
+/**
+ * The URL to load for a resource that is fetched whole (a 3D model): the resource itself when it
+ * has no probe or the probe allows it, the probe's `location` when it gives one (e.g. a signed URL),
+ * and null while the user has not been let in yet.
+ */
+export const authorizedUrl = (
+  url: string,
+  state: { phase: string; location?: AuthSubstitute } | undefined,
+): string | null => {
+  if (!state) return url;
+  if (state.phase !== 'ok') return null;
+  return state.location?.id ?? url;
+};
