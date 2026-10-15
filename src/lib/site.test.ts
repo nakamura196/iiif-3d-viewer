@@ -6,6 +6,8 @@ import { LOCALES, OLD_HOSTS, PUBLIC_PATHS, SITE_URL, alternatesFor } from './sit
 import robots from '@/app/robots';
 import sitemap from '@/app/sitemap';
 import { NEWS } from './news';
+import { USE_CASES } from './usecases';
+import { SAMPLES } from './samples';
 
 const root = join(__dirname, '../..');
 const read = (p: string) => readFileSync(join(root, p), 'utf8');
@@ -36,10 +38,13 @@ describe('公開 URL', () => {
 
   it('sitemap は全ロケール×全ページ、新ホストで、ページは実在する', () => {
     const urls = sitemap().map((e) => e.url);
-    expect(urls).toHaveLength(LOCALES.length * (PUBLIC_PATHS.length + NEWS.length));
+    expect(urls).toHaveLength(LOCALES.length * (PUBLIC_PATHS.length + NEWS.length + USE_CASES.length + SAMPLES.length));
     expect(urls).toContain('https://kasane.ldas.jp/ja/');
     expect(urls).toContain('https://kasane.ldas.jp/en/viewer/');
     expect(urls).toContain(`https://kasane.ldas.jp/ja/news/${NEWS[0].id}/`);
+    // ユースケース・サンプルの詳細ページも載る
+    expect(urls).toContain('https://kasane.ldas.jp/ja/usecases/kuniezu/');
+    expect(urls).toContain(`https://kasane.ldas.jp/en/samples/${SAMPLES[0].id}/`);
     for (const p of PUBLIC_PATHS) {
       expect(existsSync(join(root, 'src/app/[locale]', p, 'page.tsx'))).toBe(true);
     }

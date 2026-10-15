@@ -305,6 +305,10 @@ export const newsById = (id: string): NewsItem | undefined => NEWS.find((n) => n
 export const relatedUseCasesOf = (n: NewsItem): UseCase[] =>
   (n.usecases ?? []).map((id) => USE_CASES.find((u) => u.id === id)).filter((u): u is UseCase => !!u);
 
+// このユースケースを取り上げたお知らせ（新しいものが先）
+export const newsAboutUseCase = (useCaseId: string): NewsItem[] =>
+  NEWS.filter((n) => n.usecases?.includes(useCaseId));
+
 export const newsVideoOf = (n: NewsItem, locale: keyof Localized): string | undefined =>
   n.video?.[locale] ?? n.video?.[locale === 'ja' ? 'en' : 'ja'];
 

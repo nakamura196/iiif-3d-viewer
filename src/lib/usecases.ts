@@ -313,3 +313,6 @@ export const USE_CASES: UseCase[] = [
 ];
 
 export const FEATURED_USE_CASES = USE_CASES.filter((u) => u.featured);
+
+// 名前を useCaseById にすると、React の規則の検査が Hook と取り違えるので usecaseById にしてある
+export const usecaseById = (id: string): UseCase | undefined => USE_CASES.find((u) => u.id === id);

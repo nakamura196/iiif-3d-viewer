@@ -69,7 +69,7 @@ export default function NewsDetailContent({ id }: { id: string }) {
             <ul className="grid gap-4 sm:grid-cols-2">
               {related.map((u) => (
                 <li key={u.id}>
-                  <Link href={`/usecases#${u.id}`} className="group block space-y-2">
+                  <Link href={`/usecases/${u.id}`} className="group block space-y-2">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={thumbnailOf(u, locale)}

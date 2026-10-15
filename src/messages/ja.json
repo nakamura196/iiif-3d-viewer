@@ -188,7 +188,12 @@
     "status": {
       "unchecked": "未確認",
       "none": "開くマニフェストなし"
-    }
+    },
+    "back": "サンプルの一覧へ",
+    "copyLink": "リンクをコピー",
+    "copied": "コピーしました",
+    "details": "詳しく見る",
+    "others": "ほかのサンプル"
   },
   "UseCases": {
     "title": "ユースケース",
@@ -209,7 +214,13 @@
       "ocr": "OCR",
       "auth": "認証",
       "story": "ストーリー"
-    }
+    },
+    "back": "ユースケースの一覧へ",
+    "details": "詳しく見る",
+    "copyLink": "リンクをコピー",
+    "copied": "コピーしました",
+    "others": "ほかのユースケース",
+    "newsHeading": "この例を取り上げたお知らせ"
   },
   "InferenceModels": {
     "title": "推論タブのモデル",

@@ -188,7 +188,12 @@
     "status": {
       "unchecked": "Not checked yet",
       "none": "No manifest to open"
-    }
+    },
+    "back": "Back to all samples",
+    "copyLink": "Copy link",
+    "copied": "Copied",
+    "details": "Details",
+    "others": "More samples"
   },
   "UseCases": {
     "title": "Use cases",
@@ -209,7 +214,13 @@
       "ocr": "OCR",
       "auth": "Authentication",
       "story": "Story"
-    }
+    },
+    "back": "Back to all use cases",
+    "details": "Details",
+    "copyLink": "Copy link",
+    "copied": "Copied",
+    "others": "More use cases",
+    "newsHeading": "News about this example"
   },
   "InferenceModels": {
     "title": "Models in the Inference tab",
