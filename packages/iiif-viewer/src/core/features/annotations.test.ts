@@ -5,6 +5,7 @@ import { convertToV4 } from '../services/manifestConverter';
 import {
   annotationSourcesOf,
   embeddedCanvasAnnotations,
+  isAnnotationAt,
   nextPageOf,
   parseXywh,
   pathPoints,
@@ -202,5 +203,67 @@ describe('sanitizeAnnotationHtml', () => {
     expect(sanitizeAnnotationHtml('<p><b>x')).toBe('<p><b>x</b></p>');
     expect(sanitizeAnnotationHtml('</div>x')).toBe('x');
     expect(sanitizeAnnotationHtml('a < b & c')).toContain('&amp;');
+  });
+});
+
+describe('動画の時間と範囲（#t=…&xywh=…）', () => {
+  const C = 'https://example.org/canvas';
+  const page = (target: unknown) => ({
+    type: 'AnnotationPage',
+    items: [{ id: 'a', type: 'Annotation', motivation: 'tagging', body: { type: 'TextualBody', value: 'Person' }, target }],
+  });
+  const read = (target: unknown) => readCanvasAnnotations(C, [page(target)], { width: 640, height: 360 })[0];
+
+  it('文字列の target から、範囲と時間の両方を読む', () => {
+    const a = read(`${C}#t=22.916,23.916&xywh=360,34,234,255`);
+    expect(a.region).toEqual({ type: 'rect', x: 360, y: 34, w: 234, h: 255 });
+    expect(a.time).toEqual({ start: 22.916, end: 23.916 });
+  });
+
+  it('FragmentSelector が 2 つ（範囲と時間）に分かれていても読む', () => {
+    const a = read({
+      type: 'SpecificResource',
+      source: C,
+      selector: [
+        { type: 'FragmentSelector', value: 't=5,6' },
+        { type: 'FragmentSelector', conformsTo: 'http://www.w3.org/TR/media-frags/', value: 'xywh=10,20,30,40' },
+      ],
+    });
+    expect(a.region).toEqual({ type: 'rect', x: 10, y: 20, w: 30, h: 40 });
+    expect(a.time).toEqual({ start: 5, end: 6 });
+  });
+
+  it('PointSelector の instant は、その一瞬として読む', () => {
+    const a = read({ type: 'SpecificResource', source: C, selector: { type: 'PointSelector', x: 100, y: 50, instant: 12 } });
+    expect(a.region).toEqual({ type: 'point', x: 100, y: 50 });
+    expect(a.time).toEqual({ start: 12, instant: true });
+    expect(isAnnotationAt(a, 12.5)).toBe(true);
+    expect(isAnnotationAt(a, 13.5)).toBe(false);
+  });
+
+  it('終わりの無い #t=10 は、最後まで出る', () => {
+    const a = read(`${C}#t=10&xywh=0,0,10,10`);
+    expect(a.time).toEqual({ start: 10 });
+    expect(isAnnotationAt(a, 9.9)).toBe(false);
+    expect(isAnnotationAt(a, 1000)).toBe(true);
+  });
+
+  it('時間の範囲の中だけ出る（終わりの時刻は含まない）・時間の無い注釈はいつも出る', () => {
+    const a = read(`${C}#t=5,6&xywh=0,0,10,10`);
+    expect(isAnnotationAt(a, 4.99)).toBe(false);
+    expect(isAnnotationAt(a, 5)).toBe(true);
+    expect(isAnnotationAt(a, 6)).toBe(false);
+    expect(read(`${C}#xywh=0,0,10,10`).time).toBeUndefined();
+    expect(isAnnotationAt(read(`${C}#xywh=0,0,10,10`), 99)).toBe(true);
+  });
+
+  it('見本（ArchiveBase の Video Search から作ったマニフェスト）を読める', () => {
+    const manifest = convertToV4(
+      JSON.parse(readFileSync(join(__dirname, '../../../../../public/manifests/sample-manifest-video-objects.json'), 'utf8')),
+    );
+    const canvas = manifest.items[0] as unknown as { id: string; width: number; height: number };
+    const annos = embeddedCanvasAnnotations(manifest, canvas.id, canvas);
+    expect(annos.length).toBeGreaterThan(100);
+    expect(annos.every((x) => x.region.type === 'rect' && x.time && x.time.end! > x.time.start)).toBe(true);
   });
 });

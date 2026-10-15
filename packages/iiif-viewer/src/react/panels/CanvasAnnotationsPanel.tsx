@@ -6,6 +6,7 @@ import {
   annotationSourcesOf,
   containersOf,
   embeddedCanvasAnnotations,
+  isAnnotationAt,
   rawCanvasOf,
   labelIn,
   pickBodies,
@@ -22,6 +23,8 @@ import { useCanvasNavigation } from '../navigation';
 import { selectedCanvasAnnotationAtom } from '../overlays/canvasAnnotationState';
 import { useCanvasAnnotations } from '../overlays/useCanvasAnnotations';
 import AnnotationImages from '../annotation/AnnotationImages';
+import { fmt } from '../displays/TranscriptPanel';
+import { usePlayback } from '../playback';
 import type { Panel, PanelContext } from './types';
 
 const KNOWN_MOTIVATIONS = new Set([
@@ -133,10 +136,13 @@ function Item({
   onSelect,
   canvasLabels,
   bodyStyle,
+  playing,
 }: {
   bodyStyle?: StyleDeclarations;
   annotation: CanvasAnnotation;
   selected: boolean;
+  /** The annotation's time contains the current position of the video or audio. */
+  playing?: boolean;
   onSelect: () => void;
   canvasLabels: Map<string, string>;
 }) {
@@ -161,7 +167,9 @@ function Item({
       className={`rounded border p-2 cursor-pointer ${
         selected
           ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/30'
-          : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
+          : playing
+            ? 'border-blue-300 dark:border-blue-700 hover:bg-gray-50 dark:hover:bg-gray-800'
+            : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
       }`}
       onClick={onSelect}
       aria-current={selected || undefined}
@@ -173,6 +181,14 @@ function Item({
           </span>
         ) : null}
         <span>{where}</span>
+        {annotation.time ? (
+          <span className="ml-auto tabular-nums">
+            {fmt(annotation.time.start)}
+            {annotation.time.end !== undefined && fmt(annotation.time.end) !== fmt(annotation.time.start)
+              ? `–${fmt(annotation.time.end)}`
+              : ''}
+          </span>
+        ) : null}
         {annotation.layer ? (
           <span>{t('canvasAnnotationsLayer', { label: labelIn(annotation.layer.label, locale) || annotation.layer.id })}</span>
         ) : null}
@@ -194,6 +210,8 @@ export function CanvasAnnotationsPanelBody({ container, manifest }: PanelContext
   const locale = useLocale();
   const { annotations, loading, failed, styleOf } = useCanvasAnnotations(manifest, container);
   const [selected, setSelected] = useAtom(selectedCanvasAnnotationAtom);
+  const { currentTime, seek } = usePlayback();
+  const timed = annotations.some((a) => a.time);
 
   // clear the selection when the Canvas changes
   useEffect(() => {
@@ -237,7 +255,13 @@ export function CanvasAnnotationsPanelBody({ container, manifest }: PanelContext
                 key={a.id}
                 annotation={a}
                 selected={selected === a.id}
-                onSelect={() => setSelected(selected === a.id ? null : a.id)}
+                onSelect={() => {
+                  // an annotation on a moment of a video or audio: go there, so that its frame is shown
+                  // (a little past the start: a seek may land a hair before the asked position)
+                  if (a.time && selected !== a.id) seek(a.time.start + 0.01);
+                  setSelected(selected === a.id ? null : a.id);
+                }}
+                playing={timed && !!a.time && isAnnotationAt(a, currentTime)}
                 canvasLabels={canvasLabels}
                 bodyStyle={styleOf(a).body}
               />

@@ -8,6 +8,7 @@
 import type { ManifestV4 } from '../types/iiif';
 
 import { parseStyleClasses, readStylesheetField, type AnnotationStyleSource } from './annotationStyle';
+import { targetTimeOf } from './temporal';
 
 export { sanitizeAnnotationHtml, safeAnnotationUrl } from './annotationHtml';
 
@@ -62,6 +63,12 @@ export interface CanvasAnnotation extends AnnotationStyleSource {
    * The layer draws it itself, so the overlay on the Canvas skips it; the list shows it with the layer's name.
    */
   layer?: { id: string; label?: unknown };
+  /**
+   * The part of a video or audio the annotation is about, in seconds (`#t=10,12` in the target,
+   * a FragmentSelector, or a PointSelector's `instant`). Without `end` it runs to the end of the media
+   * (`#t=10`), except for an `instant`, which is a single moment.
+   */
+  time?: { start: number; end?: number; instant?: true };
 }
 
 const asList = (v: unknown): unknown[] => (Array.isArray(v) ? v : v == null ? [] : [v]);
@@ -476,6 +483,14 @@ export const readCanvasAnnotations = (
       const targetClasses = parseStyleClasses(isObj(asList(raw.target)[0]) ? (asList(raw.target)[0] as Json).styleClass : undefined);
       const bodyClasses = bodyClassesOf(raw.body);
       const sheet = readStylesheetField(raw.stylesheet);
+      const rawTarget = asList(raw.target)[0];
+      const time = targetTimeOf(rawTarget);
+      const instant =
+        !!time &&
+        time.end === undefined &&
+        asList(isObj(rawTarget) ? rawTarget.selector : undefined).some(
+          (sel) => isObj(sel) && sel.type === 'PointSelector' && num(sel.instant) === time.start,
+        );
       out.push({
         id,
         motivations,
@@ -487,6 +502,9 @@ export const readCanvasAnnotations = (
         ...(collection ? { collection } : {}),
         ...(painting ? { painted: true } : {}),
         ...(layer ? { layer } : {}),
+        ...(time
+          ? { time: { start: time.start, ...(time.end !== undefined ? { end: time.end } : {}), ...(instant ? { instant: true as const } : {}) } }
+          : {}),
       });
     }
   }
@@ -504,6 +522,16 @@ export const embeddedCanvasAnnotations = (
 /** The ids of the Canvases of a manifest (for `readCanvasAnnotations`). */
 export const canvasIdsOf = (manifest: unknown): Set<string> =>
   new Set(manifestItemsOf(manifest).map((c) => c?.id).filter((id): id is string => typeof id === 'string'));
+
+/**
+ * Whether an annotation is shown at `seconds` of the media. An annotation without a time is always shown;
+ * one at a single instant is shown for `instantWindow` seconds from it.
+ */
+export const isAnnotationAt = (a: CanvasAnnotation, seconds: number, instantWindow = 1): boolean => {
+  if (!a.time) return true;
+  const end = a.time.end ?? (a.time.instant ? a.time.start + instantWindow : Infinity);
+  return seconds >= a.time.start && seconds < end;
+};
 
 // ---- placing on the image ----------------------------------------------------
 

@@ -43,6 +43,15 @@ export const SAMPLES: Sample[] = [
     },
     manifest: withBasePath('/manifests/sample-manifest-video-transcript.json'), tab: 'transcript',
   },
+  {
+    id: 'video-objects', media: 'video',
+    title: { ja: '動画の中の物体の枠', en: 'Boxes on objects in a video' },
+    note: {
+      ja: '動画の時間と範囲を指す注釈（#t=…&xywh=…）の例。ArchiveBase の Video Search が AI で見つけた人物などの枠が、その時間だけ動画の上に出ます。一覧を押すと、その時刻へ移ります',
+      en: 'Annotations on a time and a region of a video (#t=…&xywh=…). Boxes on people and things that ArchiveBase Video Search found with AI appear over the video at their time. Click one in the list to go there',
+    },
+    manifest: withBasePath('/manifests/sample-manifest-video-objects.json'), tab: 'canvasAnnotations',
+  },
 ];
 
 // 「開く」の行き先（/viewer）。一覧の画面と、サムネイルを撮るスクリプトの両方で使う

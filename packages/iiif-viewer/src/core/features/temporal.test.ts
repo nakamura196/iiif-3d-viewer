@@ -135,6 +135,19 @@ describe('Choice の音声（0434）と単独の動画（0017）は合成にし�
 });
 
 describe('timedTextsOf（0103）', () => {
+  it('範囲も指す注釈（#t=…&xywh=…、動画の中の物）は文字起こしに入れない', () => {
+    const c = {
+      annotations: [
+        {
+          items: [
+            { id: 'a', body: { type: 'TextualBody', value: 'Person' }, target: 'c#t=1,2&xywh=0,0,10,10' },
+            { id: 'b', body: { type: 'TextualBody', value: 'Hello' }, target: 'c#t=3,4' },
+          ],
+        },
+      ],
+    };
+    expect(timedTextsOf(c).map((t) => t.id)).toEqual(['b']);
+  });
   it('時刻つきの TextualBody を一覧にする', () => {
     const texts = timedTextsOf(first(r0103).container);
     expect(texts).toHaveLength(1);

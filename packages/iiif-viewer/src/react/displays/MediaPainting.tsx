@@ -18,6 +18,7 @@ import { useLocale } from '../env';
 import { usePlayback } from '../playback';
 import MediaView, { type CaptionTrack } from './MediaView';
 import { useReferencedPages } from './useReferencedPages';
+import VideoAnnotations from './VideoAnnotations';
 
 // 動画・音声（選ばれた中身）の表示。字幕は <track> に渡す。
 // 字幕は共有の読み取り（supplementing）に加えて、Choice に入った複数言語の字幕（0074）も、
@@ -74,9 +75,12 @@ export default function MediaPainting({
       kind={option.kind}
       src={option.url}
       format={option.format}
+      width={container.width}
+      height={container.height}
       tracks={tracks}
       mediaRef={mediaRef}
       onTimeUpdate={setCurrentTime}
+      overlay={option.kind === 'Video' && container.kind === 'Canvas' ? <VideoAnnotations container={container} /> : undefined}
     />
   );
 }
