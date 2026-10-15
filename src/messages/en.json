@@ -39,7 +39,7 @@
   },
   "Input": {
     "title": "Open an IIIF manifest",
-    "description": "Enter the URL of the IIIF Manifest",
+    "description": "Enter the URL of a Manifest, Collection, Curation or info.json",
     "submit": "View",
     "sampleManifest": "Use cases",
     "sampleManifestAll": "All samples: image, audio, video and 3D (IIIF Cookbook and more)",
