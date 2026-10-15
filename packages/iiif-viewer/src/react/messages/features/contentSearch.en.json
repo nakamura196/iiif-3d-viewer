@@ -1,0 +1,29 @@
+{
+  "Info": {
+    "contentSearch": "Search text"
+  },
+  "ContentSearch": {
+    "placeholder": "Search the text of this item",
+    "search": "Search",
+    "about": "Searches with the provider's search service (IIIF Content Search {version}).",
+    "running": "Searching…",
+    "loadingMore": "Loading more…",
+    "count": "“{q}”: {count} hits ({total} in all)",
+    "truncated": "Stopped at the first {count} hits. Add a word to narrow the search.",
+    "failed": "The search failed. The provider's service did not answer, or does not accept requests from the browser.",
+    "showOnImage": "Show on image",
+    "copyLink": "Copy link to this search",
+    "copied": "Copied",
+    "clear": "Clear",
+    "granularity": "Unit",
+    "granularityAll": "All",
+    "granularity_page": "Page",
+    "granularity_block": "Block",
+    "granularity_paragraph": "Paragraph",
+    "granularity_line": "Line",
+    "granularity_word": "Word",
+    "granularity_glyph": "Glyph",
+    "page": "{label} ({count})",
+    "more": "Show more ({count} left)"
+  }
+}

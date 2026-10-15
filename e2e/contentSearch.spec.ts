@@ -1,0 +1,115 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { expect, test, type Page } from '@playwright/test';
+
+// 文字の検索（IIIF Content Search）。2.0 の窓口を持つ公開の資料が見つからなかったので（2026-10-15）、
+// 2.0 はマニフェスト・画像・検索の応答をこのテストの中で返す。1.0 は MDZ の実物に問い合わせる。
+
+const BASE = 'https://example.org/book1';
+const fixture = (name: string) =>
+  readFileSync(join(__dirname, '../packages/iiif-viewer/src/core/features/contentSearch/fixtures', name), 'utf8');
+
+// 1×1 の灰色の PNG（画像そのものは何でもよい。Canvas の大きさで描かれる）
+const PNG = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGNoAAAAggCBd81ytgAAAABJRU5ErkJggg==',
+  'base64',
+);
+
+const canvas = (n: number) => ({
+  id: `${BASE}/canvas/p${n}`,
+  type: 'Canvas',
+  label: { none: [`p. ${n}`] },
+  width: 1000,
+  height: 800,
+  items: [
+    {
+      id: `${BASE}/canvas/p${n}/page`,
+      type: 'AnnotationPage',
+      items: [
+        {
+          id: `${BASE}/canvas/p${n}/image`,
+          type: 'Annotation',
+          motivation: 'painting',
+          body: { id: `${BASE}/p${n}.png`, type: 'Image', format: 'image/png', width: 1000, height: 800 },
+          target: `${BASE}/canvas/p${n}`,
+        },
+      ],
+    },
+  ],
+});
+
+const manifest = {
+  '@context': 'http://iiif.io/api/presentation/3/context.json',
+  id: `${BASE}/manifest`,
+  type: 'Manifest',
+  label: { en: ['Content Search 2.0 test'] },
+  behavior: ['individuals'],
+  service: [
+    {
+      id: 'https://example.org/service/book1/search',
+      type: 'SearchService2',
+      service: [{ id: 'https://example.org/service/book1/autocomplete', type: 'AutoCompleteService2' }],
+    },
+  ],
+  items: [canvas(1), canvas(2)],
+};
+
+async function serveBook(page: Page) {
+  const json = (body: string) => ({ status: 200, contentType: 'application/json', headers: { 'access-control-allow-origin': '*' }, body });
+  await page.route(`${BASE}/manifest`, (r) => r.fulfill(json(JSON.stringify(manifest))));
+  await page.route(`${BASE}/*.png`, (r) => r.fulfill({ status: 200, contentType: 'image/png', headers: { 'access-control-allow-origin': '*' }, body: PNG }));
+  // 2 ページ目（next の先）は空にする
+  await page.route('https://example.org/service/book1/search?**', (r) =>
+    r.fulfill(json(new URL(r.request().url()).searchParams.get('page') ? '{"type":"AnnotationPage","items":[]}' : fixture('search2-handmade.json'))),
+  );
+  await page.route('https://example.org/service/book1/autocomplete?**', (r) => r.fulfill(json(fixture('autocomplete2-handmade.json'))));
+}
+
+test('Content Search 2.0: 当たりの一覧・単位の絞り込み・候補語・押すとそのページへ', async ({ page }) => {
+  await serveBook(page);
+  await page.goto(`/ja/viewer/?iiif-content=${encodeURIComponent(`${BASE}/manifest`)}&tab=contentSearch`);
+
+  const box = page.getByPlaceholder('資料の中の文字を探す') // 候補語が出ると役割が combobox に変わるので、役割では探さない;
+  await box.fill('bir');
+  await expect(page.locator('datalist option')).toHaveCount(3);
+  await box.fill('bird');
+  await box.press('Enter');
+
+  await expect(page.getByText('「bird」: 2 件（全 5 件）')).toBeVisible();
+  await expect(page.getByText('IIIF Content Search 2.0')).toBeVisible();
+  // 前後の文の中で、当たった語に印
+  await expect(page.locator('mark', { hasText: 'blue bird' })).toBeVisible();
+
+  // 単位（Text Granularity）で絞る
+  const units = page.getByRole('group', { name: '単位' });
+  await expect(units.getByRole('button')).toHaveText(['すべて', '行', '語']);
+  await units.getByRole('button', { name: '語' }).click();
+  await expect(page.locator('mark')).toHaveCount(1);
+  await units.getByRole('button', { name: 'すべて' }).click();
+
+  // 1 ページ目の画像に、行の当たりの印
+  await expect(page.locator(`[data-overlay="annotations"] [data-annotation-id="${BASE}/annotation/line-1"]`)).toBeVisible();
+
+  // 2 語にまたがる当たりを押すと 2 ページ目に移り、印が 2 つ出る
+  await page.locator('mark', { hasText: 'blue bird' }).click();
+  await expect(page.getByText('2 / 2')).toBeVisible();
+  await expect(page.locator(`[data-overlay="annotations"] [data-annotation-id^="${BASE}/annotation/word-12"]`)).toHaveCount(2);
+});
+
+test('Content Search 1.0（MDZ の実物）: ?q= で開くと探してある', async ({ page }) => {
+  const m = 'https://api.digitale-sammlungen.de/iiif/presentation/v2/bsb00026283/manifest';
+  await page.goto(`/ja/viewer/?iiif-content=${encodeURIComponent(m)}&tab=contentSearch&q=der`);
+  await expect(page.getByText(/「der」: \d+ 件（全 \d+ 件）/)).toBeVisible();
+  await expect(page.getByText('IIIF Content Search 1.0')).toBeVisible();
+  await expect(page.locator('[data-overlay="annotations"] [data-annotation-id*="/search/v1/bsb00026283/anno/"]').first()).toBeVisible();
+});
+
+test('見開きの両ページにも当たりの印を出す（MDZ の 2・3 コマ目）', async ({ page }) => {
+  const m = 'https://api.digitale-sammlungen.de/iiif/presentation/v2/bsb00026283/manifest';
+  await page.goto(`/ja/viewer/?iiif-content=${encodeURIComponent(m)}&tab=contentSearch&q=der&canvas=2`);
+  await expect(page.getByText('2・3 / 79')).toBeVisible();
+  for (const n of [2, 3]) {
+    const layer = page.locator(`[data-page-overlay$="/canvas/${n}"]`);
+    await expect(layer.locator('[data-annotation-id]').first()).toBeVisible();
+  }
+});

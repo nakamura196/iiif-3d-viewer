@@ -26,6 +26,8 @@ export type UseCaseOpen =
       pos?: number;
       // 何コマ目を開くか（1 始まり）
       canvas?: number;
+      // 文字の検索（tab: 'contentSearch'）で、開いたときに探しておく語
+      query?: string;
     }
   | {
       page: 'compare';
@@ -90,6 +92,7 @@ export function hrefOf(open: UseCaseOpen): string {
       if (open.tab) q.push(`tab=${open.tab}`);
       if (open.pos) q.push(`pos=${open.pos}`);
       if (open.canvas) q.push(`canvas=${open.canvas}`);
+      if (open.query) q.push(`q=${encodeURIComponent(open.query)}`);
       break;
     case 'compare':
       if (open.mode) q.push(`mode=${open.mode}`);
@@ -292,6 +295,25 @@ export const USE_CASES: UseCase[] = [
     site: 'https://dl.ndl.go.jp/pid/1288371',
     // 動画はお知らせ inference-ocr と同じ（同じ『銘尽』の 6 コマ目で OCR する）
     video: { ja: 'IYhzoqRM7QY', en: 'dJS7uoeb-S0' },
+  },
+  {
+    id: 'mdz-content-search',
+    title: {
+      ja: 'バイエルン州立図書館の写本（資料の中の文字を探す）',
+      en: 'Manuscript, Bavarian State Library (search the text inside)',
+    },
+    note: {
+      ja: 'ミュンヘンデジタル化センター（MDZ）が公開する 15 世紀ドイツ語の写本を、文字の検索タブで開きます。提供元の検索窓口（IIIF Content Search API）に「petrus」を問い合わせ、当たった語を一覧と画像の上の枠で示します。一覧を押すと、そのページへ移ります。',
+      en: 'A 15th-century German manuscript from the Munich Digitization Center (MDZ), opened in the Search text tab. Kasane asks the provider’s search service (IIIF Content Search API) for “petrus” and marks each hit in the list and on the image. Click a hit to go to its page.',
+    },
+    open: {
+      page: 'viewer',
+      manifest: 'https://api.digitale-sammlungen.de/iiif/presentation/v2/bsb00026283/manifest',
+      tab: 'contentSearch',
+      query: 'petrus',
+    },
+    features: ['image', 'search'],
+    site: 'https://www.digitale-sammlungen.de/view/bsb00026283',
   },
   {
     id: 'wakozukan-story',

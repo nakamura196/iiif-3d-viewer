@@ -1,0 +1,15 @@
+{
+  "@context": "http://iiif.io/api/search/1/context.json",
+  "@id": "https://iiif.wellcomecollection.org/search/autocomplete/v1/b21450638?q=chol",
+  "@type": "search:TermList",
+  "terms": [
+    {
+      "match": "cholera",
+      "search": "https://iiif.wellcomecollection.org/search/v1/b21450638?q=cholera"
+    },
+    {
+      "match": "choleric",
+      "search": "https://iiif.wellcomecollection.org/search/v1/b21450638?q=choleric"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "@context": "http://iiif.io/api/search/2/context.json",
+  "id": "https://example.org/service/book1/autocomplete?q=bir",
+  "type": "TermPage",
+  "items": [
+    { "value": "bird", "total": 15 },
+    { "value": "birds", "total": 5 },
+    { "value": "birdsong", "total": 2, "label": { "en": ["birdsong"] } }
+  ]
+}

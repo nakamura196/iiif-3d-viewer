@@ -1,0 +1,77 @@
+{
+  "@context": [
+    "http://iiif.io/api/presentation/2/context.json",
+    "http://iiif.io/api/search/1/context.json"
+  ],
+  "@id": "https://api.digitale-sammlungen.de/iiif/services/search/v1/bsb00026283?q=der",
+  "@type": "sc:AnnotationList",
+  "resources": [
+    {
+      "@id": "https://api.digitale-sammlungen.de/iiif/services/search/v1/bsb00026283/anno/a63ac8ef230e1e33",
+      "@type": "oa:Annotation",
+      "motivation": "sc:painting",
+      "resource": {
+        "@type": "cnt:ContentAsText",
+        "chars": "der"
+      },
+      "on": "https://api.digitale-sammlungen.de/iiif/presentation/v2/bsb00026283/canvas/1#xywh=2854,1631,141,162"
+    },
+    {
+      "@id": "https://api.digitale-sammlungen.de/iiif/services/search/v1/bsb00026283/anno/7b275f327652f953",
+      "@type": "oa:Annotation",
+      "motivation": "sc:painting",
+      "resource": {
+        "@type": "cnt:ContentAsText",
+        "chars": "der"
+      },
+      "on": "https://api.digitale-sammlungen.de/iiif/presentation/v2/bsb00026283/canvas/1#xywh=1472,1918,128,145"
+    },
+    {
+      "@id": "https://api.digitale-sammlungen.de/iiif/services/search/v1/bsb00026283/anno/1b70ac87a413e245",
+      "@type": "oa:Annotation",
+      "motivation": "sc:painting",
+      "resource": {
+        "@type": "cnt:ContentAsText",
+        "chars": "der"
+      },
+      "on": "https://api.digitale-sammlungen.de/iiif/presentation/v2/bsb00026283/canvas/1#xywh=1119,2052,134,143"
+    }
+  ],
+  "hits": [
+    {
+      "annotations": [
+        "https://api.digitale-sammlungen.de/iiif/services/search/v1/bsb00026283/anno/a63ac8ef230e1e33"
+      ],
+      "match": "der",
+      "before": "Er geng aberto him cum an tern:vnd pat quechtur. Va man: ob ",
+      "after": " belchicht mag vbergen ich trinde un deun-ge Cachechten willud kam an-",
+      "@type": "search:Hit"
+    },
+    {
+      "annotations": [
+        "https://api.digitale-sammlungen.de/iiif/services/search/v1/bsb00026283/anno/7b275f327652f953"
+      ],
+      "match": "der",
+      "before": "un dir: ich werd uymer geergat Jelus ſuathaiym war lag ich dw:wan in ",
+      "after": " nacht vor dem das der han lungt: verlau geult du mem der hund.da Grach petrus-Ob uh auch mit derben mur dwich verlange",
+      "@type": "search:Hit"
+    },
+    {
+      "annotations": [
+        "https://api.digitale-sammlungen.de/iiif/services/search/v1/bsb00026283/anno/1b70ac87a413e245"
+      ],
+      "match": "der",
+      "before": "un dir: ich werd uymer geergat Jelus ſuathaiym war lag ich dw:wan in der nacht vor dem das ",
+      "after": " han lungt: verlau geult du mem der hund.da Grach petrus-Ob uh auch mit derben mur dwich verlange",
+      "@type": "search:Hit"
+    }
+  ],
+  "startIndex": 0,
+  "next": "https://api.digitale-sammlungen.de/iiif/services/search/v1/bsb00026283?q=der&page=2",
+  "within": {
+    "@type": "sc:Layer",
+    "total": 422,
+    "first": "https://api.digitale-sammlungen.de/iiif/services/search/v1/bsb00026283?q=der&page=1",
+    "last": "https://api.digitale-sammlungen.de/iiif/services/search/v1/bsb00026283?q=der&page=9"
+  }
+}

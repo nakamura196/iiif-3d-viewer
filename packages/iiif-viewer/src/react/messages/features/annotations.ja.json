@@ -24,6 +24,14 @@
     "canvasAnnotationsMotivation_replying": "返信",
     "canvasAnnotationsMotivation_editing": "修正",
     "canvasAnnotationsMotivation_moderating": "管理",
-    "canvasAnnotationsMotivation_painting": "本文"
+    "canvasAnnotationsMotivation_painting": "本文",
+    "canvasAnnotationsGranularity": "単位",
+    "canvasAnnotationsGranularityAll": "すべて",
+    "canvasAnnotationsGranularity_page": "ページ",
+    "canvasAnnotationsGranularity_block": "ブロック",
+    "canvasAnnotationsGranularity_paragraph": "段落",
+    "canvasAnnotationsGranularity_line": "行",
+    "canvasAnnotationsGranularity_word": "語",
+    "canvasAnnotationsGranularity_glyph": "文字"
   }
 }

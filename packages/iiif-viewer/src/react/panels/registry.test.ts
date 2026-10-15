@@ -14,6 +14,7 @@ describe('PANELS', () => {
       'rights',
       'transcript',
       'annotationTranscript',
+      'contentSearch',
       'canvasAnnotations',
       'annotations',
       'inference',

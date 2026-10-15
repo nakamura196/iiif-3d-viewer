@@ -8,6 +8,7 @@ import { useLocale } from '../env';
 import { usePlayback } from '../playback';
 import { flatDisplay } from './FlatDisplay';
 import { imageCanvasDisplay } from './ImageCanvasDisplay';
+import { OverlayLayer } from './ImageView';
 import { storyOpenAtom } from '../overlays/storyState';
 import { compareAtom, compareMultiAtom, focusAtom, usePageOrder } from './structureState';
 import type { Display, DisplayProps } from './types';
@@ -134,6 +135,60 @@ function Strip({
   );
 }
 
+interface PageBox {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
+
+const sameBox = (a: PageBox | undefined, b: PageBox) =>
+  !!a && Math.abs(a.left - b.left) < 0.5 && Math.abs(a.top - b.top) < 0.5 && Math.abs(a.width - b.width) < 0.5 && Math.abs(a.height - b.height) < 0.5;
+
+// 見開きの各ページにも、画像に重ねる表示（OVERLAYS: 注釈の枠、文字の検索の当たりなど）を載せる。
+// 見開きは拡大しないので、層をページの画像の矩形に合わせるだけでよい。矩形は毎フレーム測る（RegionHighlight と同じ）。
+function PageOverlays({ host, pages }: { host: React.RefObject<HTMLDivElement | null>; pages: ContainerInfo[] }) {
+  const [boxes, setBoxes] = useState<Record<string, PageBox>>({});
+  const ids = pages.map((c) => c.id).join('\n');
+  useEffect(() => {
+    let frame = 0;
+    const tick = () => {
+      const root = host.current;
+      if (root) {
+        const r = root.getBoundingClientRect();
+        const next: Record<string, PageBox> = {};
+        for (const id of ids.split('\n')) {
+          const img = root.querySelector(`img[data-canvas-id="${CSS.escape(id)}"]`);
+          const i = img?.getBoundingClientRect();
+          if (i && i.width > 0 && i.height > 0) next[id] = { left: i.left - r.left, top: i.top - r.top, width: i.width, height: i.height };
+        }
+        setBoxes((prev) =>
+          Object.keys(next).length === Object.keys(prev).length && Object.entries(next).every(([k, b]) => sameBox(prev[k], b))
+            ? prev
+            : next,
+        );
+      }
+      frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [host, ids]);
+
+  return (
+    <>
+      {pages.map((c) => {
+        const b = boxes[c.id];
+        if (!b || !c.width || !c.height) return null;
+        return (
+          <div key={c.id} className="absolute pointer-events-none" style={b} data-page-overlay={c.id}>
+            <OverlayLayer container={c} canvasWidth={c.width} canvasHeight={c.height} />
+          </div>
+        );
+      })}
+    </>
+  );
+}
+
 // Draws the region that a content state / table of contents entry points to, over the image.
 // The image element is measured every frame, so the box follows zooming and moving.
 // Not while the story tab is open: the story zooms to its scenes and draws its own frame only on request.
@@ -239,8 +294,9 @@ function PagedDisplay(props: DisplayProps) {
     : group.map((i) => containers[i]).filter((c): c is ContainerInfo => !!c);
   const allImages = pages.length > 1 && pages.every((c) => !!imageOf(c));
 
+  const strip = !comparing && viewing.mode === 'continuous' && containers.length > 1 && containers.every((c) => !!imageOf(c));
   let body: React.ReactNode;
-  if (!comparing && viewing.mode === 'continuous' && containers.length > 1 && containers.every((c) => !!imageOf(c))) {
+  if (strip) {
     body = (
       <Strip
         containers={containers}
@@ -277,6 +333,8 @@ function PagedDisplay(props: DisplayProps) {
         </p>
       )}
       {body}
+      {/* 見開き（別々のマニフェストを並べたときは除く。注釈はそのマニフェストのものではないため） */}
+      {!strip && allImages && !multiItems ? <PageOverlays host={host} pages={pages} /> : null}
       <RegionHighlight host={host} container={container} />
     </div>
   );
