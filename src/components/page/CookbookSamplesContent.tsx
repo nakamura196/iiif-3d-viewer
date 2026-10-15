@@ -75,7 +75,9 @@ export default function CookbookSamplesContent() {
                   <span className="shrink-0 w-12 font-mono text-sm text-[var(--ds-fg-muted)] pt-0.5">{r.id}</span>
                   <div className="min-w-0 flex-1">
                     <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-                      <span className="font-medium text-[var(--ds-fg)]">{r.title[locale]}</span>
+                      <Link href={`/samples/${r.id}`} className="font-medium text-[var(--ds-fg)] hover:text-[var(--ds-primary)] hover:underline">
+                        {r.title[locale]}
+                      </Link>
                       {locale === 'ja' && <span className="text-xs text-[var(--ds-fg-muted)]">{r.title.en}</span>}
                       {r.status !== 'checked' && (
                         <span className="text-xs px-2 py-0.5 rounded bg-[var(--ds-surface-2)] text-[var(--ds-fg-muted)]">

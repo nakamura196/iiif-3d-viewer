@@ -187,13 +187,19 @@
     },
     "status": {
       "unchecked": "未確認",
-      "none": "開くマニフェストなし"
+      "none": "開くマニフェストなし",
+      "checked": "確認済み"
     },
     "back": "サンプルの一覧へ",
     "copyLink": "リンクをコピー",
     "copied": "コピーしました",
     "details": "詳しく見る",
-    "others": "ほかのサンプル"
+    "others": "ほかのサンプル",
+    "noManifest": "開くマニフェストがありません",
+    "prev": "前のレシピ",
+    "next": "次のレシピ",
+    "sameCategory": "同じ分類のレシピ",
+    "description": "IIIF Cookbook のレシピ {id}（{category}）。{status}"
   },
   "UseCases": {
     "title": "ユースケース",

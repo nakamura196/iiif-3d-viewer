@@ -45,7 +45,7 @@ export default function SamplesContent() {
                     className="bg-[var(--ds-surface)] rounded-lg border border-[var(--ds-border)] p-4 flex flex-col sm:flex-row gap-4"
                   >
                     {/* 開いたときの画面。押すと詳細ページへ */}
-                    <Link href={`/samples/${s.id}`} className="shrink-0 sm:w-48" tabIndex={-1} aria-hidden="true">
+                    <Link href={`/samples/kasane/${s.id}`} className="shrink-0 sm:w-48" tabIndex={-1} aria-hidden="true">
                       {/* eslint-disable-next-line @next/next/no-img-element -- 静的書き出しのため next/image は使わない */}
                       <img
                         src={sampleThumbnail(s)}
@@ -58,7 +58,7 @@ export default function SamplesContent() {
                     </Link>
                     <div className="min-w-0">
                       <div className="flex flex-wrap items-baseline gap-2">
-                        <Link href={`/samples/${s.id}`} className="font-medium text-[var(--ds-fg)] hover:text-[var(--ds-primary)] hover:underline">
+                        <Link href={`/samples/kasane/${s.id}`} className="font-medium text-[var(--ds-fg)] hover:text-[var(--ds-primary)] hover:underline">
                           {s.title[locale]}
                         </Link>
                       </div>
@@ -67,7 +67,7 @@ export default function SamplesContent() {
                         <Link href={sampleHref(s)} className="text-[var(--ds-primary)] hover:underline">
                           {t('open')}
                         </Link>
-                        <Link href={`/samples/${s.id}`} className="text-[var(--ds-primary)] hover:underline">
+                        <Link href={`/samples/kasane/${s.id}`} className="text-[var(--ds-primary)] hover:underline">
                           {t('details')}
                         </Link>
                         <a

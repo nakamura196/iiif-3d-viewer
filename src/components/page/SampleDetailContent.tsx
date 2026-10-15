@@ -10,7 +10,7 @@ import { SAMPLES, sampleById, sampleHref, sampleThumbnail } from '@/lib/samples'
 
 const linkClass = 'text-[var(--ds-primary)] hover:underline';
 
-// /samples/<id>: Kasane 独自のサンプル 1 件。画像・説明・マニフェスト・「ビューアで開く」・ほかのサンプル
+// /samples/kasane/<id>: Kasane 独自のサンプル 1 件。画像・説明・マニフェスト・「ビューアで開く」・ほかのサンプル
 export default function SampleDetailContent({ id }: { id: string }) {
   const t = useTranslations('Samples');
   const locale = useLocale() === 'en' ? 'en' : 'ja';
@@ -65,7 +65,7 @@ export default function SampleDetailContent({ id }: { id: string }) {
             <ul className="grid gap-4 sm:grid-cols-2">
               {others.map((o) => (
                 <li key={o.id}>
-                  <Link href={`/samples/${o.id}`} className="group block space-y-2">
+                  <Link href={`/samples/kasane/${o.id}`} className="group block space-y-2">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={sampleThumbnail(o)}
