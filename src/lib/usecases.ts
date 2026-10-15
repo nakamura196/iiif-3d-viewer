@@ -235,6 +235,8 @@ export const USE_CASES: UseCase[] = [
     },
     open: { page: 'search', url: 'https://nakamura196.github.io/ndl-face-finder/curations/works/edonohanami.json' },
     features: ['image', 'curation', 'search'],
+    // 動画はお知らせ face-detection と同じ（同じ花見のキュレーションで顔を検出する）
+    video: { ja: 'l2j9h0g8SLo', en: 'XX1Tdc4Sxss' },
   },
   {
     id: 'kaishi',

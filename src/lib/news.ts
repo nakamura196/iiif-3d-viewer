@@ -51,6 +51,7 @@ export const NEWS: NewsItem[] = [
     action: {
       href: viewer('https://nakamura196.github.io/ndl-face-finder/curations/works/edonohanami.json', 'pos=2&tab=inference'),
     },
+    video: { ja: 'RCZvHpaHSc8', en: 'rRyTJmxkckM' },
   },
   {
     id: 'cookbook-video',
@@ -82,6 +83,7 @@ export const NEWS: NewsItem[] = [
       href: viewer('https://nakamura196.github.io/ndl-face-finder/curations/works/edonohanami.json', 'pos=2&tab=inference'),
     },
     usecases: ['curation-search'],
+    video: { ja: 'l2j9h0g8SLo', en: 'XX1Tdc4Sxss' },
   },
   {
     id: 'cookbook-all-recipes',
