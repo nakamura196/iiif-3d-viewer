@@ -235,7 +235,13 @@
     "compareHintLink": "Help: Open the compare page from a URL",
     "copied": "Copied",
     "others": "More use cases",
-    "newsHeading": "News about this example"
+    "newsHeading": "News about this example",
+    "filter": "Filter by tag",
+    "all": "All",
+    "sort": "Order",
+    "sortDefault": "Recommended",
+    "sortNewest": "Newest first",
+    "added": "Added"
   },
   "InferenceModels": {
     "title": "Models in the Inference tab",

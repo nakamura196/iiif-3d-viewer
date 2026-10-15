@@ -55,6 +55,8 @@ export type UseCaseFeature = (typeof USE_CASE_FEATURES)[number];
 export interface UseCase {
   // ページ内リンク（/usecases#<id>）にも使う。英小文字・数字・ハイフン
   id: string;
+  // 一覧に足した日（YYYY-MM-DD）。一覧の「新しい順」と、カードの表示に使う
+  added: string;
   title: Localized;
   // 2〜3 文。何の資料で、Kasane で何ができるか
   note: Localized;
@@ -120,6 +122,7 @@ export const USE_CASES: UseCase[] = [
   // 3D モデルへのアノテーションが Kasane の中心の機能なので、先頭に置く
   {
     id: 'globe-annotations',
+    added: '2026-10-14',
     title: {
       ja: '石淵家地球儀（3D モデルへのアノテーション）',
       en: 'Ishibuchi family globe (annotations on a 3D model)',
@@ -136,6 +139,7 @@ export const USE_CASES: UseCase[] = [
   },
   {
     id: 'globe-georef',
+    added: '2026-10-14',
     title: {
       ja: '石淵家地球儀（3D と地図を並べて見る）',
       en: 'Ishibuchi family globe (3D beside a map)',
@@ -150,6 +154,7 @@ export const USE_CASES: UseCase[] = [
   },
   {
     id: 'iiif-geo',
+    added: '2026-10-13',
     title: {
       ja: '東京大学本郷キャンパス歴史的建造物マップ（iiif_geo）',
       en: 'Hongo Campus Historical Buildings Map (iiif_geo)',
@@ -168,6 +173,7 @@ export const USE_CASES: UseCase[] = [
   },
   {
     id: 'shelley',
+    added: '2026-10-13',
     title: {
       ja: 'シェリーの手稿（元画像と透過光画像）',
       en: 'Shelley manuscript (original and transmitted-light images)',
@@ -185,6 +191,7 @@ export const USE_CASES: UseCase[] = [
   },
   {
     id: 'kuniezu',
+    added: '2026-10-14',
     title: {
       ja: '国絵図を見比べる（天保国絵図 近江国）',
       en: 'Comparing provincial maps (Tenpō kuniezu, Ōmi Province)',
@@ -206,6 +213,7 @@ export const USE_CASES: UseCase[] = [
   },
   {
     id: 'ueno',
+    added: '2026-10-13',
     title: {
       ja: '上野駅周辺の点群と建物モデル（3D の左右表示）',
       en: 'Ueno station area: point cloud and building models side by side',
@@ -223,6 +231,7 @@ export const USE_CASES: UseCase[] = [
   },
   {
     id: 'curation',
+    added: '2026-10-13',
     title: {
       ja: 'IIIF Curation API の例（CODH のサンプル）',
       en: 'IIIF Curation API example (CODH sample)',
@@ -245,6 +254,7 @@ export const USE_CASES: UseCase[] = [
   },
   {
     id: 'curation-search',
+    added: '2026-10-14',
     title: {
       ja: 'キュレーションを検索する（江戸の花見の顔 121 点）',
       en: 'Searching a curation (121 faces in Edo hanami prints)',
@@ -260,6 +270,7 @@ export const USE_CASES: UseCase[] = [
   },
   {
     id: 'kaishi',
+    added: '2026-10-13',
     title: {
       ja: '大日本海志編纂資料「起絵図」（泰平丸起絵図）',
       en: 'Okoshi-ezu from the Dai Nihon Kaishi materials (Taiheimaru)',
@@ -277,6 +288,7 @@ export const USE_CASES: UseCase[] = [
   },
   {
     id: 'meizukushi-ocr',
+    added: '2026-10-14',
     title: {
       ja: '国立国会図書館「銘尽」（ブラウザの中で古典籍 OCR）',
       en: 'Meizukushi, National Diet Library (classical-text OCR in the browser)',
@@ -298,6 +310,7 @@ export const USE_CASES: UseCase[] = [
   },
   {
     id: 'mdz-content-search',
+    added: '2026-10-15',
     title: {
       ja: 'バイエルン州立図書館の写本（資料の中の文字を探す）',
       en: 'Manuscript, Bavarian State Library (search the text inside)',
@@ -317,6 +330,7 @@ export const USE_CASES: UseCase[] = [
   },
   {
     id: 'wakozukan-story',
+    added: '2026-10-14',
     title: {
       ja: '東京大学史料編纂所「倭寇図巻」（ストーリー）',
       en: 'Wakō zukan, Historiographical Institute, The University of Tokyo (story)',
@@ -337,6 +351,7 @@ export const USE_CASES: UseCase[] = [
   },
   {
     id: 'wellcome-auth',
+    added: '2026-10-14',
     title: {
       ja: 'Wellcome Collection の閲覧注意付き資料（IIIF Auth API 2.0）',
       en: 'Wellcome Collection material behind a content advisory (IIIF Auth API 2.0)',
@@ -352,6 +367,7 @@ export const USE_CASES: UseCase[] = [
   },
   {
     id: 'video-objects',
+    added: '2026-10-15',
     title: {
       ja: '信州デジタルコモンズ「芦の尻の道祖神祭り」（動画の中の人の枠）',
       en: 'Ashinoshiri Dosojin Festival, Shinshu Digital Commons (boxes on people in a video)',
@@ -366,6 +382,10 @@ export const USE_CASES: UseCase[] = [
     site: 'https://ab.ldas.jp/ja/na-kamura-1263/video',
   },
 ];
+
+/** 新しく足した順。同じ日なら定義の順のまま */
+export const byNewest = (list: UseCase[]): UseCase[] =>
+  [...list].sort((a, b) => b.added.localeCompare(a.added));
 
 export const FEATURED_USE_CASES = USE_CASES.filter((u) => u.featured);
 
