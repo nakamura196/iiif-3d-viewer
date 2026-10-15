@@ -13,7 +13,7 @@ import { G, $, resetState, escapeHtml } from "./state.js";
 import { setLang, applyI18n, t } from "./i18n.js";
 import { fetchJson, detectIiifType } from "./iiif.js";
 import { setupScene, setupPostprocessing, onResize } from "./scene.js";
-import { setupControls, setMode, updateWalk, updateThirdPerson, updateFlight, updateHover } from "./controls.js";
+import { setupControls, setMode, updateWalk, updateThirdPerson, updateFlight, updateHover, clampCameraToRoom } from "./controls.js";
 import { setupViewerUI } from "./viewer.js";
 import { setupXR, bindXRInputSources, updateXR } from "./xr.js";
 import { setupTourUI, updateTour, isTouring } from "./tour.js";
@@ -267,7 +267,10 @@ function loop() {
   updateFlight(dt);
   updateWalk(dt);
   updateThirdPerson(dt);
-  if (G.mode === "orbit" || G.mode === "thirdperson") G.controls.update();
+  if (G.mode === "orbit" || G.mode === "thirdperson") {
+    G.controls.update();
+    clampCameraToRoom();
+  }
   updateHover();
   G.composer.render();
 }

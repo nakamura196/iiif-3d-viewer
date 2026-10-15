@@ -30,6 +30,7 @@ export const G = {
   charKind: "man", // 三人称アバター "man" | "girl"
   charLoadedKind: null,
   walkBounds: 8,
+  roomShape: null, // { angles, apothem, height } 正多角形の部屋の形(カメラの壁抜け防止)
   pedestalR: 0,
   eyeY: 1.6,
   move: { f: false, b: false, l: false, r: false },

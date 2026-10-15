@@ -321,6 +321,28 @@ function groundAt(x, z) {
 }
 // 水平移動を解決(ぶつかったら軸ごとに滑る)。壁(walkBounds)内にも収める。
 // tour.js の三人称ツアーでもアバターの当たり判定に再利用する。
+// 見回し・三人称のカメラが壁や天井を突き抜けないよう、部屋の内側に留める。
+// 注視点(部屋の中)からカメラへ向かう線上で、壁の手前まで引き戻す(三人称ゲームのカメラと同じ)。
+// 壁も絵も表側しか描かないので、外へ出ると壁が透けて額縁の裏や空の枠が見えてしまう。
+const CAM_WALL_MARGIN = 0.35; // 壁(額縁の厚み込み)からの余白 m
+export function clampCameraToRoom() {
+  const r = G.roomShape;
+  if (!r) return;
+  const cam = G.camera.position, tg = G.controls.target;
+  const lim = r.apothem - CAM_WALL_MARGIN;
+  let k = 1; // 注視点→カメラの何割まで進めるか
+  for (const a of r.angles) {
+    const nx = Math.sin(a), nz = Math.cos(a); // 壁の外向き法線
+    const dt = tg.x * nx + tg.z * nz;
+    const dc = cam.x * nx + cam.z * nz;
+    if (dc > lim && dt < lim) k = Math.min(k, (lim - dt) / (dc - dt));
+  }
+  const top = r.height - CAM_WALL_MARGIN, bottom = 0.2;
+  if (cam.y > top && tg.y < top) k = Math.min(k, (top - tg.y) / (cam.y - tg.y));
+  if (cam.y < bottom && tg.y > bottom) k = Math.min(k, (tg.y - bottom) / (tg.y - cam.y));
+  if (k < 1) cam.lerpVectors(tg, cam, Math.max(0, k));
+}
+
 export function resolveMove(px, pz, dx, dz, feetY) {
   let nx = px + dx, nz = pz + dz;
   if (blockedAt(nx, nz, feetY)) {
