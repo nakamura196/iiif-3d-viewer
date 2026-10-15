@@ -13,6 +13,7 @@ import Footer from '@/components/Footer';
 import { Link } from '@/i18n/routing';
 import { contentParam, convertToV4, fetchManifest, manifestFromParams, parseManifestV4 } from '@nakamura196/iiif-viewer/core';
 import { isViewerTab } from '@/lib/viewerTabs';
+import { canOpenInGallery } from '@/lib/gallery';
 
 // /viewer?iiif-content=...&tab=...（?manifest=... も読む）: ビューア本体はパッケージの Viewer。
 // ここでは URL の読み書きと、ヘッダー・フッター・入力欄だけを持つ。
@@ -25,8 +26,11 @@ const ViewerContent: NextPage = () => {
   const { resolvedTheme } = useTheme();
   const tc = useTranslations('Compare');
   const tg = useTranslations('GeoRef');
+  const tv = useTranslations('Gallery');
   // 地図と並べて見られる位置情報（Canvas または Scene の georeferencing）があるか
   const [hasGeoCanvas, setHasGeoCanvas] = useState(false);
+  // 画像を含み、3D の美術館（/gallery/）の壁に掛けられるか
+  const [galleryOk, setGalleryOk] = useState(false);
 
   useEffect(() => {
     const manifestParam = manifestFromParams(new URLSearchParams(window.location.search));
@@ -35,6 +39,7 @@ const ViewerContent: NextPage = () => {
 
   useEffect(() => {
     setHasGeoCanvas(false);
+    setGalleryOk(false);
     if (!manifestUrl) return;
     let cancelled = false;
     fetchManifest(manifestUrl)
@@ -43,6 +48,7 @@ const ViewerContent: NextPage = () => {
         // 2D の Canvas か、3D の Scene に位置情報（georeferencing）がある
         const { geoCanvasId, geoFeatures } = parseManifestV4(convertToV4(raw));
         setHasGeoCanvas(!!geoCanvasId || geoFeatures.length > 0);
+        setGalleryOk(canOpenInGallery(raw));
       })
       .catch(() => {});
     return () => {
@@ -89,13 +95,26 @@ const ViewerContent: NextPage = () => {
             <ManifestInput onSubmit={(url: string) => setManifestUrl(url)} />
           </div>
         )}
-        {manifestUrl && hasGeoCanvas && (
-          <Link
-            href={`/georef?${contentParam(manifestUrl)}`}
-            className="absolute bottom-4 left-4 z-10 text-sm px-3 py-1.5 bg-[var(--ds-surface)] rounded-lg shadow-md border border-[var(--ds-border)] text-[var(--ds-fg)] hover:bg-[var(--ds-surface-2)]"
-          >
-            {tg('viewOnMap')}
-          </Link>
+        {manifestUrl && (hasGeoCanvas || galleryOk) && (
+          <div className="absolute bottom-4 left-4 z-10 flex flex-wrap gap-2">
+            {hasGeoCanvas && (
+              <Link
+                href={`/georef?${contentParam(manifestUrl)}`}
+                className="text-sm px-3 py-1.5 bg-[var(--ds-surface)] rounded-lg shadow-md border border-[var(--ds-border)] text-[var(--ds-fg)] hover:bg-[var(--ds-surface-2)]"
+              >
+                {tg('viewOnMap')}
+              </Link>
+            )}
+            {galleryOk && (
+              // 美術館は ?u=<IIIF の URL> で展示を受け取る
+              <Link
+                href={`/gallery?u=${encodeURIComponent(manifestUrl)}`}
+                className="text-sm px-3 py-1.5 bg-[var(--ds-surface)] rounded-lg shadow-md border border-[var(--ds-border)] text-[var(--ds-fg)] hover:bg-[var(--ds-surface-2)]"
+              >
+                {tv('openInGallery')}
+              </Link>
+            )}
+          </div>
         )}
       </main>
       {!manifestUrl && <Footer />}

@@ -24,7 +24,8 @@
     "developers": "Satoru Nakamura & Jun Ogawa (The University of Tokyo)",
     "samplesAll": "Cookbook samples",
     "samplesOwn": "Kasane samples",
-    "useCasesAll": "Use cases"
+    "useCasesAll": "Use cases",
+    "gallery": "IIIF VR Gallery"
   },
   "News": {
     "heading": "News",
@@ -282,5 +283,8 @@
       "curation": "Curation",
       "collection": "Collection"
     }
+  },
+  "Gallery": {
+    "openInGallery": "View in 3D gallery"
   }
 }

@@ -16,5 +16,7 @@ export default defineConfig([
       'react-hooks/immutability': 'warn',
     },
   },
-  globalIgnores(['.next/**', 'out/**', 'packages/*/dist/**', 'build/**', 'vercel-static/**', 'next-env.d.ts']),
+  globalIgnores(['.next/**', 'out/**', 'packages/*/dist/**', 'build/**', 'vercel-static/**', 'next-env.d.ts',
+    // IIIF VR Gallery の描画部分。元リポジトリ(nakamura196/iiif-vr-gallery)の素の JavaScript をそのまま移したもの
+    'src/components/gallery/engine/**']),
 ]);

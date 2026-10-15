@@ -1,0 +1,425 @@
+{
+  "@context": [
+    "http://iiif.io/api/presentation/2/context.json",
+    "http://codh.rois.ac.jp/iiif/curation/1/context.json"
+  ],
+  "@id": "https://nakamura196.github.io/iiif-vr/curation/genelib-vm-sample",
+  "@type": "cr:Curation",
+  "label": "IIIF VR 美術館サンプル（東京大学総合図書館バーチャルミュージアムより）",
+  "description": "https://utda.github.io/tenjiroom/ の genelib_vm2020-01 から、写真帖『東京帝國大學』とアラカルトを抜粋・再構成したデモ用キュレーション。",
+  "selections": [
+    {
+      "@id": "https://nakamura196.github.io/iiif-vr/curation/genelib-vm-sample/range/shashincho",
+      "@type": "sc:Range",
+      "label": "写真帖『東京帝國大學』 明治37年(1904)",
+      "members": [
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p37#xywh=114,252,2740,1220",
+          "@type": "sc:Canvas",
+          "label": "1：赤門及び医科大学の一部",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 0,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p42#xywh=430,300,1900,1492",
+          "@type": "sc:Canvas",
+          "label": "2：陸上運動会（棒飛）",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 1,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p45#xywh=426,300,1892,1484",
+          "@type": "sc:Canvas",
+          "label": "3：図書館学生閲覧室",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 2,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p49#xywh=406,312,1920,1500",
+          "@type": "sc:Canvas",
+          "label": "4：法科大学教室",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 3,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p53#xywh=414,304,1924,1488",
+          "@type": "sc:Canvas",
+          "label": "5：生理学実験室",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 4,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p57#xywh=418,324,1916,1464",
+          "@type": "sc:Canvas",
+          "label": "6：病理学講義室",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 5,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p61#xywh=438,312,1900,1500",
+          "@type": "sc:Canvas",
+          "label": "7：薬物学教室化学実験室",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 6,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p67#xywh=442,304,1900,1496",
+          "@type": "sc:Canvas",
+          "label": "8：外科手術室",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 7,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p77#xywh=418,304,1956,1512",
+          "@type": "sc:Canvas",
+          "label": "9：婦人科耳鼻咽喉科及眼科外来診察所",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 8,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p81#xywh=398,308,1972,1496",
+          "@type": "sc:Canvas",
+          "label": "10：機械工学列品室",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 9,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p84#xywh=414,320,1896,1504",
+          "@type": "sc:Canvas",
+          "label": "11：造船学列品室",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 10,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p92#xywh=418,292,1924,1480",
+          "@type": "sc:Canvas",
+          "label": "12：試金実験室",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 11,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p102#xywh=446,296,1896,1496",
+          "@type": "sc:Canvas",
+          "label": "13：植物園の一部",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 12,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p110#xywh=422,312,1904,1492",
+          "@type": "sc:Canvas",
+          "label": "14：農学教室",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 13,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p115#xywh=450,320,1920,1492",
+          "@type": "sc:Canvas",
+          "label": "15：農科大学温室",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 14,
+                "roomId": 0
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/canvas/p118#xywh=458,312,1900,1476",
+          "@type": "sc:Canvas",
+          "label": "16：養蚕室",
+          "description": "写真帖『東京帝國大學』明治37年(1904)年版　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/8b0089a9-66fc-4833-ab13-21d92f7f7aa4/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 15,
+                "roomId": 0
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "@id": "https://nakamura196.github.io/iiif-vr/curation/genelib-vm-sample/range/alacarte",
+      "@type": "sc:Range",
+      "label": "アラカルト（鯰絵・ピラネージ・鴎外文庫 ほか）",
+      "members": [
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/2fe5f21a-fa37-4dc6-9753-755df1ef3faa/canvas/p1#xywh=300,744,6440,4216",
+          "@type": "sc:Canvas",
+          "label": "1：生捕ました三度の大地震",
+          "description": "「石本コレクション」　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/2fe5f21a-fa37-4dc6-9753-755df1ef3faa/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 0,
+                "roomId": 2
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/f20d2fc7-27f8-4494-86c8-99a6cd1fbb7c/canvas/p1#xywh=312,352,4176,6112",
+          "@type": "sc:Canvas",
+          "label": "2：鯰之讎討",
+          "description": "「石本コレクション」　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/f20d2fc7-27f8-4494-86c8-99a6cd1fbb7c/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 1,
+                "roomId": 2
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/723553d0-4a10-43fa-991c-7e46c6b6b01d/canvas/p1#xywh=360,560,4016,5744",
+          "@type": "sc:Canvas",
+          "label": "3：百一年目の日蝕",
+          "description": "「石本コレクション」　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/723553d0-4a10-43fa-991c-7e46c6b6b01d/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 2,
+                "roomId": 2
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/3d6550cb-2cd7-4188-96c1-4a5fdb487fed/canvas/p1#xywh=248,288,5984,8064",
+          "@type": "sc:Canvas",
+          "label": "4：ピラネージ肖像画",
+          "description": "亀井文庫「ピラネージ版画集」　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/3d6550cb-2cd7-4188-96c1-4a5fdb487fed/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 3,
+                "roomId": 2
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/38197f83-8f97-4d18-87e0-da5222ca938d/canvas/p1#xywh=232,192,5104,6656",
+          "@type": "sc:Canvas",
+          "label": "5：想像上の牢獄",
+          "description": "亀井文庫「ピラネージ版画集」　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/38197f83-8f97-4d18-87e0-da5222ca938d/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 4,
+                "roomId": 2
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/f31c02e5-5f1c-4bf6-a3d0-90863ce8973f/canvas/p8#xywh=0,16,4256,3352",
+          "@type": "sc:Canvas",
+          "label": "6：膳部之事",
+          "description": "「鴎外文庫」（書き入れ本）　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/f31c02e5-5f1c-4bf6-a3d0-90863ce8973f/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 5,
+                "roomId": 2
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/58539ab0-8bc6-4cb1-95bb-5c28ce2749c7/canvas/p19#xywh=258,224,3116,2664",
+          "@type": "sc:Canvas",
+          "label": "7：烏琴齋雜録",
+          "description": "「鴎外文庫」（書き入れ本）　から",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/58539ab0-8bc6-4cb1-95bb-5c28ce2749c7/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 6,
+                "roomId": 2
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/5061e0fa-b328-431f-a95e-7b417137335b/canvas/p1#xywh=0,640,7632,8784",
+          "@type": "sc:Canvas",
+          "label": "8：救世主像",
+          "description": "",
+          "manifest": "https://da.dl.itc.u-tokyo.ac.jp/portal/repo/iiif/5061e0fa-b328-431f-a95e-7b417137335b/manifest",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 7,
+                "roomId": 2
+              }
+            }
+          ]
+        },
+        {
+          "@id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/c416f868-754f-4fed-9974-6ba911e2c0ba/canvas/p1",
+          "@type": "sc:Canvas",
+          "label": "9：松乃栄",
+          "description": "",
+          "metadata": [
+            {
+              "label": "selfMuseumRoom",
+              "value": {
+                "position": 8,
+                "roomId": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

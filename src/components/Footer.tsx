@@ -36,6 +36,7 @@ export default function Footer() {
           heading: t('samplesHeading'),
           links: [
             { label: t('useCasesAll'), href: '/usecases' },
+            { label: t('gallery'), href: '/gallery' },
             { label: t('samplesAll'), href: '/samples' },
             { label: t('samplesOwn'), href: '/samples/kasane' },
           ],
