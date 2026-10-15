@@ -31,6 +31,11 @@ interface Loaded {
   collection: boolean;
 }
 
+interface Found extends Loaded {
+  /** How many images each URL gave, in the order given (0: it could not be read). */
+  counts: number[];
+}
+
 // 1 つの URL の資料。Collection は、載っている Manifest（入れ子は見ない）を順に開く。
 async function loadSource(url: string, locale: string, member = false): Promise<Loaded> {
   const json = await jsonOf(url);
@@ -39,7 +44,8 @@ async function loadSource(url: string, locale: string, member = false): Promise<
     const c = infoCandidateOf(json, url);
     return { candidates: c ? [c] : [], collection: false };
   }
-  const v3 = inlineSharedServices(upgradeToV3(json));
+  // the upgrade rewrites what it is given: work on a copy, so that the cached JSON can be read again
+  const v3 = inlineSharedServices(upgradeToV3(structuredClone(json)));
   if (isCollectionJson(v3)) {
     if (member) return { candidates: [], collection: true };
     const parts = await Promise.all(memberManifestUrlsOf(v3).map((u) => loadSource(u, locale, true)));
@@ -50,11 +56,12 @@ async function loadSource(url: string, locale: string, member = false): Promise<
 
 /**
  * The images of several sources, in the order given. `collection`: one of them is a Collection
- * (a comparison of different sources, not of the Choice of one Canvas). `ready`: all are read.
+ * (a comparison of different sources, not of the Choice of one Canvas). `counts`: images per URL.
+ * `ready`: all are read.
  */
-export function useCompareSources(urls: string[], locale: string): Loaded & { ready: boolean } {
+export function useCompareSources(urls: string[], locale: string): Found & { ready: boolean } {
   const key = JSON.stringify(urls);
-  const [res, setRes] = useState<{ key: string; loaded: Loaded } | null>(null);
+  const [res, setRes] = useState<{ key: string; loaded: Found } | null>(null);
   useEffect(() => {
     if (urls.length === 0) return;
     let cancelled = false;
@@ -62,7 +69,11 @@ export function useCompareSources(urls: string[], locale: string): Loaded & { re
       if (cancelled) return;
       setRes({
         key: key + locale,
-        loaded: { candidates: parts.flatMap((p) => p.candidates), collection: parts.some((p) => p.collection) },
+        loaded: {
+          candidates: parts.flatMap((p) => p.candidates),
+          collection: parts.some((p) => p.collection),
+          counts: parts.map((p) => p.candidates.length),
+        },
       });
     });
     return () => {
@@ -72,5 +83,5 @@ export function useCompareSources(urls: string[], locale: string): Loaded & { re
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key, locale]);
   const ready = res?.key === key + locale;
-  return { ...(ready && res ? res.loaded : { candidates: [], collection: false }), ready };
+  return { ...(ready && res ? res.loaded : { candidates: [], collection: false, counts: [] }), ready };
 }

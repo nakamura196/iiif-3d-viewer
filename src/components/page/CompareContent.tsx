@@ -1,7 +1,7 @@
 'use client';
 
 import type { NextPage } from 'next';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import { useLocale, useTranslations } from 'next-intl';
 import {
@@ -61,12 +61,88 @@ function Segmented<T extends string | number>({
   );
 }
 
+// The sources being compared, each with a button to take it away, and a field to add one more
+// (a Manifest, a Collection or an info.json). `counts`: images read from each (0: could not be read).
+function SourceList({
+  sources,
+  counts,
+  ready,
+  onAdd,
+  onRemove,
+}: {
+  sources: string[];
+  counts: number[];
+  ready: boolean;
+  onAdd: (url: string) => void;
+  onRemove: (index: number) => void;
+}) {
+  const t = useTranslations('Compare');
+  const [url, setUrl] = useState('');
+  const [error, setError] = useState('');
+  const submit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const u = url.trim();
+    try {
+      if (!/^https?:$/.test(new URL(u).protocol)) throw new Error();
+    } catch {
+      setError(t('invalidUrl'));
+      return;
+    }
+    if (sources.includes(u)) {
+      setError(t('alreadyAdded'));
+      return;
+    }
+    setError('');
+    setUrl('');
+    onAdd(u);
+  };
+  return (
+    <div className="px-3 py-2 border-b border-[var(--ds-border)] bg-[var(--ds-surface)] text-sm text-[var(--ds-fg)] space-y-2">
+      <ol className="space-y-1">
+        {sources.map((s, i) => (
+          <li key={s} className="flex items-center gap-2 min-w-0">
+            <span className="truncate min-w-0 flex-1" title={s}>
+              {s}
+            </span>
+            <span className="shrink-0 text-xs text-[var(--ds-fg-muted)]">
+              {!ready ? '…' : counts[i] ? t('imageCount', { count: counts[i] }) : t('unreadable')}
+            </span>
+            <button
+              type="button"
+              onClick={() => onRemove(i)}
+              aria-label={t('removeSource')}
+              title={t('removeSource')}
+              className="shrink-0 px-1.5 rounded hover:bg-[var(--ds-surface-2)]"
+            >
+              ×
+            </button>
+          </li>
+        ))}
+      </ol>
+      <form onSubmit={submit} className="flex flex-wrap items-center gap-2">
+        <input
+          type="text"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder={t('addPlaceholder')}
+          aria-label={t('addSource')}
+          className="flex-1 min-w-[12rem] rounded border border-[var(--ds-border)] bg-[var(--ds-bg)] text-[var(--ds-fg)] px-2 py-1 placeholder-[var(--ds-fg-muted)]"
+        />
+        <button type="submit" className="rounded px-3 py-1 bg-blue-600 text-white hover:bg-blue-700">
+          {t('add')}
+        </button>
+        {error && <span className="text-xs text-red-600 dark:text-red-400">{error}</span>}
+      </form>
+    </div>
+  );
+}
+
 // Compare two candidates of a Choice: two models of the first painted Choice of a 3D Scene
 // (e.g. LiDAR points and textured buildings of the same area; other painted models are drawn
 // on both sides), or two images of a Canvas (e.g. a letter in ordinary and transmitted light).
 // Images of different sources can be compared too: a Collection as iiif-content (its Manifests), and/or
 // repeated src=<Manifest or info.json URL>. Every Canvas that paints an image is a candidate; a and b are
-// then indexes of that list. (There is no form for it yet: the URL is the only way in.)
+// then indexes of that list. Sources can be added and taken away on the page (they are kept as src= in the URL).
 // The URL keeps what is shown: ?iiif-content=...&canvas=0&a=0&b=1&mode=swipe(&zoom=2)(&opacity=50)(&dir=v)(&src=...)
 const CompareContent: NextPage = () => {
   const t = useTranslations('Compare');
@@ -81,6 +157,9 @@ const CompareContent: NextPage = () => {
   const [opacity, setOpacity] = useState(50); // %
   const [srcs, setSrcs] = useState<string[]>([]);
   const [direction, setDirection] = useState<SwipeDirection>('horizontal');
+  const [showSources, setShowSources] = useState(false);
+  // after a source is added: B becomes its first image once it is read (index of the source)
+  const pendingB = useRef<number | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -106,6 +185,30 @@ const CompareContent: NextPage = () => {
   // images of different sources (a Collection, or src=...); otherwise the Choice of one Canvas / Scene
   const multi = srcs.length > 0 || found.collection;
 
+  const addSource = (url: string) => {
+    pendingB.current = sources.length;
+    if (manifestUrl) setSrcs((s) => [...s, url]);
+    else setManifestUrl(url);
+  };
+  // taking away the first one (iiif-content) moves the next src= into its place
+  const removeSource = (index: number) => {
+    if (index === 0 && manifestUrl) {
+      setManifestUrl(srcs[0] ?? null);
+      setSrcs((s) => s.slice(1));
+    } else {
+      const i = manifestUrl ? index - 1 : index;
+      setSrcs((s) => s.filter((_, j) => j !== i));
+    }
+    setPick([0, 1]);
+  };
+  useEffect(() => {
+    const at = pendingB.current;
+    if (at === null || !found.ready || found.counts.length <= at) return;
+    pendingB.current = null;
+    const first = found.counts.slice(0, at).reduce((n, c) => n + c, 0);
+    if (found.counts[at] > 0) setPick((p) => [p[0], first]);
+  }, [found.ready, found.counts]);
+
   // a Collection or a bare info.json is not what the side panel shows
   useManifest(multi ? null : manifestUrl);
 
@@ -122,6 +225,12 @@ const CompareContent: NextPage = () => {
   useEffect(() => {
     if (!manifestUrl && srcs.length === 0) return;
     const params = new URLSearchParams(window.location.search);
+    params.delete('iiif-content');
+    params.delete('manifest');
+    params.delete('curation');
+    if (manifestUrl) params.set('iiif-content', manifestUrl);
+    params.delete('src');
+    srcs.forEach((s) => params.append('src', s));
     params.set('a', String(pick[0]));
     params.set('b', String(pick[1]));
     params.set('mode', mode);
@@ -174,7 +283,12 @@ const CompareContent: NextPage = () => {
   let noChoice: string | null = null;
   if (is3D && options.length < 2) noChoice = t('noChoice');
   else if (multi && found.ready && found.candidates.length < 2) noChoice = t('noSources');
-  else if (!multi && !is3D && images && !imageChoice) noChoice = t('noImageChoice');
+  else if (!multi && !is3D && found.ready && images && !imageChoice) noChoice = t('addAnother');
+  // one source with nothing to compare in it: open the list so that another can be added
+  const needMore = noChoice === t('addAnother') || (multi && found.ready && found.candidates.length < 2);
+  useEffect(() => {
+    if (needMore) setShowSources(true);
+  }, [needMore]);
 
   return (
     <div className="flex flex-col h-dvh">
@@ -238,8 +352,25 @@ const CompareContent: NextPage = () => {
                     <span className="w-9 text-right tabular-nums">{opacity}%</span>
                   </label>
                 )}
-                {noChoice && <span className="text-xs text-[var(--ds-fg)]">{noChoice}</span>}
+                {noChoice && <span className="text-sm font-medium text-[var(--ds-fg)]">{noChoice}</span>}
+                <button
+                  type="button"
+                  onClick={() => setShowSources((v) => !v)}
+                  aria-expanded={showSources}
+                  className="ml-auto text-sm px-3 py-1 rounded border border-[var(--ds-border)] text-[var(--ds-fg)] hover:bg-[var(--ds-surface-2)]"
+                >
+                  {t('sources', { count: sources.length })}
+                </button>
               </div>
+              {showSources && (
+                <SourceList
+                  sources={sources}
+                  counts={found.counts}
+                  ready={found.ready}
+                  onAdd={addSource}
+                  onRemove={removeSource}
+                />
+              )}
               <div className="flex-1 min-h-0">
                 {is3D ? (
                   <CompareView

@@ -117,7 +117,7 @@
       "overlay": "重ねる"
     },
     "swipeHandle": "境界線（ドラッグして動かす）",
-    "noSources": "見比べられる画像が 2 枚そろいませんでした。",
+    "noSources": "見比べられる画像が 2 枚そろいません。もう 1 つ資料を足してください",
     "swipeDirection": "境界線の向き",
     "directions": {
       "h": "左右",
@@ -130,8 +130,17 @@
     "open": "比較",
     "zoom": "拡大",
     "opacity": "B の濃さ",
-    "noImageChoice": "この Canvas には切り替えられる画像（Choice）がありません",
-    "canvas": "Canvas"
+    "canvas": "Canvas",
+    "sources": "資料（{count}）",
+    "addSource": "資料を足す",
+    "addPlaceholder": "Manifest・Collection・info.json の URL",
+    "add": "足す",
+    "removeSource": "この資料を外す",
+    "imageCount": "画像 {count} 枚",
+    "unreadable": "読めませんでした",
+    "invalidUrl": "URL の形になっていません",
+    "alreadyAdded": "この資料はもう入っています",
+    "addAnother": "この資料だけでは見比べられません。下の欄に、もう 1 つ資料の URL を足してください"
   },
   "Samples": {
     "media": {
