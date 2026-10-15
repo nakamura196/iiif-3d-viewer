@@ -97,6 +97,7 @@ export const NEWS: NewsItem[] = [
       en: 'The Cookbook samples page now lists all 76 IIIF Cookbook recipes in numbering order. Filter them by category and open each one in Kasane.',
     },
     action: { href: '/samples' },
+    video: { ja: 'oYfYjzzFfrU', en: 'eh2za9P9LfY' },
   },
   {
     id: 'story-tab',
@@ -111,6 +112,7 @@ export const NEWS: NewsItem[] = [
     },
     action: { href: hrefOfUseCase('wakozukan-story') },
     usecases: ['wakozukan-story'],
+    video: { ja: 'VDXuQE6P34s', en: 'fXIwtvfEZ-Q' },
   },
   {
     id: 'inference-ocr',
@@ -125,6 +127,7 @@ export const NEWS: NewsItem[] = [
     },
     action: { href: hrefOfUseCase('meizukushi-ocr') },
     usecases: ['meizukushi-ocr'],
+    video: { ja: 'IYhzoqRM7QY', en: 'dJS7uoeb-S0' },
   },
   {
     id: 'maps',
@@ -166,6 +169,7 @@ export const NEWS: NewsItem[] = [
       en: 'Kasane now handles v4 captions, images, styles and Wikidata in annotations, and choosing a playable audio or video format. Content states spanning several manifests and a timeline view of Collections work too.',
     },
     action: { href: '/samples' },
+    video: { ja: '8_0_pyBlAyc', en: 'lsKHqDCUBo4' },
   },
   {
     id: 'compare-video',

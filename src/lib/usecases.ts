@@ -273,6 +273,8 @@ export const USE_CASES: UseCase[] = [
     },
     features: ['image', 'ocr'],
     site: 'https://dl.ndl.go.jp/pid/1288371',
+    // 動画はお知らせ inference-ocr と同じ（同じ『銘尽』の 6 コマ目で OCR する）
+    video: { ja: 'IYhzoqRM7QY', en: 'dJS7uoeb-S0' },
   },
   {
     id: 'wakozukan-story',
@@ -291,6 +293,8 @@ export const USE_CASES: UseCase[] = [
     },
     features: ['image', 'annotations', 'story'],
     site: 'https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/',
+    // 動画はお知らせ story-tab と同じ（同じ倭寇図巻をストーリータブで読む）
+    video: { ja: 'VDXuQE6P34s', en: 'fXIwtvfEZ-Q' },
   },
   {
     id: 'wellcome-auth',
