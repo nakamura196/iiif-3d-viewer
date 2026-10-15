@@ -29,7 +29,9 @@ export type UseCaseOpen =
     }
   | {
       page: 'compare';
-      manifest: string;
+      // 1 つなら iiif-content=（Choice を持つマニフェストやコレクション）、
+      // 複数なら src= を並べて渡す（別々のマニフェストや info.json を見比べる）
+      manifest: string | string[];
       mode?: CompareMode;
     }
   | {
@@ -69,8 +71,9 @@ export interface UseCase {
   headline?: Localized;
 }
 
-/** 開く資料そのものの URL（マニフェスト、search ならキュレーション・コレクション） */
-export const sourceOf = (open: UseCaseOpen): string => (open.page === 'search' ? open.url : open.manifest);
+/** 開く資料そのものの URL（マニフェスト、search ならキュレーション・コレクション）。compare では複数のことがある */
+export const sourcesOf = (open: UseCaseOpen): string[] =>
+  open.page === 'search' ? [open.url] : typeof open.manifest === 'string' ? [open.manifest] : open.manifest;
 
 export function hrefOf(open: UseCaseOpen): string {
   if (open.page === 'search') {
@@ -78,7 +81,10 @@ export function hrefOf(open: UseCaseOpen): string {
     if (open.query) q.push(`q=${encodeURIComponent(open.query)}`);
     return `/search?${q.join('&')}`;
   }
-  const q = [contentParam(open.manifest)];
+  const q =
+    typeof open.manifest === 'string'
+      ? [contentParam(open.manifest)]
+      : open.manifest.map((m) => `src=${encodeURIComponent(m)}`);
   switch (open.page) {
     case 'viewer':
       if (open.tab) q.push(`tab=${open.tab}`);
@@ -180,10 +186,17 @@ export const USE_CASES: UseCase[] = [
       en: 'Comparing provincial maps (Tenpō kuniezu, Ōmi Province)',
     },
     note: {
-      ja: '国立公文書館が所蔵する正式版の近江国絵図と、その前年に作られた同じ大きさの写しをスタンフォード大学図書館が所蔵しています。2 つの Manifest をまとめた Collection を開き、境目を動かして記載の違いを見比べます。所蔵: 国立公文書館、スタンフォード大学図書館。',
-      en: "The official copy of the Ōmi Province map held by the National Archives of Japan, and a copy of the same size made a year earlier, held by Stanford University Libraries. Open a Collection of the two Manifests and drag the divider to compare what they record. Holders: National Archives of Japan, Stanford University Libraries.",
+      ja: '国立公文書館が所蔵する正式版の近江国絵図と、その前年に作られた同じ大きさの写しをスタンフォード大学図書館が所蔵しています。別々の機関が公開している 2 つの Manifest を、URL に src= で並べて渡すだけで見比べられる例です。境目を動かして記載の違いを確かめます。所蔵: 国立公文書館、スタンフォード大学図書館。',
+      en: "The official copy of the Ōmi Province map held by the National Archives of Japan, and a copy of the same size made a year earlier, held by Stanford University Libraries. This example shows how to compare two Manifests published by different institutions: just list both in the URL as src=. Drag the divider to see what each records. Holders: National Archives of Japan, Stanford University Libraries.",
     },
-    open: { page: 'compare', manifest: 'https://pocket.cultural.jp/data/kuniezu.json', mode: 'swipe' },
+    open: {
+      page: 'compare',
+      manifest: [
+        'https://www.digital.archives.go.jp/api/iiif/764297/manifest.json',
+        'https://purl.stanford.edu/hs631zg4177/iiif/manifest',
+      ],
+      mode: 'swipe',
+    },
     video: { ja: 'kWFXPKhW9Tc', en: 'OPX9OJ8voDc' },
     features: ['image', 'compare'],
   },
