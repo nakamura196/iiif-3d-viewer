@@ -1,0 +1,359 @@
+{
+  "@context": [
+    "https://nakamura196.github.io/iiif-region-tag-extension/context.json",
+    "http://iiif.io/api/presentation/4/context.json"
+  ],
+  "id": "https://example.org/kasane/region-tags-image/manifest.json",
+  "type": "Manifest",
+  "label": {
+    "en": [
+      "Shared Region and Keyed Tag Extension — example on an image"
+    ],
+    "ja": [
+      "領域の共有とキー付きタグ拡張 — 画像の例"
+    ]
+  },
+  "summary": {
+    "en": [
+      "Example annotations on a 2D image for the Shared Region and Keyed Tag Extension. The annotation texts are illustrative, not scholarly claims about the picture."
+    ],
+    "ja": [
+      "拡張の説明用に、画像に付けた注釈の例です。注釈の文面は例であり、この絵図についての学術的な記述ではありません。"
+    ]
+  },
+  "items": [
+    {
+      "id": "https://example.org/kasane/region-tags-image/canvas/1",
+      "type": "Canvas",
+      "label": {
+        "none": [
+          "1"
+        ]
+      },
+      "width": 18415,
+      "height": 12911,
+      "items": [
+        {
+          "id": "https://example.org/kasane/region-tags-image/page/painting",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://example.org/kasane/region-tags-image/painting",
+              "type": "Annotation",
+              "motivation": [
+                "painting"
+              ],
+              "body": {
+                "id": "https://iiif.dl.itc.u-tokyo.ac.jp/iiif/2/agriculture_re%2Fnou_tatemonochokanzu%2F0002.tif/full/full/0/default.jpg",
+                "type": "Image",
+                "format": "image/jpeg",
+                "width": 18415,
+                "height": 12911,
+                "service": [
+                  {
+                    "id": "https://iiif.dl.itc.u-tokyo.ac.jp/iiif/2/agriculture_re%2Fnou_tatemonochokanzu%2F0002.tif",
+                    "type": "ImageService2"
+                  }
+                ]
+              },
+              "target": "https://example.org/kasane/region-tags-image/canvas/1"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://example.org/kasane/region-tags-image/page/comments",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://example.org/kasane/region-tags-image#anno-a-1",
+              "type": "Annotation",
+              "motivation": [
+                "commenting"
+              ],
+              "creator": {
+                "id": "https://example.org/users/annotator-1",
+                "type": "Person",
+                "name": "Example Annotator 1"
+              },
+              "created": "2026-09-20T10:00:00Z",
+              "body": {
+                "type": "TextualBody",
+                "format": "text/html",
+                "value": "<p>Example: a building group in the center of the picture.</p>",
+                "label": {
+                  "ja": [
+                    "中央の建物群（例）"
+                  ],
+                  "en": [
+                    "Central building group (example)"
+                  ]
+                }
+              },
+              "target": {
+                "id": "https://example.org/kasane/region-tags-image#region-a",
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://example.org/kasane/region-tags-image/canvas/1",
+                    "type": "Canvas"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "FragmentSelector",
+                    "conformsTo": "http://www.w3.org/TR/media-frags/",
+                    "value": "xywh=6200,4300,3200,2300"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "https://example.org/kasane/region-tags-image#anno-a-2",
+              "type": "Annotation",
+              "motivation": [
+                "commenting",
+                "tagging"
+              ],
+              "creator": {
+                "id": "https://example.org/users/annotator-2",
+                "type": "Person",
+                "name": "Example Annotator 2"
+              },
+              "created": "2026-09-25T15:30:00Z",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "format": "text/html",
+                  "value": "<p>Example: a second annotation on the same region, by another annotator, with keyed tags.</p>",
+                  "label": {
+                    "ja": [
+                      "同じ場所への別の注釈（例）"
+                    ],
+                    "en": [
+                      "Another annotation on the same region (example)"
+                    ]
+                  }
+                },
+                {
+                  "type": "TextualBody",
+                  "purpose": "tagging",
+                  "value": "buildings",
+                  "label": {
+                    "en": [
+                      "type"
+                    ]
+                  }
+                },
+                {
+                  "type": "TextualBody",
+                  "purpose": "tagging",
+                  "value": "example"
+                }
+              ],
+              "target": {
+                "id": "https://example.org/kasane/region-tags-image#region-a",
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://example.org/kasane/region-tags-image/canvas/1",
+                    "type": "Canvas"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "FragmentSelector",
+                    "conformsTo": "http://www.w3.org/TR/media-frags/",
+                    "value": "xywh=6200,4300,3200,2300"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "https://example.org/kasane/region-tags-image#anno-a-3",
+              "type": "Annotation",
+              "motivation": [
+                "tagging"
+              ],
+              "creator": {
+                "id": "https://example.org/users/annotator-3",
+                "type": "Person",
+                "name": "Example Annotator 3"
+              },
+              "created": "2026-09-26T09:00:00Z",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "purpose": "tagging",
+                  "value": "campus",
+                  "label": {
+                    "en": [
+                      "place"
+                    ]
+                  }
+                },
+                {
+                  "type": "TextualBody",
+                  "purpose": "tagging",
+                  "value": "bird's-eye view",
+                  "label": {
+                    "en": [
+                      "view"
+                    ]
+                  }
+                }
+              ],
+              "target": {
+                "id": "https://example.org/kasane/region-tags-image#region-a",
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://example.org/kasane/region-tags-image/canvas/1",
+                    "type": "Canvas"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "FragmentSelector",
+                    "conformsTo": "http://www.w3.org/TR/media-frags/",
+                    "value": "xywh=6200,4300,3200,2300"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "https://example.org/kasane/region-tags-image#anno-b-1",
+              "type": "Annotation",
+              "motivation": [
+                "commenting"
+              ],
+              "creator": {
+                "id": "https://example.org/users/annotator-1",
+                "type": "Person",
+                "name": "Example Annotator 1"
+              },
+              "created": "2026-09-21T11:00:00Z",
+              "body": {
+                "type": "TextualBody",
+                "format": "text/html",
+                "value": "<p>Example: a region commented on by two annotators.</p>",
+                "label": {
+                  "ja": [
+                    "二人が注釈した場所（例）"
+                  ],
+                  "en": [
+                    "Region with two annotators (example)"
+                  ]
+                }
+              },
+              "target": {
+                "id": "https://example.org/kasane/region-tags-image#region-b",
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://example.org/kasane/region-tags-image/canvas/1",
+                    "type": "Canvas"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "FragmentSelector",
+                    "conformsTo": "http://www.w3.org/TR/media-frags/",
+                    "value": "xywh=11800,7600,2600,1800"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "https://example.org/kasane/region-tags-image#anno-b-2",
+              "type": "Annotation",
+              "motivation": [
+                "commenting"
+              ],
+              "creator": {
+                "id": "https://example.org/users/annotator-2",
+                "type": "Person",
+                "name": "Example Annotator 2"
+              },
+              "created": "2026-09-27T13:00:00Z",
+              "body": {
+                "type": "TextualBody",
+                "format": "text/html",
+                "value": "<p>Example: the second comment on this region.</p>",
+                "label": {
+                  "ja": [
+                    "同じ場所への二つ目の注釈（例）"
+                  ],
+                  "en": [
+                    "Second comment on this region (example)"
+                  ]
+                }
+              },
+              "target": {
+                "id": "https://example.org/kasane/region-tags-image#region-b",
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://example.org/kasane/region-tags-image/canvas/1",
+                    "type": "Canvas"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "FragmentSelector",
+                    "conformsTo": "http://www.w3.org/TR/media-frags/",
+                    "value": "xywh=11800,7600,2600,1800"
+                  }
+                ]
+              }
+            },
+            {
+              "id": "https://example.org/kasane/region-tags-image#anno-lone",
+              "type": "Annotation",
+              "motivation": [
+                "commenting"
+              ],
+              "creator": {
+                "id": "https://example.org/users/annotator-1",
+                "type": "Person",
+                "name": "Example Annotator 1"
+              },
+              "created": "2026-09-22T08:00:00Z",
+              "body": {
+                "type": "TextualBody",
+                "format": "text/html",
+                "value": "<p>Example: a region that only one annotation points to; it is drawn as before.</p>",
+                "label": {
+                  "ja": [
+                    "単独の注釈（例）"
+                  ],
+                  "en": [
+                    "Lone annotation (example)"
+                  ]
+                }
+              },
+              "target": {
+                "id": "https://example.org/kasane/region-tags-image#region-lone",
+                "type": "SpecificResource",
+                "source": [
+                  {
+                    "id": "https://example.org/kasane/region-tags-image/canvas/1",
+                    "type": "Canvas"
+                  }
+                ],
+                "selector": [
+                  {
+                    "type": "FragmentSelector",
+                    "conformsTo": "http://www.w3.org/TR/media-frags/",
+                    "value": "xywh=2000,8800,2800,1600"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
