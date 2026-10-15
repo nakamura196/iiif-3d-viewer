@@ -10,3 +10,4 @@ export * from './ndlOcr';
 export * from './yolo';
 export * from './contour';
 export * from './sam2';
+export * from './ppocr';
