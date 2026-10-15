@@ -1,0 +1,126 @@
+slug	no	t	xywh	tags	verdict	reason
+sdcommons_video-01DD001H210011-5.0-173-164-107-194	1	5	173,164,107,194	Person	keep	後ろ姿の男性（黒い上着）
+sdcommons_video-01DD001H210011-5.0-278-298-81-61	2	5	278,298,81,61	Person	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-5.0-440-139-134-214	3	5	440,139,134,214	Person	drop	藁の飾りと岩が主で、人は端にしか入らない
+sdcommons_video-01DD001H210011-5.0-544-106-52-123	4	5	544,106,52,123	Person	keep	カメラを構える人
+sdcommons_video-01DD001H210011-5.5-25-237-124-121	5	5.5	25,237,124,121	Adult, Male, Man, Person	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-5.5-159-202-122-157	6	5.5	159,202,122,157	Adult, Male, Man, Person	keep	前かがみの男性
+sdcommons_video-01DD001H210011-5.5-207-44-88-123	7	5.5	207,44,88,123	Adult, Female, Person, Woman	drop	藁の飾り（三角の道祖神）
+sdcommons_video-01DD001H210011-5.5-523-100-70-132	8	5.5	523,100,70,132	Adult, Female, Person, Woman	keep	カメラを構える人
+sdcommons_video-01DD001H210011-6.0-169-237-186-122	9	6	169,237,186,122	Adult, Female, Person, Woman	drop	深く屈んだ男性の背中の一部で、枠の大半が岩と字幕
+sdcommons_video-01DD001H210011-6.0-265-26-174-173	10	6	265,26,174,173	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-6.0-441-181-164-177	11	6	441,181,164,177	Adult, Female, Person, Woman	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-6.0-531-95-83-128	12	6	531,95,83,128	Adult, Male, Man, Person	keep	カメラを構える人
+sdcommons_video-01DD001H210011-6.5-27-254-54-97	13	6.5	27,254,54,97	Person	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-6.5-207-1-105-126	14	6.5	207,1,105,126	Adult, Female, Person, Woman	drop	藁の飾り（三角の道祖神）
+sdcommons_video-01DD001H210011-6.5-270-0-177-184	15	6.5	270,0,177,184	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-6.5-441-166-179-192	16	6.5	441,166,179,192	Adult, Female, Person, Woman	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-6.5-540-64-59-131	17	6.5	540,64,59,131	Person	keep	カメラを構える人
+sdcommons_video-01DD001H210011-7.0-23-279-56-80	18	7	23,279,56,80	Person	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-7.0-95-45-124-144	19	7	95,45,124,144	Adult, Female, Person, Woman	drop	藁の飾りと石碑
+sdcommons_video-01DD001H210011-7.0-173-154-107-205	20	7	173,154,107,205	Adult, Male, Man, Person	keep	神面の前に立つ男性
+sdcommons_video-01DD001H210011-7.0-207-36-68-111	21	7	207,36,68,111	Adult, Female, Person, Woman	drop	藁の飾り（三角の道祖神）
+sdcommons_video-01DD001H210011-7.0-266-18-176-180	22	7	266,18,176,180	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-7.0-436-173-182-184	23	7	436,173,182,184	Adult, Female, Person, Woman	drop	藁の飾りと岩が主で、人は端にしか入らない
+sdcommons_video-01DD001H210011-7.0-539-82-58-131	24	7	539,82,58,131	Person	keep	カメラを構える人
+sdcommons_video-01DD001H210011-7.5-28-290-56-69	25	7.5	28,290,56,69	Person	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-7.5-177-165-143-193	26	7.5	177,165,143,193	Adult, Male, Man, Person	keep	神面の前に立つ男性
+sdcommons_video-01DD001H210011-7.5-442-192-179-166	27	7.5	442,192,179,166	Adult, Male, Man, Person	drop	藁の飾りと岩が主で、人は端にしか入らない
+sdcommons_video-01DD001H210011-7.5-531-93-82-138	28	7.5	531,93,82,138	Adult, Female, Person, Woman	keep	カメラを構える人
+sdcommons_video-01DD001H210011-8.0-36-302-44-56	29	8	36,302,44,56	Person	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-8.0-103-76-126-138	30	8	103,76,126,138	Adult, Female, Person, Woman	drop	藁の飾りと石碑
+sdcommons_video-01DD001H210011-8.0-179-241-185-118	31	8	179,241,185,118	Adult, Female, Person, Woman	drop	深く屈んだ男性の背中の一部で、枠の大半が岩と字幕
+sdcommons_video-01DD001H210011-8.0-214-59-70-110	32	8	214,59,70,110	Adult, Female, Person, Woman	drop	藁の飾り（三角の道祖神）
+sdcommons_video-01DD001H210011-8.0-540-96-74-136	33	8	540,96,74,136	Adult, Female, Person, Woman	keep	カメラを構える人
+sdcommons_video-01DD001H210011-8.5-40-294-59-65	34	8.5	40,294,59,65	Person	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-8.5-105-74-125-133	35	8.5	105,74,125,133	Adult, Female, Person, Woman	drop	藁の飾りと石碑
+sdcommons_video-01DD001H210011-8.5-181-226-192-132	36	8.5	181,226,192,132	Adult, Female, Person, Woman	drop	深く屈んだ男性の背中の一部で、枠の大半が岩と字幕
+sdcommons_video-01DD001H210011-8.5-279-35-173-172	37	8.5	279,35,173,172	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-8.5-451-129-180-229	38	8.5	451,129,180,229	Adult, Female, Person, Woman	drop	藁の飾りと岩が主で、人は端にしか入らない
+sdcommons_video-01DD001H210011-8.5-544-95-72-134	39	8.5	544,95,72,134	Adult, Female, Person, Woman	keep	カメラを構える人
+sdcommons_video-01DD001H210011-9.0-41-298-53-61	40	9	41,298,53,61	Person	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-9.0-192-163-99-196	41	9	192,163,99,196	Adult, Person	keep	神面の前に立つ男性
+sdcommons_video-01DD001H210011-9.0-449-180-185-178	42	9	449,180,185,178	Adult, Female, Person, Woman	drop	藁の飾りと岩が主で、人は端にしか入らない
+sdcommons_video-01DD001H210011-9.0-536-95-82-131	43	9	536,95,82,131	Adult, Female, Person, Woman	keep	カメラを構える人
+sdcommons_video-01DD001H210011-9.5-50-299-49-60	44	9.5	50,299,49,60	Person	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-9.5-192-157-119-202	45	9.5	192,157,119,202	Adult, Male, Man, Person	keep	神面の前に立つ男性
+sdcommons_video-01DD001H210011-10.0-194-160-127-199	46	10	194,160,127,199	Adult, Male, Man, Person	keep	神面の前に立つ男性
+sdcommons_video-01DD001H210011-10.0-282-50-163-166	47	10	282,50,163,166	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-10.0-481-128-90-189	48	10	481,128,90,189	Adult, Female, Person, Woman	drop	藁の飾りと岩が主で、人は端にしか入らない
+sdcommons_video-01DD001H210011-10.0-551-116-48-123	49	10	551,116,48,123	Person	keep	カメラを構える人
+sdcommons_video-01DD001H210011-10.416-41-254-69-96	50	10.416	41,254,69,96	Adult, Male, Man, Person	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-10.416-189-164-116-195	51	10.416	189,164,116,195	Adult, Male, Man, Person	keep	神面の前に立つ男性
+sdcommons_video-01DD001H210011-10.416-280-54-163-189	52	10.416	280,54,163,189	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-10.5-39-254-72-96	53	10.5	39,254,72,96	Person	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-10.5-98-59-134-150	54	10.5	98,59,134,150	Adult, Female, Person, Woman	drop	藁の飾りと石碑
+sdcommons_video-01DD001H210011-10.5-189-165-109-194	55	10.5	189,165,109,194	Adult, Male, Man, Person	keep	神面の前に立つ男性
+sdcommons_video-01DD001H210011-10.916-180-163-183-196	56	10.916	180,163,183,196	Adult, Male, Man, Person	keep	飾りに手を伸ばす男性
+sdcommons_video-01DD001H210011-10.916-274-51-165-173	57	10.916	274,51,165,173	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-10.916-437-115-200-243	58	10.916	437,115,200,243	Adult, Female, Person, Woman	drop	手前のカメラと腕の一部で、切り抜くと人と言い切れない
+sdcommons_video-01DD001H210011-11.0-180-162-173-197	59	11	180,162,173,197	Adult, Male, Man, Person	keep	飾りに手を伸ばす男性
+sdcommons_video-01DD001H210011-11.0-451-123-187-235	60	11	451,123,187,235	Adult, Male, Man, Person	drop	藁の飾りと岩が主で、人は端にしか入らない
+sdcommons_video-01DD001H210011-11.416-178-167-101-192	61	11.416	178,167,101,192	Adult, Male, Man, Person	keep	神面の前に立つ男性
+sdcommons_video-01DD001H210011-11.416-226-249-124-110	62	11.416	226,249,124,110	Adult, Male, Man, Person	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-11.416-428-119-211-239	63	11.416	428,119,211,239	Adult, Male, Man, Person	drop	藁の飾りと岩が主で、人は端にしか入らない
+sdcommons_video-01DD001H210011-11.5-91-63-128-145	64	11.5	91,63,128,145	Adult, Female, Person, Woman	drop	藁の飾りと石碑
+sdcommons_video-01DD001H210011-11.5-177-167-98-192	65	11.5	177,167,98,192	Adult, Male, Man, Person	keep	神面の前に立つ男性
+sdcommons_video-01DD001H210011-11.5-238-250-112-109	66	11.5	238,250,112,109	Adult, Female, Person, Woman	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-11.5-443-116-196-241	67	11.5	443,116,196,241	Adult, Male, Man, Person	drop	藁の飾りと岩が主で、人は端にしか入らない
+sdcommons_video-01DD001H210011-11.916-162-218-191-141	68	11.916	162,218,191,141	Adult, Female, Person, Woman	drop	深く屈んだ男性の背中の一部で、枠の大半が岩と字幕
+sdcommons_video-01DD001H210011-11.916-252-46-180-166	69	11.916	252,46,180,166	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-11.916-464-273-78-86	70	11.916	464,273,78,86	Adult, Female, Person, Woman	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-12.0-164-232-189-127	71	12	164,232,189,127	Adult, Female, Person, Woman	drop	深く屈んだ男性の背中の一部で、枠の大半が岩と字幕
+sdcommons_video-01DD001H210011-12.0-205-65-65-109	72	12	205,65,65,109	Adult, Female, Person, Woman	drop	藁の飾り（三角の道祖神）
+sdcommons_video-01DD001H210011-12.0-261-46-172-166	73	12	261,46,172,166	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-12.0-364-310-90-49	74	12	364,310,90,49	Adult, Female, Person, Woman	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-12.0-432-130-172-214	75	12	432,130,172,214	Adult, Female, Person, Woman	drop	藁の飾りと岩が主で、人は端にしか入らない
+sdcommons_video-01DD001H210011-12.0-464-272-79-87	76	12	464,272,79,87	Adult, Female, Person, Woman	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-12.416-34-254-67-49	77	12.416	34,254,67,49	Adult, Female, Person, Woman	drop	案内板
+sdcommons_video-01DD001H210011-12.416-172-263-186-96	78	12.416	172,263,186,96	Adult, Female, Person, Woman	drop	深く屈んだ男性の背中の一部で、枠の大半が岩と字幕
+sdcommons_video-01DD001H210011-12.416-253-45-183-170	79	12.416	253,45,183,170	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-12.416-391-307-69-52	80	12.416	391,307,69,52	Adult, Female, Person, Woman	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-12.416-433-114-189-244	81	12.416	433,114,189,244	Adult, Female, Person, Woman	drop	藁の飾りと岩が主で、人は端にしか入らない
+sdcommons_video-01DD001H210011-12.416-529-106-109-252	82	12.416	529,106,109,252	Adult, Male, Man, Person	drop	手前のカメラと腕の一部で、切り抜くと人と言い切れない
+sdcommons_video-01DD001H210011-12.5-24-89-159-269	83	12.5	24,89,159,269	Adult, Female, Person, Woman	drop	石碑と藁の飾り（人はいない）
+sdcommons_video-01DD001H210011-12.5-172-263-186-96	84	12.5	172,263,186,96	Adult, Female, Person, Woman	drop	深く屈んだ男性の背中の一部で、枠の大半が岩と字幕
+sdcommons_video-01DD001H210011-12.5-437-110-200-248	85	12.5	437,110,200,248	Adult, Male, Man, Person	drop	藁の飾りと岩が主で、人は端にしか入らない
+sdcommons_video-01DD001H210011-12.916-167-249-189-110	86	12.916	167,249,189,110	Adult, Female, Person, Woman	drop	深く屈んだ男性の背中の一部で、枠の大半が岩と字幕
+sdcommons_video-01DD001H210011-12.916-253-40-185-173	87	12.916	253,40,185,173	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-12.916-388-300-71-59	88	12.916	388,300,71,59	Person	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-12.916-427-128-175-155	89	12.916	427,128,175,155	Adult, Female, Person, Woman	drop	藁の飾りと岩が主で、人は端にしか入らない
+sdcommons_video-01DD001H210011-13.0-163-246-192-112	90	13	163,246,192,112	Adult, Female, Person, Woman	drop	深く屈んだ男性の背中の一部で、枠の大半が岩と字幕
+sdcommons_video-01DD001H210011-13.0-255-37-175-167	91	13	255,37,175,167	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-13.0-387-299-72-60	92	13	387,299,72,60	Adult, Female, Person, Woman	drop	手前の影・暗がりで、人か判別できない
+sdcommons_video-01DD001H210011-13.0-567-99-71-258	93	13	567,99,71,258	Adult, Male, Man, Person	drop	手前のカメラと腕の一部で、切り抜くと人と言い切れない
+sdcommons_video-01DD001H210011-13.416-163-195-120-163	94	13.416	163,195,120,163	Adult, Male, Man, Person	keep	前かがみの男性（頭が見える）
+sdcommons_video-01DD001H210011-13.416-196-54-67-110	95	13.416	196,54,67,110	Adult, Female, Person, Woman	drop	藁の飾り（三角の道祖神）
+sdcommons_video-01DD001H210011-13.416-255-35-172-164	96	13.416	255,35,172,164	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-13.5-166-185-186-173	97	13.5	166,185,186,173	Adult, Male, Man, Person	keep	前かがみの男性（頭が見える）
+sdcommons_video-01DD001H210011-13.5-196-54-83-111	98	13.5	196,54,83,111	Female, Person	drop	藁の飾り（三角の道祖神）
+sdcommons_video-01DD001H210011-13.5-254-35-171-164	99	13.5	254,35,171,164	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-13.916-167-175-124-182	100	13.916	167,175,124,182	Adult, Male, Man, Person	keep	前かがみの男性
+sdcommons_video-01DD001H210011-13.916-251-40-177-172	101	13.916	251,40,177,172	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-14.0-138-161-143-80	102	14	138,161,143,80	Adult, Male, Man, Person	drop	岩が主で、頭が端に入るだけ
+sdcommons_video-01DD001H210011-14.0-163-183-125-175	103	14	163,183,125,175	Adult, Male, Man, Person	keep	前かがみの男性
+sdcommons_video-01DD001H210011-14.0-556-64-83-293	104	14	556,64,83,293	Adult, Male, Man, Person	drop	手前のカメラと腕の一部で、切り抜くと人と言い切れない
+sdcommons_video-01DD001H210011-14.416-73-239-185-119	105	14.416	73,239,185,119	Adult, Male, Man, Person	drop	枠の大半が字幕で、人は一部だけ
+sdcommons_video-01DD001H210011-14.416-193-62-75-110	106	14.416	193,62,75,110	Adult, Female, Person, Woman	drop	藁の飾り（三角の道祖神）
+sdcommons_video-01DD001H210011-14.416-242-43-201-169	107	14.416	242,43,201,169	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-14.5-136-242-132-116	108	14.5	136,242,132,116	Adult, Female, Person, Woman	drop	深く屈んだ男性の背中の一部で、枠の大半が岩と字幕
+sdcommons_video-01DD001H210011-14.5-253-43-192-168	109	14.5	253,43,192,168	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-14.916-329-237-104-122	110	14.916	329,237,104,122	Adult, Person	drop	場面転換の重なったコマで、像が崩れている
+sdcommons_video-01DD001H210011-14.916-508-96-70-98	111	14.916	508,96,70,98	Person	drop	場面転換の重なったコマで、像が崩れている
+sdcommons_video-01DD001H210011-15.0-180-41-122-170	112	15	180,41,122,170	Person	drop	場面転換の重なったコマで、像が崩れている
+sdcommons_video-01DD001H210011-19.416-462-5-169-219	113	19.416	462,5,169,219	Person	drop	場面転換の重なったコマで、像が崩れている
+sdcommons_video-01DD001H210011-19.5-432-30-156-260	114	19.5	432,30,156,260	Adult, Female, Person, Woman	drop	場面転換の重なったコマで、像が崩れている
+sdcommons_video-01DD001H210011-19.916-0-310-114-49	115	19.916	0,310,114,49	Adult, Female, Person, Woman	drop	案内板
+sdcommons_video-01DD001H210011-19.916-117-60-63-197	116	19.916	117,60,63,197	Person	drop	藁の飾りと石碑
+sdcommons_video-01DD001H210011-19.916-363-32-228-320	117	19.916	363,32,228,320	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-20.0-321-30-287-326	118	20	321,30,287,326	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-20.416-360-31-254-324	119	20.416	360,31,254,324	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-20.916-361-42-233-250	120	20.916	361,42,233,250	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-21.416-365-38-229-255	121	21.416	365,38,229,255	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-21.916-369-35-225-254	122	21.916	369,35,225,254	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-22.916-360-34-234-255	123	22.916	360,34,234,255	Adult, Female, Person, Woman	drop	藁の神面
+sdcommons_video-01DD001H210011-23.916-361-42-233-247	124	23.916	361,42,233,247	Person	drop	藁の神面
+sdcommons_video-01DD001H210011-34.416-184-29-234-107	125	34.416	184,29,234,107	Person	drop	藁の神面

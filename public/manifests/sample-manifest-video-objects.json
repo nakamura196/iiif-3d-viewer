@@ -4,18 +4,18 @@
   "type": "Manifest",
   "label": {
     "ja": [
-      "芦の尻の道祖神祭り（動画の中の物体の枠）"
+      "芦の尻の道祖神祭り（動画の中の人の枠）"
     ],
     "en": [
-      "Ashinoshiri Dosojin Festival (objects in the video)"
+      "Ashinoshiri Dosojin Festival (people in the video)"
     ]
   },
   "summary": {
     "ja": [
-      "動画の時間と範囲を指す注釈（target が #t=…&xywh=…）の見本。ArchiveBase の Video Search が AI で検出した 125 件の人物などの枠を、IIIF の注釈に書き直した。タグは生成 AI の出力で、検証していない。"
+      "動画の時間と範囲を指す注釈（target が #t=…&xywh=…）の見本。ArchiveBase の Video Search が AI で検出した人の枠 125 件のうち、目で確かめて確かに人が写っている 27 件だけを残し、IIIF の注釈に書き直した。枠は AI の出力のまま。"
     ],
     "en": [
-      "Sample of annotations on a time and a region of a video (target #t=…&xywh=…): 125 boxes of people and things that ArchiveBase Video Search found with AI, rewritten as IIIF annotations. The tags are AI output and have not been checked."
+      "Sample of annotations on a time and a region of a video (target #t=…&xywh=…). ArchiveBase Video Search found 125 boxes of people with AI; a person checked each one by eye, and only the 27 that really show a person are kept here, rewritten as IIIF annotations. The boxes are the AI output as is."
     ]
   },
   "requiredStatement": {
@@ -83,10 +83,10 @@
           "type": "AnnotationPage",
           "label": {
             "ja": [
-              "動画の中の物体（AI による検出）"
+              "動画の中の人（AI による検出、目で確かめたもの）"
             ],
             "en": [
-              "Objects in the video (detected by AI)"
+              "People in the video (detected by AI, checked by eye)"
             ]
           },
           "items": [
@@ -123,10 +123,10 @@
                 "language": "en",
                 "format": "text/plain"
               },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=5,5.5&xywh=278,298,81,61",
+              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=5,5.5&xywh=544,106,52,123",
               "seeAlso": [
                 {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-5.0-278-298-81-61",
+                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-5.0-544-106-52-123",
                   "type": "Text",
                   "format": "text/html"
                 }
@@ -144,10 +144,10 @@
                 "language": "en",
                 "format": "text/plain"
               },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=5,5.5&xywh=440,139,134,214",
+              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=5.5,6&xywh=159,202,122,157",
               "seeAlso": [
                 {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-5.0-440-139-134-214",
+                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-5.5-159-202-122-157",
                   "type": "Text",
                   "format": "text/html"
                 }
@@ -165,10 +165,10 @@
                 "language": "en",
                 "format": "text/plain"
               },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=5,5.5&xywh=544,106,52,123",
+              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=5.5,6&xywh=523,100,70,132",
               "seeAlso": [
                 {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-5.0-544-106-52-123",
+                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-5.5-523-100-70-132",
                   "type": "Text",
                   "format": "text/html"
                 }
@@ -182,154 +182,7 @@
               ],
               "body": {
                 "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=5.5,6&xywh=25,237,124,121",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-5.5-25-237-124-121",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/6",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=5.5,6&xywh=159,202,122,157",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-5.5-159-202-122-157",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/7",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=5.5,6&xywh=207,44,88,123",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-5.5-207-44-88-123",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/8",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=5.5,6&xywh=523,100,70,132",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-5.5-523-100-70-132",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/9",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=6,6.5&xywh=169,237,186,122",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-6.0-169-237-186-122",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/10",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=6,6.5&xywh=265,26,174,173",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-6.0-265-26-174-173",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/11",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=6,6.5&xywh=441,181,164,177",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-6.0-441-181-164-177",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/12",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
+                "value": "Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -343,91 +196,7 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/13",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=6.5,7&xywh=27,254,54,97",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-6.5-27-254-54-97",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/14",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=6.5,7&xywh=207,1,105,126",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-6.5-207-1-105-126",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/15",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=6.5,7&xywh=270,0,177,184",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-6.5-270-0-177-184",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/16",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=6.5,7&xywh=441,166,179,192",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-6.5-441-166-179-192",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/17",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/6",
               "type": "Annotation",
               "motivation": [
                 "tagging"
@@ -448,7 +217,7 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/18",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/7",
               "type": "Annotation",
               "motivation": [
                 "tagging"
@@ -456,48 +225,6 @@
               "body": {
                 "type": "TextualBody",
                 "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=7,7.5&xywh=23,279,56,80",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-7.0-23-279-56-80",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/19",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=7,7.5&xywh=95,45,124,144",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-7.0-95-45-124-144",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/20",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -511,70 +238,7 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/21",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=7,7.5&xywh=207,36,68,111",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-7.0-207-36-68-111",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/22",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=7,7.5&xywh=266,18,176,180",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-7.0-266-18-176-180",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/23",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=7,7.5&xywh=436,173,182,184",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-7.0-436-173-182-184",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/24",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/8",
               "type": "Annotation",
               "motivation": [
                 "tagging"
@@ -595,7 +259,7 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/25",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/9",
               "type": "Annotation",
               "motivation": [
                 "tagging"
@@ -603,27 +267,6 @@
               "body": {
                 "type": "TextualBody",
                 "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=7.5,8&xywh=28,290,56,69",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-7.5-28-290-56-69",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/26",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -637,35 +280,14 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/27",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/10",
               "type": "Annotation",
               "motivation": [
                 "tagging"
               ],
               "body": {
                 "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=7.5,8&xywh=442,192,179,166",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-7.5-442-192-179-166",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/28",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
+                "value": "Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -679,7 +301,7 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/29",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/11",
               "type": "Annotation",
               "motivation": [
                 "tagging"
@@ -687,90 +309,6 @@
               "body": {
                 "type": "TextualBody",
                 "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=8,8.5&xywh=36,302,44,56",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-8.0-36-302-44-56",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/30",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=8,8.5&xywh=103,76,126,138",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-8.0-103-76-126-138",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/31",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=8,8.5&xywh=179,241,185,118",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-8.0-179-241-185-118",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/32",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=8,8.5&xywh=214,59,70,110",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-8.0-214-59-70-110",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/33",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -784,7 +322,7 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/34",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/12",
               "type": "Annotation",
               "motivation": [
                 "tagging"
@@ -792,111 +330,6 @@
               "body": {
                 "type": "TextualBody",
                 "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=8.5,9&xywh=40,294,59,65",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-8.5-40-294-59-65",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/35",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=8.5,9&xywh=105,74,125,133",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-8.5-105-74-125-133",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/36",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=8.5,9&xywh=181,226,192,132",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-8.5-181-226-192-132",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/37",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=8.5,9&xywh=279,35,173,172",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-8.5-279-35-173-172",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/38",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=8.5,9&xywh=451,129,180,229",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-8.5-451-129-180-229",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/39",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -910,7 +343,7 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/40",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/13",
               "type": "Annotation",
               "motivation": [
                 "tagging"
@@ -918,27 +351,6 @@
               "body": {
                 "type": "TextualBody",
                 "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=9,9.5&xywh=41,298,53,61",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-9.0-41-298-53-61",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/41",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -952,35 +364,14 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/42",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/14",
               "type": "Annotation",
               "motivation": [
                 "tagging"
               ],
               "body": {
                 "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=9,9.5&xywh=449,180,185,178",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-9.0-449-180-185-178",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/43",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
+                "value": "Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -994,7 +385,7 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/44",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/15",
               "type": "Annotation",
               "motivation": [
                 "tagging"
@@ -1002,27 +393,6 @@
               "body": {
                 "type": "TextualBody",
                 "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=9.5,10&xywh=50,299,49,60",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-9.5-50-299-49-60",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/45",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -1036,14 +406,14 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/46",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/16",
               "type": "Annotation",
               "motivation": [
                 "tagging"
               ],
               "body": {
                 "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
+                "value": "Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -1057,49 +427,7 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/47",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=10,10.416&xywh=282,50,163,166",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-10.0-282-50-163-166",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/48",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=10,10.416&xywh=481,128,90,189",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-10.0-481-128-90-189",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/49",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/17",
               "type": "Annotation",
               "motivation": [
                 "tagging"
@@ -1120,35 +448,14 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/50",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/18",
               "type": "Annotation",
               "motivation": [
                 "tagging"
               ],
               "body": {
                 "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=10.416,10.5&xywh=41,254,69,96",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-10.416-41-254-69-96",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/51",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
+                "value": "Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -1162,28 +469,7 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/52",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=10.416,10.5&xywh=280,54,163,189",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-10.416-280-54-163-189",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/53",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/19",
               "type": "Annotation",
               "motivation": [
                 "tagging"
@@ -1191,48 +477,6 @@
               "body": {
                 "type": "TextualBody",
                 "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=10.5,10.916&xywh=39,254,72,96",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-10.5-39-254-72-96",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/54",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=10.5,10.916&xywh=98,59,134,150",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-10.5-98-59-134-150",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/55",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -1246,14 +490,14 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/56",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/20",
               "type": "Annotation",
               "motivation": [
                 "tagging"
               ],
               "body": {
                 "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
+                "value": "Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -1267,56 +511,14 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/57",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/21",
               "type": "Annotation",
               "motivation": [
                 "tagging"
               ],
               "body": {
                 "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=10.916,11&xywh=274,51,165,173",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-10.916-274-51-165-173",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/58",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=10.916,11&xywh=437,115,200,243",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-10.916-437-115-200-243",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/59",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
+                "value": "Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -1330,35 +532,14 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/60",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/22",
               "type": "Annotation",
               "motivation": [
                 "tagging"
               ],
               "body": {
                 "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=11,11.416&xywh=451,123,187,235",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-11.0-451-123-187-235",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/61",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
+                "value": "Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -1372,553 +553,7 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/62",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=11.416,11.5&xywh=226,249,124,110",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-11.416-226-249-124-110",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/63",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=11.416,11.5&xywh=428,119,211,239",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-11.416-428-119-211-239",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/64",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=11.5,11.916&xywh=91,63,128,145",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-11.5-91-63-128-145",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/65",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=11.5,11.916&xywh=177,167,98,192",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-11.5-177-167-98-192",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/66",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=11.5,11.916&xywh=238,250,112,109",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-11.5-238-250-112-109",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/67",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=11.5,11.916&xywh=443,116,196,241",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-11.5-443-116-196-241",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/68",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=11.916,12&xywh=162,218,191,141",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-11.916-162-218-191-141",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/69",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=11.916,12&xywh=252,46,180,166",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-11.916-252-46-180-166",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/70",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=11.916,12&xywh=464,273,78,86",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-11.916-464-273-78-86",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/71",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12,12.416&xywh=164,232,189,127",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.0-164-232-189-127",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/72",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12,12.416&xywh=205,65,65,109",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.0-205-65-65-109",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/73",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12,12.416&xywh=261,46,172,166",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.0-261-46-172-166",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/74",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12,12.416&xywh=364,310,90,49",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.0-364-310-90-49",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/75",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12,12.416&xywh=432,130,172,214",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.0-432-130-172-214",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/76",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12,12.416&xywh=464,272,79,87",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.0-464-272-79-87",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/77",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12.416,12.5&xywh=34,254,67,49",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.416-34-254-67-49",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/78",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12.416,12.5&xywh=172,263,186,96",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.416-172-263-186-96",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/79",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12.416,12.5&xywh=253,45,183,170",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.416-253-45-183-170",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/80",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12.416,12.5&xywh=391,307,69,52",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.416-391-307-69-52",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/81",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12.416,12.5&xywh=433,114,189,244",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.416-433-114-189-244",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/82",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12.416,12.5&xywh=529,106,109,252",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.416-529-106-109-252",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/83",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12.5,12.916&xywh=24,89,159,269",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.5-24-89-159-269",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/84",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12.5,12.916&xywh=172,263,186,96",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.5-172-263-186-96",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/85",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12.5,12.916&xywh=437,110,200,248",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.5-437-110-200-248",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/86",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12.916,13&xywh=167,249,189,110",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.916-167-249-189-110",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/87",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12.916,13&xywh=253,40,185,173",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.916-253-40-185-173",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/88",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/23",
               "type": "Annotation",
               "motivation": [
                 "tagging"
@@ -1929,129 +564,24 @@
                 "language": "en",
                 "format": "text/plain"
               },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12.916,13&xywh=388,300,71,59",
+              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=11.5,12.5&xywh=177,167,98,192",
               "seeAlso": [
                 {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.916-388-300-71-59",
+                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-11.5-177-167-98-192",
                   "type": "Text",
                   "format": "text/html"
                 }
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/89",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/24",
               "type": "Annotation",
               "motivation": [
                 "tagging"
               ],
               "body": {
                 "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=12.916,13&xywh=427,128,175,155",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-12.916-427-128-175-155",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/90",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=13,13.416&xywh=163,246,192,112",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-13.0-163-246-192-112",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/91",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=13,13.416&xywh=255,37,175,167",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-13.0-255-37-175-167",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/92",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=13,13.416&xywh=387,299,72,60",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-13.0-387-299-72-60",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/93",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=13,13.416&xywh=567,99,71,258",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-13.0-567-99-71-258",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/94",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
+                "value": "Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -2065,56 +595,14 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/95",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/25",
               "type": "Annotation",
               "motivation": [
                 "tagging"
               ],
               "body": {
                 "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=13.416,13.5&xywh=196,54,67,110",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-13.416-196-54-67-110",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/96",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=13.416,13.5&xywh=255,35,172,164",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-13.416-255-35-172-164",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/97",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
+                "value": "Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -2128,56 +616,14 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/98",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/26",
               "type": "Annotation",
               "motivation": [
                 "tagging"
               ],
               "body": {
                 "type": "TextualBody",
-                "value": "Female, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=13.5,13.916&xywh=196,54,83,111",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-13.5-196-54-83-111",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/99",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=13.5,13.916&xywh=254,35,171,164",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-13.5-254-35-171-164",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/100",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
+                "value": "Person",
                 "language": "en",
                 "format": "text/plain"
               },
@@ -2191,525 +637,21 @@
               ]
             },
             {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/101",
+              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/27",
               "type": "Annotation",
               "motivation": [
                 "tagging"
               ],
               "body": {
                 "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
+                "value": "Person",
                 "language": "en",
                 "format": "text/plain"
               },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=13.916,14&xywh=251,40,177,172",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-13.916-251-40-177-172",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/102",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=14,14.416&xywh=138,161,143,80",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-14.0-138-161-143-80",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/103",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=14,14.416&xywh=163,183,125,175",
+              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=14,15&xywh=163,183,125,175",
               "seeAlso": [
                 {
                   "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-14.0-163-183-125-175",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/104",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=14,14.416&xywh=556,64,83,293",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-14.0-556-64-83-293",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/105",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Male, Man, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=14.416,14.5&xywh=73,239,185,119",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-14.416-73-239-185-119",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/106",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=14.416,14.5&xywh=193,62,75,110",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-14.416-193-62-75-110",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/107",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=14.416,14.5&xywh=242,43,201,169",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-14.416-242-43-201-169",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/108",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=14.5,14.916&xywh=136,242,132,116",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-14.5-136-242-132-116",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/109",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=14.5,14.916&xywh=253,43,192,168",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-14.5-253-43-192-168",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/110",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=14.916,15&xywh=329,237,104,122",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-14.916-329-237-104-122",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/111",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=14.916,15&xywh=508,96,70,98",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-14.916-508-96-70-98",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/112",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=15,16&xywh=180,41,122,170",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-15.0-180-41-122-170",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/113",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=19.416,19.5&xywh=462,5,169,219",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-19.416-462-5-169-219",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/114",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=19.5,19.916&xywh=432,30,156,260",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-19.5-432-30-156-260",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/115",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=19.916,20&xywh=0,310,114,49",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-19.916-0-310-114-49",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/116",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=19.916,20&xywh=117,60,63,197",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-19.916-117-60-63-197",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/117",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=19.916,20&xywh=363,32,228,320",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-19.916-363-32-228-320",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/118",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=20,20.416&xywh=321,30,287,326",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-20.0-321-30-287-326",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/119",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=20.416,20.916&xywh=360,31,254,324",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-20.416-360-31-254-324",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/120",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=20.916,21.416&xywh=361,42,233,250",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-20.916-361-42-233-250",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/121",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=21.416,21.916&xywh=365,38,229,255",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-21.416-365-38-229-255",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/122",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=21.916,22.916&xywh=369,35,225,254",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-21.916-369-35-225-254",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/123",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Adult, Female, Person, Woman",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=22.916,23.916&xywh=360,34,234,255",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-22.916-360-34-234-255",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/124",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=23.916,24.916&xywh=361,42,233,247",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-23.916-361-42-233-247",
-                  "type": "Text",
-                  "format": "text/html"
-                }
-              ]
-            },
-            {
-              "id": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas/objects/125",
-              "type": "Annotation",
-              "motivation": [
-                "tagging"
-              ],
-              "body": {
-                "type": "TextualBody",
-                "value": "Person",
-                "language": "en",
-                "format": "text/plain"
-              },
-              "target": "https://kasane.ldas.jp/manifests/sample-manifest-video-objects.json/canvas#t=34.416,35.416&xywh=184,29,234,107",
-              "seeAlso": [
-                {
-                  "id": "https://ab.ldas.jp/na-kamura-1263/video/resource/sdcommons_video-01DD001H210011-34.416-184-29-234-107",
                   "type": "Text",
                   "format": "text/html"
                 }

@@ -133,7 +133,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 // ページに入っている動画を、長さの 1/4 の位置で止める（読み込めていない動画は放っておく）。
 // SEEK_AT に秒があるものは、その位置で止める（見せたい場面が 1/4 の位置に無いとき）
 const SEEK_AT = {
-  // 物体の枠は最初の 35 秒にだけある。5 秒すぎは 4 人の枠が並ぶ
+  // 人の枠は 5〜15 秒にだけある。5 秒すぎは、神面の前の男性とカメラを構える人の 2 つの枠が出る
   'video-objects': 5.3,
 };
 const seekVideos = (at) => `Promise.all([...document.querySelectorAll('video')].map((v) => new Promise((done) => {

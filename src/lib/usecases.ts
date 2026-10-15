@@ -353,12 +353,12 @@ export const USE_CASES: UseCase[] = [
   {
     id: 'video-objects',
     title: {
-      ja: '信州デジタルコモンズ「芦の尻の道祖神祭り」（動画の中の物体の枠）',
-      en: 'Ashinoshiri Dosojin Festival, Shinshu Digital Commons (boxes on objects in a video)',
+      ja: '信州デジタルコモンズ「芦の尻の道祖神祭り」（動画の中の人の枠）',
+      en: 'Ashinoshiri Dosojin Festival, Shinshu Digital Commons (boxes on people in a video)',
     },
     note: {
-      ja: '県立長野図書館の記録映像に、ArchiveBase の Video Search が AI で見つけた人物などの枠を、IIIF の注釈（時間と範囲を指す #t=…&xywh=…）として重ねた例です。枠はその時間だけ動画の上に出ます。一覧の注釈を押すと、その時刻へ移ります。タグは生成 AI の出力で、検証していません。',
-      en: 'A documentary film from the Nagano Prefectural Library, with boxes on people and things that ArchiveBase Video Search found with AI, written as IIIF annotations on a time and a region (#t=…&xywh=…). Each box appears over the video only at its time. Click an annotation in the list to go there. The tags are AI output and have not been checked.',
+      ja: '県立長野図書館の記録映像に、ArchiveBase の Video Search が AI で見つけた人の枠を、IIIF の注釈（時間と範囲を指す #t=…&xywh=…）として重ねた例です。枠は AI の出力です。AI は藁の神面などにも「人」の枠を付けていたので、人が目で確かめて、確かに人が写っている 27 件だけを残しました。枠はその時間だけ動画の上に出ます。一覧の注釈を押すと、その時刻へ移ります。',
+      en: 'A documentary film from the Nagano Prefectural Library, with boxes on people that ArchiveBase Video Search found with AI, written as IIIF annotations on a time and a region (#t=…&xywh=…). The boxes are AI output. The AI also put “person” boxes on things such as the straw god mask, so a person checked every box by eye and kept only the 27 that really show a person. Each box appears over the video only at its time. Click an annotation in the list to go there.',
     },
     open: { page: 'viewer', manifest: `${SITE_URL}/manifests/sample-manifest-video-objects.json`, tab: 'canvasAnnotations' },
     features: ['annotations'],

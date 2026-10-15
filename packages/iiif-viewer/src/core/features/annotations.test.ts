@@ -263,7 +263,8 @@ describe('動画の時間と範囲（#t=…&xywh=…）', () => {
     );
     const canvas = manifest.items[0] as unknown as { id: string; width: number; height: number };
     const annos = embeddedCanvasAnnotations(manifest, canvas.id, canvas);
-    expect(annos.length).toBeGreaterThan(100);
+    // 目で確かめて人の枠だけを残した数（scripts/video-objects-review.tsv の keep）
+    expect(annos.length).toBe(27);
     expect(annos.every((x) => x.region.type === 'rect' && x.time && x.time.end! > x.time.start)).toBe(true);
   });
 });
