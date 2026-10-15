@@ -171,6 +171,11 @@ export function buildRoom(placements) {
   const roomH = room.height || 5.5;
   const root = G.galleryRoot;
   G.colliders = []; // 当たり箱をリセット
+  // 見回し・三人称のカメラを部屋の中に留めるための形(controls.js の clampCameraToRoom)。
+  // 自由配置(explicit)は壁が閉じていないので対象外。
+  G.roomShape = placements.length > 2 && !placements[0].explicit
+    ? { angles: placements.map((pl) => pl.angle), apothem: placements[0].apothem, height: roomH }
+    : null;
 
   const wallMat = new THREE.MeshStandardMaterial({ color: room.wallColor || "#1b1e24", roughness: 0.95 });
   for (const pl of placements) {
