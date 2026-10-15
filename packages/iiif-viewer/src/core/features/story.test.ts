@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { convertToV4 } from '../services/manifestConverter';
-import { splitHeading, stepTarget, stepText, storyBodies, storyOf, type StoryStep } from './story';
+import { openingStep, splitHeading, stepTarget, stepText, storyBodies, storyOf, type StoryStep } from './story';
 
 // 倭寇図巻のストーリー（https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/cp/story/m.json）の
 // 先頭 7 件（章 3、細部 4）。2026-10-14 に保存。章と細部の区別は本文先頭の <h2> だけで書かれている。
@@ -136,5 +136,21 @@ describe('step text', () => {
       { kind: 'text', value: 'Hello', language: 'en', choice: 0 },
     ]);
     expect(storyBodies(choice, 'ja').map((b) => b.value)).toEqual(['こんにちは']);
+  });
+});
+
+describe('openingStep', () => {
+  const story = storyOf(convertToV4(fixture('wakozukan-story.json')), 'ja');
+
+  it('moves to the step the tab shows when the picture is not on it (scene 1 was skipped)', () => {
+    expect(story).not.toBeNull();
+    expect(openingStep(story!, 0, null)).toBe(0);
+    expect(openingStep(story!, 3, 'https://example.org/other-mark')).toBe(3);
+  });
+
+  it('stays when that step is already selected, and clamps an index out of range', () => {
+    expect(openingStep(story!, 0, story!.steps[0].id)).toBeNull();
+    expect(openingStep(story!, 99, null)).toBe(story!.steps.length - 1);
+    expect(openingStep(story!, -1, null)).toBe(0);
   });
 });
