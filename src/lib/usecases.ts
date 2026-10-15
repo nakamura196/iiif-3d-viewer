@@ -95,8 +95,10 @@ export function hrefOf(open: UseCaseOpen): string {
 }
 
 // サムネイル（scripts/capture-thumbnails.mjs で撮った、右の欄を除いたビューアの画面）。言語ごとに撮ってある
-export const thumbnailOf = (u: UseCase, locale: Locale): string =>
-  withBasePath(`/thumbnails/usecases/${u.id}.${locale}.webp`);
+// thumbnailPathOf は basePath なし（og:image など metadataBase からの URL 用）、thumbnailOf は画面の <img> 用
+export const thumbnailPathOf = (u: UseCase, locale: Locale): string =>
+  `/thumbnails/usecases/${u.id}.${locale}.webp`;
+export const thumbnailOf = (u: UseCase, locale: Locale): string => withBasePath(thumbnailPathOf(u, locale));
 
 // トップのカードで再生する短い動画（scripts/capture-usecase-clips.mjs で撮った、音なしの数秒の録画）
 export const clipOf = (u: UseCase, locale: Locale): string =>

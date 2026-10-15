@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import UseCaseDetailContent from '@/components/page/UseCaseDetailContent';
 import { setRequestLocale } from 'next-intl/server';
 import { LOCALES, alternatesFor } from '@/lib/site';
-import { USE_CASES, thumbnailOf, usecaseById } from '@/lib/usecases';
+import { USE_CASES, thumbnailPathOf, usecaseById } from '@/lib/usecases';
 import type { Metadata } from 'next';
 
 export default async function UseCaseDetailPage({
@@ -30,8 +30,8 @@ export async function generateMetadata({
   if (!u) return {};
   const lang = locale === 'en' ? 'en' : 'ja';
   const alternates = alternatesFor(locale, `usecases/${id}/`);
-  // サムネイルは metadataBase からの絶対 URL になる（basePath は thumbnailOf が付ける）
-  const image = { url: thumbnailOf(u, lang), width: 1280, height: 720, alt: u.title[lang] };
+  // サムネイルは metadataBase からの絶対 URL になる。canonical と同じく basePath は付けない
+  const image = { url: thumbnailPathOf(u, lang), width: 1280, height: 720, alt: u.title[lang] };
   return {
     title: u.title[lang],
     description: u.note[lang],
