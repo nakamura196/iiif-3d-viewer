@@ -6,6 +6,7 @@ import { useThree } from '@react-three/fiber';
 import { Box3, Group, PerspectiveCamera, Sphere, Vector3 } from 'three';
 import gsap from 'gsap';
 import Annotations from '../three/Annotations';
+import ModelErrorBoundary from './ModelErrorBoundary';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { manifestAtom, modelAnimationAtom, sceneIdAtom, showAnnotationsAtom } from '../atoms';
 import { defaultCameraOf, type DefaultCamera } from '../../core';
@@ -165,9 +166,12 @@ export default function Scene({
       )}
       {viewRef && <ViewController handle={viewRef} center={sphere.center} radius={sphere.radius} />}
       {extraModels.map((m, i) => (
-        <Suspense key={i} fallback={null}>
-          <PlacedGLTF url={m.url} position={m.position} />
-        </Suspense>
+        // a model beside the main one that fails to load is left out; the rest stays
+        <ModelErrorBoundary key={`${i}:${m.url}`}>
+          <Suspense fallback={null}>
+            <PlacedGLTF url={m.url} position={m.position} />
+          </Suspense>
+        </ModelErrorBoundary>
       ))}
       {model && showAnnotations && <Annotations model={model} />}
     </>
