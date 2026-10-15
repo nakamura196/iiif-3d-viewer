@@ -207,3 +207,15 @@ export function storyOf(manifest: ManifestV4 | null | undefined, locale = 'en'):
 /** The chapter label in the wanted language. */
 export const chapterLabel = (c: StoryChapter, locale: string): string =>
   typeof c.label === 'string' ? c.label : labelIn(c.label, locale);
+
+/**
+ * The step to move to when the story tab is opened, or null to stay. The tab shows "n / total" for the
+ * current step, so the picture must show that step too: without this move it stayed on the whole picture
+ * while the tab said "1 / 31", and "next" then went to step 2, so step 1 was never seen.
+ * Stays when that step is already selected (the picture is on it).
+ */
+export function openingStep(story: Story, index: number, selected: string | null): number | null {
+  if (story.steps.length === 0) return null;
+  const at = Math.min(Math.max(index, 0), story.steps.length - 1);
+  return story.steps[at].id === selected ? null : at;
+}

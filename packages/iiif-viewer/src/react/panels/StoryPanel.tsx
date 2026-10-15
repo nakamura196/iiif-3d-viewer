@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import {
   chapterLabel,
   containersOf,
+  openingStep,
   sanitizeAnnotationHtml,
   stepTarget,
   stepText,
@@ -78,6 +79,20 @@ function StoryPanel({ manifest }: PanelContext) {
     const i = story.steps.findIndex((s) => s.id === selected);
     if (i >= 0) setIndex(i);
   }, [selected, story, setIndex]);
+
+  // On opening the tab, move to the step it shows ("1 / 31" must show scene 1, not the whole picture).
+  // Only once per opening; later moves come from the buttons or a chosen mark.
+  const opened = useRef(false);
+  useEffect(() => {
+    if (opened.current || !story) return;
+    opened.current = true;
+    const i = openingStep(story, index, selected);
+    if (i === null) return;
+    const s = story.steps[i];
+    setIndex(i);
+    setSelected(s.id);
+    setRequest({ seq: nextSeq(), target: stepTarget(s, sizes.get(s.canvasId)) });
+  }, [story, index, selected, sizes, setIndex, setSelected, setRequest]);
 
   useEffect(() => {
     current.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
