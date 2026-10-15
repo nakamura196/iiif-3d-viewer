@@ -257,6 +257,7 @@ export const NEWS: NewsItem[] = [
     },
     action: { href: hrefOfUseCase('globe-georef') },
     usecases: ['globe-georef'],
+    video: { ja: 'NAVE09zRedo', en: 'b8qKqzuNNZY' },
   },
   // 同じ場所の注釈・キー付きタグ（研究段階、2026-09-28）の告知。掲載の了承が得られたら戻す
   {
