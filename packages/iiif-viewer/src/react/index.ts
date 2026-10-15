@@ -26,6 +26,7 @@ export {
   useCanvasImages,
   type ImageCompareViewProps,
 } from './displays/ImageCompareView';
+export { useCompareSources } from './displays/useCompareSources';
 export * from './compare/CompareParts';
 export {
   default as GeoImageView,

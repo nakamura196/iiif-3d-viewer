@@ -172,6 +172,19 @@ export const USE_CASES: UseCase[] = [
     headline: { ja: '2 枚の画像を見比べる', en: 'Compare two images' },
   },
   {
+    id: 'kuniezu',
+    title: {
+      ja: '国絵図を見比べる（天保国絵図 近江国）',
+      en: 'Comparing provincial maps (Tenpō kuniezu, Ōmi Province)',
+    },
+    note: {
+      ja: '国立公文書館が所蔵する正式版の近江国絵図と、その前年に作られた同じ大きさの写しをスタンフォード大学図書館が所蔵しています。2 つの Manifest をまとめた Collection を開き、境目を動かして記載の違いを見比べます。所蔵: 国立公文書館、スタンフォード大学図書館。',
+      en: "The official copy of the Ōmi Province map held by the National Archives of Japan, and a copy of the same size made a year earlier, held by Stanford University Libraries. Open a Collection of the two Manifests and drag the divider to compare what they record. Holders: National Archives of Japan, Stanford University Libraries.",
+    },
+    open: { page: 'compare', manifest: 'https://pocket.cultural.jp/data/kuniezu.json', mode: 'swipe' },
+    features: ['image', 'compare'],
+  },
+  {
     id: 'ueno',
     title: {
       ja: '上野駅周辺の点群と建物モデル（3D の左右表示）',

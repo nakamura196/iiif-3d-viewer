@@ -75,6 +75,14 @@ describe('hrefOf', () => {
   it('compare は見比べ方を載せる', () => {
     expect(hrefOf({ page: 'compare', manifest: m, mode: 'swipe' })).toBe(`/compare?iiif-content=${enc}&mode=swipe`);
   });
+
+  it('kuniezu は、2 つの資料をまとめた Collection を swipe で開く', () => {
+    const u = USE_CASES.find((x) => x.id === 'kuniezu');
+    expect(u?.features).toEqual(['image', 'compare']);
+    expect(hrefOf(u!.open)).toBe(
+      `/compare?iiif-content=${encodeURIComponent('https://pocket.cultural.jp/data/kuniezu.json')}&mode=swipe`,
+    );
+  });
 });
 
 describe('hrefOf（georef・search）', () => {

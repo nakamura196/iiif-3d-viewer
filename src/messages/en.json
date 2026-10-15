@@ -117,6 +117,7 @@
       "overlay": "Overlay"
     },
     "swipeHandle": "Divider (drag to move)",
+    "noSources": "Fewer than two images could be read from these sources.",
     "swipeDirection": "Divider direction",
     "directions": {
       "h": "Left–right",
