@@ -181,6 +181,8 @@ function ImageBody({
                   stage={stage}
                   opacity={layerOpacity(it, settings)}
                   onFailed={it.id === base ? () => setFailedBase(true) : undefined}
+                  // ログイン前に失敗していても、ログイン後に読めたら「読み込めませんでした」を消す
+                  onLoaded={it.id === base ? () => setFailedBase(false) : undefined}
                 />
               ))
             }
