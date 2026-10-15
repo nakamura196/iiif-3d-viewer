@@ -1,8 +1,10 @@
 // ユースケースの一覧を書き足したときに、書き漏れ（片方の言語・札の表示名・重複した id）を見つけるテスト。
 import { describe, expect, it } from 'vitest';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import ja from '@/messages/ja.json';
 import en from '@/messages/en.json';
-import { FEATURED_USE_CASES, USE_CASES, USE_CASE_FEATURES, hrefOf, sourceOf, videoOf } from './usecases';
+import { FEATURED_USE_CASES, USE_CASES, USE_CASE_FEATURES, hrefOf, sourceOf, usecaseById, videoOf } from './usecases';
 import { isViewerTab } from './viewerTabs';
 
 describe('USE_CASES', () => {
@@ -105,5 +107,20 @@ describe('videoOf', () => {
     const u = { ...base, video: { ja: 'aaaaaaaaaaa' } };
     expect(videoOf(u, 'en')).toBe('aaaaaaaaaaa');
     expect(videoOf({ ...base, video: undefined }, 'ja')).toBeUndefined();
+  });
+});
+
+describe('usecaseById', () => {
+  it('詳細ページの og:image になるサムネイルが日英とも public/ にある', () => {
+    for (const u of USE_CASES) {
+      for (const l of ['ja', 'en']) {
+        expect(existsSync(join(__dirname, '../../public/thumbnails/usecases', `${u.id}.${l}.webp`)), `${u.id}.${l}`).toBe(true);
+      }
+    }
+  });
+
+  it('id で引ける。無い id は undefined', () => {
+    for (const u of USE_CASES) expect(usecaseById(u.id)).toBe(u);
+    expect(usecaseById('no-such-id')).toBeUndefined();
   });
 });

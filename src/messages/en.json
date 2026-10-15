@@ -187,8 +187,19 @@
     },
     "status": {
       "unchecked": "Not checked yet",
-      "none": "No manifest to open"
-    }
+      "none": "No manifest to open",
+      "checked": "Checked"
+    },
+    "back": "Back to all samples",
+    "copyLink": "Copy link",
+    "copied": "Copied",
+    "details": "Details",
+    "others": "More samples",
+    "noManifest": "There is no manifest to open",
+    "prev": "Previous recipe",
+    "next": "Next recipe",
+    "sameCategory": "Recipes in the same category",
+    "description": "IIIF Cookbook recipe {id} ({category}). {status}"
   },
   "UseCases": {
     "title": "Use cases",
@@ -209,7 +220,13 @@
       "ocr": "OCR",
       "auth": "Authentication",
       "story": "Story"
-    }
+    },
+    "back": "Back to all use cases",
+    "details": "Details",
+    "copyLink": "Copy link",
+    "copied": "Copied",
+    "others": "More use cases",
+    "newsHeading": "News about this example"
   },
   "InferenceModels": {
     "title": "Models in the Inference tab",

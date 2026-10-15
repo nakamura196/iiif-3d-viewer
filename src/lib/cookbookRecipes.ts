@@ -558,3 +558,5 @@ export const COOKBOOK_RECIPES: CookbookRecipe[] = ROWS.map((r) => ({ ...r, statu
 /** 「開く」の行き先（/viewer）。URL が無ければ空のビューア */
 export const recipeHref = (r: CookbookRecipe, link: RecipeLink): string =>
   link.url ? `/viewer?${contentParam(link.url)}${r.tab ? `&tab=${r.tab}` : ''}` : '/viewer';
+
+export const recipeById = (id: string): CookbookRecipe | undefined => COOKBOOK_RECIPES.find((r) => r.id === id);

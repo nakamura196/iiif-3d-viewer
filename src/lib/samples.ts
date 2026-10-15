@@ -51,3 +51,5 @@ export const sampleHref = (s: Sample): string =>
 
 // サムネイル（scripts/capture-thumbnails.mjs で撮った画面）。public/ からのパス
 export const sampleThumbnail = (s: Sample): string => withBasePath(`/thumbnails/samples/${s.id}.webp`);
+
+export const sampleById = (id: string): Sample | undefined => SAMPLES.find((s) => s.id === id);

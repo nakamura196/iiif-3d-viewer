@@ -187,8 +187,19 @@
     },
     "status": {
       "unchecked": "未確認",
-      "none": "開くマニフェストなし"
-    }
+      "none": "開くマニフェストなし",
+      "checked": "確認済み"
+    },
+    "back": "サンプルの一覧へ",
+    "copyLink": "リンクをコピー",
+    "copied": "コピーしました",
+    "details": "詳しく見る",
+    "others": "ほかのサンプル",
+    "noManifest": "開くマニフェストがありません",
+    "prev": "前のレシピ",
+    "next": "次のレシピ",
+    "sameCategory": "同じ分類のレシピ",
+    "description": "IIIF Cookbook のレシピ {id}（{category}）。{status}"
   },
   "UseCases": {
     "title": "ユースケース",
@@ -209,7 +220,13 @@
       "ocr": "OCR",
       "auth": "認証",
       "story": "ストーリー"
-    }
+    },
+    "back": "ユースケースの一覧へ",
+    "details": "詳しく見る",
+    "copyLink": "リンクをコピー",
+    "copied": "コピーしました",
+    "others": "ほかのユースケース",
+    "newsHeading": "この例を取り上げたお知らせ"
   },
   "InferenceModels": {
     "title": "推論タブのモデル",
