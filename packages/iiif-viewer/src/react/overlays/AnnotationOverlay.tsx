@@ -11,7 +11,7 @@ import {
 } from '../../core';
 import { manifestAtom } from '../atoms';
 import { useLocale } from '../env';
-import { selectedCanvasAnnotationAtom } from './canvasAnnotationState';
+import { canvasAnnotationGranularityAtom, selectedCanvasAnnotationAtom } from './canvasAnnotationState';
 import { storyFrameAtom, storyOpenAtom } from './storyState';
 import type { Overlay, OverlayProps } from './types';
 import { useCanvasAnnotations } from './useCanvasAnnotations';
@@ -38,10 +38,12 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
   // While a story is read, only the current scene may be framed (thin line, no fill), and only when asked.
   const storyOpen = useAtomValue(storyOpenAtom);
   const storyFrame = useAtomValue(storyFrameAtom);
+  const granularity = useAtomValue(canvasAnnotationGranularityAtom);
 
   const drawn = annotations
     .filter((a) => a.region.type !== 'canvas' && !a.layer) // layer annotations are drawn by the layer itself
     .filter((a) => !storyOpen || (storyFrame && a.id === selected))
+    .filter((a) => !granularity || a.granularity === granularity || a.motivations.includes('highlighting'))
     .sort((a, b) => areaOf(b) - areaOf(a));
   if (drawn.length === 0 || !(canvasWidth > 0) || !(canvasHeight > 0)) return null;
 

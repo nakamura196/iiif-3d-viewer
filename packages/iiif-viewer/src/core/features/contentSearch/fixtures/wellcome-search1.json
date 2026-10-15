@@ -1,0 +1,51 @@
+{
+  "@context": "http://iiif.io/api/search/1/context.json",
+  "@id": "https://iiif.wellcomecollection.org/search/v0/b21450638?q=cholera",
+  "@type": "sc:AnnotationList",
+  "within": {
+    "@type": "sc:Layer",
+    "total": 41
+  },
+  "resources": [
+    {
+      "@id": "https://iiif.wellcomecollection.org/annotations/b21450638/b21450638_0002.jp2/h0r2778,2311,91,26",
+      "@type": "oa:Annotation",
+      "motivation": "sc:painting",
+      "resource": {
+        "@type": "cnt:ContentAsText",
+        "chars": "CHOLERA"
+      },
+      "on": "https://iiif.wellcomecollection.org/presentation/b21450638/canvases/b21450638_0002.jp2#xywh=2778,2311,91,26"
+    },
+    {
+      "@id": "https://iiif.wellcomecollection.org/annotations/b21450638/b21450638_0003.jp2/h1r540,378,648,80",
+      "@type": "oa:Annotation",
+      "motivation": "sc:painting",
+      "resource": {
+        "@type": "cnt:ContentAsText",
+        "chars": "CHOLERA,"
+      },
+      "on": "https://iiif.wellcomecollection.org/presentation/b21450638/canvases/b21450638_0003.jp2#xywh=540,378,648,80"
+    }
+  ],
+  "hits": [
+    {
+      "@type": "search:Hit",
+      "annotations": [
+        "https://iiif.wellcomecollection.org/annotations/b21450638/b21450638_0002.jp2/h0r2778,2311,91,26"
+      ],
+      "match": "CHOLERA",
+      "before": "; CAUSE. n PREVENTS- CLEARU AND I Willi m WHICH ",
+      "after": " IS ISTlMATf.LY 0 AKDrnguKtrnvniitBiKED; By '\"•fin;,,,, CHOLERA, ITS NATURE, CAUSE, TREATMENT, AND PREVENTION, CLEARLY AND CONCISELY EXPLAINED: WITH A"
+    },
+    {
+      "@type": "search:Hit",
+      "annotations": [
+        "https://iiif.wellcomecollection.org/annotations/b21450638/b21450638_0003.jp2/h1r540,378,648,80"
+      ],
+      "match": "CHOLERA,",
+      "before": "; CAUSE. n PREVENTS- CLEARU AND I Willi m WHICH CHOLERA IS ISTlMATf.LY 0 AKDrnguKtrnvniitBiKED; By '\"•fin;,,,, ",
+      "after": " ITS NATURE, CAUSE, TREATMENT, AND PREVENTION, CLEARLY AND CONCISELY EXPLAINED: WITH AN APPENDIX, CONTAINING PRACTICAL UEMARKS ON FEVER AND DYSENTERY,"
+    }
+  ]
+}

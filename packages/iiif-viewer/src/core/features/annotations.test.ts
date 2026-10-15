@@ -267,3 +267,21 @@ describe('動画の時間と範囲（#t=…&xywh=…）', () => {
     expect(annos.every((x) => x.region.type === 'rect' && x.time && x.time.end! > x.time.start)).toBe(true);
   });
 });
+
+describe('Text Granularity', () => {
+  it('keeps textGranularity (line, word) on OCR annotations', () => {
+    const page = {
+      type: 'AnnotationPage',
+      items: [
+        { id: 'l1', type: 'Annotation', motivation: 'supplementing', textGranularity: 'line', body: { type: 'TextualBody', value: 'a b' }, target: 'https://e.org/c1#xywh=0,0,10,2' },
+        { id: 'w1', type: 'Annotation', motivation: 'supplementing', textGranularity: 'word', body: { type: 'TextualBody', value: 'a' }, target: 'https://e.org/c1#xywh=0,0,4,2' },
+        { id: 'n1', type: 'Annotation', motivation: 'commenting', body: { type: 'TextualBody', value: 'note' }, target: 'https://e.org/c1#xywh=1,1,1,1' },
+      ],
+    };
+    expect(readCanvasAnnotations('https://e.org/c1', [page]).map((a) => [a.id, a.granularity])).toEqual([
+      ['l1', 'line'],
+      ['w1', 'word'],
+      ['n1', undefined],
+    ]);
+  });
+});

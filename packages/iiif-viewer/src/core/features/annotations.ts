@@ -69,6 +69,8 @@ export interface CanvasAnnotation extends AnnotationStyleSource {
    * (`#t=10`), except for an `instant`, which is a single moment.
    */
   time?: { start: number; end?: number; instant?: true };
+  /** Text Granularity extension: the unit of text the annotation stands for (line, word …). */
+  granularity?: string;
 }
 
 const asList = (v: unknown): unknown[] => (Array.isArray(v) ? v : v == null ? [] : [v]);
@@ -505,6 +507,7 @@ export const readCanvasAnnotations = (
         ...(time
           ? { time: { start: time.start, ...(time.end !== undefined ? { end: time.end } : {}), ...(instant ? { instant: true as const } : {}) } }
           : {}),
+        ...(str(raw.textGranularity) ? { granularity: str(raw.textGranularity) } : {}),
       });
     }
   }

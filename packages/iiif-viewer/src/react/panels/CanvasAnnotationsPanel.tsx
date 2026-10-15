@@ -15,12 +15,13 @@ import {
   wikidataLabelUrl,
   sanitizeAnnotationHtml,
   type AnnotationBodyItem,
+  TEXT_GRANULARITIES,
   type CanvasAnnotation,
   type StyleDeclarations,
 } from '../../core';
 import { useLocale, useTranslations } from '../env';
 import { useCanvasNavigation } from '../navigation';
-import { selectedCanvasAnnotationAtom } from '../overlays/canvasAnnotationState';
+import { canvasAnnotationGranularityAtom, selectedCanvasAnnotationAtom } from '../overlays/canvasAnnotationState';
 import { useCanvasAnnotations } from '../overlays/useCanvasAnnotations';
 import AnnotationImages from '../annotation/AnnotationImages';
 import { fmt } from '../displays/TranscriptPanel';
@@ -31,6 +32,12 @@ const KNOWN_MOTIVATIONS = new Set([
   'commenting', 'tagging', 'linking', 'describing', 'identifying', 'classifying',
   'bookmarking', 'highlighting', 'questioning', 'replying', 'editing', 'moderating', 'painting',
 ]);
+
+const isKnownGranularity = (g: string) => (TEXT_GRANULARITIES as readonly string[]).includes(g);
+const granularityRank = (g: string) => {
+  const i = (TEXT_GRANULARITIES as readonly string[]).indexOf(g);
+  return i < 0 ? TEXT_GRANULARITIES.length : i;
+};
 
 const isHtml = (b: AnnotationBodyItem) => /html/i.test(b.format ?? '');
 
@@ -181,6 +188,13 @@ function Item({
           </span>
         ) : null}
         <span>{where}</span>
+        {annotation.granularity ? (
+          <span>
+            {isKnownGranularity(annotation.granularity)
+              ? t(`canvasAnnotationsGranularity_${annotation.granularity}`)
+              : annotation.granularity}
+          </span>
+        ) : null}
         {annotation.time ? (
           <span className="ml-auto tabular-nums">
             {fmt(annotation.time.start)}
@@ -208,8 +222,15 @@ function Item({
 export function CanvasAnnotationsPanelBody({ container, manifest }: PanelContext) {
   const t = useTranslations('Info');
   const locale = useLocale();
-  const { annotations, loading, failed, styleOf } = useCanvasAnnotations(manifest, container);
+  const { annotations: all, loading, failed, styleOf } = useCanvasAnnotations(manifest, container);
   const [selected, setSelected] = useAtom(selectedCanvasAnnotationAtom);
+  // Text Granularity: 行と語が両方あるときなど、単位で絞り込めるようにする
+  const [granularity, setGranularity] = useAtom(canvasAnnotationGranularityAtom);
+  const granularities = [...new Set(all.map((a) => a.granularity).filter((g): g is string => !!g))].sort(
+    (a, b) => granularityRank(a) - granularityRank(b),
+  );
+  const activeGranularity = granularity && granularities.includes(granularity) ? granularity : null;
+  const annotations = activeGranularity ? all.filter((a) => a.granularity === activeGranularity) : all;
   const { currentTime, seek } = usePlayback();
   const timed = annotations.some((a) => a.time);
 
@@ -238,6 +259,30 @@ export function CanvasAnnotationsPanelBody({ container, manifest }: PanelContext
         <p className="text-sm text-red-600 dark:text-red-400" role="alert">
           {t('canvasAnnotationsFailed')}
         </p>
+      ) : null}
+      {granularities.length > 1 ? (
+        <div className="flex flex-wrap items-center gap-1 text-xs" role="group" aria-label={t('canvasAnnotationsGranularity')}>
+          <span className="text-gray-500 dark:text-gray-300 mr-1">{t('canvasAnnotationsGranularity')}</span>
+          {[null, ...granularities].map((g) => (
+            <button
+              key={g ?? 'all'}
+              type="button"
+              aria-pressed={activeGranularity === g}
+              onClick={() => setGranularity(g)}
+              className={`px-2 py-0.5 rounded-full border ${
+                activeGranularity === g
+                  ? 'border-blue-600 bg-blue-600 text-white'
+                  : 'border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800'
+              }`}
+            >
+              {g === null
+                ? t('canvasAnnotationsGranularityAll')
+                : isKnownGranularity(g)
+                  ? t(`canvasAnnotationsGranularity_${g}`)
+                  : g}
+            </button>
+          ))}
+        </div>
       ) : null}
       {!loading && annotations.length === 0 ? (
         <p className="text-sm text-gray-500 dark:text-gray-300">{t('canvasAnnotationsEmpty')}</p>
