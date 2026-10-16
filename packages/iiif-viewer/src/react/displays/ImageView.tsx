@@ -46,6 +46,10 @@ export const rotatePoint = (x: number, y: number, degrees: number): [number, num
   return [x * c - y * s, x * s + y * c];
 };
 
+/** How far one can zoom in: until the sharpest source image is magnified three times (at least MAX). */
+export const maxScaleOf = (detailWidth: number | undefined, stageW: number): number =>
+  detailWidth && stageW > 0 ? Math.max(MAX, (detailWidth * 3) / stageW) : MAX;
+
 export const INITIAL_VIEW: ViewState = { scale: 1, tx: 0, ty: 0 };
 
 /**
@@ -149,10 +153,12 @@ export function OverlayLayer({
   container,
   canvasWidth,
   canvasHeight,
+  stage,
 }: {
   container: ContainerInfo;
   canvasWidth: number;
   canvasHeight: number;
+  stage?: StageInfo;
 }) {
   const active = OVERLAYS.filter((o) => o.available(container));
   if (active.length === 0) return null;
@@ -161,7 +167,7 @@ export function OverlayLayer({
     <div className="absolute inset-0 pointer-events-none" data-iiif-overlay-layer>
       {active.map((o) => (
         <div key={o.id} className="absolute inset-0 pointer-events-none" data-iiif-overlay={o.id}>
-          <o.Component container={sized} canvasWidth={canvasWidth} canvasHeight={canvasHeight} />
+          <o.Component container={sized} canvasWidth={canvasWidth} canvasHeight={canvasHeight} stage={stage} />
         </div>
       ))}
     </div>
@@ -219,7 +225,7 @@ export default function ImageView({
     stageW = cw * fit;
     stageH = ch * fit;
   }
-  const maxScale = detailWidth && stageW > 0 ? Math.max(MAX, (detailWidth * 3) / stageW) : MAX;
+  const maxScale = maxScaleOf(detailWidth, stageW);
   const maxRef = useRef(maxScale);
   useEffect(() => {
     maxRef.current = maxScale;
@@ -340,7 +346,7 @@ export default function ImageView({
           )}
           {children?.(stage)}
           {extra}
-          {container && <OverlayLayer container={container} canvasWidth={cw} canvasHeight={ch} />}
+          {container && <OverlayLayer container={container} canvasWidth={cw} canvasHeight={ch} stage={stage} />}
         </div>
       )}
       {stageW > 0 && cw && ch && over?.(stage)}
