@@ -95,9 +95,6 @@ class FitAllControl implements maplibregl.IControl {
   }
 }
 
-// 自動で全体に合わせたときの印。動かし終えたときに、人が動かしたのか見分ける
-const AUTO_FIT = { autoFit: true };
-
 const escapeHtml = (s: string) =>
   s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
@@ -283,16 +280,18 @@ export default function MapView({
     const currentFeatures = featuresRef.current;
     if (!map.current || currentFeatures.length === 0) return;
     if (auto && keepViewRef.current) return;
+    // 「全体を表示」を押したら、以後は自動で合わせない
+    if (!auto) keepViewRef.current = true;
     const bounds = new maplibregl.LngLatBounds();
     currentFeatures.forEach(f => bounds.extend(f.geometry.coordinates));
     // 画像を重ねているときは、画像の全体も収める
     overlayRef.current?.corners.forEach(c => bounds.extend(c));
-    map.current.fitBounds(bounds, { padding: 50, maxZoom: 17, duration }, auto ? AUTO_FIT : undefined);
+    map.current.fitBounds(bounds, { padding: 50, maxZoom: 17, duration });
     const selected = auto
       ? currentFeatures.find((f, idx) => geoFeatureIdOf(f, idx) === selectedIdRef.current)
       : undefined;
     if (selected) {
-      map.current.jumpTo({ center: selected.geometry.coordinates, zoom: Math.max(map.current.getZoom(), 4) }, AUTO_FIT);
+      map.current.jumpTo({ center: selected.geometry.coordinates, zoom: Math.max(map.current.getZoom(), 4) });
     }
   };
   const fitAllRef = useRef(fitAll);
@@ -323,7 +322,8 @@ export default function MapView({
     });
 
     // 動かし終えたら、縮尺と中心を覚えて知らせる（URL に書く）。
-    // 自動で全体に合わせた以外の動き（人の操作・選んだ地点へ飛ぶ）なら、以後は自動で合わせない
+    // 人が動かしたら（操作の元になったイベントがあれば）、以後は自動で合わせない。
+    // 地図が枠の大きさに合わせて自分で動いたとき（狭い画面で開いたときなど）は数えない
     const reportView = () => {
       const m = map.current;
       if (!m) return;
@@ -332,7 +332,7 @@ export default function MapView({
       onViewChangeRef.current?.(viewRef.current);
     };
     map.current.on('moveend', (e) => {
-      if (!(e as { autoFit?: boolean }).autoFit) keepViewRef.current = true;
+      if (e.originalEvent) keepViewRef.current = true;
       reportView();
     });
 
@@ -422,6 +422,7 @@ export default function MapView({
     if (selectedId) {
       const feature = features.find((f, idx) => geoFeatureIdOf(f, idx) === selectedId);
       if (feature && map.current) {
+        keepViewRef.current = true;
         // 選んだピンへ移る。今より引かない（全体に合わせた拡大のまま、中心だけ動かす）
         map.current.flyTo({
           center: feature.geometry.coordinates,
