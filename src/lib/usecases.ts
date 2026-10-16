@@ -1,4 +1,4 @@
-import type { CompareMode } from '@nakamura196/iiif-viewer';
+import type { CompareBlend, CompareMode } from '@nakamura196/iiif-viewer';
 import { contentParam } from '@nakamura196/iiif-viewer/core';
 import { withBasePath } from '@/lib/basePath';
 import { SITE_URL } from '@/lib/site';
@@ -35,6 +35,10 @@ export type UseCaseOpen =
       // 複数なら src= を並べて渡す（別々のマニフェストや info.json を見比べる）
       manifest: string | string[];
       mode?: CompareMode;
+      // 重ねるときの合成（difference = 差、tint = 色分け）。mode: 'overlay' のときに効く
+      blend?: CompareBlend;
+      // 位置合わせの JSON（scripts/align/ で事前に計算したもの）。B を A に合わせて重ねる
+      align?: string;
     }
   | {
       page: 'georef';
@@ -98,6 +102,8 @@ export function hrefOf(open: UseCaseOpen): string {
       break;
     case 'compare':
       if (open.mode) q.push(`mode=${open.mode}`);
+      if (open.blend) q.push(`blend=${open.blend}`);
+      if (open.align) q.push(`align=${encodeURIComponent(open.align)}`);
       break;
     case 'georef':
       break;
@@ -210,6 +216,30 @@ export const USE_CASES: UseCase[] = [
     },
     video: { ja: 'kWFXPKhW9Tc', en: 'OPX9OJ8voDc' },
     features: ['image', 'compare'],
+  },
+  {
+    id: 'genji-hyakunin-diff',
+    added: '2026-10-15',
+    title: {
+      ja: '源氏百人一首の 2 つの版を重ねて見比べる（引目と開目）',
+      en: 'Overlaying two editions of the Genji Hyakunin Isshu (hikime and kaimoku)',
+    },
+    note: {
+      ja: '人物の目の描き方が違う 2 つの版（引目・開目）から、同じ人物の箇所を切り出したキュレーション 2 本を、組ごとに送って見比べます。位置は事前に合わせてあり、紙の伸び縮みによる局所的なずれも補正しています。「色分け」や「差」で重ねると、本文はほぼ消え、目や冠など描き方の違う所だけが浮かびます。所蔵: 大阪公立大学中百舌鳥図書館（引目）、奈良女子大学学術情報センター（開目）、提供: 国文学研究資料館。',
+      en: 'Two curations cut from two editions of the Genji Hyakunin Isshu that draw the eyes differently (hikime and kaimoku), stepped through pair by pair. The pairs are pre-aligned, including local correction for paper stretch. Overlaid with Tint or Difference, the text nearly vanishes and only what is drawn differently — eyes, headgear — stands out. Holdings: Osaka Metropolitan University Nakamozu Library (hikime) and Nara Women’s University Academic Information Center (kaimoku), provided by the National Institute of Japanese Literature.',
+    },
+    open: {
+      page: 'compare',
+      manifest: [
+        'https://genji.lib.u-tokyo.ac.jp/data/face/100097415.json',
+        'https://genji.lib.u-tokyo.ac.jp/data/face/100241606.json',
+      ],
+      mode: 'overlay',
+      blend: 'tint',
+      align: `${SITE_URL}/data/align/genji-hyakunin.json`,
+    },
+    features: ['image', 'compare', 'curation'],
+    site: 'https://genji.lib.u-tokyo.ac.jp/',
   },
   {
     id: 'ueno',
