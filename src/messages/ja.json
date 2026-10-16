@@ -77,6 +77,7 @@
     "northUpUnavailable": "地点が 2 つ以上あるときに使えます",
     "rotationReset": "0° に戻す",
     "autoRotateOnSelect": "地点を選んだら、その近くで北を上に",
+    "clustering": "近い地点をまとめる",
     "noResults": "結果が見つかりません"
   },
   "Home": {

@@ -77,6 +77,7 @@
     "northUpUnavailable": "Needs at least two points",
     "rotationReset": "Reset to 0°",
     "autoRotateOnSelect": "When a point is selected, turn its surroundings north up",
+    "clustering": "Group nearby places",
     "noResults": "No results found"
   },
   "Home": {

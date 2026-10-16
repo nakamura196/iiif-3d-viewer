@@ -46,6 +46,10 @@ export const rotatePoint = (x: number, y: number, degrees: number): [number, num
   return [x * c - y * s, x * s + y * c];
 };
 
+/** How far one can zoom in: until the sharpest source image is magnified three times (at least MAX). */
+export const maxScaleOf = (detailWidth: number | undefined, stageW: number): number =>
+  detailWidth && stageW > 0 ? Math.max(MAX, (detailWidth * 3) / stageW) : MAX;
+
 export const INITIAL_VIEW: ViewState = { scale: 1, tx: 0, ty: 0 };
 
 /**
@@ -219,7 +223,7 @@ export default function ImageView({
     stageW = cw * fit;
     stageH = ch * fit;
   }
-  const maxScale = detailWidth && stageW > 0 ? Math.max(MAX, (detailWidth * 3) / stageW) : MAX;
+  const maxScale = maxScaleOf(detailWidth, stageW);
   const maxRef = useRef(maxScale);
   useEffect(() => {
     maxRef.current = maxScale;
