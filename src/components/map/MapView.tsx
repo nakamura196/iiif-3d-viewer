@@ -9,6 +9,8 @@ maplibregl.setWorkerUrl(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/maplibre/map
 import { useTheme } from 'next-themes';
 import { useLocale, useTranslations } from 'next-intl';
 import { geoFeatureIdOf, type GeorefMapView, type LngLat } from '@nakamura196/iiif-viewer/core';
+import { BASEMAPS, basemapOf, type BasemapId } from './basemaps';
+import { searchPlaces, type PlaceResult } from './placeSearch';
 
 interface GeoFeatureName {
   toponym: string;
@@ -140,6 +142,65 @@ export default function MapView({
     onViewChangeRef.current = onViewChange;
     initialSelectedIdRef.current = initialSelectedId;
   });
+
+  // 背景地図。切り替えたら地図を作り直す（縮尺と中心・地点・重ねた画像は引き継ぐ）
+  const [basemap, setBasemap] = useState<BasemapId>('standard');
+
+  // 地名検索。選んだ場所には印を立てる（地図を作り直しても立て直す）
+  const [placeQuery, setPlaceQuery] = useState('');
+  const [placeResults, setPlaceResults] = useState<PlaceResult[] | null>(null);
+  const [placeSearching, setPlaceSearching] = useState(false);
+  const [placeError, setPlaceError] = useState(false);
+  const placeAbortRef = useRef<AbortController | null>(null);
+  const placeRef = useRef<PlaceResult | null>(null);
+  const placeMarkerRef = useRef<maplibregl.Marker | null>(null);
+  // 現在地が取れなかったとき（許可されなかった・時間切れ）に出す
+  const [geolocateError, setGeolocateError] = useState(false);
+
+  const showPlace = () => {
+    const m = map.current;
+    const place = placeRef.current;
+    placeMarkerRef.current?.remove();
+    placeMarkerRef.current = null;
+    if (!m || !place) return;
+    placeMarkerRef.current = new maplibregl.Marker({ color: '#f97316' })
+      .setLngLat([place.lng, place.lat])
+      .setPopup(new maplibregl.Popup({ closeOnClick: false, maxWidth: '240px' }).setText(place.name))
+      .addTo(m)
+      .togglePopup();
+  };
+
+  const runPlaceSearch = async () => {
+    placeAbortRef.current?.abort();
+    const q = placeQuery.trim();
+    if (!q) {
+      setPlaceResults(null);
+      return;
+    }
+    const ac = new AbortController();
+    placeAbortRef.current = ac;
+    setPlaceSearching(true);
+    setPlaceError(false);
+    try {
+      const results = await searchPlaces(q, locale, ac.signal);
+      if (!ac.signal.aborted) setPlaceResults(results);
+    } catch {
+      if (!ac.signal.aborted) {
+        setPlaceResults(null);
+        setPlaceError(true);
+      }
+    } finally {
+      if (!ac.signal.aborted) setPlaceSearching(false);
+    }
+  };
+
+  const selectPlace = (place: PlaceResult) => {
+    placeRef.current = place;
+    setPlaceResults(null);
+    keepViewRef.current = true;
+    showPlace();
+    map.current?.flyTo({ center: [place.lng, place.lat], zoom: 15, duration: 1000 });
+  };
 
   // 重ねた画像の表示と濃さ。地図を作り直しても（テーマ・言語の切り替え）引き継ぐ
   const [overlayVisible, setOverlayVisible] = useState(true);
@@ -308,17 +369,17 @@ export default function MapView({
       map.current = null;
     }
 
-    // OpenFreeMapのベクタータイルスタイル（多言語対応）
-    const styleUrl = resolvedTheme === 'dark'
-      ? `https://tiles.openfreemap.org/styles/dark`
-      : `https://tiles.openfreemap.org/styles/liberty`;
+    // 標準は OpenFreeMap のベクタータイル（多言語対応）。ほかは basemaps.ts
+    const base = basemapOf(basemap);
+    const styleUrl = base.style(resolvedTheme === 'dark');
 
     const start = viewRef.current;
     map.current = new maplibregl.Map({
       container: mapContainer.current,
       style: styleUrl,
       center: start ? [start.lng, start.lat] : [0, 30],
-      zoom: start ? start.zoom : 1
+      zoom: start ? start.zoom : 1,
+      attributionControl: { compact: base.collapseAttribution || undefined },
     });
 
     // 動かし終えたら、縮尺と中心を覚えて知らせる（URL に書く）。
@@ -348,6 +409,18 @@ export default function MapView({
 
     map.current.addControl(new maplibregl.NavigationControl());
     map.current.addControl(new FitAllControl(t('fitAll'), () => fitAllRef.current()));
+    // 現在地。押すと、いる場所に青い点を出して寄る（地図ライブラリの部品）
+    const geolocate = new maplibregl.GeolocateControl({
+      positionOptions: { enableHighAccuracy: true, timeout: 10000 },
+      fitBoundsOptions: { maxZoom: 15 },
+    });
+    geolocate.on('geolocate', () => {
+      keepViewRef.current = true;
+      setGeolocateError(false);
+    });
+    geolocate.on('error', () => setGeolocateError(true));
+    map.current.addControl(geolocate);
+    showPlace();
 
     // スタイル読み込み後に言語を設定してマーカーを追加
     map.current.on('load', () => {
@@ -357,7 +430,7 @@ export default function MapView({
       if (!style || !style.layers) return;
 
       // テキストラベルのレイヤーを探して言語を変更
-      style.layers.forEach((layer) => {
+      if (base.localizeLabels) style.layers.forEach((layer) => {
         if (layer.type === 'symbol' && layer.layout && 'text-field' in layer.layout) {
           const textField = layer.layout['text-field'];
           if (textField && typeof textField === 'object') {
@@ -370,6 +443,11 @@ export default function MapView({
           }
         }
       });
+
+      // 出典の長い地図（れきちず）は、出典を「i」のボタンに畳む（下の「画像を重ねる」に重なるため）
+      if (base.collapseAttribution) {
+        mapContainer.current?.querySelector('.maplibregl-ctrl-attrib')?.classList.remove('maplibregl-compact-show');
+      }
 
       mapReadyRef.current = true;
       // 開いたときの縮尺と中心も URL に書く（動かさなければ moveend が来ないため）
@@ -385,7 +463,7 @@ export default function MapView({
       map.current?.remove();
       map.current = null;
     };
-  }, [locale, resolvedTheme]);
+  }, [locale, resolvedTheme, basemap]);
 
   // featuresが変わったらマーカーを再追加
   useEffect(() => {
@@ -436,6 +514,94 @@ export default function MapView({
   return (
     <div className="relative w-full h-full">
       <div ref={mapContainer} className="w-full h-full" />
+      {/* 地名検索と背景地図。右上の拡大・縮小のボタンの左に置く（左上の「地図」の札は避ける） */}
+      <div className="absolute top-2.5 right-12 left-20 z-10 flex flex-wrap items-start justify-end gap-2 pointer-events-none text-sm">
+        <div className="relative w-56 max-w-full pointer-events-auto">
+          <form
+            role="search"
+            onSubmit={(e) => {
+              e.preventDefault();
+              void runPlaceSearch();
+            }}
+            className="flex rounded-md bg-white/95 dark:bg-gray-800/95 shadow"
+          >
+            <input
+              type="search"
+              value={placeQuery}
+              onChange={(e) => {
+                setPlaceQuery(e.target.value);
+                if (!e.target.value) setPlaceResults(null);
+              }}
+              placeholder={t('placeSearch')}
+              aria-label={t('placeSearch')}
+              className="min-w-0 flex-1 bg-transparent px-2 py-1.5 text-gray-900 dark:text-gray-100 outline-none"
+            />
+            <button
+              type="submit"
+              title={t('placeSearch')}
+              aria-label={t('placeSearch')}
+              className="px-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" />
+              </svg>
+            </button>
+          </form>
+          {(placeSearching || placeError || placeResults) && (
+            <div className="absolute mt-1 w-full max-h-72 overflow-y-auto rounded-md bg-white dark:bg-gray-800 shadow text-gray-800 dark:text-gray-100">
+              {placeSearching ? (
+                <p className="px-3 py-2 text-gray-500 dark:text-gray-400">{t('placeSearching')}</p>
+              ) : placeError ? (
+                <p className="px-3 py-2 text-red-600 dark:text-red-400">{t('placeSearchFailed')}</p>
+              ) : placeResults && placeResults.length === 0 ? (
+                <p className="px-3 py-2 text-gray-500 dark:text-gray-400">{t('noResults')}</p>
+              ) : (
+                <>
+                  <ul>
+                    {placeResults?.map((p, i) => (
+                      <li key={i}>
+                        <button
+                          type="button"
+                          onClick={() => selectPlace(p)}
+                          className="block w-full px-3 py-1.5 text-left hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          <span className="block break-words">{p.name}</span>
+                          {p.type && <span className="block text-xs text-gray-500 dark:text-gray-400">{p.type}</span>}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="border-t border-gray-200 dark:border-gray-700 px-3 py-1 text-[11px] text-gray-500 dark:text-gray-400">
+                    {t('placeSearchCredit')}
+                  </p>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+        <select
+          value={basemap}
+          onChange={(e) => setBasemap(e.target.value as BasemapId)}
+          aria-label={t('basemap')}
+          title={t('basemap')}
+          className="pointer-events-auto rounded-md bg-white/95 dark:bg-gray-800/95 px-2 py-1.5 shadow text-gray-900 dark:text-gray-100"
+        >
+          {BASEMAPS.map((b) => (
+            <option key={b.id} value={b.id}>
+              {t(b.labelKey)}
+            </option>
+          ))}
+        </select>
+      </div>
+      {geolocateError && (
+        <div role="alert" className="absolute bottom-8 right-2 z-10 flex items-center gap-2 rounded-md bg-white/95 dark:bg-gray-800/95 px-3 py-2 shadow text-sm text-red-600 dark:text-red-400">
+          {t('geolocateFailed')}
+          <button type="button" onClick={() => setGeolocateError(false)} aria-label={t('close')} className="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200">
+            ×
+          </button>
+        </div>
+      )}
       {overlay && (
         <div className="absolute bottom-8 left-2 z-10 flex items-center gap-2 rounded-md bg-white/90 dark:bg-gray-800/90 px-3 py-2 shadow text-sm text-gray-700 dark:text-gray-200">
           <label className="flex items-center gap-1.5 cursor-pointer">

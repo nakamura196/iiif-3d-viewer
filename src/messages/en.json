@@ -77,7 +77,18 @@
     "northUpUnavailable": "Needs at least two points",
     "rotationReset": "Reset to 0°",
     "autoRotateOnSelect": "When a point is selected, turn its surroundings north up",
-    "noResults": "No results found"
+    "noResults": "No results found",
+    "basemap": "Base map",
+    "basemapStandard": "Standard",
+    "basemapGsiPale": "GSI pale map",
+    "basemapGsiPhoto": "GSI aerial photo",
+    "basemapRekichizu": "Rekichizu",
+    "placeSearch": "Search places",
+    "placeSearching": "Searching…",
+    "placeSearchFailed": "Search failed. Please wait a moment and try again",
+    "placeSearchCredit": "Search: Nominatim / © OpenStreetMap contributors",
+    "geolocateFailed": "Could not get your location",
+    "close": "Close"
   },
   "Home": {
     "developers": "Developers",
