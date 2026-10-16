@@ -1,7 +1,7 @@
 'use client';
 
 import { useAtom, useAtomValue } from 'jotai';
-import { memo, useCallback, useDeferredValue, useMemo } from 'react';
+import { memo, useCallback, useDeferredValue, useLayoutEffect, useMemo, useRef } from 'react';
 import {
   annotationSearchText,
   bboxOf,
@@ -20,6 +20,7 @@ import { manifestAtom } from '../atoms';
 import { useLocale } from '../env';
 import { canvasAnnotationGranularityAtom, canvasAnnotationQueryAtom, selectedCanvasAnnotationAtom } from './canvasAnnotationState';
 import { storyFrameAtom, storyOpenAtom } from './storyState';
+import { DOM_MARK_LIMIT, boxOfRegion, overlaps, pixelsPerUnit, visibleBoxOf, type Box } from './annotationMarks';
 import type { Overlay, OverlayProps } from './types';
 import { useCanvasAnnotations } from './useCanvasAnnotations';
 
@@ -37,7 +38,7 @@ const STROKE = '#2563eb';
 
 // 画像の上に、Canvas 上の注釈の領域を重ねる。位置は Canvas 座標の割合で置く（画像と同じ大きさの層の中）。
 // Canvas 全体への注釈は枠を描かない（右パネルにだけ出る）。
-export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: OverlayProps) {
+export function AnnotationOverlayView({ container, canvasWidth, canvasHeight, stage }: OverlayProps) {
   const locale = useLocale();
   const manifest = useAtomValue(manifestAtom);
   const { annotations, styleOf } = useCanvasAnnotations(manifest, container);
@@ -68,17 +69,42 @@ export function AnnotationOverlayView({ container, canvasWidth, canvasHeight }: 
     return a ? groupByRegion([a]) : [];
   }, [selected, terms, drawn, annotations]);
   const toggle = useCallback((id: string, isSel: boolean) => setSelected(isSel ? null : id), [setSelected]);
-  if (drawn.length + chosen.length === 0 || !(canvasWidth > 0) || !(canvasHeight > 0)) return null;
+  const all = useMemo(
+    () => [...drawn, ...chosen].map((g) => ({ group: g, box: boxOfRegion(g.annotations[0]) })),
+    [drawn, chosen],
+  );
+  if (all.length === 0 || !(canvasWidth > 0) || !(canvasHeight > 0)) return null;
+
+  // 画面に見えている分だけ描く。少なければ押せる印、多ければ 1 枚の canvas にまとめる。
+  // 押せる印は拡大のたびに全部描き直しになる（線の太さが拡大率で決まるため）。2 万件で 1 段 190ms かかった。
+  const view = visibleBoxOf(stage, canvasWidth, canvasHeight, 0.2);
+  const onScreen = all.filter((d) => d.box && overlaps(d.box, view));
+  const asCanvas = !!stage && onScreen.length > DOM_MARK_LIMIT;
+  const isSelected = (g: RegionGroup<CanvasAnnotation>) =>
+    selected !== null && g.annotations.some((m) => m.id === selected);
+  // On the canvas, the chosen mark is still drawn as a mark one can press (and on top of the others).
+  const marks = asCanvas ? onScreen.filter((d) => isSelected(d.group)) : onScreen;
 
   // Each mark is drawn again only when it changes (being chosen or not), not when another one is chosen:
   // a Canvas may have tens of thousands of them.
   return (
     <div className="absolute inset-0 pointer-events-none" data-overlay="annotations">
-      {[...drawn, ...chosen].map((g) => (
+      {asCanvas ? (
+        <AnnotationCanvas
+          drawn={onScreen.filter((d) => !isSelected(d.group))}
+          view={visibleBoxOf(stage, canvasWidth, canvasHeight)}
+          unit={pixelsPerUnit(stage, canvasWidth)}
+          canvasWidth={canvasWidth}
+          canvasHeight={canvasHeight}
+          styleOf={styleOf}
+          onPick={(a) => setSelected(a.id)}
+        />
+      ) : null}
+      {marks.map(({ group: g }) => (
         <Mark
           key={g.key}
           group={g}
-          selected={selected !== null && g.annotations.some((m) => m.id === selected)}
+          selected={isSelected(g)}
           storyOpen={storyOpen}
           canvasWidth={canvasWidth}
           canvasHeight={canvasHeight}
@@ -243,6 +269,143 @@ const Mark = memo(function Mark({
   }
   return null;
 });
+
+type Drawn = { group: RegionGroup<CanvasAnnotation>; box: Box | null };
+
+// How far (screen pixels) a press may move and still pick a mark; further is a drag of the image.
+const CLICK_SLOP = 4;
+
+// 印が多いときの描き方。見えている範囲だけを、画面の画素の細かさで 1 枚の canvas に描く。
+// 拡大・移動のたびに描き直すが、2 万件でも数ミリ秒で済む（DOM の印は 1 つずつ描き直しになる）。
+// 押した所にある印（いちばん小さい物）を選ぶ。ドラッグは今までどおり画像の移動になる。
+function AnnotationCanvas({
+  drawn,
+  view,
+  unit,
+  canvasWidth,
+  canvasHeight,
+  styleOf,
+  onPick,
+}: {
+  drawn: Drawn[];
+  /** The part of the Canvas the canvas covers (Canvas coordinates). */
+  view: Box;
+  /** Screen pixels per Canvas unit. */
+  unit: number;
+  canvasWidth: number;
+  canvasHeight: number;
+  styleOf: (a: CanvasAnnotation) => { target: StyleDeclarations };
+  onPick: (a: CanvasAnnotation) => void;
+}) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  const dpr = typeof window === 'undefined' ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+  const k = unit * dpr; // canvas pixels per Canvas unit
+  const pw = Math.max(1, Math.ceil(view.w * k));
+  const ph = Math.max(1, Math.ceil(view.h * k));
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    const ctx = el?.getContext('2d');
+    if (!el || !ctx) return;
+    if (el.width !== pw) el.width = pw;
+    if (el.height !== ph) el.height = ph;
+    ctx.clearRect(0, 0, pw, ph);
+    // One path per look, so 20,000 boxes are a handful of fill and stroke calls.
+    const batches = new Map<string, { fill: string; stroke: string; path: Path2D }>();
+    const pathFor = (fill: string, stroke: string) => {
+      const key = `${fill}|${stroke}`;
+      let b = batches.get(key);
+      if (!b) batches.set(key, (b = { fill, stroke, path: new Path2D() }));
+      return b.path;
+    };
+    const px = (x: number) => (x - view.x) * k;
+    const py = (y: number) => (y - view.y) * k;
+    for (const { group } of drawn) {
+      const a = group.annotations[0];
+      const r = a.region;
+      const st = styleOf(a).target;
+      const stroke = st.borderColor ?? STROKE;
+      if (r.type === 'rect') {
+        pathFor(st.backgroundColor ?? 'rgba(37,99,235,0.10)', stroke).rect(px(r.x), py(r.y), r.w * k, r.h * k);
+      } else if (r.type === 'polygon') {
+        const path = pathFor(st.backgroundColor ?? 'rgba(37,99,235,0.15)', stroke);
+        for (const ring of r.rings) {
+          ring.forEach(([x, y], i) => (i === 0 ? path.moveTo(px(x), py(y)) : path.lineTo(px(x), py(y))));
+          path.closePath();
+        }
+      } else if (r.type === 'point') {
+        const path = pathFor(st.backgroundColor ?? '#2563eb', '#ffffff');
+        const rad = 5 * dpr;
+        path.moveTo(px(r.x) + rad, py(r.y));
+        path.arc(px(r.x), py(r.y), rad, 0, Math.PI * 2);
+      }
+    }
+    // The marks one can press have a 2px outline. Keep it where the boxes are large enough to show it,
+    // so the look does not jump between the two ways; small boxes get 1px, or they would be all outline.
+    const sizes = drawn
+      .slice(0, 200)
+      .map((d) => (d.box && d.box.w > 0 ? Math.min(d.box.w, d.box.h) * unit : 0))
+      .sort((a, b) => a - b);
+    ctx.lineWidth = (sizes[sizes.length >> 1] ?? 0) >= 16 ? 2 * dpr : dpr;
+    for (const b of batches.values()) {
+      ctx.fillStyle = b.fill;
+      ctx.fill(b.path);
+      ctx.strokeStyle = b.stroke;
+      ctx.stroke(b.path);
+    }
+  }, [drawn, view.x, view.y, k, unit, pw, ph, styleOf, dpr]);
+
+  // the smallest mark under a point of the canvas (CSS pixels from its top left)
+  const pick = (cx: number, cy: number): CanvasAnnotation | null => {
+    const x = view.x + cx / unit;
+    const y = view.y + cy / unit;
+    const reach = 6 / unit; // a point is drawn 5px wide, and a thin box is hard to hit exactly
+    let best: CanvasAnnotation | null = null;
+    let bestArea = Infinity;
+    for (const { group, box } of drawn) {
+      if (!box) continue;
+      if (x < box.x - reach || x > box.x + box.w + reach || y < box.y - reach || y > box.y + box.h + reach) continue;
+      const area = box.w * box.h;
+      if (area < bestArea) {
+        best = group.annotations[0];
+        bestArea = area;
+      }
+    }
+    return best;
+  };
+
+  return (
+    <canvas
+      ref={ref}
+      data-annotation-canvas
+      className="absolute pointer-events-auto"
+      style={{
+        left: `${(view.x / canvasWidth) * 100}%`,
+        top: `${(view.y / canvasHeight) * 100}%`,
+        width: `${(view.w / canvasWidth) * 100}%`,
+        height: `${(view.h / canvasHeight) * 100}%`,
+      }}
+      // The press still reaches the image (to drag it), which then holds the pointer, so the release is
+      // heard on the window. Only a press that did not move picks a mark.
+      onPointerDown={(e) => {
+        const el = e.currentTarget;
+        const x0 = e.clientX;
+        const y0 = e.clientY;
+        window.addEventListener(
+          'pointerup',
+          (up) => {
+            if (Math.hypot(up.clientX - x0, up.clientY - y0) > CLICK_SLOP) return;
+            const rect = el.getBoundingClientRect();
+            const a = pick(up.clientX - rect.left, up.clientY - rect.top);
+            if (a) onPick(a);
+          },
+          { once: true },
+        );
+      }}
+    />
+  );
+}
+
 
 export const annotationOverlay: Overlay = {
   id: 'annotations',
