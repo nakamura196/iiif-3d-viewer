@@ -275,7 +275,8 @@
       "audio": "Audio",
       "measure": "Real size",
       "gallery": "Gallery",
-      "inference": "Inference"
+      "inference": "Inference",
+      "puzzle": "Puzzle"
     },
     "back": "Back to all use cases",
     "details": "Details",

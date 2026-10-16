@@ -61,7 +61,7 @@ export type UseCaseOpen =
     };
 
 /** 何を見せる例か。一覧に札として出す。表示名は messages の UseCases.features */
-export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'search', 'ocr', 'auth', 'story', 'audio', 'measure', 'gallery', 'inference'] as const;
+export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'search', 'ocr', 'auth', 'story', 'audio', 'measure', 'gallery', 'inference', 'puzzle'] as const;
 export type UseCaseFeature = (typeof USE_CASE_FEATURES)[number];
 
 export interface UseCase {
@@ -507,6 +507,20 @@ export const USE_CASES: UseCase[] = [
     },
     features: ['image', 'inference'],
     site: 'https://nakamura196.github.io/ndl-face-finder/',
+  },
+  {
+    id: 'puzzle-kuniezu',
+    added: '2026-10-16',
+    title: {
+      ja: '近江国絵図（天保国絵図の写し）でジグソーパズル',
+      en: 'A jigsaw puzzle of the Ōmi provincial map (a copy of the Tenpō kuniezu)',
+    },
+    note: {
+      ja: 'スタンフォード大学図書館が所蔵する近江国絵図（天保国絵図の写し）を、右の「パズル」タブでジグソーパズルにします。マスの数（3 × 3〜8 × 8）を選んで「はじめる」を押すと、画像が切り分けられて混ざります。2 つのピースを順に押すと入れ替わり、元の絵に戻せば完成です。ほかの資料でも、開いてこのタブを選べば同じように遊べます。所蔵: スタンフォード大学図書館。',
+      en: 'A copy of the Tenpō provincial map of Ōmi, held by Stanford University Libraries, turned into a jigsaw puzzle in the Puzzle tab on the right. Choose a grid (3 × 3 to 8 × 8) and press Start to cut up and shuffle the image. Click two pieces in turn to swap them, and finish by putting the picture back together. Any other image works the same way: open it and pick this tab. Holder: Stanford University Libraries.',
+    },
+    open: { page: 'viewer', manifest: 'https://purl.stanford.edu/hs631zg4177/iiif/manifest', tab: 'puzzle' },
+    features: ['image', 'puzzle'],
   },
 ];
 
