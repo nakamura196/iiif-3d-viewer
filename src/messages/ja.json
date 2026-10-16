@@ -71,6 +71,11 @@
     "overlayImage": "画像を重ねる",
     "overlayOpacity": "画像の濃さ",
     "coordinates": "座標",
+    "rotation": "回転",
+    "rotationDegrees": "角度（度）",
+    "northUp": "北を上に",
+    "northUpUnavailable": "地点が 2 つ以上あるときに使えます",
+    "rotationReset": "0° に戻す",
     "noResults": "結果が見つかりません"
   },
   "Home": {

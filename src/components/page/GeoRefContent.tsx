@@ -9,6 +9,7 @@ import { fetchManifest } from '@nakamura196/iiif-viewer/core';
 import { manifestAtom } from '@nakamura196/iiif-viewer';
 import { CanvasComponent, GeoImageView, useCanvasImages } from '@nakamura196/iiif-viewer';
 import ManifestInput from '@/components/Input';
+import RotationControl from '@/components/map/RotationControl';
 import Header from '@/components/Header';
 import { Link } from '@/i18n/routing';
 import MapView, { type MapImageOverlay } from '@/components/map/MapView';
@@ -23,7 +24,10 @@ import {
   imageViewParams,
   manifestFromParams,
   mapViewParams,
+  northUpRotation,
+  normalizeAngle,
   readGeorefParams,
+  rotationParams,
   type GeorefImageView,
   type GeorefMapView,
   type GeorefParamPatch,
@@ -76,11 +80,14 @@ const GeoRefContent: NextPage = () => {
   const annotationRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   // 開いたときの URL から読んだ表示の状態（geo.ldas.jp と同じ名前の引数）
   const [urlState, setUrlState] = useState<GeorefUrlState | null>(null);
+  // 画像の回転（度、反時計回りが正）。URL の rotation と同じ値
+  const [rotation, setRotation] = useState(0);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const state = readGeorefParams(params, manifestFromParams(params));
     setUrlState(state);
+    if (state.rotation !== undefined) setRotation(state.rotation);
     if (!state.manifest) return;
     setManifestUrl(state.manifest);
   }, [setManifestUrl]);
@@ -102,6 +109,14 @@ const GeoRefContent: NextPage = () => {
   }, []);
   const handleMapViewChange = useCallback((v: GeorefMapView) => writeParams(mapViewParams(v)), [writeParams]);
   const handleImageViewChange = useCallback((v: GeorefImageView) => writeParams(imageViewParams(v)), [writeParams]);
+  const changeRotation = useCallback(
+    (deg: number) => {
+      const r = normalizeAngle(deg);
+      setRotation(r);
+      writeParams(rotationParams(r));
+    },
+    [writeParams]
+  );
 
   useEffect(() => {
     if (!manifestUrl) return;
@@ -137,6 +152,29 @@ const GeoRefContent: NextPage = () => {
     const idx = geoFeatures.findIndex((f, i) => geoFeatureIdOf(f, i) === selectedAnnotationId);
     writeParams({ id: idx < 0 ? null : (geoFeatures[idx].id ?? geoFeatureIdOf(geoFeatures[idx], idx)) });
   }, [selectedAnnotationId, geoFeatures, writeParams]);
+
+  // 北が上になる回転。地点が 2 つ以上あるときだけ求まる
+  const autoRotation = useMemo(
+    () =>
+      northUpRotation(
+        geoFeatures.map((f) => ({
+          x: f.properties.resourceCoords[0],
+          y: f.properties.resourceCoords[1],
+          lng: f.geometry.coordinates[0],
+          lat: f.geometry.coordinates[1],
+        }))
+      ),
+    [geoFeatures]
+  );
+
+  // 開いたとき、URL に rotation が無ければ北が上になるよう回す（geo.ldas.jp と同じ）。1 つの資料につき 1 回だけ
+  const autoRotatedFor = useRef<string | null>(null);
+  useEffect(() => {
+    if (!urlState || urlState.rotation !== undefined || autoRotation === null || !manifestUrl) return;
+    if (autoRotatedFor.current === manifestUrl) return;
+    autoRotatedFor.current = manifestUrl;
+    changeRotation(autoRotation);
+  }, [urlState, autoRotation, manifestUrl, changeRotation]);
 
   const imagePoints = useMemo(
     () =>
@@ -218,6 +256,9 @@ const GeoRefContent: NextPage = () => {
                 >
                   {t('openInViewer')}
                 </Link>
+                {geoCanvas && (
+                  <RotationControl rotation={rotation} onChange={changeRotation} northUp={autoRotation} />
+                )}
               </div>
               {geoCanvas && (
                 <GeoImageView
@@ -227,6 +268,7 @@ const GeoRefContent: NextPage = () => {
                   onSelect={handleFeatureClick}
                   initialView={urlState?.image}
                   onViewChange={handleImageViewChange}
+                  rotation={rotation}
                 />
               )}
               {glbUrl && (
