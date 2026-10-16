@@ -5,7 +5,9 @@
   "Viewer": {
     "compositePlay": "Play",
     "compositePause": "Pause",
-    "compositeSeek": "Position"
+    "compositeSeek": "Position",
+    "youTubeCaptions": "Captions",
+    "youTubeCaptionsOff": "Off"
   },
   "Transcript": {
     "language": "Language"

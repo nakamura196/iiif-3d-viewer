@@ -5,7 +5,9 @@
   "Viewer": {
     "compositePlay": "再生",
     "compositePause": "一時停止",
-    "compositeSeek": "再生位置"
+    "compositeSeek": "再生位置",
+    "youTubeCaptions": "字幕",
+    "youTubeCaptionsOff": "字幕なし"
   },
   "Transcript": {
     "language": "言語"

@@ -24,6 +24,7 @@ import {
   playbackSettings,
   type PaintingContent,
   type Physdim,
+  youTubeIdOf,
 } from '../../core';
 import {
   canvasLayersAtom,
@@ -252,7 +253,9 @@ function MediaBody({ props, images, kind }: { props: DisplayProps; images: Canva
   const [dismissedId, setDismissedId] = useState<string | null>(null);
   // 表紙が無い動画は、動画の途中から絵を取って表紙にする
   const own = kind === 'Video' ? images.placeholder?.layer.url ?? images.thumbnail : undefined;
-  const video = kind === 'Video' && !own && !images.accompanying
+  // YouTube の動画は YouTube のプレーヤーが自前の表紙と再生ボタンを出すので、表紙は重ねない
+  const youTube = kind === 'Video' && images.paintings.some((p) => p.options.some((o) => o.kind === 'Video' && youTubeIdOf(o.url)));
+  const video = kind === 'Video' && !youTube && !own && !images.accompanying
     ? images.paintings.flatMap((p) => p.options).find((o) => o.kind === 'Video')?.url
     : undefined;
   const still = useVideoPoster(video);
@@ -288,7 +291,7 @@ function MediaBody({ props, images, kind }: { props: DisplayProps; images: Canva
   return (
     <div className="relative flex-1 min-h-0 min-w-0 flex flex-col">
       <Next {...props} />
-      {kind === 'Video' && (
+      {kind === 'Video' && !youTube && (
         <MediaCover
           src={own ?? still}
           dismissed={dismissedId === props.container.id || currentTime > 0}

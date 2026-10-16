@@ -13,6 +13,7 @@ export * from './regions';
 export * from './thumbnail';
 export * from './georefOverlay';
 export * from './vtt';
+export * from './youtube';
 export * from './types/iiif';
 export * from './types/main';
 export * from './contentState';
