@@ -9,7 +9,7 @@
 | 画像の上に重ねる表示 | `src/react/overlays/<名前>Overlay.tsx`（型は `overlays/types.ts`。重ね順は `order`） | 無し |
 | 読み取り（React に依存しない） | `src/core/features/<機能>.ts` と `<機能>.test.ts`、または `<機能>/index.ts` のフォルダ | 無し |
 | 文言 | `src/react/messages/features/<機能>.{ja,en}.json` | 無し |
-| 推論のモデル（ブラウザ内の OCR など） | `src/react/inference/models/<名前>.ts`（型は `models/types.ts`。重い処理は `load()` の先の `<名前>.run.ts`）。React に依存しない前処理・後処理は `src/core/features/inference/` | `models/registry.ts` に 1 行 |
+| 推論のモデル（ブラウザ内の OCR など） | `src/react/inference/models/<名前>.ts`（型は `models/types.ts`。重い処理は `load()` の先の `<名前>.run.ts`）。React に依存しない前処理・後処理は `src/core/features/inference/` | `models/registry.ts` に 1 行（手順は `docs/adding-inference-model.md`） |
 
 「無し」のものは、ファイルを置けば一覧に入る。一覧は `scripts/gen-registries.mjs` が
 `*.generated.ts` として作る（git には入れない）。開発サーバ・テスト・ビルドが自動で走らせるので、
