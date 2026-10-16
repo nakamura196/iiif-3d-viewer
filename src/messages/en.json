@@ -271,7 +271,11 @@
       "search": "Search",
       "ocr": "OCR",
       "auth": "Authentication",
-      "story": "Story"
+      "story": "Story",
+      "audio": "Audio",
+      "measure": "Real size",
+      "gallery": "Gallery",
+      "inference": "Inference"
     },
     "back": "Back to all use cases",
     "details": "Details",
