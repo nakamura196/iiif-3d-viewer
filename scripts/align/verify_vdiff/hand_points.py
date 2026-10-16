@@ -88,3 +88,11 @@ for other in ("vdiff600", "vdiff1000", "homog_ecc", "affine"):
     boot = [np.mean(rng.choice(d, len(d))) for _ in range(5000)]
     lo, hi = np.percentile(boot, [2.5, 97.5])
     print(f"sim+warp − {other:10s}: 平均 {d.mean():+.2f} px（95% 区間 {lo:+.2f}〜{hi:+.2f}）、局所補正が近い点 {int((d < 0).sum())} / 遠い点 {int((d > 0).sum())} / 同じ {int((d == 0).sum())}")
+# 同じ組の点どうしは相関するので、組ごとにまとめて引き直す（こちらを本文に使う）
+pairs = sorted({p for p, i in keys})
+rng = np.random.default_rng(0)
+for other in ("vdiff600", "vdiff1000", "homog_ecc", "affine"):
+    d = {p: np.array([E[("sim+warp", p, i)] - E[(other, p, i)] for q, i in keys if q == p]) for p in pairs}
+    boot = [np.concatenate([d[p] for p in rng.choice(pairs, len(pairs))]).mean() for _ in range(5000)]
+    lo, hi = np.percentile(boot, [2.5, 97.5])
+    print(f"sim+warp − {other:10s}（組単位）: 平均 {np.concatenate(list(d.values())).mean():+.2f} px（95% 区間 {lo:+.2f}〜{hi:+.2f}）")
