@@ -22,7 +22,7 @@ import {
 } from '../../core';
 import { useAuth } from '../auth/authStore';
 import { useLocale, useTranslations } from '../env';
-import type { StageInfo } from './ImageView';
+import { rotatePoint, type StageInfo } from './ImageView';
 
 // Image API の深いズーム。info.json から「どの大きさの画像を、どの範囲だけ」取るかを決め、
 // 見えている範囲のタイルだけを <img> で並べる（依存なし・CSS の位置指定だけ）。
@@ -205,10 +205,17 @@ export default function ImageLayerView({
   const scheme = tileSchemeOf(info);
   if (scheme && stage.boxW > 0 && stage.stageW > 0) {
     const toCanvas = canvasWidth / stage.stageW;
-    const x0 = (-stage.boxW / 2 - stage.tx) / stage.scale + stage.stageW / 2;
-    const x1 = (stage.boxW / 2 - stage.tx) / stage.scale + stage.stageW / 2;
-    const y0 = (-stage.boxH / 2 - stage.ty) / stage.scale + stage.stageH / 2;
-    const y1 = (stage.boxH / 2 - stage.ty) / stage.scale + stage.stageH / 2;
+    // the box seen from the stage: its centre turned back, and the bounds of the turned box
+    const [cx, cy] = rotatePoint(-stage.tx / stage.scale, -stage.ty / stage.scale, -(stage.rotation ?? 0));
+    const r = ((stage.rotation ?? 0) * Math.PI) / 180;
+    const c = Math.abs(Math.cos(r));
+    const sn = Math.abs(Math.sin(r));
+    const hw = (stage.boxW * c + stage.boxH * sn) / 2 / stage.scale;
+    const hh = (stage.boxW * sn + stage.boxH * c) / 2 / stage.scale;
+    const x0 = cx - hw + stage.stageW / 2;
+    const x1 = cx + hw + stage.stageW / 2;
+    const y0 = cy - hh + stage.stageH / 2;
+    const y1 = cy + hh + stage.stageH / 2;
     const visibleCanvas: ImageRegion = { x: x0 * toCanvas, y: y0 * toCanvas, w: (x1 - x0) * toCanvas, h: (y1 - y0) * toCanvas };
     const local = canvasRectToLayer(place, visibleCanvas);
     const visible = intersect({ x: local.x + region.x, y: local.y + region.y, w: local.w, h: local.h }, region);

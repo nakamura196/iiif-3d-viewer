@@ -21,14 +21,30 @@ export interface StageInfo {
   stageH: number;
   boxW: number;
   boxH: number;
+  /** Clockwise degrees the stage is turned about its centre (0 when absent). */
+  rotation?: number;
 }
 
-/** Zoom and move of the view (`tx`, `ty`: CSS pixels from the box centre). */
+/**
+ * Zoom and move of the view (`tx`, `ty`: CSS pixels from the box centre).
+ * `rotation` (clockwise degrees) turns the stage about its centre: a point at stage offset d
+ * shows at t + scale · R(rotation) · d from the box centre.
+ */
 export interface ViewState {
   scale: number;
   tx: number;
   ty: number;
+  rotation?: number;
 }
+
+/** (x, y) turned clockwise by `degrees` (y down, as on screen). */
+export const rotatePoint = (x: number, y: number, degrees: number): [number, number] => {
+  if (!degrees) return [x, y];
+  const r = (degrees * Math.PI) / 180;
+  const c = Math.cos(r);
+  const s = Math.sin(r);
+  return [x * c - y * s, x * s + y * c];
+};
 
 export const INITIAL_VIEW: ViewState = { scale: 1, tx: 0, ty: 0 };
 
@@ -54,6 +70,31 @@ export function viewForRegion(
   return { scale, tx: -cx * scale, ty: -cy * scale };
 }
 
+/**
+ * The whole stage turned by `rotation` (clockwise degrees), fitted into the box.
+ * Unturned, this is INITIAL_VIEW; turned, the stage is shrunk so that its corners stay inside.
+ */
+export const homeView = (
+  s: { stageW: number; stageH: number; boxW: number; boxH: number },
+  rotation = 0,
+): ViewState => {
+  if (!rotation) return INITIAL_VIEW;
+  const r = (rotation * Math.PI) / 180;
+  const c = Math.abs(Math.cos(r));
+  const sn = Math.abs(Math.sin(r));
+  const bw = s.stageW * c + s.stageH * sn;
+  const bh = s.stageW * sn + s.stageH * c;
+  const scale = bw > 0 && bh > 0 ? Math.min(s.boxW / bw, s.boxH / bh) : 1;
+  return { scale, tx: 0, ty: 0, rotation };
+};
+
+/** The same region view for a stage turned by `rotation` (the region still lands in the middle of the box). */
+const turnRegionView = (v: ViewState, rotation: number | undefined): ViewState => {
+  if (!rotation) return v;
+  const [tx, ty] = rotatePoint(v.tx, v.ty, rotation);
+  return { ...v, tx, ty, rotation };
+};
+
 /** The CSS that places a stage in its box (the same for a second stage drawn over the first). */
 export const stageStyleOf = (s: StageInfo): CSSProperties => ({
   position: 'absolute',
@@ -61,7 +102,9 @@ export const stageStyleOf = (s: StageInfo): CSSProperties => ({
   top: (s.boxH - s.stageH) / 2,
   width: s.stageW,
   height: s.stageH,
-  transform: `translate(${s.tx}px, ${s.ty}px) scale(${s.scale})`,
+  transform: s.rotation
+    ? `translate(${s.tx}px, ${s.ty}px) rotate(${s.rotation}deg) scale(${s.scale})`
+    : `translate(${s.tx}px, ${s.ty}px) scale(${s.scale})`,
   transformOrigin: 'center center',
   ['--image-scale' as string]: s.scale,
 });
@@ -194,7 +237,10 @@ export default function ImageView({
     doneFocus.current = focusSeq;
     setGliding(true);
     setView(
-      viewForRegion(focusXywh, { w: cw, h: ch }, { w: stageW, h: stageH }, size, { min: MIN, max: maxRef.current }),
+      turnRegionView(
+        viewForRegion(focusXywh, { w: cw, h: ch }, { w: stageW, h: stageH }, size, { min: MIN, max: maxRef.current }),
+        viewRef.current.rotation,
+      ),
     );
     window.setTimeout(() => setGliding(false), 700);
   }, [focusXywh, focusSeq, cw, ch, stageW, stageH, size, setView]);
@@ -219,7 +265,7 @@ export default function ImageView({
       setView((v) => {
         const scale = Math.min(maxRef.current, Math.max(MIN, v.scale * Math.exp(-e.deltaY * 0.0015)));
         const k = scale / v.scale;
-        return { scale, tx: px - (px - v.tx) * k, ty: py - (py - v.ty) * k };
+        return { ...v, scale, tx: px - (px - v.tx) * k, ty: py - (py - v.ty) * k };
       });
     };
     el.addEventListener('wheel', onWheel, { passive: false });
@@ -238,6 +284,7 @@ export default function ImageView({
     stageH,
     boxW: size.w,
     boxH: size.h,
+    rotation: view.rotation,
   };
   const stageStyle = gliding ? { ...stageStyleOf(stage), transition: 'transform 600ms ease' } : stageStyleOf(stage);
 
@@ -262,7 +309,8 @@ export default function ImageView({
       onPointerCancel={() => {
         drag.current = null;
       }}
-      onDoubleClick={() => setView(INITIAL_VIEW)}
+      // back to the whole Canvas; a turned stage stays turned
+      onDoubleClick={() => setView((v) => homeView({ stageW, stageH, boxW: size.w, boxH: size.h }, v.rotation))}
     >
       {src !== undefined && !nat && !canvasWidth && (
         // only to learn the natural size (the Canvas has none)

@@ -70,6 +70,12 @@
     "fitAll": "Show all",
     "overlayImage": "Overlay image",
     "overlayOpacity": "Image opacity",
+    "coordinates": "Coordinates",
+    "rotation": "Rotation",
+    "rotationDegrees": "Degrees",
+    "northUp": "North up",
+    "northUpUnavailable": "Needs at least two points",
+    "rotationReset": "Reset to 0°",
     "noResults": "No results found"
   },
   "Home": {

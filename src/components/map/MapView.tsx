@@ -8,7 +8,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 maplibregl.setWorkerUrl(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/maplibre/maplibre-gl-worker.mjs`);
 import { useTheme } from 'next-themes';
 import { useLocale, useTranslations } from 'next-intl';
-import { geoFeatureIdOf, type LngLat } from '@nakamura196/iiif-viewer/core';
+import { geoFeatureIdOf, type GeorefMapView, type LngLat } from '@nakamura196/iiif-viewer/core';
 
 interface GeoFeatureName {
   toponym: string;
@@ -55,6 +55,14 @@ interface MapViewProps {
   selectedId: string | null;
   onFeatureClick: (id: string) => void;
   overlay?: MapImageOverlay | null;
+  /** 開いたときの縮尺と中心（URL の mapZoom・mapLat・mapLng）。無ければすべての地点が収まる縮尺にする。 */
+  initialView?: GeorefMapView;
+  /** 印を立てる地点（URL の lat・lng）。 */
+  focus?: { lat: number; lng: number };
+  /** 開いたときに選んである地点。initialView があるときは、そこへは飛ばない。 */
+  initialSelectedId?: string | null;
+  /** 地図を動かし終えるたびに呼ぶ。 */
+  onViewChange?: (view: GeorefMapView) => void;
 }
 
 const OVERLAY_SOURCE = 'georef-overlay';
@@ -87,7 +95,22 @@ class FitAllControl implements maplibregl.IControl {
   }
 }
 
-export default function MapView({ features, selectedId, onFeatureClick, overlay }: MapViewProps) {
+// 自動で全体に合わせたときの印。動かし終えたときに、人が動かしたのか見分ける
+const AUTO_FIT = { autoFit: true };
+
+const escapeHtml = (s: string) =>
+  s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+
+export default function MapView({
+  features,
+  selectedId,
+  onFeatureClick,
+  overlay,
+  initialView,
+  focus,
+  initialSelectedId,
+  onViewChange,
+}: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
   const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
@@ -104,6 +127,22 @@ export default function MapView({ features, selectedId, onFeatureClick, overlay 
   featuresRef.current = features;
   selectedIdRef.current = selectedId;
   onFeatureClickRef.current = onFeatureClick;
+  const onViewChangeRef = useRef(onViewChange);
+
+  // 今の縮尺と中心。地図を作り直したとき（テーマ・言語の切り替え）もここから始める
+  const viewRef = useRef<GeorefMapView | null>(initialView ?? null);
+  // 縮尺と中心が決まっているか（URL で与えられた、または人が動かした）。決まっていれば自動で全体に合わせない
+  const keepViewRef = useRef(Boolean(initialView));
+  // URL で縮尺と中心が決まっているときは、開いたときの選択（URL の id）へは飛ばない。
+  // 地点は地図より後に読み込まれるので、最初に選ばれた地点で見分ける
+  const initialSelectedIdRef = useRef(initialSelectedId);
+  const firstSelectionRef = useRef(true);
+  const hasInitialView = useRef(Boolean(initialView));
+  const focusRef = useRef(focus);
+  useEffect(() => {
+    onViewChangeRef.current = onViewChange;
+    initialSelectedIdRef.current = initialSelectedId;
+  });
 
   // 重ねた画像の表示と濃さ。地図を作り直しても（テーマ・言語の切り替え）引き継ぐ
   const [overlayVisible, setOverlayVisible] = useState(true);
@@ -183,11 +222,11 @@ export default function MapView({ features, selectedId, onFeatureClick, overlay 
       const isDark = resolvedTheme === 'dark';
       const thumbnailHtml = thumbnail
         ? `<div style="width: 100%; max-width: 150px; margin-bottom: 8px; border-radius: 4px; overflow: hidden;">
-            <img src="${thumbnail}" alt="${title}" style="width: 100%; height: auto; display: block;" onerror="this.parentElement.style.display='none'" />
+            <img src="${escapeHtml(thumbnail)}" alt="${escapeHtml(title)}" style="width: 100%; height: auto; display: block;" onerror="this.parentElement.style.display='none'" />
           </div>`
         : '';
       const altNamesHtml = altNames
-        ? `<div style="font-size: 12px; color: ${isDark ? '#9ca3af' : '#6b7280'}; margin-top: 4px;">${altNames}</div>`
+        ? `<div style="font-size: 12px; color: ${isDark ? '#9ca3af' : '#6b7280'}; margin-top: 4px;">${escapeHtml(altNames)}</div>`
         : '';
       const popup = new maplibregl.Popup({
         offset: 25,
@@ -198,7 +237,7 @@ export default function MapView({ features, selectedId, onFeatureClick, overlay 
       }).setHTML(
         `<div style="padding: 8px; background-color: ${isDark ? '#1f2937' : '#ffffff'}; color: ${isDark ? '#f3f4f6' : '#111827'}; border-radius: 4px;">
           ${thumbnailHtml}
-          <div style="font-weight: bold;">${title}</div>
+          <div style="font-weight: bold;">${escapeHtml(title)}</div>
           ${altNamesHtml}
         </div>`
       );
@@ -232,20 +271,29 @@ export default function MapView({ features, selectedId, onFeatureClick, overlay 
       markersRef.current.set(featureId, marker);
     });
 
-    fitAll(0);
+    fitAll(0, true);
   };
 
   // すべてのピンが収まるように合わせる（地球儀なら大陸の規模、街なら通りの規模になる）。
   // ピンが 1 つ・ごく近いときに寄りすぎないよう、上限は建物が見える程度。
   // 開いたときと、「全体を表示」ボタンを押したときに使う
-  const fitAll = (duration = 600) => {
+  // 自動で合わせるとき（auto）は、縮尺と中心が決まっていれば何もしない。
+  // 地点を選んであれば、全体の縮尺のまま、その地点を中心にする
+  const fitAll = (duration = 600, auto = false) => {
     const currentFeatures = featuresRef.current;
     if (!map.current || currentFeatures.length === 0) return;
+    if (auto && keepViewRef.current) return;
     const bounds = new maplibregl.LngLatBounds();
     currentFeatures.forEach(f => bounds.extend(f.geometry.coordinates));
     // 画像を重ねているときは、画像の全体も収める
     overlayRef.current?.corners.forEach(c => bounds.extend(c));
-    map.current.fitBounds(bounds, { padding: 50, maxZoom: 17, duration });
+    map.current.fitBounds(bounds, { padding: 50, maxZoom: 17, duration }, auto ? AUTO_FIT : undefined);
+    const selected = auto
+      ? currentFeatures.find((f, idx) => geoFeatureIdOf(f, idx) === selectedIdRef.current)
+      : undefined;
+    if (selected) {
+      map.current.jumpTo({ center: selected.geometry.coordinates, zoom: Math.max(map.current.getZoom(), 4) }, AUTO_FIT);
+    }
   };
   const fitAllRef = useRef(fitAll);
   fitAllRef.current = fitAll;
@@ -266,12 +314,37 @@ export default function MapView({ features, selectedId, onFeatureClick, overlay 
       ? `https://tiles.openfreemap.org/styles/dark`
       : `https://tiles.openfreemap.org/styles/liberty`;
 
+    const start = viewRef.current;
     map.current = new maplibregl.Map({
       container: mapContainer.current,
       style: styleUrl,
-      center: [0, 30],
-      zoom: 1
+      center: start ? [start.lng, start.lat] : [0, 30],
+      zoom: start ? start.zoom : 1
     });
+
+    // 動かし終えたら、縮尺と中心を覚えて知らせる（URL に書く）。
+    // 自動で全体に合わせた以外の動き（人の操作・選んだ地点へ飛ぶ）なら、以後は自動で合わせない
+    const reportView = () => {
+      const m = map.current;
+      if (!m) return;
+      const c = m.getCenter();
+      viewRef.current = { zoom: m.getZoom(), lat: c.lat, lng: c.lng };
+      onViewChangeRef.current?.(viewRef.current);
+    };
+    map.current.on('moveend', (e) => {
+      if (!(e as { autoFit?: boolean }).autoFit) keepViewRef.current = true;
+      reportView();
+    });
+
+    // URL の lat・lng の地点に印を立て、座標を出しておく
+    const focus = focusRef.current;
+    if (focus) {
+      new maplibregl.Marker({ color: '#f97316' })
+        .setLngLat([focus.lng, focus.lat])
+        .setPopup(new maplibregl.Popup({ closeOnClick: false }).setText(`${t('coordinates')}: ${focus.lat.toFixed(6)}, ${focus.lng.toFixed(6)}`))
+        .addTo(map.current)
+        .togglePopup();
+    }
 
     map.current.addControl(new maplibregl.NavigationControl());
     map.current.addControl(new FitAllControl(t('fitAll'), () => fitAllRef.current()));
@@ -299,6 +372,8 @@ export default function MapView({ features, selectedId, onFeatureClick, overlay 
       });
 
       mapReadyRef.current = true;
+      // 開いたときの縮尺と中心も URL に書く（動かさなければ moveend が来ないため）
+      reportView();
 
       // マップ準備完了後に画像とマーカーを追加
       syncOverlay();
@@ -321,7 +396,7 @@ export default function MapView({ features, selectedId, onFeatureClick, overlay 
   // 重ねる画像が変わったら貼り直し、全体が見える縮尺に戻す
   useEffect(() => {
     syncOverlay();
-    fitAll(0);
+    fitAll(0, true);
   }, [overlay?.url, overlay?.corners]);
 
   useEffect(() => {
@@ -337,6 +412,11 @@ export default function MapView({ features, selectedId, onFeatureClick, overlay 
       const el = marker.getElement();
       el.style.backgroundColor = id === selectedId ? '#ef4444' : '#3b82f6';
     });
+
+    if (selectedId && firstSelectionRef.current) {
+      firstSelectionRef.current = false;
+      if (hasInitialView.current && selectedId === initialSelectedIdRef.current) return;
+    }
 
     // Fly to selected marker
     if (selectedId) {
