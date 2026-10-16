@@ -655,11 +655,14 @@ export default function MapView({
     fitAll(0, true);
   }, [overlay?.url, overlay?.corners]);
 
-  // 別の Canvas に切り替えたら、手で動かした後でも、その地点が収まる縮尺に合わせ直す
+  // 別の Canvas に切り替えたら、手で動かした後でも、その地点が収まる縮尺に合わせ直す。
+  // 読み込みで最初の Canvas が決まったとき（未定 → id）は切り替えではないので、URL の縮尺と中心を残す
   const fitKeyRef = useRef(fitKey);
   useEffect(() => {
     if (fitKeyRef.current === fitKey) return;
+    const first = fitKeyRef.current === undefined;
     fitKeyRef.current = fitKey;
+    if (first) return;
     keepViewRef.current = false;
     fitAll(600, true);
   }, [fitKey]);
