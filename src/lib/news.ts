@@ -136,6 +136,7 @@ export const NEWS: NewsItem[] = [
       en: 'Hang the images of a Curation, Collection or manifest on the walls of a 3D museum and walk around them. Look around, walk in first person, or follow an avatar in third person, and zoom into any work. IIIF VR Gallery, formerly a separate site, now lives in Kasane.',
     },
     action: { href: '/gallery' },
+    usecases: ['gallery-walk'],
     // 英語版の動画のみ（日本語のページでも英語版を出す）
     video: { en: '91AhCgI7TXY' },
   },
@@ -155,6 +156,7 @@ export const NEWS: NewsItem[] = [
       href: viewer('https://nakamura196.github.io/ndl-face-finder/curations/works/edonohanami.json', 'pos=2&tab=inference'),
     },
     video: { ja: 'RCZvHpaHSc8', en: 'rRyTJmxkckM' },
+    usecases: ['click-outline-edonohanami'],
   },
   {
     id: 'cookbook-video',

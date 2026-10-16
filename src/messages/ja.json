@@ -271,7 +271,11 @@
       "search": "検索",
       "ocr": "OCR",
       "auth": "認証",
-      "story": "ストーリー"
+      "story": "ストーリー",
+      "audio": "音声",
+      "measure": "実寸",
+      "gallery": "ギャラリー",
+      "inference": "推論"
     },
     "back": "ユースケースの一覧へ",
     "details": "詳しく見る",

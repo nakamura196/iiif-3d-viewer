@@ -59,6 +59,8 @@ const PREPARE = {
   // 地球儀のピンは裏側にあるので、アノテーションの 1 件目を押して、その場所へ視点を移す
   'globe-annotations': `[...document.querySelectorAll('.cursor-pointer')].find((e) => e.textContent.includes('北海'))?.click()`,
   // 開いた直後は巻物の全体なので、一覧の場面を 1 つ押して、そこへ寄った画面を撮る
+  // 推論タブは上からモデルが並ぶので、「クリックで切り出す」の項目が見える位置までスクロールする
+  'click-outline-edonohanami': `[...document.querySelectorAll('div')].filter((e) => e.children.length === 0 && /^(クリックで切り出す|Click to outline)$/.test(e.textContent.trim()))[0]?.scrollIntoView({ block: 'center' })`,
   'wakozukan-story': `[...document.querySelectorAll('nav button')].find((e) => e.textContent.includes('倭寇の上陸'))?.click()`,
 };
 // 操作のあと撮るまでの待ち時間（既定 3 秒）。深く寄ると、細かいタイルが届くまで時間がかかる
@@ -135,8 +137,10 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const SEEK_AT = {
   // 人の枠は 5〜15 秒にだけある。5 秒すぎは、神面の前の男性とカメラを構える人の 2 つの枠が出る
   'video-objects': 5.3,
+  // 音声は 0 秒目だと字幕の先頭しか光らないので、30 秒すぎ（「母音の前には…」のあたり）で止める
+  'rekion-audio': 30,
 };
-const seekVideos = (at) => `Promise.all([...document.querySelectorAll('video')].map((v) => new Promise((done) => {
+const seekVideos = (at) => `Promise.all([...document.querySelectorAll('video, audio')].map((v) => new Promise((done) => {
   if (!(v.duration > 0)) return done();
   v.pause();
   v.addEventListener('seeked', () => done(), { once: true });

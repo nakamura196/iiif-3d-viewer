@@ -14,7 +14,8 @@ export type Locale = keyof Localized;
 /**
  * 「Kasane で開く」で開く先。開くページごとに、URL に載せられる引数が違うので分けて書く。
  * 新しいページに開かせたいときは、ここに 1 種類足して hrefOf に分岐を足す。
- * georef は地図と並べて見るページ、search はキュレーション・コレクションを横断して検索するページ。
+ * georef は地図と並べて見るページ、search はキュレーション・コレクションを横断して検索するページ、
+ * gallery は 3D の美術館として歩くページ。
  */
 export type UseCaseOpen =
   | {
@@ -45,6 +46,13 @@ export type UseCaseOpen =
       manifest: string;
     }
   | {
+      page: 'gallery';
+      // 美術館に掛ける Curation・Collection・マニフェストの URL（?u=）
+      url: string;
+      // 歩く向き。walk = 一人称で歩く、thirdperson = 三人称（アバター）、orbit = 見回す
+      mode?: 'walk' | 'thirdperson' | 'orbit';
+    }
+  | {
       page: 'search';
       // 検索する対象のキュレーション・コレクションの URL
       url: string;
@@ -53,7 +61,7 @@ export type UseCaseOpen =
     };
 
 /** 何を見せる例か。一覧に札として出す。表示名は messages の UseCases.features */
-export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'search', 'ocr', 'auth', 'story'] as const;
+export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'search', 'ocr', 'auth', 'story', 'audio', 'measure', 'gallery', 'inference'] as const;
 export type UseCaseFeature = (typeof USE_CASE_FEATURES)[number];
 
 export interface UseCase {
@@ -81,13 +89,18 @@ export interface UseCase {
 
 /** 開く資料そのものの URL（マニフェスト、search ならキュレーション・コレクション）。compare では複数のことがある */
 export const sourcesOf = (open: UseCaseOpen): string[] =>
-  open.page === 'search' ? [open.url] : typeof open.manifest === 'string' ? [open.manifest] : open.manifest;
+  open.page === 'search' || open.page === 'gallery' ? [open.url] : typeof open.manifest === 'string' ? [open.manifest] : open.manifest;
 
 export function hrefOf(open: UseCaseOpen): string {
   if (open.page === 'search') {
     const q = [`u=${encodeURIComponent(open.url)}`];
     if (open.query) q.push(`q=${encodeURIComponent(open.query)}`);
     return `/search?${q.join('&')}`;
+  }
+  if (open.page === 'gallery') {
+    const q = [`u=${encodeURIComponent(open.url)}`];
+    if (open.mode) q.push(`mode=${open.mode}`);
+    return `/gallery?${q.join('&')}`;
   }
   const q =
     typeof open.manifest === 'string'
@@ -166,8 +179,8 @@ export const USE_CASES: UseCase[] = [
       en: 'Hongo Campus Historical Buildings Map (iiif_geo)',
     },
     note: {
-      ja: '鳥瞰図『東京帝國大學本部構内及農學部建物鳥瞰圖』に、IIIF Georeference Extension で現在の地図との対応点を付けた資料です。Kasane では、図と対応点を現在の地図と並べて表示します。対応点を押すと双方で同じ場所が選ばれ、図を地図に重ねることもできます。対応点には、OpenStreetMap にある現在の建物名を付けています。',
-      en: 'A bird’s-eye view of the Imperial University campus, georeferenced with the IIIF Georeference Extension. Kasane shows the image and its control points beside a modern map. Selecting a point picks the same place on both, and the image can be overlaid on the map. The control points are labelled with current building names from OpenStreetMap.',
+      ja: '鳥瞰図『東京帝國大學本部構内及農學部建物鳥瞰圖』に、IIIF Georeference Extension で現在の地図との対応点を付けた資料です。Kasane では、図と対応点を現在の地図と並べて表示します。対応点を押すと双方で同じ場所が選ばれ、図を地図に重ねることもできます。近くの対応点は数字つきの丸にまとめて表示し、背景の地図の種類も切り替えられます。対応点には、OpenStreetMap にある現在の建物名を付けています。',
+      en: 'A bird’s-eye view of the Imperial University campus, georeferenced with the IIIF Georeference Extension. Kasane shows the image and its control points beside a modern map. Selecting a point picks the same place on both, and the image can be overlaid on the map. Nearby points are grouped into numbered circles, and the background map can be switched. The control points are labelled with current building names from OpenStreetMap.',
     },
     open: { page: 'georef', manifest: `${SITE_URL}/manifests/geo-hongo-buildings.json` },
     features: ['image', 'georef'],
@@ -429,6 +442,71 @@ export const USE_CASES: UseCase[] = [
     },
     features: ['annotations', 'search'],
     site: 'https://toyobunko-lab.jp/app/suikeichuzu/',
+  },
+  {
+    id: 'rekion-audio',
+    added: '2026-10-16',
+    title: {
+      ja: '国立国会図書館「れきおん」英語講座「蛙」（音声と字幕）',
+      en: 'NDL Rekion, English lecture “The Frog” (audio with captions)',
+    },
+    note: {
+      ja: '国立国会図書館が「れきおん」で公開している、1930 年発売のレコードの音声（約 3 分 24 秒）です。ArchiveBase でマニフェストにしてあり、再生しながら「文字起こし」タブで、いま流れている行が光ります。日本語と英語の 2 つの字幕が付いていますが、どちらも AI（Whisper）が聞き取った文字なので、聞き違いが混じります。',
+      en: 'A 1930 record (about 3 min 24 s) that the National Diet Library publishes in Rekion, its historical sound collection. ArchiveBase turned it into a manifest. While it plays, the Transcript tab highlights the line being spoken. Japanese and English captions are attached, but both are AI output (Whisper), so they contain mishearings.',
+    },
+    open: { page: 'viewer', manifest: 'https://ab.ldas.jp/na-kamura-1263/rekion/api/iiif/3/1320052/manifest', tab: 'transcript' },
+    features: ['audio'],
+    site: 'https://ab.ldas.jp/ja/na-kamura-1263/rekion',
+  },
+  {
+    id: 'kaitou-ruler',
+    added: '2026-10-16',
+    title: {
+      ja: '『海東諸国紀』（画像に実寸の物差しを出す）',
+      en: 'Kaito Shokokuki (a ruler in real size on the image)',
+    },
+    note: {
+      ja: '東京大学史料編纂所が所蔵する、朝鮮で 1471 年に編まれた『海東諸国紀』です。公開されている法量（縦 32.6 cm × 横 21.2 cm）から 1 ピクセルの実寸を求め、IIIF の physdim（実寸を書く仕組み）としてマニフェストに書き足してあります。画像の上と左に cm の物差しが出て、拡大すると目盛りが細かくなります。左上の歯車で、単位（mm・cm・in）と色を変えられます。',
+      en: 'The Kaito Shokokuki, compiled in Korea in 1471, held by the Historiographical Institute, the University of Tokyo. From its published dimensions (32.6 cm by 21.2 cm) the real size of one pixel was worked out and added to the manifest as IIIF physdim (a way to state real size). Rulers in cm appear along the top and left of the image, and the ticks get finer as you zoom. The gear at the top left changes the unit (mm, cm, in) and colours.',
+    },
+    open: { page: 'viewer', manifest: `${SITE_URL}/manifests/physdim-kaitou.json` },
+    features: ['image', 'measure'],
+    site: 'https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/nihonzu/',
+  },
+  {
+    id: 'gallery-walk',
+    added: '2026-10-16',
+    title: {
+      ja: 'IIIF Cookbook のコレクションを美術館として歩く（ギャラリー）',
+      en: 'Walk an IIIF Cookbook collection as a museum (Gallery)',
+    },
+    note: {
+      ja: 'IIIF Cookbook の「コレクション」の例（2 点の絵画）を、3D の美術館の壁に掛けて歩きます。マニフェストやコレクションの URL を渡すだけで、絵が額に入って並びます。見回す・一人称・三人称（アバター）の 3 つの歩き方があり、作品に近づくと拡大して見られます。',
+      en: 'The IIIF Cookbook collection example (two paintings), hung on the walls of a 3D museum that you walk through. Give it the URL of a manifest or collection and the pictures appear in frames. You can look around, walk in first person, or follow an avatar in third person, and zoom into a work when you get close.',
+    },
+    open: { page: 'gallery', url: 'https://iiif.io/api/cookbook/recipe/0032-collection/collection.json' },
+    features: ['gallery', 'image'],
+    site: 'https://iiif.io/api/cookbook/recipe/0032-collection/',
+  },
+  {
+    id: 'click-outline-edonohanami',
+    added: '2026-10-16',
+    title: {
+      ja: '「江戸の花見」のキュレーション（クリックで物の輪郭を切り出す）',
+      en: 'The Edo hanami curation (click to outline things)',
+    },
+    note: {
+      ja: '江戸の花見を描いた絵を、国立国会図書館デジタルコレクションの 29 冊から集めたキュレーションです。右の「推論」タブで「クリックで切り出す」を選ぶと、Meta の SAM 2.1 というモデル（78 MB）がブラウザに入ります。画像の中の人や物をクリックすると、その輪郭が多角形の注釈になります。Shift で範囲を足し、Alt で削れます。画像はどこにも送られません。',
+      en: 'A curation of Edo-period cherry-blossom viewing pictures from 29 books in the National Diet Library Digital Collections. In the Inference tab on the right, choose “Click to outline” and the browser downloads Meta’s SAM 2.1 model (78 MB). Click a person or object in the image and its outline becomes a polygon annotation. Shift adds to the shape and Alt takes away. The image is never sent anywhere.',
+    },
+    open: {
+      page: 'viewer',
+      manifest: 'https://nakamura196.github.io/ndl-face-finder/curations/works/edonohanami.json',
+      pos: 2,
+      tab: 'inference',
+    },
+    features: ['image', 'inference'],
+    site: 'https://nakamura196.github.io/ndl-face-finder/',
   },
 ];
 
