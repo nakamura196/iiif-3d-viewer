@@ -4,7 +4,7 @@ import type { NextPage } from 'next';
 import { Suspense } from 'react';
 import { annotationsAtom, manifestUrlAtom, selectedAnnotationIdAtom } from '@nakamura196/iiif-viewer';
 import { useAtom } from 'jotai';
-import { useEffect, useMemo, useState, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useState, useRef } from 'react';
 import { fetchManifest } from '@nakamura196/iiif-viewer/core';
 import { manifestAtom } from '@nakamura196/iiif-viewer';
 import { CanvasComponent, GeoImageView, useCanvasImages } from '@nakamura196/iiif-viewer';
@@ -17,7 +17,18 @@ import { parseManifestV4, geoAnnotations, geoFeatureIdOf, overlayCorners, type G
 import { AnnotationCard } from '@nakamura196/iiif-viewer';
 import { SidePanel } from '@nakamura196/iiif-viewer';
 import { useTranslations, useLocale } from 'next-intl';
-import { contentParam, manifestFromParams } from '@nakamura196/iiif-viewer/core';
+import {
+  applyGeorefPatch,
+  contentParam,
+  imageViewParams,
+  manifestFromParams,
+  mapViewParams,
+  readGeorefParams,
+  type GeorefImageView,
+  type GeorefMapView,
+  type GeorefParamPatch,
+  type GeorefUrlState,
+} from '@nakamura196/iiif-viewer/core';
 
 // マニフェストからattributionを取得するヘルパー関数
 const getAttribution = (manifest: Record<string, unknown>, locale: string): string | undefined => {
@@ -39,6 +50,15 @@ const overlayUrlOf = (layer: ImageLayer): string => {
   return `${layer.service.id}/full/!${size},${size}/0/${quality}.jpg`;
 };
 
+// 表示の状態を URL に書き戻す間隔。地図や画像を動かしている間に、何度も書き換えないようにする
+const URL_WRITE_DELAY = 500;
+
+// URL の id は geo.ldas.jp では地物の id。Kasane の地点の名前（@id が先）と違うときがあるので、両方で引く
+const featureIdFromParam = (features: GeoFeature[], id: string): string | undefined => {
+  const idx = features.findIndex((f, i) => f.id === id || geoFeatureIdOf(f, i) === id);
+  return idx < 0 ? undefined : geoFeatureIdOf(features[idx], idx);
+};
+
 const GeoRefContent: NextPage = () => {
   const t = useTranslations('GeoRef');
   const locale = useLocale();
@@ -54,13 +74,34 @@ const GeoRefContent: NextPage = () => {
   const [geoFeatures, setGeoFeatures] = useState<GeoFeature[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const annotationRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  // 開いたときの URL から読んだ表示の状態（geo.ldas.jp と同じ名前の引数）
+  const [urlState, setUrlState] = useState<GeorefUrlState | null>(null);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const manifestParam = manifestFromParams(params);
-    if (!manifestParam) return;
-    setManifestUrl(manifestParam);
+    const state = readGeorefParams(params, manifestFromParams(params));
+    setUrlState(state);
+    if (!state.manifest) return;
+    setManifestUrl(state.manifest);
   }, [setManifestUrl]);
+
+  // 表示の状態を URL に書き戻す（履歴は増やさない）。まとめて、動きが止まってから書く
+  const pendingPatch = useRef<GeorefParamPatch>({});
+  const writeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const writeParams = useCallback((patch: GeorefParamPatch) => {
+    pendingPatch.current = { ...pendingPatch.current, ...patch };
+    if (writeTimer.current) clearTimeout(writeTimer.current);
+    writeTimer.current = setTimeout(() => {
+      const search = applyGeorefPatch(window.location.search, pendingPatch.current);
+      pendingPatch.current = {};
+      window.history.replaceState(window.history.state, '', `${window.location.pathname}${search ? `?${search}` : ''}${window.location.hash}`);
+    }, URL_WRITE_DELAY);
+  }, []);
+  useEffect(() => () => {
+    if (writeTimer.current) clearTimeout(writeTimer.current);
+  }, []);
+  const handleMapViewChange = useCallback((v: GeorefMapView) => writeParams(mapViewParams(v)), [writeParams]);
+  const handleImageViewChange = useCallback((v: GeorefImageView) => writeParams(imageViewParams(v)), [writeParams]);
 
   useEffect(() => {
     if (!manifestUrl) return;
@@ -75,12 +116,27 @@ const GeoRefContent: NextPage = () => {
       setAttribution(getAttribution(manifest as unknown as Record<string, unknown>, locale));
       setAnnotations(geoAnnotations(geoFeatures, annotations));
       setGeoFeatures(geoFeatures);
+      // URL の id の地点を選んでおく
+      const id = urlState?.id;
+      const selected = id ? featureIdFromParam(geoFeatures, id) : undefined;
+      if (selected) setSelectedAnnotationId(selected);
     });
-  }, [manifestUrl, setManifest, setAnnotations, locale]);
+  }, [manifestUrl, urlState, setManifest, setAnnotations, setSelectedAnnotationId, locale]);
 
   const handleManifestSubmit = async (manifestUrl: string) => {
     setManifestUrl(manifestUrl);
+    // 入力欄から開いたときも、URL を共有すれば同じものが開くようにする
+    const params = new URLSearchParams(window.location.search);
+    params.set('iiif-content', manifestUrl);
+    window.history.replaceState(window.history.state, '', `${window.location.pathname}?${params.toString()}`);
   };
+
+  // 選んでいる地点を URL の id に書く。geo.ldas.jp のリンクと揃えるため、地物に id があればそれを使う
+  useEffect(() => {
+    if (geoFeatures.length === 0) return;
+    const idx = geoFeatures.findIndex((f, i) => geoFeatureIdOf(f, i) === selectedAnnotationId);
+    writeParams({ id: idx < 0 ? null : (geoFeatures[idx].id ?? geoFeatureIdOf(geoFeatures[idx], idx)) });
+  }, [selectedAnnotationId, geoFeatures, writeParams]);
 
   const imagePoints = useMemo(
     () =>
@@ -130,7 +186,8 @@ const GeoRefContent: NextPage = () => {
     <div className="flex flex-col h-dvh">
       <Header />
       <main className="flex-1 flex overflow-hidden">
-        {manifestUrl ? (
+        {/* URL を読み終えてから地図と画像を作る（開いたときの縮尺・中心を渡すため） */}
+        {manifestUrl && urlState ? (
           <div className="flex flex-col lg:flex-row w-full h-full">
             {/* Map */}
             <div className="flex-1 min-h-0 lg:h-full lg:flex-[2] relative border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700">
@@ -142,6 +199,10 @@ const GeoRefContent: NextPage = () => {
                 selectedId={selectedAnnotationId}
                 onFeatureClick={handleFeatureClick}
                 overlay={mapOverlay}
+                initialView={urlState?.map}
+                focus={urlState?.focus}
+                initialSelectedId={urlState?.id ? featureIdFromParam(geoFeatures, urlState.id) : null}
+                onViewChange={handleMapViewChange}
               />
             </div>
             {/* 3D Viewer, or the georeferenced picture */}
@@ -164,6 +225,8 @@ const GeoRefContent: NextPage = () => {
                   points={imagePoints}
                   selectedId={selectedAnnotationId}
                   onSelect={handleFeatureClick}
+                  initialView={urlState?.image}
+                  onViewChange={handleImageViewChange}
                 />
               )}
               {glbUrl && (

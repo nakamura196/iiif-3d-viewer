@@ -140,6 +140,7 @@ The image is not sent anywhere. All reading happens inside your browser. The res
 
 - [Search collections and curations](../search/): enter the URL of a Collection or a curation to get a list of its items that you can filter by metadata.
 - Map and image (`/en/georef/?iiif-content=<URL>`): shows a georeferenced image next to a map. When the image has control points, it can be laid over the map.
+  The map's zoom and centre (`mapZoom`, `mapLat`, `mapLng`), the image's zoom and centre (`zoom`, `centerX`, `centerY`) and the selected place (`id`) are written into the URL as you move around, so the URL opens the same view. The parameter names are the same as in the IIIF Georeference Viewer (geo.ldas.jp), so the part after `?` of its links works here too (`u=` for the manifest is read as well). Add `&lat=<latitude>&lng=<longitude>` to open with a marker at that point.
 
 ## Sharing a link
 
