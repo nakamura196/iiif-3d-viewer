@@ -1,0 +1,26 @@
+<!doctype html>
+<!-- run_vdiff.mjs から開く。harness.html という名前で配信ディレクトリに置く --><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="vdiffjs/vdiff.bundle.css">
+<script src="vdiffjs/vdiff.bundle.min.js"></script>
+</head><body><div id="v"></div>
+<script>
+window.__rec = {H: [], P: [], nmatch: null, done: false, err: null};
+window.addEventListener('opencvRuntimeInitialized', function () {
+  const fh = cv.findHomography;
+  cv.findHomography = function (src, dst, method, th) {
+    const H = fh.apply(cv, arguments);
+    window.__rec.H.push(Array.from(H.data64F)); window.__rec.nmatch = src.rows;
+    window.__rec.src = Array.from(src.data32F); window.__rec.dst = Array.from(dst.data32F);
+    return H;
+  };
+  cv.findHomography.overloadTable = fh.overloadTable;
+  const gp = cv.getPerspectiveTransform;
+  cv.getPerspectiveTransform = function (s, d) { const M = gp.apply(cv, arguments); window.__rec.P.push(Array.from(M.data64F)); return M; };
+  cv.getPerspectiveTransform.overloadTable = gp.overloadTable;
+});
+const q = new URLSearchParams(location.search);
+VDiff({id: 'v', data: {img1: q.get('img1'), img2: q.get('img2')}, method: 3,
+  doneCallback: function () { window.__rec.done = true; }, failCallback: function (e) { window.__rec.err = String(e); window.__rec.done = true; }});
+</script>
+<script src="opencv/opencv-4.5.1.js" async></script>
+</body></html>

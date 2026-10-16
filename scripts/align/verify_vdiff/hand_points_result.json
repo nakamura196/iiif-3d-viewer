@@ -1,0 +1,4979 @@
+[
+{
+"pair": 1,
+"i": 0,
+"method": "sim",
+"region": "text",
+"err": 4.540682711312433
+},
+{
+"pair": 1,
+"i": 1,
+"method": "sim",
+"region": "text",
+"err": 2.107601927770203
+},
+{
+"pair": 1,
+"i": 2,
+"method": "sim",
+"region": "text",
+"err": 4.200193561960792
+},
+{
+"pair": 1,
+"i": 3,
+"method": "sim",
+"region": "text",
+"err": 2.4562938867023085
+},
+{
+"pair": 1,
+"i": 4,
+"method": "sim",
+"region": "pic",
+"err": 2.7144936885696342
+},
+{
+"pair": 1,
+"i": 5,
+"method": "sim",
+"region": "pic",
+"err": 1.0875840091813695
+},
+{
+"pair": 1,
+"i": 6,
+"method": "sim",
+"region": "pic",
+"err": 3.3747189664552626
+},
+{
+"pair": 1,
+"i": 7,
+"method": "sim",
+"region": "pic",
+"err": 4.496624632433105
+},
+{
+"pair": 1,
+"i": 0,
+"method": "sim+warp",
+"region": "text",
+"err": 0.4325016460140253
+},
+{
+"pair": 1,
+"i": 1,
+"method": "sim+warp",
+"region": "text",
+"err": 0.29724994612562633
+},
+{
+"pair": 1,
+"i": 2,
+"method": "sim+warp",
+"region": "text",
+"err": 0.4775538405757499
+},
+{
+"pair": 1,
+"i": 3,
+"method": "sim+warp",
+"region": "text",
+"err": 0.22268508006120524
+},
+{
+"pair": 1,
+"i": 4,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.5475769351235794
+},
+{
+"pair": 1,
+"i": 5,
+"method": "sim+warp",
+"region": "pic",
+"err": 1.0494300307518007
+},
+{
+"pair": 1,
+"i": 6,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.6958093544767151
+},
+{
+"pair": 1,
+"i": 7,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.3752876210601411
+},
+{
+"pair": 1,
+"i": 0,
+"method": "vdiff600",
+"region": "text",
+"err": 0.44400763357338197
+},
+{
+"pair": 1,
+"i": 1,
+"method": "vdiff600",
+"region": "text",
+"err": 0.4583757350318762
+},
+{
+"pair": 1,
+"i": 2,
+"method": "vdiff600",
+"region": "text",
+"err": 0.46882266288296226
+},
+{
+"pair": 1,
+"i": 3,
+"method": "vdiff600",
+"region": "text",
+"err": 0.2062864812505797
+},
+{
+"pair": 1,
+"i": 4,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.69761813607636
+},
+{
+"pair": 1,
+"i": 5,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.84344140556912
+},
+{
+"pair": 1,
+"i": 6,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.4242137734135717
+},
+{
+"pair": 1,
+"i": 7,
+"method": "vdiff600",
+"region": "pic",
+"err": 1.0886197003614941
+},
+{
+"pair": 1,
+"i": 0,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.4599919305366599
+},
+{
+"pair": 1,
+"i": 1,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.31415652436106406
+},
+{
+"pair": 1,
+"i": 2,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.5080855346731986
+},
+{
+"pair": 1,
+"i": 3,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.2503076923866221
+},
+{
+"pair": 1,
+"i": 4,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.45450826667693417
+},
+{
+"pair": 1,
+"i": 5,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.9318743931111111
+},
+{
+"pair": 1,
+"i": 6,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.740594633927587
+},
+{
+"pair": 1,
+"i": 7,
+"method": "vdiff1000",
+"region": "pic",
+"err": 1.0455213537232186
+},
+{
+"pair": 1,
+"i": 0,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.13410807867332983
+},
+{
+"pair": 1,
+"i": 1,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.3477437235637011
+},
+{
+"pair": 1,
+"i": 2,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.7728620362069402
+},
+{
+"pair": 1,
+"i": 3,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.4024978204642304
+},
+{
+"pair": 1,
+"i": 4,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.18909012359991534
+},
+{
+"pair": 1,
+"i": 5,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.9618225980568291
+},
+{
+"pair": 1,
+"i": 6,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.45891397959265773
+},
+{
+"pair": 1,
+"i": 7,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.46747506501814995
+},
+{
+"pair": 1,
+"i": 0,
+"method": "affine",
+"region": "text",
+"err": 0.9051360433541004
+},
+{
+"pair": 1,
+"i": 1,
+"method": "affine",
+"region": "text",
+"err": 0.23605028257278074
+},
+{
+"pair": 1,
+"i": 2,
+"method": "affine",
+"region": "text",
+"err": 0.43271176088576446
+},
+{
+"pair": 1,
+"i": 3,
+"method": "affine",
+"region": "text",
+"err": 0.5381413564526105
+},
+{
+"pair": 1,
+"i": 4,
+"method": "affine",
+"region": "pic",
+"err": 0.19702229600798116
+},
+{
+"pair": 1,
+"i": 5,
+"method": "affine",
+"region": "pic",
+"err": 1.0408900701729604
+},
+{
+"pair": 1,
+"i": 6,
+"method": "affine",
+"region": "pic",
+"err": 1.106357434136566
+},
+{
+"pair": 1,
+"i": 7,
+"method": "affine",
+"region": "pic",
+"err": 0.7779799691429905
+},
+{
+"pair": 1,
+"i": 0,
+"method": "fit_similarity",
+"region": "text",
+"err": 2.4645477716730886
+},
+{
+"pair": 1,
+"i": 1,
+"method": "fit_similarity",
+"region": "text",
+"err": 3.4074859098596133
+},
+{
+"pair": 1,
+"i": 2,
+"method": "fit_similarity",
+"region": "text",
+"err": 2.8225883663449958
+},
+{
+"pair": 1,
+"i": 3,
+"method": "fit_similarity",
+"region": "text",
+"err": 0.9813075164435442
+},
+{
+"pair": 1,
+"i": 4,
+"method": "fit_similarity",
+"region": "pic",
+"err": 3.659017225810037
+},
+{
+"pair": 1,
+"i": 5,
+"method": "fit_similarity",
+"region": "pic",
+"err": 3.667440782355027
+},
+{
+"pair": 1,
+"i": 6,
+"method": "fit_similarity",
+"region": "pic",
+"err": 4.5037702704450195
+},
+{
+"pair": 1,
+"i": 7,
+"method": "fit_similarity",
+"region": "pic",
+"err": 5.480813890572057
+},
+{
+"pair": 1,
+"i": 0,
+"method": "fit_affine",
+"region": "text",
+"err": 0.7933986394027283
+},
+{
+"pair": 1,
+"i": 1,
+"method": "fit_affine",
+"region": "text",
+"err": 1.961996127189351
+},
+{
+"pair": 1,
+"i": 2,
+"method": "fit_affine",
+"region": "text",
+"err": 0.1825030423644257
+},
+{
+"pair": 1,
+"i": 3,
+"method": "fit_affine",
+"region": "text",
+"err": 1.3943846169963874
+},
+{
+"pair": 1,
+"i": 4,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.3376271434218292
+},
+{
+"pair": 1,
+"i": 5,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.5041538553790659
+},
+{
+"pair": 1,
+"i": 6,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.2889001401566456
+},
+{
+"pair": 1,
+"i": 7,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.2125093499198478
+},
+{
+"pair": 1,
+"i": 0,
+"method": "fit_homography",
+"region": "text",
+"err": 0.6056740415307136
+},
+{
+"pair": 1,
+"i": 1,
+"method": "fit_homography",
+"region": "text",
+"err": 0.6486046813039773
+},
+{
+"pair": 1,
+"i": 2,
+"method": "fit_homography",
+"region": "text",
+"err": 0.6434986363420306
+},
+{
+"pair": 1,
+"i": 3,
+"method": "fit_homography",
+"region": "text",
+"err": 0.4443340350289649
+},
+{
+"pair": 1,
+"i": 4,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.911559008221662
+},
+{
+"pair": 1,
+"i": 5,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.9535392313403099
+},
+{
+"pair": 1,
+"i": 6,
+"method": "fit_homography",
+"region": "pic",
+"err": 1.0537380377063141
+},
+{
+"pair": 1,
+"i": 7,
+"method": "fit_homography",
+"region": "pic",
+"err": 2.549828922894212
+},
+{
+"pair": 9,
+"i": 0,
+"method": "sim",
+"region": "text",
+"err": 3.2043914349127305
+},
+{
+"pair": 9,
+"i": 1,
+"method": "sim",
+"region": "text",
+"err": 1.4433979898151958
+},
+{
+"pair": 9,
+"i": 2,
+"method": "sim",
+"region": "text",
+"err": 1.38213342337816
+},
+{
+"pair": 9,
+"i": 3,
+"method": "sim",
+"region": "text",
+"err": 0.8859992916795917
+},
+{
+"pair": 9,
+"i": 4,
+"method": "sim",
+"region": "pic",
+"err": 1.056877463053654
+},
+{
+"pair": 9,
+"i": 5,
+"method": "sim",
+"region": "pic",
+"err": 3.26737588926478
+},
+{
+"pair": 9,
+"i": 6,
+"method": "sim",
+"region": "pic",
+"err": 1.5670379868131235
+},
+{
+"pair": 9,
+"i": 7,
+"method": "sim",
+"region": "pic",
+"err": 6.362086840029671
+},
+{
+"pair": 9,
+"i": 0,
+"method": "sim+warp",
+"region": "text",
+"err": 0.28746630853335575
+},
+{
+"pair": 9,
+"i": 1,
+"method": "sim+warp",
+"region": "text",
+"err": 0.2789950674651679
+},
+{
+"pair": 9,
+"i": 2,
+"method": "sim+warp",
+"region": "text",
+"err": 0.9914144633809013
+},
+{
+"pair": 9,
+"i": 3,
+"method": "sim+warp",
+"region": "text",
+"err": 0.44340580002908675
+},
+{
+"pair": 9,
+"i": 4,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.6826502946628088
+},
+{
+"pair": 9,
+"i": 5,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.17407666059817697
+},
+{
+"pair": 9,
+"i": 6,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.7307803479162203
+},
+{
+"pair": 9,
+"i": 7,
+"method": "sim+warp",
+"region": "pic",
+"err": 2.655228873033762
+},
+{
+"pair": 9,
+"i": 0,
+"method": "vdiff600",
+"region": "text",
+"err": 0.3351715983505734
+},
+{
+"pair": 9,
+"i": 1,
+"method": "vdiff600",
+"region": "text",
+"err": 0.3304265358526685
+},
+{
+"pair": 9,
+"i": 2,
+"method": "vdiff600",
+"region": "text",
+"err": 1.2909795643633433
+},
+{
+"pair": 9,
+"i": 3,
+"method": "vdiff600",
+"region": "text",
+"err": 0.5110221811798205
+},
+{
+"pair": 9,
+"i": 4,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.6817924891887502
+},
+{
+"pair": 9,
+"i": 5,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.335877462388635
+},
+{
+"pair": 9,
+"i": 6,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.43005889856002016
+},
+{
+"pair": 9,
+"i": 7,
+"method": "vdiff600",
+"region": "pic",
+"err": 2.107750287426308
+},
+{
+"pair": 9,
+"i": 0,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.6567549781417646
+},
+{
+"pair": 9,
+"i": 1,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.5901690620039088
+},
+{
+"pair": 9,
+"i": 2,
+"method": "vdiff1000",
+"region": "text",
+"err": 1.1890565956989438
+},
+{
+"pair": 9,
+"i": 3,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.373747240806437
+},
+{
+"pair": 9,
+"i": 4,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.6919812012947301
+},
+{
+"pair": 9,
+"i": 5,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.25792528957850175
+},
+{
+"pair": 9,
+"i": 6,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.6906022702177866
+},
+{
+"pair": 9,
+"i": 7,
+"method": "vdiff1000",
+"region": "pic",
+"err": 2.570165513354743
+},
+{
+"pair": 9,
+"i": 0,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.27107147315315117
+},
+{
+"pair": 9,
+"i": 1,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.5946765270365938
+},
+{
+"pair": 9,
+"i": 2,
+"method": "homog_ecc",
+"region": "text",
+"err": 1.3466923977516352
+},
+{
+"pair": 9,
+"i": 3,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.407467911025063
+},
+{
+"pair": 9,
+"i": 4,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.7381134814512654
+},
+{
+"pair": 9,
+"i": 5,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.35031289722901626
+},
+{
+"pair": 9,
+"i": 6,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.4731076197793002
+},
+{
+"pair": 9,
+"i": 7,
+"method": "homog_ecc",
+"region": "pic",
+"err": 2.4784062424848488
+},
+{
+"pair": 9,
+"i": 0,
+"method": "affine",
+"region": "text",
+"err": 0.8233903991624902
+},
+{
+"pair": 9,
+"i": 1,
+"method": "affine",
+"region": "text",
+"err": 0.18513466536655748
+},
+{
+"pair": 9,
+"i": 2,
+"method": "affine",
+"region": "text",
+"err": 0.9901180316815538
+},
+{
+"pair": 9,
+"i": 3,
+"method": "affine",
+"region": "text",
+"err": 0.3476441593318132
+},
+{
+"pair": 9,
+"i": 4,
+"method": "affine",
+"region": "pic",
+"err": 0.07844199184777376
+},
+{
+"pair": 9,
+"i": 5,
+"method": "affine",
+"region": "pic",
+"err": 0.327272709342708
+},
+{
+"pair": 9,
+"i": 6,
+"method": "affine",
+"region": "pic",
+"err": 0.40334437704255927
+},
+{
+"pair": 9,
+"i": 7,
+"method": "affine",
+"region": "pic",
+"err": 3.077619386409567
+},
+{
+"pair": 9,
+"i": 0,
+"method": "fit_similarity",
+"region": "text",
+"err": 3.2629521981916776
+},
+{
+"pair": 9,
+"i": 1,
+"method": "fit_similarity",
+"region": "text",
+"err": 2.9368157647380326
+},
+{
+"pair": 9,
+"i": 2,
+"method": "fit_similarity",
+"region": "text",
+"err": 2.1946955870344556
+},
+{
+"pair": 9,
+"i": 3,
+"method": "fit_similarity",
+"region": "text",
+"err": 0.7106105475244116
+},
+{
+"pair": 9,
+"i": 4,
+"method": "fit_similarity",
+"region": "pic",
+"err": 2.410249143586899
+},
+{
+"pair": 9,
+"i": 5,
+"method": "fit_similarity",
+"region": "pic",
+"err": 4.310983919004443
+},
+{
+"pair": 9,
+"i": 6,
+"method": "fit_similarity",
+"region": "pic",
+"err": 7.364384781936292
+},
+{
+"pair": 9,
+"i": 7,
+"method": "fit_similarity",
+"region": "pic",
+"err": 5.9607823120204655
+},
+{
+"pair": 9,
+"i": 0,
+"method": "fit_affine",
+"region": "text",
+"err": 1.5460056426390647
+},
+{
+"pair": 9,
+"i": 1,
+"method": "fit_affine",
+"region": "text",
+"err": 0.2511161695793251
+},
+{
+"pair": 9,
+"i": 2,
+"method": "fit_affine",
+"region": "text",
+"err": 1.1001130334068252
+},
+{
+"pair": 9,
+"i": 3,
+"method": "fit_affine",
+"region": "text",
+"err": 0.32246487185744804
+},
+{
+"pair": 9,
+"i": 4,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.2644368379483576
+},
+{
+"pair": 9,
+"i": 5,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.2018616121042702
+},
+{
+"pair": 9,
+"i": 6,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.3935116160913962
+},
+{
+"pair": 9,
+"i": 7,
+"method": "fit_affine",
+"region": "pic",
+"err": 3.3617999437889683
+},
+{
+"pair": 9,
+"i": 0,
+"method": "fit_homography",
+"region": "text",
+"err": 0.8138872184283132
+},
+{
+"pair": 9,
+"i": 1,
+"method": "fit_homography",
+"region": "text",
+"err": 0.6770082217438667
+},
+{
+"pair": 9,
+"i": 2,
+"method": "fit_homography",
+"region": "text",
+"err": 0.9208812227188057
+},
+{
+"pair": 9,
+"i": 3,
+"method": "fit_homography",
+"region": "text",
+"err": 0.2742902950897097
+},
+{
+"pair": 9,
+"i": 4,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.5226944623100163
+},
+{
+"pair": 9,
+"i": 5,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.4885060256207247
+},
+{
+"pair": 9,
+"i": 6,
+"method": "fit_homography",
+"region": "pic",
+"err": 1.137025184961571
+},
+{
+"pair": 9,
+"i": 7,
+"method": "fit_homography",
+"region": "pic",
+"err": 1.004725438657006
+},
+{
+"pair": 16,
+"i": 0,
+"method": "sim",
+"region": "text",
+"err": 4.854361045853937
+},
+{
+"pair": 16,
+"i": 1,
+"method": "sim",
+"region": "text",
+"err": 3.246342361607005
+},
+{
+"pair": 16,
+"i": 2,
+"method": "sim",
+"region": "text",
+"err": 7.274755442128338
+},
+{
+"pair": 16,
+"i": 3,
+"method": "sim",
+"region": "text",
+"err": 2.6544789682816616
+},
+{
+"pair": 16,
+"i": 4,
+"method": "sim",
+"region": "pic",
+"err": 1.7597226925547707
+},
+{
+"pair": 16,
+"i": 5,
+"method": "sim",
+"region": "pic",
+"err": 1.918996073575926
+},
+{
+"pair": 16,
+"i": 6,
+"method": "sim",
+"region": "pic",
+"err": 1.2252890917904695
+},
+{
+"pair": 16,
+"i": 7,
+"method": "sim",
+"region": "pic",
+"err": 0.95448068829431
+},
+{
+"pair": 16,
+"i": 0,
+"method": "sim+warp",
+"region": "text",
+"err": 0.23984593453883804
+},
+{
+"pair": 16,
+"i": 1,
+"method": "sim+warp",
+"region": "text",
+"err": 0.9401125191607156
+},
+{
+"pair": 16,
+"i": 2,
+"method": "sim+warp",
+"region": "text",
+"err": 1.1963468781869577
+},
+{
+"pair": 16,
+"i": 3,
+"method": "sim+warp",
+"region": "text",
+"err": 0.11408259997671753
+},
+{
+"pair": 16,
+"i": 4,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.19261261828475265
+},
+{
+"pair": 16,
+"i": 5,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.35279343156656434
+},
+{
+"pair": 16,
+"i": 6,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.4323407329722807
+},
+{
+"pair": 16,
+"i": 7,
+"method": "sim+warp",
+"region": "pic",
+"err": 1.4208707550647515
+},
+{
+"pair": 16,
+"i": 0,
+"method": "vdiff600",
+"region": "text",
+"err": 1.1761097326670058
+},
+{
+"pair": 16,
+"i": 1,
+"method": "vdiff600",
+"region": "text",
+"err": 1.2286895636307436
+},
+{
+"pair": 16,
+"i": 2,
+"method": "vdiff600",
+"region": "text",
+"err": 0.7631841954035643
+},
+{
+"pair": 16,
+"i": 3,
+"method": "vdiff600",
+"region": "text",
+"err": 0.36334244632363794
+},
+{
+"pair": 16,
+"i": 4,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.18473699561711548
+},
+{
+"pair": 16,
+"i": 5,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.35983087664849056
+},
+{
+"pair": 16,
+"i": 6,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.39090707500236394
+},
+{
+"pair": 16,
+"i": 7,
+"method": "vdiff600",
+"region": "pic",
+"err": 1.8104869371975008
+},
+{
+"pair": 16,
+"i": 0,
+"method": "vdiff1000",
+"region": "text",
+"err": 1.1574789900023659
+},
+{
+"pair": 16,
+"i": 1,
+"method": "vdiff1000",
+"region": "text",
+"err": 1.196510608188692
+},
+{
+"pair": 16,
+"i": 2,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.699954358008055
+},
+{
+"pair": 16,
+"i": 3,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.4030403421913394
+},
+{
+"pair": 16,
+"i": 4,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.2211657082668895
+},
+{
+"pair": 16,
+"i": 5,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.3775748420847796
+},
+{
+"pair": 16,
+"i": 6,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.4482744204781281
+},
+{
+"pair": 16,
+"i": 7,
+"method": "vdiff1000",
+"region": "pic",
+"err": 1.8573956949823172
+},
+{
+"pair": 16,
+"i": 0,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.966348191314002
+},
+{
+"pair": 16,
+"i": 1,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.9762040882640636
+},
+{
+"pair": 16,
+"i": 2,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.4993895418938796
+},
+{
+"pair": 16,
+"i": 3,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.17446201408249656
+},
+{
+"pair": 16,
+"i": 4,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.31419995807721507
+},
+{
+"pair": 16,
+"i": 5,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.4896052884274304
+},
+{
+"pair": 16,
+"i": 6,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.5797426423410894
+},
+{
+"pair": 16,
+"i": 7,
+"method": "homog_ecc",
+"region": "pic",
+"err": 2.0421862588311894
+},
+{
+"pair": 16,
+"i": 0,
+"method": "affine",
+"region": "text",
+"err": 0.8049922754557727
+},
+{
+"pair": 16,
+"i": 1,
+"method": "affine",
+"region": "text",
+"err": 1.0825638660509744
+},
+{
+"pair": 16,
+"i": 2,
+"method": "affine",
+"region": "text",
+"err": 1.1270768367115505
+},
+{
+"pair": 16,
+"i": 3,
+"method": "affine",
+"region": "text",
+"err": 0.3307015233872232
+},
+{
+"pair": 16,
+"i": 4,
+"method": "affine",
+"region": "pic",
+"err": 0.38171116784814274
+},
+{
+"pair": 16,
+"i": 5,
+"method": "affine",
+"region": "pic",
+"err": 0.5386431359074084
+},
+{
+"pair": 16,
+"i": 6,
+"method": "affine",
+"region": "pic",
+"err": 0.27011689695024665
+},
+{
+"pair": 16,
+"i": 7,
+"method": "affine",
+"region": "pic",
+"err": 1.9184163125898708
+},
+{
+"pair": 16,
+"i": 0,
+"method": "fit_similarity",
+"region": "text",
+"err": 2.410796777930134
+},
+{
+"pair": 16,
+"i": 1,
+"method": "fit_similarity",
+"region": "text",
+"err": 0.7416361280440072
+},
+{
+"pair": 16,
+"i": 2,
+"method": "fit_similarity",
+"region": "text",
+"err": 5.786520084456209
+},
+{
+"pair": 16,
+"i": 3,
+"method": "fit_similarity",
+"region": "text",
+"err": 3.4852981342131595
+},
+{
+"pair": 16,
+"i": 4,
+"method": "fit_similarity",
+"region": "pic",
+"err": 0.939796153479519
+},
+{
+"pair": 16,
+"i": 5,
+"method": "fit_similarity",
+"region": "pic",
+"err": 1.195811459771349
+},
+{
+"pair": 16,
+"i": 6,
+"method": "fit_similarity",
+"region": "pic",
+"err": 3.3889671850346277
+},
+{
+"pair": 16,
+"i": 7,
+"method": "fit_similarity",
+"region": "pic",
+"err": 2.0422640462211272
+},
+{
+"pair": 16,
+"i": 0,
+"method": "fit_affine",
+"region": "text",
+"err": 2.781267700391235
+},
+{
+"pair": 16,
+"i": 1,
+"method": "fit_affine",
+"region": "text",
+"err": 1.0698461454813897
+},
+{
+"pair": 16,
+"i": 2,
+"method": "fit_affine",
+"region": "text",
+"err": 5.558975325076369
+},
+{
+"pair": 16,
+"i": 3,
+"method": "fit_affine",
+"region": "text",
+"err": 0.3730242380591624
+},
+{
+"pair": 16,
+"i": 4,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.5022841566018823
+},
+{
+"pair": 16,
+"i": 5,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.34263957749809126
+},
+{
+"pair": 16,
+"i": 6,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.53680675069347
+},
+{
+"pair": 16,
+"i": 7,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.6537518168840581
+},
+{
+"pair": 16,
+"i": 0,
+"method": "fit_homography",
+"region": "text",
+"err": 1.4087142824044976
+},
+{
+"pair": 16,
+"i": 1,
+"method": "fit_homography",
+"region": "text",
+"err": 0.9852022384844868
+},
+{
+"pair": 16,
+"i": 2,
+"method": "fit_homography",
+"region": "text",
+"err": 3.5840253758669176
+},
+{
+"pair": 16,
+"i": 3,
+"method": "fit_homography",
+"region": "text",
+"err": 1.1222324635741154
+},
+{
+"pair": 16,
+"i": 4,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.5324510843515168
+},
+{
+"pair": 16,
+"i": 5,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.41534767974901626
+},
+{
+"pair": 16,
+"i": 6,
+"method": "fit_homography",
+"region": "pic",
+"err": 1.681924734254552
+},
+{
+"pair": 16,
+"i": 7,
+"method": "fit_homography",
+"region": "pic",
+"err": 2.00593609458761
+},
+{
+"pair": 19,
+"i": 0,
+"method": "sim",
+"region": "text",
+"err": 1.7226441090068665
+},
+{
+"pair": 19,
+"i": 1,
+"method": "sim",
+"region": "text",
+"err": 4.253822737681976
+},
+{
+"pair": 19,
+"i": 2,
+"method": "sim",
+"region": "text",
+"err": 0.9416860702545674
+},
+{
+"pair": 19,
+"i": 3,
+"method": "sim",
+"region": "text",
+"err": 5.289672548583583
+},
+{
+"pair": 19,
+"i": 4,
+"method": "sim",
+"region": "pic",
+"err": 1.2198331875397972
+},
+{
+"pair": 19,
+"i": 5,
+"method": "sim",
+"region": "pic",
+"err": 2.0272775424950753
+},
+{
+"pair": 19,
+"i": 6,
+"method": "sim",
+"region": "pic",
+"err": 5.5127804881223454
+},
+{
+"pair": 19,
+"i": 7,
+"method": "sim",
+"region": "pic",
+"err": 5.236525887513296
+},
+{
+"pair": 19,
+"i": 0,
+"method": "sim+warp",
+"region": "text",
+"err": 0.6073507702882102
+},
+{
+"pair": 19,
+"i": 1,
+"method": "sim+warp",
+"region": "text",
+"err": 0.6733226215597626
+},
+{
+"pair": 19,
+"i": 2,
+"method": "sim+warp",
+"region": "text",
+"err": 0.39425777946603663
+},
+{
+"pair": 19,
+"i": 3,
+"method": "sim+warp",
+"region": "text",
+"err": 0.8449497738356904
+},
+{
+"pair": 19,
+"i": 4,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.46406248513346016
+},
+{
+"pair": 19,
+"i": 5,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.31152298978784143
+},
+{
+"pair": 19,
+"i": 6,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.8779324094761856
+},
+{
+"pair": 19,
+"i": 7,
+"method": "sim+warp",
+"region": "pic",
+"err": 1.1291580802975292
+},
+{
+"pair": 19,
+"i": 0,
+"method": "vdiff600",
+"region": "text",
+"err": 1.216184933830691
+},
+{
+"pair": 19,
+"i": 1,
+"method": "vdiff600",
+"region": "text",
+"err": 0.48538179492003863
+},
+{
+"pair": 19,
+"i": 2,
+"method": "vdiff600",
+"region": "text",
+"err": 0.12960296230587878
+},
+{
+"pair": 19,
+"i": 3,
+"method": "vdiff600",
+"region": "text",
+"err": 0.3109020237073861
+},
+{
+"pair": 19,
+"i": 4,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.298070357548201
+},
+{
+"pair": 19,
+"i": 5,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.6800873517023412
+},
+{
+"pair": 19,
+"i": 6,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.865681730329436
+},
+{
+"pair": 19,
+"i": 7,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.23810118867716792
+},
+{
+"pair": 19,
+"i": 0,
+"method": "vdiff1000",
+"region": "text",
+"err": 1.048181173461667
+},
+{
+"pair": 19,
+"i": 1,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.46930967697104864
+},
+{
+"pair": 19,
+"i": 2,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.1449223909223061
+},
+{
+"pair": 19,
+"i": 3,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.2334549211937223
+},
+{
+"pair": 19,
+"i": 4,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.1191845749391237
+},
+{
+"pair": 19,
+"i": 5,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.6949539710073103
+},
+{
+"pair": 19,
+"i": 6,
+"method": "vdiff1000",
+"region": "pic",
+"err": 1.1996519003007025
+},
+{
+"pair": 19,
+"i": 7,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.11539387506835805
+},
+{
+"pair": 19,
+"i": 0,
+"method": "homog_ecc",
+"region": "text",
+"err": 1.2536640704791344
+},
+{
+"pair": 19,
+"i": 1,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.489873379596901
+},
+{
+"pair": 19,
+"i": 2,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.12252390459029983
+},
+{
+"pair": 19,
+"i": 3,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.2861791558168359
+},
+{
+"pair": 19,
+"i": 4,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.29370027949044636
+},
+{
+"pair": 19,
+"i": 5,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.5507389756802086
+},
+{
+"pair": 19,
+"i": 6,
+"method": "homog_ecc",
+"region": "pic",
+"err": 1.0379251856055212
+},
+{
+"pair": 19,
+"i": 7,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.06306933189064377
+},
+{
+"pair": 19,
+"i": 0,
+"method": "affine",
+"region": "text",
+"err": 0.8048528127512254
+},
+{
+"pair": 19,
+"i": 1,
+"method": "affine",
+"region": "text",
+"err": 1.106544346030848
+},
+{
+"pair": 19,
+"i": 2,
+"method": "affine",
+"region": "text",
+"err": 0.4184207345625647
+},
+{
+"pair": 19,
+"i": 3,
+"method": "affine",
+"region": "text",
+"err": 0.6112306588084774
+},
+{
+"pair": 19,
+"i": 4,
+"method": "affine",
+"region": "pic",
+"err": 0.2862919417687475
+},
+{
+"pair": 19,
+"i": 5,
+"method": "affine",
+"region": "pic",
+"err": 1.0510778645385448
+},
+{
+"pair": 19,
+"i": 6,
+"method": "affine",
+"region": "pic",
+"err": 0.6589721938217273
+},
+{
+"pair": 19,
+"i": 7,
+"method": "affine",
+"region": "pic",
+"err": 0.9080574180849594
+},
+{
+"pair": 19,
+"i": 0,
+"method": "fit_similarity",
+"region": "text",
+"err": 3.5787418516360026
+},
+{
+"pair": 19,
+"i": 1,
+"method": "fit_similarity",
+"region": "text",
+"err": 2.569530900649138
+},
+{
+"pair": 19,
+"i": 2,
+"method": "fit_similarity",
+"region": "text",
+"err": 2.604939742216266
+},
+{
+"pair": 19,
+"i": 3,
+"method": "fit_similarity",
+"region": "text",
+"err": 3.1997745333449785
+},
+{
+"pair": 19,
+"i": 4,
+"method": "fit_similarity",
+"region": "pic",
+"err": 2.3643125530497375
+},
+{
+"pair": 19,
+"i": 5,
+"method": "fit_similarity",
+"region": "pic",
+"err": 5.7906087728319084
+},
+{
+"pair": 19,
+"i": 6,
+"method": "fit_similarity",
+"region": "pic",
+"err": 8.46599094153716
+},
+{
+"pair": 19,
+"i": 7,
+"method": "fit_similarity",
+"region": "pic",
+"err": 12.08948347956229
+},
+{
+"pair": 19,
+"i": 0,
+"method": "fit_affine",
+"region": "text",
+"err": 1.2823273952813192
+},
+{
+"pair": 19,
+"i": 1,
+"method": "fit_affine",
+"region": "text",
+"err": 2.912609534417233
+},
+{
+"pair": 19,
+"i": 2,
+"method": "fit_affine",
+"region": "text",
+"err": 0.47316648257582933
+},
+{
+"pair": 19,
+"i": 3,
+"method": "fit_affine",
+"region": "text",
+"err": 5.337396806576131
+},
+{
+"pair": 19,
+"i": 4,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.34266490976872194
+},
+{
+"pair": 19,
+"i": 5,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.9562438055541919
+},
+{
+"pair": 19,
+"i": 6,
+"method": "fit_affine",
+"region": "pic",
+"err": 2.943116072751092
+},
+{
+"pair": 19,
+"i": 7,
+"method": "fit_affine",
+"region": "pic",
+"err": 10.191585479973783
+},
+{
+"pair": 19,
+"i": 0,
+"method": "fit_homography",
+"region": "text",
+"err": 1.1391931447860248
+},
+{
+"pair": 19,
+"i": 1,
+"method": "fit_homography",
+"region": "text",
+"err": 0.8517452209943275
+},
+{
+"pair": 19,
+"i": 2,
+"method": "fit_homography",
+"region": "text",
+"err": 0.3181601443923851
+},
+{
+"pair": 19,
+"i": 3,
+"method": "fit_homography",
+"region": "text",
+"err": 0.3088271463131666
+},
+{
+"pair": 19,
+"i": 4,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.1086665952571623
+},
+{
+"pair": 19,
+"i": 5,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.8873551646899218
+},
+{
+"pair": 19,
+"i": 6,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.8711156585533913
+},
+{
+"pair": 19,
+"i": 7,
+"method": "fit_homography",
+"region": "pic",
+"err": 3.4024161769170833
+},
+{
+"pair": 28,
+"i": 0,
+"method": "sim",
+"region": "text",
+"err": 3.264620265429219
+},
+{
+"pair": 28,
+"i": 1,
+"method": "sim",
+"region": "text",
+"err": 11.977663854774477
+},
+{
+"pair": 28,
+"i": 2,
+"method": "sim",
+"region": "text",
+"err": 2.0731364727748027
+},
+{
+"pair": 28,
+"i": 3,
+"method": "sim",
+"region": "text",
+"err": 7.488177505390477
+},
+{
+"pair": 28,
+"i": 4,
+"method": "sim",
+"region": "pic",
+"err": 2.8083098624506415
+},
+{
+"pair": 28,
+"i": 5,
+"method": "sim",
+"region": "pic",
+"err": 4.289728803207044
+},
+{
+"pair": 28,
+"i": 6,
+"method": "sim",
+"region": "pic",
+"err": 2.6932792419933276
+},
+{
+"pair": 28,
+"i": 7,
+"method": "sim",
+"region": "pic",
+"err": 1.2785793076905783
+},
+{
+"pair": 28,
+"i": 0,
+"method": "sim+warp",
+"region": "text",
+"err": 0.7887387768236676
+},
+{
+"pair": 28,
+"i": 1,
+"method": "sim+warp",
+"region": "text",
+"err": 0.9547751930352766
+},
+{
+"pair": 28,
+"i": 2,
+"method": "sim+warp",
+"region": "text",
+"err": 1.8863557755878737
+},
+{
+"pair": 28,
+"i": 3,
+"method": "sim+warp",
+"region": "text",
+"err": 0.6990734587030583
+},
+{
+"pair": 28,
+"i": 4,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.9447145143115785
+},
+{
+"pair": 28,
+"i": 5,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.5280347837739033
+},
+{
+"pair": 28,
+"i": 6,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.520847952100708
+},
+{
+"pair": 28,
+"i": 7,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.5635067009934741
+},
+{
+"pair": 28,
+"i": 0,
+"method": "vdiff600",
+"region": "text",
+"err": 1.8178264218675284
+},
+{
+"pair": 28,
+"i": 1,
+"method": "vdiff600",
+"region": "text",
+"err": 2.00276480982283
+},
+{
+"pair": 28,
+"i": 2,
+"method": "vdiff600",
+"region": "text",
+"err": 1.777429027627599
+},
+{
+"pair": 28,
+"i": 3,
+"method": "vdiff600",
+"region": "text",
+"err": 1.8888860506661083
+},
+{
+"pair": 28,
+"i": 4,
+"method": "vdiff600",
+"region": "pic",
+"err": 1.7496199652314683
+},
+{
+"pair": 28,
+"i": 5,
+"method": "vdiff600",
+"region": "pic",
+"err": 1.4908198758131939
+},
+{
+"pair": 28,
+"i": 6,
+"method": "vdiff600",
+"region": "pic",
+"err": 1.4017110197011444
+},
+{
+"pair": 28,
+"i": 7,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.8234586817964193
+},
+{
+"pair": 28,
+"i": 0,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.8637368350665131
+},
+{
+"pair": 28,
+"i": 1,
+"method": "vdiff1000",
+"region": "text",
+"err": 1.4420591351744108
+},
+{
+"pair": 28,
+"i": 2,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.36129979871263573
+},
+{
+"pair": 28,
+"i": 3,
+"method": "vdiff1000",
+"region": "text",
+"err": 1.200997269805887
+},
+{
+"pair": 28,
+"i": 4,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.4034845563308932
+},
+{
+"pair": 28,
+"i": 5,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.2166660246629241
+},
+{
+"pair": 28,
+"i": 6,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.35146358813403755
+},
+{
+"pair": 28,
+"i": 7,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.45854719800487576
+},
+{
+"pair": 28,
+"i": 0,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.6477931796186286
+},
+{
+"pair": 28,
+"i": 1,
+"method": "homog_ecc",
+"region": "text",
+"err": 1.2548701564482652
+},
+{
+"pair": 28,
+"i": 2,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.7591200201279316
+},
+{
+"pair": 28,
+"i": 3,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.98185133404588
+},
+{
+"pair": 28,
+"i": 4,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.6227816641826868
+},
+{
+"pair": 28,
+"i": 5,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.2240001762295867
+},
+{
+"pair": 28,
+"i": 6,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.3803627873537105
+},
+{
+"pair": 28,
+"i": 7,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.6857509262297057
+},
+{
+"pair": 28,
+"i": 0,
+"method": "affine",
+"region": "text",
+"err": 0.6591762898970963
+},
+{
+"pair": 28,
+"i": 1,
+"method": "affine",
+"region": "text",
+"err": 0.6755272366540598
+},
+{
+"pair": 28,
+"i": 2,
+"method": "affine",
+"region": "text",
+"err": 0.7460851527800355
+},
+{
+"pair": 28,
+"i": 3,
+"method": "affine",
+"region": "text",
+"err": 0.40781698510548026
+},
+{
+"pair": 28,
+"i": 4,
+"method": "affine",
+"region": "pic",
+"err": 0.7187102588733837
+},
+{
+"pair": 28,
+"i": 5,
+"method": "affine",
+"region": "pic",
+"err": 0.5508179722155917
+},
+{
+"pair": 28,
+"i": 6,
+"method": "affine",
+"region": "pic",
+"err": 0.46382761119622046
+},
+{
+"pair": 28,
+"i": 7,
+"method": "affine",
+"region": "pic",
+"err": 0.27603646141579663
+},
+{
+"pair": 28,
+"i": 0,
+"method": "fit_similarity",
+"region": "text",
+"err": 6.016430217962879
+},
+{
+"pair": 28,
+"i": 1,
+"method": "fit_similarity",
+"region": "text",
+"err": 10.052236271936877
+},
+{
+"pair": 28,
+"i": 2,
+"method": "fit_similarity",
+"region": "text",
+"err": 5.320412856217153
+},
+{
+"pair": 28,
+"i": 3,
+"method": "fit_similarity",
+"region": "text",
+"err": 3.817045207326739
+},
+{
+"pair": 28,
+"i": 4,
+"method": "fit_similarity",
+"region": "pic",
+"err": 5.62720163815832
+},
+{
+"pair": 28,
+"i": 5,
+"method": "fit_similarity",
+"region": "pic",
+"err": 2.288199467529533
+},
+{
+"pair": 28,
+"i": 6,
+"method": "fit_similarity",
+"region": "pic",
+"err": 6.3683178325971195
+},
+{
+"pair": 28,
+"i": 7,
+"method": "fit_similarity",
+"region": "pic",
+"err": 5.662971872110955
+},
+{
+"pair": 28,
+"i": 0,
+"method": "fit_affine",
+"region": "text",
+"err": 0.09727444018759533
+},
+{
+"pair": 28,
+"i": 1,
+"method": "fit_affine",
+"region": "text",
+"err": 2.643950676194804
+},
+{
+"pair": 28,
+"i": 2,
+"method": "fit_affine",
+"region": "text",
+"err": 0.4795847877023287
+},
+{
+"pair": 28,
+"i": 3,
+"method": "fit_affine",
+"region": "text",
+"err": 1.1238185482897862
+},
+{
+"pair": 28,
+"i": 4,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.9082031318291437
+},
+{
+"pair": 28,
+"i": 5,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.7539359725044384
+},
+{
+"pair": 28,
+"i": 6,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.6250983445782344
+},
+{
+"pair": 28,
+"i": 7,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.3650163484580689
+},
+{
+"pair": 28,
+"i": 0,
+"method": "fit_homography",
+"region": "text",
+"err": 0.6334375006766342
+},
+{
+"pair": 28,
+"i": 1,
+"method": "fit_homography",
+"region": "text",
+"err": 0.7396398769054903
+},
+{
+"pair": 28,
+"i": 2,
+"method": "fit_homography",
+"region": "text",
+"err": 0.5898977638611189
+},
+{
+"pair": 28,
+"i": 3,
+"method": "fit_homography",
+"region": "text",
+"err": 0.3345945601410645
+},
+{
+"pair": 28,
+"i": 4,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.6185415870911273
+},
+{
+"pair": 28,
+"i": 5,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.3987223379995158
+},
+{
+"pair": 28,
+"i": 6,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.3192728194792141
+},
+{
+"pair": 28,
+"i": 7,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.4888337902970466
+},
+{
+"pair": 40,
+"i": 0,
+"method": "sim",
+"region": "text",
+"err": 7.052428619145967
+},
+{
+"pair": 40,
+"i": 1,
+"method": "sim",
+"region": "text",
+"err": 2.5313714450196825
+},
+{
+"pair": 40,
+"i": 2,
+"method": "sim",
+"region": "text",
+"err": 5.94599993347749
+},
+{
+"pair": 40,
+"i": 3,
+"method": "sim",
+"region": "text",
+"err": 3.1386402123325783
+},
+{
+"pair": 40,
+"i": 4,
+"method": "sim",
+"region": "pic",
+"err": 5.3895009147313875
+},
+{
+"pair": 40,
+"i": 5,
+"method": "sim",
+"region": "pic",
+"err": 2.7589624461469495
+},
+{
+"pair": 40,
+"i": 6,
+"method": "sim",
+"region": "pic",
+"err": 3.7442622370642424
+},
+{
+"pair": 40,
+"i": 7,
+"method": "sim",
+"region": "pic",
+"err": 0.23413835533737695
+},
+{
+"pair": 40,
+"i": 0,
+"method": "sim+warp",
+"region": "text",
+"err": 0.31327542345104975
+},
+{
+"pair": 40,
+"i": 1,
+"method": "sim+warp",
+"region": "text",
+"err": 0.22551123306996715
+},
+{
+"pair": 40,
+"i": 2,
+"method": "sim+warp",
+"region": "text",
+"err": 0.7116482694515027
+},
+{
+"pair": 40,
+"i": 3,
+"method": "sim+warp",
+"region": "text",
+"err": 0.45658982253055563
+},
+{
+"pair": 40,
+"i": 4,
+"method": "sim+warp",
+"region": "pic",
+"err": 1.2407789154337951
+},
+{
+"pair": 40,
+"i": 5,
+"method": "sim+warp",
+"region": "pic",
+"err": 1.0962835030963982
+},
+{
+"pair": 40,
+"i": 6,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.3512445487926215
+},
+{
+"pair": 40,
+"i": 7,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.694417196800254
+},
+{
+"pair": 40,
+"i": 0,
+"method": "vdiff600",
+"region": "text",
+"err": 1.6609025071293213
+},
+{
+"pair": 40,
+"i": 1,
+"method": "vdiff600",
+"region": "text",
+"err": 1.5078237731806066
+},
+{
+"pair": 40,
+"i": 2,
+"method": "vdiff600",
+"region": "text",
+"err": 1.7770535990025282
+},
+{
+"pair": 40,
+"i": 3,
+"method": "vdiff600",
+"region": "text",
+"err": 0.9471545690324356
+},
+{
+"pair": 40,
+"i": 4,
+"method": "vdiff600",
+"region": "pic",
+"err": 1.5833247814586346
+},
+{
+"pair": 40,
+"i": 5,
+"method": "vdiff600",
+"region": "pic",
+"err": 2.4934472398876166
+},
+{
+"pair": 40,
+"i": 6,
+"method": "vdiff600",
+"region": "pic",
+"err": 1.2366934377403496
+},
+{
+"pair": 40,
+"i": 7,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.39940588427812607
+},
+{
+"pair": 40,
+"i": 0,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.11278617371877356
+},
+{
+"pair": 40,
+"i": 1,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.2404367290073902
+},
+{
+"pair": 40,
+"i": 2,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.6791031601713594
+},
+{
+"pair": 40,
+"i": 3,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.6421159312265023
+},
+{
+"pair": 40,
+"i": 4,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.36040719213308237
+},
+{
+"pair": 40,
+"i": 5,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.9882592410227489
+},
+{
+"pair": 40,
+"i": 6,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.37794720863337555
+},
+{
+"pair": 40,
+"i": 7,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.9744399322417182
+},
+{
+"pair": 40,
+"i": 0,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.2302551084735702
+},
+{
+"pair": 40,
+"i": 1,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.26974838627299125
+},
+{
+"pair": 40,
+"i": 2,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.6794581740065723
+},
+{
+"pair": 40,
+"i": 3,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.6691588787899759
+},
+{
+"pair": 40,
+"i": 4,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.31202197069036863
+},
+{
+"pair": 40,
+"i": 5,
+"method": "homog_ecc",
+"region": "pic",
+"err": 1.0235045999863916
+},
+{
+"pair": 40,
+"i": 6,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.39245849500675367
+},
+{
+"pair": 40,
+"i": 7,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.8183183516185346
+},
+{
+"pair": 40,
+"i": 0,
+"method": "affine",
+"region": "text",
+"err": 0.515043993482692
+},
+{
+"pair": 40,
+"i": 1,
+"method": "affine",
+"region": "text",
+"err": 0.28994413495123766
+},
+{
+"pair": 40,
+"i": 2,
+"method": "affine",
+"region": "text",
+"err": 0.4845775365759373
+},
+{
+"pair": 40,
+"i": 3,
+"method": "affine",
+"region": "text",
+"err": 0.5605222678039012
+},
+{
+"pair": 40,
+"i": 4,
+"method": "affine",
+"region": "pic",
+"err": 0.24251402748623646
+},
+{
+"pair": 40,
+"i": 5,
+"method": "affine",
+"region": "pic",
+"err": 0.9203343919767768
+},
+{
+"pair": 40,
+"i": 6,
+"method": "affine",
+"region": "pic",
+"err": 0.6342856856907764
+},
+{
+"pair": 40,
+"i": 7,
+"method": "affine",
+"region": "pic",
+"err": 0.9823112054747957
+},
+{
+"pair": 40,
+"i": 0,
+"method": "fit_similarity",
+"region": "text",
+"err": 3.7434721968319895
+},
+{
+"pair": 40,
+"i": 1,
+"method": "fit_similarity",
+"region": "text",
+"err": 2.6680126785746716
+},
+{
+"pair": 40,
+"i": 2,
+"method": "fit_similarity",
+"region": "text",
+"err": 2.236188792137096
+},
+{
+"pair": 40,
+"i": 3,
+"method": "fit_similarity",
+"region": "text",
+"err": 2.3685452807031733
+},
+{
+"pair": 40,
+"i": 4,
+"method": "fit_similarity",
+"region": "pic",
+"err": 3.0888679797203222
+},
+{
+"pair": 40,
+"i": 5,
+"method": "fit_similarity",
+"region": "pic",
+"err": 1.192168958869757
+},
+{
+"pair": 40,
+"i": 6,
+"method": "fit_similarity",
+"region": "pic",
+"err": 3.0089728323733196
+},
+{
+"pair": 40,
+"i": 7,
+"method": "fit_similarity",
+"region": "pic",
+"err": 4.105509561926315
+},
+{
+"pair": 40,
+"i": 0,
+"method": "fit_affine",
+"region": "text",
+"err": 0.3812446489302936
+},
+{
+"pair": 40,
+"i": 1,
+"method": "fit_affine",
+"region": "text",
+"err": 0.737005341166881
+},
+{
+"pair": 40,
+"i": 2,
+"method": "fit_affine",
+"region": "text",
+"err": 0.3058528664860137
+},
+{
+"pair": 40,
+"i": 3,
+"method": "fit_affine",
+"region": "text",
+"err": 0.8367432948928301
+},
+{
+"pair": 40,
+"i": 4,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.3039118524616333
+},
+{
+"pair": 40,
+"i": 5,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.4342922229103234
+},
+{
+"pair": 40,
+"i": 6,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.5314528439977066
+},
+{
+"pair": 40,
+"i": 7,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.8875482510377962
+},
+{
+"pair": 40,
+"i": 0,
+"method": "fit_homography",
+"region": "text",
+"err": 0.3750986299581326
+},
+{
+"pair": 40,
+"i": 1,
+"method": "fit_homography",
+"region": "text",
+"err": 0.7879954498854158
+},
+{
+"pair": 40,
+"i": 2,
+"method": "fit_homography",
+"region": "text",
+"err": 0.42795087549369604
+},
+{
+"pair": 40,
+"i": 3,
+"method": "fit_homography",
+"region": "text",
+"err": 0.9618768475826108
+},
+{
+"pair": 40,
+"i": 4,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.5473043257483863
+},
+{
+"pair": 40,
+"i": 5,
+"method": "fit_homography",
+"region": "pic",
+"err": 1.508896172407873
+},
+{
+"pair": 40,
+"i": 6,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.727685305846684
+},
+{
+"pair": 40,
+"i": 7,
+"method": "fit_homography",
+"region": "pic",
+"err": 2.1752199817079445
+},
+{
+"pair": 64,
+"i": 0,
+"method": "sim",
+"region": "text",
+"err": 3.7739815962788255
+},
+{
+"pair": 64,
+"i": 1,
+"method": "sim",
+"region": "text",
+"err": 2.295985188544984
+},
+{
+"pair": 64,
+"i": 2,
+"method": "sim",
+"region": "text",
+"err": 4.944818383167398
+},
+{
+"pair": 64,
+"i": 3,
+"method": "sim",
+"region": "text",
+"err": 1.3047459983594918
+},
+{
+"pair": 64,
+"i": 4,
+"method": "sim",
+"region": "pic",
+"err": 1.8227384949687595
+},
+{
+"pair": 64,
+"i": 5,
+"method": "sim",
+"region": "pic",
+"err": 6.370841108473077
+},
+{
+"pair": 64,
+"i": 6,
+"method": "sim",
+"region": "pic",
+"err": 1.5814321938674096
+},
+{
+"pair": 64,
+"i": 0,
+"method": "sim+warp",
+"region": "text",
+"err": 0.767514070714946
+},
+{
+"pair": 64,
+"i": 1,
+"method": "sim+warp",
+"region": "text",
+"err": 0.5372838361583727
+},
+{
+"pair": 64,
+"i": 2,
+"method": "sim+warp",
+"region": "text",
+"err": 0.9725505449192519
+},
+{
+"pair": 64,
+"i": 3,
+"method": "sim+warp",
+"region": "text",
+"err": 0.6230862570480307
+},
+{
+"pair": 64,
+"i": 4,
+"method": "sim+warp",
+"region": "pic",
+"err": 1.6809458260294985
+},
+{
+"pair": 64,
+"i": 5,
+"method": "sim+warp",
+"region": "pic",
+"err": 2.0828821850776347
+},
+{
+"pair": 64,
+"i": 6,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.9085194968850341
+},
+{
+"pair": 64,
+"i": 0,
+"method": "vdiff600",
+"region": "text",
+"err": 0.728773015205475
+},
+{
+"pair": 64,
+"i": 1,
+"method": "vdiff600",
+"region": "text",
+"err": 0.7998941938762857
+},
+{
+"pair": 64,
+"i": 2,
+"method": "vdiff600",
+"region": "text",
+"err": 1.5385386922362856
+},
+{
+"pair": 64,
+"i": 3,
+"method": "vdiff600",
+"region": "text",
+"err": 1.2564503536284934
+},
+{
+"pair": 64,
+"i": 4,
+"method": "vdiff600",
+"region": "pic",
+"err": 1.1260043546513394
+},
+{
+"pair": 64,
+"i": 5,
+"method": "vdiff600",
+"region": "pic",
+"err": 1.2504325127907066
+},
+{
+"pair": 64,
+"i": 6,
+"method": "vdiff600",
+"region": "pic",
+"err": 1.150976712476157
+},
+{
+"pair": 64,
+"i": 0,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.9688050135508431
+},
+{
+"pair": 64,
+"i": 1,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.5055823122047738
+},
+{
+"pair": 64,
+"i": 2,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.5925207264569098
+},
+{
+"pair": 64,
+"i": 3,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.5317159129782352
+},
+{
+"pair": 64,
+"i": 4,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.32415466259612385
+},
+{
+"pair": 64,
+"i": 5,
+"method": "vdiff1000",
+"region": "pic",
+"err": 1.803458289892056
+},
+{
+"pair": 64,
+"i": 6,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.27821767251288154
+},
+{
+"pair": 64,
+"i": 0,
+"method": "homog_ecc",
+"region": "text",
+"err": 1.0378586496020554
+},
+{
+"pair": 64,
+"i": 1,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.4548251865208053
+},
+{
+"pair": 64,
+"i": 2,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.4634044509342236
+},
+{
+"pair": 64,
+"i": 3,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.6264737663833201
+},
+{
+"pair": 64,
+"i": 4,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.25391325748390264
+},
+{
+"pair": 64,
+"i": 5,
+"method": "homog_ecc",
+"region": "pic",
+"err": 1.7602738421354414
+},
+{
+"pair": 64,
+"i": 6,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.2807227296785035
+},
+{
+"pair": 64,
+"i": 0,
+"method": "affine",
+"region": "text",
+"err": 0.9993056355902822
+},
+{
+"pair": 64,
+"i": 1,
+"method": "affine",
+"region": "text",
+"err": 0.4203946145173186
+},
+{
+"pair": 64,
+"i": 2,
+"method": "affine",
+"region": "text",
+"err": 0.7463544360249579
+},
+{
+"pair": 64,
+"i": 3,
+"method": "affine",
+"region": "text",
+"err": 0.40045426559564706
+},
+{
+"pair": 64,
+"i": 4,
+"method": "affine",
+"region": "pic",
+"err": 0.42643295294915595
+},
+{
+"pair": 64,
+"i": 5,
+"method": "affine",
+"region": "pic",
+"err": 2.0571548840207954
+},
+{
+"pair": 64,
+"i": 6,
+"method": "affine",
+"region": "pic",
+"err": 0.23389079531917537
+},
+{
+"pair": 64,
+"i": 0,
+"method": "fit_similarity",
+"region": "text",
+"err": 2.066557550271375
+},
+{
+"pair": 64,
+"i": 1,
+"method": "fit_similarity",
+"region": "text",
+"err": 2.7023668323301413
+},
+{
+"pair": 64,
+"i": 2,
+"method": "fit_similarity",
+"region": "text",
+"err": 4.215411979321903
+},
+{
+"pair": 64,
+"i": 3,
+"method": "fit_similarity",
+"region": "text",
+"err": 1.0271895313822026
+},
+{
+"pair": 64,
+"i": 4,
+"method": "fit_similarity",
+"region": "pic",
+"err": 4.412206338188405
+},
+{
+"pair": 64,
+"i": 5,
+"method": "fit_similarity",
+"region": "pic",
+"err": 8.976411178716043
+},
+{
+"pair": 64,
+"i": 6,
+"method": "fit_similarity",
+"region": "pic",
+"err": 5.575040397495822
+},
+{
+"pair": 64,
+"i": 0,
+"method": "fit_affine",
+"region": "text",
+"err": 1.5717968507607725
+},
+{
+"pair": 64,
+"i": 1,
+"method": "fit_affine",
+"region": "text",
+"err": 0.9807442143817237
+},
+{
+"pair": 64,
+"i": 2,
+"method": "fit_affine",
+"region": "text",
+"err": 0.5809313116020904
+},
+{
+"pair": 64,
+"i": 3,
+"method": "fit_affine",
+"region": "text",
+"err": 0.6066323822669019
+},
+{
+"pair": 64,
+"i": 4,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.6292040057816739
+},
+{
+"pair": 64,
+"i": 5,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.7962568677782096
+},
+{
+"pair": 64,
+"i": 6,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.4467993481834672
+},
+{
+"pair": 64,
+"i": 0,
+"method": "fit_homography",
+"region": "text",
+"err": 1.3794431735293122
+},
+{
+"pair": 64,
+"i": 1,
+"method": "fit_homography",
+"region": "text",
+"err": 0.6043498146613537
+},
+{
+"pair": 64,
+"i": 2,
+"method": "fit_homography",
+"region": "text",
+"err": 1.5317147262624207
+},
+{
+"pair": 64,
+"i": 3,
+"method": "fit_homography",
+"region": "text",
+"err": 0.5730220199095953
+},
+{
+"pair": 64,
+"i": 4,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.5530973598814407
+},
+{
+"pair": 64,
+"i": 5,
+"method": "fit_homography",
+"region": "pic",
+"err": 17.458269425633357
+},
+{
+"pair": 64,
+"i": 6,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.6728378265304376
+},
+{
+"pair": 83,
+"i": 0,
+"method": "sim",
+"region": "text",
+"err": 6.131438536912094
+},
+{
+"pair": 83,
+"i": 1,
+"method": "sim",
+"region": "text",
+"err": 2.902353118031778
+},
+{
+"pair": 83,
+"i": 2,
+"method": "sim",
+"region": "text",
+"err": 2.9723524596642514
+},
+{
+"pair": 83,
+"i": 3,
+"method": "sim",
+"region": "text",
+"err": 3.794025629921374
+},
+{
+"pair": 83,
+"i": 4,
+"method": "sim",
+"region": "pic",
+"err": 4.3071769033011496
+},
+{
+"pair": 83,
+"i": 5,
+"method": "sim",
+"region": "pic",
+"err": 1.7572960170025986
+},
+{
+"pair": 83,
+"i": 6,
+"method": "sim",
+"region": "pic",
+"err": 1.3170306046507516
+},
+{
+"pair": 83,
+"i": 7,
+"method": "sim",
+"region": "pic",
+"err": 6.607982594972495
+},
+{
+"pair": 83,
+"i": 0,
+"method": "sim+warp",
+"region": "text",
+"err": 0.3717561374267746
+},
+{
+"pair": 83,
+"i": 1,
+"method": "sim+warp",
+"region": "text",
+"err": 0.4198796450032948
+},
+{
+"pair": 83,
+"i": 2,
+"method": "sim+warp",
+"region": "text",
+"err": 0.5884041989596102
+},
+{
+"pair": 83,
+"i": 3,
+"method": "sim+warp",
+"region": "text",
+"err": 0.6816313982933494
+},
+{
+"pair": 83,
+"i": 4,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.7771506310697831
+},
+{
+"pair": 83,
+"i": 5,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.7143184657698415
+},
+{
+"pair": 83,
+"i": 6,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.9220873642643808
+},
+{
+"pair": 83,
+"i": 7,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.7001263363503754
+},
+{
+"pair": 83,
+"i": 0,
+"method": "vdiff600",
+"region": "text",
+"err": 0.4879674334330631
+},
+{
+"pair": 83,
+"i": 1,
+"method": "vdiff600",
+"region": "text",
+"err": 0.4538928711106144
+},
+{
+"pair": 83,
+"i": 2,
+"method": "vdiff600",
+"region": "text",
+"err": 0.788428576439175
+},
+{
+"pair": 83,
+"i": 3,
+"method": "vdiff600",
+"region": "text",
+"err": 0.5336577562909638
+},
+{
+"pair": 83,
+"i": 4,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.7262120442443242
+},
+{
+"pair": 83,
+"i": 5,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.5028538069539877
+},
+{
+"pair": 83,
+"i": 6,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.12093360867777943
+},
+{
+"pair": 83,
+"i": 7,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.1994154961868994
+},
+{
+"pair": 83,
+"i": 0,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.2656120176199399
+},
+{
+"pair": 83,
+"i": 1,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.42559228085576145
+},
+{
+"pair": 83,
+"i": 2,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.7771486583603878
+},
+{
+"pair": 83,
+"i": 3,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.6835165032129688
+},
+{
+"pair": 83,
+"i": 4,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.7078098501601074
+},
+{
+"pair": 83,
+"i": 5,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.5008386152577976
+},
+{
+"pair": 83,
+"i": 6,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.1767280671991691
+},
+{
+"pair": 83,
+"i": 7,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.2949919246670952
+},
+{
+"pair": 83,
+"i": 0,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.4025136957645766
+},
+{
+"pair": 83,
+"i": 1,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.5100541422041078
+},
+{
+"pair": 83,
+"i": 2,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.8144140169804671
+},
+{
+"pair": 83,
+"i": 3,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.7059180193455118
+},
+{
+"pair": 83,
+"i": 4,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.8073901874565956
+},
+{
+"pair": 83,
+"i": 5,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.47542084408720386
+},
+{
+"pair": 83,
+"i": 6,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.29712905667714434
+},
+{
+"pair": 83,
+"i": 7,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.1405276359046895
+},
+{
+"pair": 83,
+"i": 0,
+"method": "affine",
+"region": "text",
+"err": 0.40868342221019766
+},
+{
+"pair": 83,
+"i": 1,
+"method": "affine",
+"region": "text",
+"err": 0.7097306731728236
+},
+{
+"pair": 83,
+"i": 2,
+"method": "affine",
+"region": "text",
+"err": 0.733980411340161
+},
+{
+"pair": 83,
+"i": 3,
+"method": "affine",
+"region": "text",
+"err": 0.8269421518739316
+},
+{
+"pair": 83,
+"i": 4,
+"method": "affine",
+"region": "pic",
+"err": 1.0812587717086182
+},
+{
+"pair": 83,
+"i": 5,
+"method": "affine",
+"region": "pic",
+"err": 0.42573400693294694
+},
+{
+"pair": 83,
+"i": 6,
+"method": "affine",
+"region": "pic",
+"err": 0.15793941241386072
+},
+{
+"pair": 83,
+"i": 7,
+"method": "affine",
+"region": "pic",
+"err": 0.28040216983854443
+},
+{
+"pair": 83,
+"i": 0,
+"method": "fit_similarity",
+"region": "text",
+"err": 5.707946743776928
+},
+{
+"pair": 83,
+"i": 1,
+"method": "fit_similarity",
+"region": "text",
+"err": 5.217130049602069
+},
+{
+"pair": 83,
+"i": 2,
+"method": "fit_similarity",
+"region": "text",
+"err": 2.2167016191769666
+},
+{
+"pair": 83,
+"i": 3,
+"method": "fit_similarity",
+"region": "text",
+"err": 4.880327638482843
+},
+{
+"pair": 83,
+"i": 4,
+"method": "fit_similarity",
+"region": "pic",
+"err": 5.305226195704481
+},
+{
+"pair": 83,
+"i": 5,
+"method": "fit_similarity",
+"region": "pic",
+"err": 1.4955201396980788
+},
+{
+"pair": 83,
+"i": 6,
+"method": "fit_similarity",
+"region": "pic",
+"err": 6.063650900774935
+},
+{
+"pair": 83,
+"i": 7,
+"method": "fit_similarity",
+"region": "pic",
+"err": 6.761205442230306
+},
+{
+"pair": 83,
+"i": 0,
+"method": "fit_affine",
+"region": "text",
+"err": 0.7961425556380474
+},
+{
+"pair": 83,
+"i": 1,
+"method": "fit_affine",
+"region": "text",
+"err": 0.8575719503571233
+},
+{
+"pair": 83,
+"i": 2,
+"method": "fit_affine",
+"region": "text",
+"err": 0.6635990875403216
+},
+{
+"pair": 83,
+"i": 3,
+"method": "fit_affine",
+"region": "text",
+"err": 0.8102494643702579
+},
+{
+"pair": 83,
+"i": 4,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.8598973492631246
+},
+{
+"pair": 83,
+"i": 5,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.2594389931020559
+},
+{
+"pair": 83,
+"i": 6,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.1510654714051518
+},
+{
+"pair": 83,
+"i": 7,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.0094445492731166
+},
+{
+"pair": 83,
+"i": 0,
+"method": "fit_homography",
+"region": "text",
+"err": 0.12306926142300066
+},
+{
+"pair": 83,
+"i": 1,
+"method": "fit_homography",
+"region": "text",
+"err": 0.8260298495524706
+},
+{
+"pair": 83,
+"i": 2,
+"method": "fit_homography",
+"region": "text",
+"err": 0.6908570456264308
+},
+{
+"pair": 83,
+"i": 3,
+"method": "fit_homography",
+"region": "text",
+"err": 0.6466116254343969
+},
+{
+"pair": 83,
+"i": 4,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.9369172346275711
+},
+{
+"pair": 83,
+"i": 5,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.556204675075718
+},
+{
+"pair": 83,
+"i": 6,
+"method": "fit_homography",
+"region": "pic",
+"err": 1.1444901731074681
+},
+{
+"pair": 83,
+"i": 7,
+"method": "fit_homography",
+"region": "pic",
+"err": 1.7156802118410959
+},
+{
+"pair": 85,
+"i": 0,
+"method": "sim",
+"region": "text",
+"err": 7.375192489352065
+},
+{
+"pair": 85,
+"i": 1,
+"method": "sim",
+"region": "text",
+"err": 3.5477730008487516
+},
+{
+"pair": 85,
+"i": 2,
+"method": "sim",
+"region": "text",
+"err": 9.12954361002519
+},
+{
+"pair": 85,
+"i": 3,
+"method": "sim",
+"region": "text",
+"err": 1.3492339101897772
+},
+{
+"pair": 85,
+"i": 4,
+"method": "sim",
+"region": "pic",
+"err": 5.452849383760977
+},
+{
+"pair": 85,
+"i": 5,
+"method": "sim",
+"region": "pic",
+"err": 1.9060027117044946
+},
+{
+"pair": 85,
+"i": 6,
+"method": "sim",
+"region": "pic",
+"err": 3.5220198020309486
+},
+{
+"pair": 85,
+"i": 7,
+"method": "sim",
+"region": "pic",
+"err": 4.436339278540352
+},
+{
+"pair": 85,
+"i": 0,
+"method": "sim+warp",
+"region": "text",
+"err": 0.5258390564987867
+},
+{
+"pair": 85,
+"i": 1,
+"method": "sim+warp",
+"region": "text",
+"err": 0.5361264275033649
+},
+{
+"pair": 85,
+"i": 2,
+"method": "sim+warp",
+"region": "text",
+"err": 1.188131362617343
+},
+{
+"pair": 85,
+"i": 3,
+"method": "sim+warp",
+"region": "text",
+"err": 0.7563290325438567
+},
+{
+"pair": 85,
+"i": 4,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.7672504963591312
+},
+{
+"pair": 85,
+"i": 5,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.16708459332797967
+},
+{
+"pair": 85,
+"i": 6,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.6392911613427306
+},
+{
+"pair": 85,
+"i": 7,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.15088589344894862
+},
+{
+"pair": 85,
+"i": 0,
+"method": "vdiff600",
+"region": "text",
+"err": 0.433714216712786
+},
+{
+"pair": 85,
+"i": 1,
+"method": "vdiff600",
+"region": "text",
+"err": 0.6283474337432761
+},
+{
+"pair": 85,
+"i": 2,
+"method": "vdiff600",
+"region": "text",
+"err": 0.9274344961772254
+},
+{
+"pair": 85,
+"i": 3,
+"method": "vdiff600",
+"region": "text",
+"err": 0.8286873972371287
+},
+{
+"pair": 85,
+"i": 4,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.8555504177056377
+},
+{
+"pair": 85,
+"i": 5,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.3734618451890341
+},
+{
+"pair": 85,
+"i": 6,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.8166796474710725
+},
+{
+"pair": 85,
+"i": 7,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.14209342834242977
+},
+{
+"pair": 85,
+"i": 0,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.47822011511340795
+},
+{
+"pair": 85,
+"i": 1,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.7012382788480179
+},
+{
+"pair": 85,
+"i": 2,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.9381826449925037
+},
+{
+"pair": 85,
+"i": 3,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.7875898150394546
+},
+{
+"pair": 85,
+"i": 4,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.7742973853938049
+},
+{
+"pair": 85,
+"i": 5,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.32860206492982974
+},
+{
+"pair": 85,
+"i": 6,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.794910634756231
+},
+{
+"pair": 85,
+"i": 7,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.28908357490750564
+},
+{
+"pair": 85,
+"i": 0,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.4553674637225355
+},
+{
+"pair": 85,
+"i": 1,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.9810895960676438
+},
+{
+"pair": 85,
+"i": 2,
+"method": "homog_ecc",
+"region": "text",
+"err": 1.1013007693325585
+},
+{
+"pair": 85,
+"i": 3,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.5567207532122037
+},
+{
+"pair": 85,
+"i": 4,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.8932620615227138
+},
+{
+"pair": 85,
+"i": 5,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.2014045203025482
+},
+{
+"pair": 85,
+"i": 6,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.8127828402734513
+},
+{
+"pair": 85,
+"i": 7,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.5135316488193283
+},
+{
+"pair": 85,
+"i": 0,
+"method": "affine",
+"region": "text",
+"err": 0.9183397946828148
+},
+{
+"pair": 85,
+"i": 1,
+"method": "affine",
+"region": "text",
+"err": 0.8779805710546457
+},
+{
+"pair": 85,
+"i": 2,
+"method": "affine",
+"region": "text",
+"err": 1.2385309106298579
+},
+{
+"pair": 85,
+"i": 3,
+"method": "affine",
+"region": "text",
+"err": 0.5768148872426346
+},
+{
+"pair": 85,
+"i": 4,
+"method": "affine",
+"region": "pic",
+"err": 1.1937527558583048
+},
+{
+"pair": 85,
+"i": 5,
+"method": "affine",
+"region": "pic",
+"err": 0.2038048510082236
+},
+{
+"pair": 85,
+"i": 6,
+"method": "affine",
+"region": "pic",
+"err": 1.126952498337204
+},
+{
+"pair": 85,
+"i": 7,
+"method": "affine",
+"region": "pic",
+"err": 0.7359730723919696
+},
+{
+"pair": 85,
+"i": 0,
+"method": "fit_similarity",
+"region": "text",
+"err": 5.7530733005146635
+},
+{
+"pair": 85,
+"i": 1,
+"method": "fit_similarity",
+"region": "text",
+"err": 7.746508790289393
+},
+{
+"pair": 85,
+"i": 2,
+"method": "fit_similarity",
+"region": "text",
+"err": 7.5204133142453955
+},
+{
+"pair": 85,
+"i": 3,
+"method": "fit_similarity",
+"region": "text",
+"err": 3.581116871227327
+},
+{
+"pair": 85,
+"i": 4,
+"method": "fit_similarity",
+"region": "pic",
+"err": 3.7227474339771836
+},
+{
+"pair": 85,
+"i": 5,
+"method": "fit_similarity",
+"region": "pic",
+"err": 3.455694797258691
+},
+{
+"pair": 85,
+"i": 6,
+"method": "fit_similarity",
+"region": "pic",
+"err": 9.29467034130781
+},
+{
+"pair": 85,
+"i": 7,
+"method": "fit_similarity",
+"region": "pic",
+"err": 7.668400905265603
+},
+{
+"pair": 85,
+"i": 0,
+"method": "fit_affine",
+"region": "text",
+"err": 1.3064553830672614
+},
+{
+"pair": 85,
+"i": 1,
+"method": "fit_affine",
+"region": "text",
+"err": 1.744022776329982
+},
+{
+"pair": 85,
+"i": 2,
+"method": "fit_affine",
+"region": "text",
+"err": 0.6969867053156606
+},
+{
+"pair": 85,
+"i": 3,
+"method": "fit_affine",
+"region": "text",
+"err": 0.9544284725113261
+},
+{
+"pair": 85,
+"i": 4,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.3797797470635553
+},
+{
+"pair": 85,
+"i": 5,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.2830362610142937
+},
+{
+"pair": 85,
+"i": 6,
+"method": "fit_affine",
+"region": "pic",
+"err": 3.156670353107109
+},
+{
+"pair": 85,
+"i": 7,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.9195326916089093
+},
+{
+"pair": 85,
+"i": 0,
+"method": "fit_homography",
+"region": "text",
+"err": 0.6267357911690836
+},
+{
+"pair": 85,
+"i": 1,
+"method": "fit_homography",
+"region": "text",
+"err": 2.2139441871315517
+},
+{
+"pair": 85,
+"i": 2,
+"method": "fit_homography",
+"region": "text",
+"err": 0.6629460845989039
+},
+{
+"pair": 85,
+"i": 3,
+"method": "fit_homography",
+"region": "text",
+"err": 1.173060063096277
+},
+{
+"pair": 85,
+"i": 4,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.5818424429679208
+},
+{
+"pair": 85,
+"i": 5,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.6496649792228248
+},
+{
+"pair": 85,
+"i": 6,
+"method": "fit_homography",
+"region": "pic",
+"err": 2.5604280544009157
+},
+{
+"pair": 85,
+"i": 7,
+"method": "fit_homography",
+"region": "pic",
+"err": 2.8337344686765316
+},
+{
+"pair": 99,
+"i": 0,
+"method": "sim",
+"region": "text",
+"err": 4.670901135187624
+},
+{
+"pair": 99,
+"i": 1,
+"method": "sim",
+"region": "text",
+"err": 2.203962149868259
+},
+{
+"pair": 99,
+"i": 2,
+"method": "sim",
+"region": "text",
+"err": 1.551797188737451
+},
+{
+"pair": 99,
+"i": 3,
+"method": "sim",
+"region": "text",
+"err": 1.204291962736519
+},
+{
+"pair": 99,
+"i": 4,
+"method": "sim",
+"region": "pic",
+"err": 0.9307007210557557
+},
+{
+"pair": 99,
+"i": 5,
+"method": "sim",
+"region": "pic",
+"err": 2.5167424896651585
+},
+{
+"pair": 99,
+"i": 6,
+"method": "sim",
+"region": "pic",
+"err": 2.1917704643137474
+},
+{
+"pair": 99,
+"i": 7,
+"method": "sim",
+"region": "pic",
+"err": 9.75517314866198
+},
+{
+"pair": 99,
+"i": 0,
+"method": "sim+warp",
+"region": "text",
+"err": 0.26213914415897077
+},
+{
+"pair": 99,
+"i": 1,
+"method": "sim+warp",
+"region": "text",
+"err": 0.6058255730773792
+},
+{
+"pair": 99,
+"i": 2,
+"method": "sim+warp",
+"region": "text",
+"err": 0.7919399330348851
+},
+{
+"pair": 99,
+"i": 3,
+"method": "sim+warp",
+"region": "text",
+"err": 0.3497017396735659
+},
+{
+"pair": 99,
+"i": 4,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.2602658929885522
+},
+{
+"pair": 99,
+"i": 5,
+"method": "sim+warp",
+"region": "pic",
+"err": 0.34063684037827635
+},
+{
+"pair": 99,
+"i": 6,
+"method": "sim+warp",
+"region": "pic",
+"err": 1.2049696566584536
+},
+{
+"pair": 99,
+"i": 7,
+"method": "sim+warp",
+"region": "pic",
+"err": 1.523639393337491
+},
+{
+"pair": 99,
+"i": 0,
+"method": "vdiff600",
+"region": "text",
+"err": 0.4011351396234198
+},
+{
+"pair": 99,
+"i": 1,
+"method": "vdiff600",
+"region": "text",
+"err": 1.1683617246851352
+},
+{
+"pair": 99,
+"i": 2,
+"method": "vdiff600",
+"region": "text",
+"err": 0.55818213281479
+},
+{
+"pair": 99,
+"i": 3,
+"method": "vdiff600",
+"region": "text",
+"err": 0.5494374382286155
+},
+{
+"pair": 99,
+"i": 4,
+"method": "vdiff600",
+"region": "pic",
+"err": 1.0759723948565325
+},
+{
+"pair": 99,
+"i": 5,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.13537424572027523
+},
+{
+"pair": 99,
+"i": 6,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.5762622592163396
+},
+{
+"pair": 99,
+"i": 7,
+"method": "vdiff600",
+"region": "pic",
+"err": 0.5645188852465172
+},
+{
+"pair": 99,
+"i": 0,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.2601749205048573
+},
+{
+"pair": 99,
+"i": 1,
+"method": "vdiff1000",
+"region": "text",
+"err": 1.038204419761583
+},
+{
+"pair": 99,
+"i": 2,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.6621460773818899
+},
+{
+"pair": 99,
+"i": 3,
+"method": "vdiff1000",
+"region": "text",
+"err": 0.38580747840299917
+},
+{
+"pair": 99,
+"i": 4,
+"method": "vdiff1000",
+"region": "pic",
+"err": 1.0584819857547172
+},
+{
+"pair": 99,
+"i": 5,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.17300946352706995
+},
+{
+"pair": 99,
+"i": 6,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.5614564661566687
+},
+{
+"pair": 99,
+"i": 7,
+"method": "vdiff1000",
+"region": "pic",
+"err": 0.7408752893742658
+},
+{
+"pair": 99,
+"i": 0,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.3791013866295805
+},
+{
+"pair": 99,
+"i": 1,
+"method": "homog_ecc",
+"region": "text",
+"err": 1.0359575266803454
+},
+{
+"pair": 99,
+"i": 2,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.490186177055066
+},
+{
+"pair": 99,
+"i": 3,
+"method": "homog_ecc",
+"region": "text",
+"err": 0.5763069849598569
+},
+{
+"pair": 99,
+"i": 4,
+"method": "homog_ecc",
+"region": "pic",
+"err": 1.0137248350968295
+},
+{
+"pair": 99,
+"i": 5,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.31810294678029216
+},
+{
+"pair": 99,
+"i": 6,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.6326416922431816
+},
+{
+"pair": 99,
+"i": 7,
+"method": "homog_ecc",
+"region": "pic",
+"err": 0.28668493083163715
+},
+{
+"pair": 99,
+"i": 0,
+"method": "affine",
+"region": "text",
+"err": 0.36956621077700874
+},
+{
+"pair": 99,
+"i": 1,
+"method": "affine",
+"region": "text",
+"err": 0.8042768827404265
+},
+{
+"pair": 99,
+"i": 2,
+"method": "affine",
+"region": "text",
+"err": 0.45558046907783406
+},
+{
+"pair": 99,
+"i": 3,
+"method": "affine",
+"region": "text",
+"err": 0.3273818203875512
+},
+{
+"pair": 99,
+"i": 4,
+"method": "affine",
+"region": "pic",
+"err": 1.2931520061171249
+},
+{
+"pair": 99,
+"i": 5,
+"method": "affine",
+"region": "pic",
+"err": 0.3781768785838319
+},
+{
+"pair": 99,
+"i": 6,
+"method": "affine",
+"region": "pic",
+"err": 0.752736727637314
+},
+{
+"pair": 99,
+"i": 7,
+"method": "affine",
+"region": "pic",
+"err": 0.3565043289718481
+},
+{
+"pair": 99,
+"i": 0,
+"method": "fit_similarity",
+"region": "text",
+"err": 5.306053166675605
+},
+{
+"pair": 99,
+"i": 1,
+"method": "fit_similarity",
+"region": "text",
+"err": 4.497924985506637
+},
+{
+"pair": 99,
+"i": 2,
+"method": "fit_similarity",
+"region": "text",
+"err": 1.7717306050612056
+},
+{
+"pair": 99,
+"i": 3,
+"method": "fit_similarity",
+"region": "text",
+"err": 3.1334362955604167
+},
+{
+"pair": 99,
+"i": 4,
+"method": "fit_similarity",
+"region": "pic",
+"err": 3.0990969629706973
+},
+{
+"pair": 99,
+"i": 5,
+"method": "fit_similarity",
+"region": "pic",
+"err": 1.730394733117623
+},
+{
+"pair": 99,
+"i": 6,
+"method": "fit_similarity",
+"region": "pic",
+"err": 6.88841962887697
+},
+{
+"pair": 99,
+"i": 7,
+"method": "fit_similarity",
+"region": "pic",
+"err": 10.52709637560394
+},
+{
+"pair": 99,
+"i": 0,
+"method": "fit_affine",
+"region": "text",
+"err": 1.0708779202828298
+},
+{
+"pair": 99,
+"i": 1,
+"method": "fit_affine",
+"region": "text",
+"err": 0.26784087027915937
+},
+{
+"pair": 99,
+"i": 2,
+"method": "fit_affine",
+"region": "text",
+"err": 1.385670006621558
+},
+{
+"pair": 99,
+"i": 3,
+"method": "fit_affine",
+"region": "text",
+"err": 0.5115015118135043
+},
+{
+"pair": 99,
+"i": 4,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.1638187377925153
+},
+{
+"pair": 99,
+"i": 5,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.4560325228499962
+},
+{
+"pair": 99,
+"i": 6,
+"method": "fit_affine",
+"region": "pic",
+"err": 1.8603874322013234
+},
+{
+"pair": 99,
+"i": 7,
+"method": "fit_affine",
+"region": "pic",
+"err": 0.7947542345396789
+},
+{
+"pair": 99,
+"i": 0,
+"method": "fit_homography",
+"region": "text",
+"err": 0.35238348562214367
+},
+{
+"pair": 99,
+"i": 1,
+"method": "fit_homography",
+"region": "text",
+"err": 1.4942131727172927
+},
+{
+"pair": 99,
+"i": 2,
+"method": "fit_homography",
+"region": "text",
+"err": 0.6400422750749637
+},
+{
+"pair": 99,
+"i": 3,
+"method": "fit_homography",
+"region": "text",
+"err": 0.47999381916925066
+},
+{
+"pair": 99,
+"i": 4,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.8876814356901203
+},
+{
+"pair": 99,
+"i": 5,
+"method": "fit_homography",
+"region": "pic",
+"err": 0.4747313215993529
+},
+{
+"pair": 99,
+"i": 6,
+"method": "fit_homography",
+"region": "pic",
+"err": 1.2739254389374863
+},
+{
+"pair": 99,
+"i": 7,
+"method": "fit_homography",
+"region": "pic",
+"err": 3.5122242752972848
+}
+]

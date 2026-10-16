@@ -1,0 +1,982 @@
+{
+ "1": [
+  {
+   "k": 0,
+   "region": "text",
+   "a_origin": [
+    336,
+    182
+   ],
+   "b_origin": [
+    279,
+    189
+   ]
+  },
+  {
+   "k": 1,
+   "region": "text",
+   "a_origin": [
+    608,
+    155
+   ],
+   "b_origin": [
+    578,
+    160
+   ]
+  },
+  {
+   "k": 2,
+   "region": "text",
+   "a_origin": [
+    277,
+    293
+   ],
+   "b_origin": [
+    214,
+    314
+   ]
+  },
+  {
+   "k": 3,
+   "region": "text",
+   "a_origin": [
+    496,
+    240
+   ],
+   "b_origin": [
+    455,
+    254
+   ]
+  },
+  {
+   "k": 4,
+   "region": "pic",
+   "a_origin": [
+    266,
+    721
+   ],
+   "b_origin": [
+    200,
+    791
+   ]
+  },
+  {
+   "k": 5,
+   "region": "pic",
+   "a_origin": [
+    778,
+    503
+   ],
+   "b_origin": [
+    763,
+    547
+   ]
+  },
+  {
+   "k": 6,
+   "region": "pic",
+   "a_origin": [
+    455,
+    1013
+   ],
+   "b_origin": [
+    407,
+    1118
+   ]
+  },
+  {
+   "k": 7,
+   "region": "pic",
+   "a_origin": [
+    837,
+    1165
+   ],
+   "b_origin": [
+    827,
+    1284
+   ]
+  }
+ ],
+ "9": [
+  {
+   "k": 0,
+   "region": "text",
+   "a_origin": [
+    353,
+    104
+   ],
+   "b_origin": [
+    342,
+    116
+   ]
+  },
+  {
+   "k": 1,
+   "region": "text",
+   "a_origin": [
+    708,
+    196
+   ],
+   "b_origin": [
+    706,
+    209
+   ]
+  },
+  {
+   "k": 2,
+   "region": "text",
+   "a_origin": [
+    473,
+    375
+   ],
+   "b_origin": [
+    466,
+    397
+   ]
+  },
+  {
+   "k": 3,
+   "region": "text",
+   "a_origin": [
+    654,
+    388
+   ],
+   "b_origin": [
+    651,
+    409
+   ]
+  },
+  {
+   "k": 4,
+   "region": "pic",
+   "a_origin": [
+    410,
+    478
+   ],
+   "b_origin": [
+    401,
+    504
+   ]
+  },
+  {
+   "k": 5,
+   "region": "pic",
+   "a_origin": [
+    824,
+    618
+   ],
+   "b_origin": [
+    826,
+    646
+   ]
+  },
+  {
+   "k": 6,
+   "region": "pic",
+   "a_origin": [
+    296,
+    1113
+   ],
+   "b_origin": [
+    285,
+    1165
+   ]
+  },
+  {
+   "k": 7,
+   "region": "pic",
+   "a_origin": [
+    834,
+    1188
+   ],
+   "b_origin": [
+    838,
+    1238
+   ]
+  }
+ ],
+ "16": [
+  {
+   "k": 0,
+   "region": "text",
+   "a_origin": [
+    470,
+    205
+   ],
+   "b_origin": [
+    479,
+    96
+   ]
+  },
+  {
+   "k": 1,
+   "region": "text",
+   "a_origin": [
+    595,
+    219
+   ],
+   "b_origin": [
+    612,
+    110
+   ]
+  },
+  {
+   "k": 2,
+   "region": "text",
+   "a_origin": [
+    168,
+    390
+   ],
+   "b_origin": [
+    161,
+    300
+   ]
+  },
+  {
+   "k": 3,
+   "region": "text",
+   "a_origin": [
+    703,
+    247
+   ],
+   "b_origin": [
+    727,
+    138
+   ]
+  },
+  {
+   "k": 4,
+   "region": "pic",
+   "a_origin": [
+    476,
+    749
+   ],
+   "b_origin": [
+    492,
+    683
+   ]
+  },
+  {
+   "k": 5,
+   "region": "pic",
+   "a_origin": [
+    584,
+    586
+   ],
+   "b_origin": [
+    605,
+    506
+   ]
+  },
+  {
+   "k": 6,
+   "region": "pic",
+   "a_origin": [
+    395,
+    1045
+   ],
+   "b_origin": [
+    409,
+    1004
+   ]
+  },
+  {
+   "k": 7,
+   "region": "pic",
+   "a_origin": [
+    513,
+    1027
+   ],
+   "b_origin": [
+    534,
+    982
+   ]
+  }
+ ],
+ "19": [
+  {
+   "k": 0,
+   "region": "text",
+   "a_origin": [
+    476,
+    231
+   ],
+   "b_origin": [
+    498,
+    222
+   ]
+  },
+  {
+   "k": 1,
+   "region": "text",
+   "a_origin": [
+    832,
+    159
+   ],
+   "b_origin": [
+    875,
+    147
+   ]
+  },
+  {
+   "k": 2,
+   "region": "text",
+   "a_origin": [
+    466,
+    389
+   ],
+   "b_origin": [
+    487,
+    392
+   ]
+  },
+  {
+   "k": 3,
+   "region": "text",
+   "a_origin": [
+    882,
+    417
+   ],
+   "b_origin": [
+    926,
+    423
+   ]
+  },
+  {
+   "k": 4,
+   "region": "pic",
+   "a_origin": [
+    401,
+    513
+   ],
+   "b_origin": [
+    417,
+    524
+   ]
+  },
+  {
+   "k": 5,
+   "region": "pic",
+   "a_origin": [
+    689,
+    777
+   ],
+   "b_origin": [
+    721,
+    808
+   ]
+  },
+  {
+   "k": 6,
+   "region": "pic",
+   "a_origin": [
+    106,
+    1005
+   ],
+   "b_origin": [
+    102,
+    1053
+   ]
+  },
+  {
+   "k": 7,
+   "region": "pic",
+   "a_origin": [
+    900,
+    1094
+   ],
+   "b_origin": [
+    942,
+    1149
+   ]
+  }
+ ],
+ "28": [
+  {
+   "k": 0,
+   "region": "text",
+   "a_origin": [
+    220,
+    165
+   ],
+   "b_origin": [
+    217,
+    151
+   ]
+  },
+  {
+   "k": 1,
+   "region": "text",
+   "a_origin": [
+    797,
+    117
+   ],
+   "b_origin": [
+    793,
+    97
+   ]
+  },
+  {
+   "k": 2,
+   "region": "text",
+   "a_origin": [
+    211,
+    389
+   ],
+   "b_origin": [
+    210,
+    380
+   ]
+  },
+  {
+   "k": 3,
+   "region": "text",
+   "a_origin": [
+    573,
+    234
+   ],
+   "b_origin": [
+    570,
+    218
+   ]
+  },
+  {
+   "k": 4,
+   "region": "pic",
+   "a_origin": [
+    179,
+    533
+   ],
+   "b_origin": [
+    179,
+    527
+   ]
+  },
+  {
+   "k": 5,
+   "region": "pic",
+   "a_origin": [
+    578,
+    575
+   ],
+   "b_origin": [
+    578,
+    566
+   ]
+  },
+  {
+   "k": 6,
+   "region": "pic",
+   "a_origin": [
+    473,
+    1075
+   ],
+   "b_origin": [
+    477,
+    1079
+   ]
+  },
+  {
+   "k": 7,
+   "region": "pic",
+   "a_origin": [
+    584,
+    1007
+   ],
+   "b_origin": [
+    587,
+    1008
+   ]
+  }
+ ],
+ "40": [
+  {
+   "k": 0,
+   "region": "text",
+   "a_origin": [
+    266,
+    174
+   ],
+   "b_origin": [
+    251,
+    173
+   ]
+  },
+  {
+   "k": 1,
+   "region": "text",
+   "a_origin": [
+    568,
+    221
+   ],
+   "b_origin": [
+    556,
+    215
+   ]
+  },
+  {
+   "k": 2,
+   "region": "text",
+   "a_origin": [
+    283,
+    290
+   ],
+   "b_origin": [
+    270,
+    292
+   ]
+  },
+  {
+   "k": 3,
+   "region": "text",
+   "a_origin": [
+    515,
+    282
+   ],
+   "b_origin": [
+    504,
+    279
+   ]
+  },
+  {
+   "k": 4,
+   "region": "pic",
+   "a_origin": [
+    188,
+    801
+   ],
+   "b_origin": [
+    184,
+    819
+   ]
+  },
+  {
+   "k": 5,
+   "region": "pic",
+   "a_origin": [
+    546,
+    475
+   ],
+   "b_origin": [
+    540,
+    477
+   ]
+  },
+  {
+   "k": 6,
+   "region": "pic",
+   "a_origin": [
+    247,
+    980
+   ],
+   "b_origin": [
+    247,
+    1002
+   ]
+  },
+  {
+   "k": 7,
+   "region": "pic",
+   "a_origin": [
+    529,
+    866
+   ],
+   "b_origin": [
+    530,
+    878
+   ]
+  }
+ ],
+ "64": [
+  {
+   "k": 0,
+   "region": "text",
+   "a_origin": [
+    260,
+    222
+   ],
+   "b_origin": [
+    252,
+    208
+   ]
+  },
+  {
+   "k": 1,
+   "region": "text",
+   "a_origin": [
+    571,
+    210
+   ],
+   "b_origin": [
+    558,
+    195
+   ]
+  },
+  {
+   "k": 2,
+   "region": "text",
+   "a_origin": [
+    227,
+    248
+   ],
+   "b_origin": [
+    221,
+    234
+   ]
+  },
+  {
+   "k": 3,
+   "region": "text",
+   "a_origin": [
+    529,
+    332
+   ],
+   "b_origin": [
+    516,
+    317
+   ]
+  },
+  {
+   "k": 4,
+   "region": "pic",
+   "a_origin": [
+    375,
+    824
+   ],
+   "b_origin": [
+    366,
+    807
+   ]
+  },
+  {
+   "k": 5,
+   "region": "pic",
+   "a_origin": [
+    911,
+    529
+   ],
+   "b_origin": [
+    890,
+    512
+   ]
+  },
+  {
+   "k": 6,
+   "region": "pic",
+   "a_origin": [
+    376,
+    879
+   ],
+   "b_origin": [
+    367,
+    862
+   ]
+  },
+  {
+   "k": 7,
+   "region": "pic",
+   "a_origin": [
+    499,
+    1016
+   ],
+   "b_origin": [
+    487,
+    998
+   ]
+  }
+ ],
+ "83": [
+  {
+   "k": 0,
+   "region": "text",
+   "a_origin": [
+    371,
+    61
+   ],
+   "b_origin": [
+    355,
+    53
+   ]
+  },
+  {
+   "k": 1,
+   "region": "text",
+   "a_origin": [
+    882,
+    204
+   ],
+   "b_origin": [
+    879,
+    200
+   ]
+  },
+  {
+   "k": 2,
+   "region": "text",
+   "a_origin": [
+    469,
+    305
+   ],
+   "b_origin": [
+    455,
+    307
+   ]
+  },
+  {
+   "k": 3,
+   "region": "text",
+   "a_origin": [
+    881,
+    378
+   ],
+   "b_origin": [
+    879,
+    381
+   ]
+  },
+  {
+   "k": 4,
+   "region": "pic",
+   "a_origin": [
+    313,
+    570
+   ],
+   "b_origin": [
+    296,
+    585
+   ]
+  },
+  {
+   "k": 5,
+   "region": "pic",
+   "a_origin": [
+    694,
+    497
+   ],
+   "b_origin": [
+    687,
+    507
+   ]
+  },
+  {
+   "k": 6,
+   "region": "pic",
+   "a_origin": [
+    405,
+    980
+   ],
+   "b_origin": [
+    391,
+    1014
+   ]
+  },
+  {
+   "k": 7,
+   "region": "pic",
+   "a_origin": [
+    848,
+    1072
+   ],
+   "b_origin": [
+    847,
+    1108
+   ]
+  }
+ ],
+ "85": [
+  {
+   "k": 0,
+   "region": "text",
+   "a_origin": [
+    284,
+    168
+   ],
+   "b_origin": [
+    265,
+    187
+   ]
+  },
+  {
+   "k": 1,
+   "region": "text",
+   "a_origin": [
+    828,
+    137
+   ],
+   "b_origin": [
+    807,
+    149
+   ]
+  },
+  {
+   "k": 2,
+   "region": "text",
+   "a_origin": [
+    161,
+    288
+   ],
+   "b_origin": [
+    143,
+    310
+   ]
+  },
+  {
+   "k": 3,
+   "region": "text",
+   "a_origin": [
+    748,
+    305
+   ],
+   "b_origin": [
+    729,
+    321
+   ]
+  },
+  {
+   "k": 4,
+   "region": "pic",
+   "a_origin": [
+    270,
+    694
+   ],
+   "b_origin": [
+    254,
+    722
+   ]
+  },
+  {
+   "k": 5,
+   "region": "pic",
+   "a_origin": [
+    722,
+    513
+   ],
+   "b_origin": [
+    704,
+    533
+   ]
+  },
+  {
+   "k": 6,
+   "region": "pic",
+   "a_origin": [
+    260,
+    1162
+   ],
+   "b_origin": [
+    246,
+    1200
+   ]
+  },
+  {
+   "k": 7,
+   "region": "pic",
+   "a_origin": [
+    825,
+    1017
+   ],
+   "b_origin": [
+    811,
+    1045
+   ]
+  }
+ ],
+ "99": [
+  {
+   "k": 0,
+   "region": "text",
+   "a_origin": [
+    381,
+    211
+   ],
+   "b_origin": [
+    404,
+    214
+   ]
+  },
+  {
+   "k": 1,
+   "region": "text",
+   "a_origin": [
+    877,
+    194
+   ],
+   "b_origin": [
+    923,
+    193
+   ]
+  },
+  {
+   "k": 2,
+   "region": "text",
+   "a_origin": [
+    445,
+    410
+   ],
+   "b_origin": [
+    471,
+    426
+   ]
+  },
+  {
+   "k": 3,
+   "region": "text",
+   "a_origin": [
+    642,
+    263
+   ],
+   "b_origin": [
+    677,
+    267
+   ]
+  },
+  {
+   "k": 4,
+   "region": "pic",
+   "a_origin": [
+    212,
+    756
+   ],
+   "b_origin": [
+    227,
+    796
+   ]
+  },
+  {
+   "k": 5,
+   "region": "pic",
+   "a_origin": [
+    663,
+    529
+   ],
+   "b_origin": [
+    699,
+    551
+   ]
+  },
+  {
+   "k": 6,
+   "region": "pic",
+   "a_origin": [
+    103,
+    902
+   ],
+   "b_origin": [
+    114,
+    953
+   ]
+  },
+  {
+   "k": 7,
+   "region": "pic",
+   "a_origin": [
+    929,
+    883
+   ],
+   "b_origin": [
+    977,
+    928
+   ]
+  }
+ ]
+}
