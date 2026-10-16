@@ -14,6 +14,7 @@ import {
   useCanvasImages,
   useCompareSources,
   useManifest,
+  type CompareBlend,
   type CompareMode,
   type SwipeDirection,
 } from '@nakamura196/iiif-viewer';
@@ -21,13 +22,23 @@ import Header from '@/components/Header';
 import { Link } from '@/i18n/routing';
 import ManifestInput from '@/components/Input';
 import CompareView, { type CompareMode3D } from '@/components/three/CompareView';
-import { choiceSidesOf, containersOf, contentParam, imageChoiceOf, labelIn } from '@nakamura196/iiif-viewer/core';
+import {
+  alignmentOf,
+  choiceSidesOf,
+  containersOf,
+  contentParam,
+  imageChoiceOf,
+  labelIn,
+  parseAlignment,
+  type Alignment,
+} from '@nakamura196/iiif-viewer/core';
 import { manifestFromParams } from '@nakamura196/iiif-viewer/core';
 
 const MODES: CompareMode[] = ['side', 'swipe', 'spyglass', 'overlay'];
 // overlay fades one picture into the other: images only
 const MODES_3D: CompareMode3D[] = ['side', 'swipe', 'spyglass'];
 const ZOOMS = [1, 2, 3];
+const BLENDS: CompareBlend[] = ['normal', 'difference', 'tint'];
 
 // A row of buttons of which one is on (the mode, the spyglass zoom).
 function Segmented<T extends string | number>({
@@ -144,7 +155,10 @@ function SourceList({
 // Images of different sources can be compared too: a Collection as iiif-content (its Manifests), and/or
 // repeated src=<Manifest or info.json URL>. Every Canvas that paints an image is a candidate; a and b are
 // then indexes of that list. Sources can be added and taken away on the page (they are kept as src= in the URL).
-// The URL keeps what is shown: ?iiif-content=...&canvas=0&a=0&b=1&mode=swipe(&zoom=2)(&opacity=50)(&dir=v)(&src=...)
+// A Curation gives one image per member (cut to its region). Two sources with as many images each are
+// compared pair by pair (the n-th of one with the n-th of the other; the pair can be stepped through).
+// align=<URL> reads an alignment file (see `parseAlignment`): B is then laid on A by the transform of the pair.
+// The URL keeps what is shown: ?iiif-content=...&canvas=0&a=0&b=1&mode=swipe(&zoom=2)(&opacity=50)(&blend=tint)(&dir=v)(&src=...)(&align=...)(&aligned=0)
 const CompareContent: NextPage = () => {
   const t = useTranslations('Compare');
   const locale = useLocale();
@@ -159,8 +173,14 @@ const CompareContent: NextPage = () => {
   const [srcs, setSrcs] = useState<string[]>([]);
   const [direction, setDirection] = useState<SwipeDirection>('horizontal');
   const [showSources, setShowSources] = useState(false);
+  const [blend, setBlend] = useState<CompareBlend>('normal');
+  const [alignUrl, setAlignUrl] = useState<string | null>(null);
+  const [alignment, setAlignment] = useState<Alignment | null>(null);
+  const [aligned, setAligned] = useState(true);
   // after a source is added: B becomes its first image once it is read (index of the source)
   const pendingB = useRef<number | null>(null);
+  // b= was given: keep it (otherwise two sources of the same size open at their first pair)
+  const pickGiven = useRef(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -171,6 +191,7 @@ const CompareContent: NextPage = () => {
     const a = Number(params.get('a') ?? 0);
     const b = Number(params.get('b') ?? 1);
     if (Number.isInteger(a) && Number.isInteger(b)) setPick([a, b]);
+    pickGiven.current = params.has('b');
     const c = Number(params.get('canvas') ?? 0);
     if (Number.isInteger(c) && c >= 0) setCanvas(c);
     const z = Number(params.get('zoom') ?? 1);
@@ -179,7 +200,25 @@ const CompareContent: NextPage = () => {
     if (o >= 0 && o <= 100) setOpacity(o);
     setSrcs(params.getAll('src').filter(Boolean));
     if (params.get('dir') === 'v') setDirection('vertical');
+    const bl = params.get('blend') as CompareBlend | null;
+    if (bl && BLENDS.includes(bl)) setBlend(bl);
+    setAlignUrl(params.get('align'));
+    if (params.get('aligned') === '0') setAligned(false);
   }, [setManifestUrl]);
+
+  useEffect(() => {
+    if (!alignUrl) return;
+    let cancelled = false;
+    fetch(alignUrl)
+      .then((r) => (r.ok ? r.json() : null))
+      .catch(() => null)
+      .then((json) => {
+        if (!cancelled) setAlignment(parseAlignment(json));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [alignUrl]);
 
   const sources = useMemo(() => [...(manifestUrl ? [manifestUrl] : []), ...srcs], [manifestUrl, srcs]);
   const found = useCompareSources(sources, locale);
@@ -238,10 +277,13 @@ const CompareContent: NextPage = () => {
     const keep = (key: string, value: string | null) => (value === null ? params.delete(key) : params.set(key, value));
     keep('canvas', is3D || canvasIndex === 0 ? null : String(canvasIndex));
     keep('zoom', !is3D && mode === 'spyglass' && zoom !== 1 ? String(zoom) : null);
-    keep('opacity', !is3D && mode === 'overlay' ? String(opacity) : null);
+    keep('opacity', !is3D && mode === 'overlay' && blend === 'normal' ? String(opacity) : null);
     keep('dir', mode === 'swipe' && direction === 'vertical' ? 'v' : null);
+    keep('blend', !is3D && mode === 'overlay' && blend !== 'normal' ? blend : null);
+    keep('align', alignUrl);
+    keep('aligned', alignUrl && !aligned ? '0' : null);
     window.history.replaceState(null, '', `?${params.toString()}`);
-  }, [manifestUrl, srcs, pick, mode, is3D, canvasIndex, zoom, opacity, direction]);
+  }, [manifestUrl, srcs, pick, mode, is3D, canvasIndex, zoom, opacity, direction, blend, alignUrl, aligned]);
 
   const main = paintedModels[0];
   const options = useMemo(
@@ -287,9 +329,38 @@ const CompareContent: NextPage = () => {
   const select = (side: 0 | 1, value: number) =>
     setPick((p) => (side === 0 ? [value, p[1]] : [p[0], value]));
 
+  // two sources with as many images each: the n-th of one is compared with the n-th of the other
+  const pairSize = multi && found.counts.length === 2 && found.counts[0] === found.counts[1] ? found.counts[0] : 0;
+  const pairIndex = pairSize > 1 && clamp(pick[1]) - clamp(pick[0]) === pairSize ? clamp(pick[0]) : -1;
+  useEffect(() => {
+    if (pickGiven.current || pairSize < 2) return;
+    pickGiven.current = true;
+    setPick([0, pairSize]);
+  }, [pairSize]);
+  const step = (d: number) =>
+    setPick((p) => {
+      const n = entries.length;
+      const a = clamp(p[0]) + d;
+      const b = clamp(p[1]) + d;
+      return a < 0 || b < 0 || a >= n || b >= n ? p : [a, b];
+    });
+  const pairName = (i: number) => {
+    const name = entries[i]?.label ?? '';
+    const cut = name.lastIndexOf(' — ');
+    return cut < 0 ? String(i + 1) : name.slice(cut + 3);
+  };
+
+  // the transform of the pair shown (undefined: the file does not list it; null: it could not be aligned)
+  const alignB = useMemo(() => {
+    if (!multi || !alignment) return undefined;
+    return alignmentOf(alignment, found.candidates[clamp(pick[0])]?.id, found.candidates[clamp(pick[1])]?.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [multi, alignment, found.candidates, pick, entries.length]);
+
   const selectClass =
     'text-sm rounded border border-[var(--ds-border)] bg-[var(--ds-surface)] text-[var(--ds-fg)] px-2 py-1 max-w-[12rem]';
   const labelClass = 'flex items-center gap-1.5 text-sm text-[var(--ds-fg)]';
+  const stepClass = 'text-sm px-2 py-1 rounded border border-[var(--ds-border)] text-[var(--ds-fg)] hover:bg-[var(--ds-surface-2)]';
 
   let noChoice: string | null = null;
   if (is3D && options.length < 2) noChoice = t('noChoice');
@@ -349,7 +420,48 @@ const CompareContent: NextPage = () => {
                     <Segmented label={t('zoom')} items={ZOOMS} value={zoom} onChange={setZoom} text={(z) => `×${z}`} />
                   </span>
                 )}
+                {multi && entries.length > 2 && (
+                  <span className={labelClass}>
+                    <button type="button" onClick={() => step(-1)} aria-label={t('prevPair')} title={t('prevPair')} className={stepClass}>
+                      ‹
+                    </button>
+                    {pairIndex >= 0 ? (
+                      <select
+                        value={pairIndex}
+                        onChange={(e) => setPick([Number(e.target.value), Number(e.target.value) + pairSize])}
+                        aria-label={t('pair')}
+                        className={selectClass}
+                      >
+                        {Array.from({ length: pairSize }, (_, i) => (
+                          <option key={i} value={i}>
+                            {pairName(i)}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      pairSize > 1 && (
+                        <button type="button" onClick={() => setPick([clamp(pick[0]) % pairSize, (clamp(pick[0]) % pairSize) + pairSize])} className={stepClass}>
+                          {t('pairUp')}
+                        </button>
+                      )
+                    )}
+                    <button type="button" onClick={() => step(1)} aria-label={t('nextPair')} title={t('nextPair')} className={stepClass}>
+                      ›
+                    </button>
+                  </span>
+                )}
+                {alignment && (
+                  <label className={labelClass}>
+                    <input type="checkbox" checked={aligned} onChange={(e) => setAligned(e.target.checked)} />
+                    {t('align')}
+                    {aligned && alignB === null && <span className="text-xs text-[var(--ds-fg-muted)]">{t('alignFailed')}</span>}
+                    {aligned && alignB === undefined && <span className="text-xs text-[var(--ds-fg-muted)]">{t('alignNone')}</span>}
+                  </label>
+                )}
                 {!is3D && shownMode === 'overlay' && (
+                  <Segmented label={t('blend')} items={BLENDS} value={blend} onChange={setBlend} text={(b) => t(`blends.${b}`)} />
+                )}
+                {!is3D && shownMode === 'overlay' && blend === 'normal' && (
                   <label className={labelClass}>
                     {t('opacity')}
                     <input
@@ -410,6 +522,8 @@ const CompareContent: NextPage = () => {
                       swipeHandleLabel={t('swipeHandle')}
                       spyglassHint={t('spyglassHint')}
                       swipeDirection={direction}
+                      alignB={aligned ? alignB : undefined}
+                      blend={blend}
                     />
                   )
                 )}

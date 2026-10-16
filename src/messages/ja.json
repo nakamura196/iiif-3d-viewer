@@ -151,7 +151,20 @@
     "unreadable": "読めませんでした",
     "invalidUrl": "URL の形になっていません",
     "alreadyAdded": "この資料はもう入っています",
-    "addAnother": "この資料だけでは見比べられません。下の欄に、もう 1 つ資料の URL を足してください"
+    "addAnother": "この資料だけでは見比べられません。下の欄に、もう 1 つ資料の URL を足してください",
+    "blend": "重ね方",
+    "blends": {
+      "normal": "透かす",
+      "difference": "差",
+      "tint": "色分け（A 赤・B 青緑）"
+    },
+    "pair": "組",
+    "prevPair": "前の組",
+    "nextPair": "次の組",
+    "pairUp": "同じ番号どうしにする",
+    "align": "位置を合わせる",
+    "alignFailed": "（この組は合わせられませんでした）",
+    "alignNone": "（この組の位置合わせはありません）"
   },
   "Samples": {
     "media": {

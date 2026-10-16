@@ -24,6 +24,8 @@ export { default as Metadata } from './metadata/Metadata';
 export {
   default as ImageCompareView,
   useCanvasImages,
+  TINT_COLORS,
+  type CompareBlend,
   type ImageCompareViewProps,
 } from './displays/ImageCompareView';
 export { useCompareSources } from './displays/useCompareSources';
