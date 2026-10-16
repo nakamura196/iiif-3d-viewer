@@ -115,8 +115,20 @@ const ManifestInput = ({
                 href={hrefOf(u.open)}
                 className="group block h-full rounded-lg border border-[var(--ds-border)] bg-[var(--ds-surface)] overflow-hidden hover:border-[var(--ds-primary)]"
               >
-                {/* 開いて何をすると何が起きるかを、数秒の動画で見せる */}
-                <UseCaseClip src={clipOf(u, locale)} poster={thumbnailOf(u, locale)} />
+                {/* 開いて何をすると何が起きるかを、数秒の動画で見せる。動画を撮ってあるのは featured の例だけなので、ほかはサムネイルを出す */}
+                {u.featured ? (
+                  <UseCaseClip src={clipOf(u, locale)} poster={thumbnailOf(u, locale)} />
+                ) : (
+                  // eslint-disable-next-line @next/next/no-img-element -- 静的書き出しなので next/image の最適化は使えない
+                  <img
+                    src={thumbnailOf(u, locale)}
+                    alt=""
+                    width={640}
+                    height={400}
+                    loading="lazy"
+                    className="w-full aspect-[16/10] object-cover bg-[var(--ds-surface-2)]"
+                  />
+                )}
                 {/* 見出しは「何ができるか」、その下に小さく資料の名前 */}
                 <span className="block p-2">
                   <span className="block font-medium text-[var(--ds-primary)] group-hover:underline">
