@@ -2,6 +2,7 @@ import { isCuration, resolveCuration } from '../features/curation';
 import { upgradeToV3 } from './upgradeV2';
 import { isImageInfoJson } from '../features/compareSources';
 import { manifestFromImageInfo } from './imageInfoManifest';
+import { manifestFromCanvas } from './canvasManifest';
 import { inlineSharedServices } from './sharedServices';
 
 const getJson = async (url: string): Promise<unknown> => {
@@ -32,6 +33,9 @@ export const fetchManifest = async (manifestUrl: string) => {
       if (!built) throw new Error('The image information could not be read');
       return built;
     }
+    // Canvas 単体（geo.ldas.jp の canvas.json など）は、その Canvas だけを載せた仮のマニフェストにする
+    const fromCanvas = manifestFromCanvas(raw, manifestUrl);
+    if (fromCanvas) return fromCanvas;
     // キュレーション（cr:Curation）は、元のマニフェストを取ってきて 1 冊の仮のマニフェストにする
     if (isCuration(raw)) {
       const built = await resolveCuration(raw, fetchJson);
