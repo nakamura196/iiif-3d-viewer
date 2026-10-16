@@ -167,3 +167,16 @@ ECC の結果は毎回負けて捨てられている（[1] [28] [64] [99] で確
 - G. Farnebäck. Two-Frame Motion Estimation Based on Polynomial Expansion. SCIA 2003.
 - T. Kroeger, R. Timofte, D. Dai, L. Van Gool. Fast Optical Flow using Dense Inverse Search. ECCV 2016.（DIS。局所補正に使っている側）
 - G. D. Evangelidis, E. Z. Psarakis. Parametric Image Alignment Using Enhanced Correlation Coefficient Maximization. IEEE TPAMI 30(10), 2008.（ECC）
+
+## 2026-10-16 記事にする前に確かめること（TODO）
+
+**TODO: この検証を ~/git/zenn の記事にする。** 書く前に、下の弱い所を確かめ直す（ファクトチェック）。
+
+- 「Kasane の方式が一番ずれが小さい」は RAFT だけの結果。Farneback では絵の 90% 点が逆転し（局所補正 2.01 対 射影 1.6〜1.7）、輪郭のチャンファー距離は差が付かなかった。物差しの間で一致しない差（0.1〜0.2 px）は「同程度」と書く
+- 局所補正はフロー（DIS）でずれを打ち消す作りなので、フローで測る物差し（RAFT・Farneback）には有利に出やすい。手法が違っても同じ偏りを持ちうる。補正に関わらない正解（手で打った対応点など）で測っていない
+- 「違いを消していないか」の指標（顔の枠で片方にだけ墨がある画素の割合）は、合わせが良くなっても違いを消しても同じ向きに下がる。どちらなのかを数字だけでは分けられない。目で見た画像が根拠
+- 手で直した vdiff.js の値は、人が直したものではなく ECC の最良値で代用した
+- vdiff.js は既定の設定（幅 600 / 1000、自動）。Kasane 側はこのデータに合わせて作った。条件は対等ではない
+- 10 組だけ。選び方は公開データの残差で散らした。顔の枠は 1 人が 1 回囲んだ
+- 前回は検証のプログラム自体に誤り（ECC の向き）があった。今回のプログラムも、ずれの量が分かっている人工の画像（既知のずらし）で、物差しが正しく測れるかを確かめてから記事にする
+- 単位は幅 1000 px に縮めた画像。墨の線の太さ（数 px）より小さい差に、実用上の意味があるかは別に論じる
