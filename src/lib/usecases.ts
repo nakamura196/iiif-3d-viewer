@@ -459,19 +459,19 @@ export const USE_CASES: UseCase[] = [
     site: 'https://ab.ldas.jp/ja/na-kamura-1263/rekion',
   },
   {
-    id: 'kaitou-ruler',
+    id: 'hyakki-ruler',
     added: '2026-10-16',
     title: {
-      ja: '『海東諸国紀』（画像に実寸の物差しを出す）',
-      en: 'Kaito Shokokuki (a ruler in real size on the image)',
+      ja: '『百鬼夜行図』（画像に実寸の物差しを出す）',
+      en: 'Hyakki Yagyō scroll (a ruler in real size on the image)',
     },
     note: {
-      ja: '東京大学史料編纂所が所蔵する、朝鮮で 1471 年に編まれた『海東諸国紀』です。公開されている法量（縦 32.6 cm × 横 21.2 cm）から 1 ピクセルの実寸を求め、IIIF の physdim（実寸を書く仕組み）としてマニフェストに書き足してあります。画像の上と左に cm の物差しが出て、拡大すると目盛りが細かくなります。左上の歯車で、単位（mm・cm・in）と色を変えられます。',
-      en: 'The Kaito Shokokuki, compiled in Korea in 1471, held by the Historiographical Institute, the University of Tokyo. From its published dimensions (32.6 cm by 21.2 cm) the real size of one pixel was worked out and added to the manifest as IIIF physdim (a way to state real size). Rulers in cm appear along the top and left of the image, and the ticks get finer as you zoom. The gear at the top left changes the unit (mm, cm, in) and colours.',
+      ja: '東京大学総合図書館が所蔵する江戸中期の絵巻『百鬼夜行図』です。公開されている法量（縦 28 cm）と画像の高さから 1 ピクセルの実寸を推定し、IIIF の physdim（実寸を書く仕組み）としてマニフェストに書き足してあります。画像の上と左に cm の物差しが出て、拡大すると目盛りが細かくなります。左上の歯車で、単位（mm・cm・in）と色を変えられます。',
+      en: 'The Hyakki Yagyō scroll, a mid-Edo handscroll held by the General Library, the University of Tokyo. From its published height (28 cm) and the height of the image, the real size of one pixel was estimated and added to the manifest as IIIF physdim (a way to state real size). Rulers in cm appear along the top and left of the image, and the ticks get finer as you zoom. The gear at the top left changes the unit (mm, cm, in) and colours.',
     },
-    open: { page: 'viewer', manifest: `${SITE_URL}/manifests/physdim-kaitou.json` },
+    open: { page: 'viewer', manifest: `${SITE_URL}/manifests/physdim-hyakki.json` },
     features: ['image', 'measure'],
-    site: 'https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/nihonzu/',
+    site: 'https://da.dl.itc.u-tokyo.ac.jp/portal/assets/fbd0479b-dbb4-4eaa-95b8-f27e1c423e4b',
   },
   {
     id: 'gallery-walk',

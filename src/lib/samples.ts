@@ -61,15 +61,6 @@ export const SAMPLES: Sample[] = [
     },
     manifest: withBasePath('/manifests/physdim-hyakki.json'),
   },
-  {
-    id: 'physdim-kaitou', media: 'image',
-    title: { ja: '実寸の物差し: 海東諸国紀', en: 'Physical ruler: Kaito Shokokuki' },
-    note: {
-      ja: '10 ページの冊子の例。どのページにも実寸（physdim）が書いてあり、ページを移しても物差しが付きます',
-      en: 'A 10-page book. Every page carries its physical size (physdim), so the ruler stays as you turn pages',
-    },
-    manifest: withBasePath('/manifests/physdim-kaitou.json'),
-  },
 ];
 
 // 「開く」の行き先（/viewer）。一覧の画面と、サムネイルを撮るスクリプトの両方で使う
