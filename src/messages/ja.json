@@ -92,7 +92,17 @@
     "placeSearchFailed": "検索できませんでした。少し待ってからもう一度お試しください",
     "placeSearchCredit": "検索: Nominatim / © OpenStreetMap contributors",
     "geolocateFailed": "現在地を取得できませんでした",
-    "close": "閉じる"
+    "close": "閉じる",
+    "entryTitle": "地図と画像を並べて見る",
+    "entryDescription": "地点の付いた IIIF マニフェスト、または Canvas の URL を入力してください",
+    "entryHowTo": "使い方",
+    "entryHowTo1": "古地図や鳥瞰図などの画像（3D モデルでも可）と、現在の地図を並べて表示します。地点を選ぶと、両方で同じ場所が選ばれます。",
+    "entryHowTo2": "地点が 3 つ以上あれば、画像を地図に重ねられます。画像を回して、北を上にすることもできます。",
+    "entryHowTo3": "読むのは、IIIF Georeference Extension の注釈（motivation が georeferencing）です。",
+    "entryMoved": "geo.ldas.jp（IIIF Georeference Viewer）はこの画面に移りました。主な URL の引数はそのまま使えます。",
+    "entrySamples": "サンプル",
+    "entrySampleTags": "タグと説明の付いた例（Canvas 単体の JSON）",
+    "entrySampleTagsNote": "東京帝國大學本部構内及農學部建物鳥瞰圖。一覧をタグで絞り込めます。"
   },
   "Home": {
     "developers": "開発者",

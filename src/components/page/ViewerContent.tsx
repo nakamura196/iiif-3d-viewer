@@ -91,8 +91,11 @@ const ViewerContent: NextPage = () => {
             }
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <ManifestInput onSubmit={(url: string) => setManifestUrl(url)} />
+          <div className="w-full h-full overflow-y-auto flex px-4 py-8">
+            {/* 入口の画面。中身が画面より高いときは上から並べてスクロールさせ（真ん中寄せだと上が切れる）、幅はトップに近い 768px まで */}
+            <div className="m-auto w-full max-w-3xl">
+              <ManifestInput onSubmit={(url: string) => setManifestUrl(url)} />
+            </div>
           </div>
         )}
         {manifestUrl && (hasGeoCanvas || galleryOk) && (
