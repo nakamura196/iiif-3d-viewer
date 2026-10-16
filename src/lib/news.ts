@@ -212,12 +212,11 @@ export const NEWS: NewsItem[] = [
       en: 'A new Story tab',
     },
     body: {
-      ja: 'マニフェストの注釈を順に送りながら、その場面に寄って説明を読めます。倭寇図巻などの、既にあるストーリー用のマニフェストをそのまま開けます。',
-      en: 'Step through the annotations of a manifest, gliding to each scene as you read. Existing tour manifests such as the Wakō zukan story open as they are.',
+      ja: 'マニフェストの注釈を順に送りながら、その場面に寄って説明を読めます。既にあるストーリー用のマニフェストも、そのまま開けます。',
+      en: 'Step through the annotations of a manifest, gliding to each scene as you read. Existing tour manifests open as they are.',
     },
-    action: { href: hrefOfUseCase('wakozukan-story') },
-    usecases: ['wakozukan-story'],
-    video: { ja: 'VDXuQE6P34s', en: 'fXIwtvfEZ-Q' },
+    action: { href: hrefOfUseCase('ndl-emaki-story') },
+    usecases: ['ndl-emaki-story'],
   },
   {
     id: 'inference-ocr',

@@ -34,7 +34,8 @@ const arg = (name) => {
   const i = process.argv.indexOf(`--${name}`);
   return i < 0 ? undefined : process.argv[i + 1];
 };
-const base = (arg('base') ?? 'https://kasane.ldas.jp').replace(/\/$/, '');
+const SITE = 'https://kasane.ldas.jp';
+const base = (arg('base') ?? SITE).replace(/\/$/, '');
 const only = arg('only')?.split(',');
 const missingOnly = process.argv.includes('--missing');
 const waitArg = arg('wait') ? Number(arg('wait')) : undefined;
@@ -61,10 +62,11 @@ const PREPARE = {
   // 開いた直後は巻物の全体なので、一覧の場面を 1 つ押して、そこへ寄った画面を撮る
   // 推論タブは上からモデルが並ぶので、「クリックで切り出す」の項目が見える位置までスクロールする
   'click-outline-edonohanami': `[...document.querySelectorAll('div')].filter((e) => e.children.length === 0 && /^(クリックで切り出す|Click to outline)$/.test(e.textContent.trim()))[0]?.scrollIntoView({ block: 'center' })`,
-  'wakozukan-story': `[...document.querySelectorAll('nav button')].find((e) => e.textContent.includes('倭寇の上陸'))?.click()`,
+  // ストーリーは開いた直後だと 1 枚目の全体なので、「次へ」で最初の場面に寄った画面を撮る
+  'ndl-emaki-story': `[...document.querySelectorAll('button')].find((e) => e.textContent.includes('次へ') || e.textContent.includes('Next'))?.click()`,
 };
 // 操作のあと撮るまでの待ち時間（既定 3 秒）。深く寄ると、細かいタイルが届くまで時間がかかる
-const PREPARE_WAIT = { 'wakozukan-story': 12000 };
+const PREPARE_WAIT = { 'ndl-emaki-story': 12000 };
 
 const targets = [
   ...SAMPLES.map((s) => ({
@@ -150,7 +152,9 @@ const seekVideos = (at) => `Promise.all([...document.querySelectorAll('video, au
 
 let failed = 0;
 for (const t of targets) {
-  const url = `${base}/${t.locale ?? 'ja'}${t.href}`;
+  // 手元のサーバで撮るときは、このサイトのマニフェストも手元から読む（本番にまだ無いものを撮れるように）
+  const href = base === SITE ? t.href : t.href.replaceAll(encodeURIComponent(SITE), encodeURIComponent(base));
+  const url = `${base}/${t.locale ?? 'ja'}${href}`;
   const width = t.width ?? WIDTH;
   const { targetId } = await send('Target.createTarget', { url: 'about:blank' });
   const { sessionId } = await send('Target.attachToTarget', { targetId, flatten: true });

@@ -1,0 +1,723 @@
+{
+  "@context": "http://iiif.io/api/presentation/3/context.json",
+  "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json",
+  "type": "Manifest",
+  "label": {
+    "ja": [
+      "絵巻の世界「異界・異類の描かれ方」（国立国会図書館 電子展示会より）"
+    ],
+    "en": [
+      "The World of Emaki: “異界・異類の描かれ方” (from a National Diet Library online exhibition)"
+    ]
+  },
+  "summary": {
+    "ja": [
+      "第2章 第2節"
+    ]
+  },
+  "requiredStatement": {
+    "label": {
+      "ja": [
+        "出典"
+      ],
+      "en": [
+        "Source"
+      ]
+    },
+    "value": {
+      "ja": [
+        "出典：国立国会図書館「絵巻の世界」（https://www.ndl.go.jp/d_exhibitions/emaki/22）を加工して作成。画像：国立国会図書館デジタルコレクション"
+      ],
+      "en": [
+        "Text adapted from the National Diet Library online exhibition “Emaki no Sekai” (https://www.ndl.go.jp/d_exhibitions/emaki/22). Images: National Diet Library Digital Collections"
+      ]
+    }
+  },
+  "homepage": [
+    {
+      "id": "https://www.ndl.go.jp/d_exhibitions/emaki/22",
+      "type": "Text",
+      "format": "text/html",
+      "label": {
+        "ja": [
+          "絵巻の世界（国立国会図書館）"
+        ]
+      }
+    }
+  ],
+  "provider": [
+    {
+      "id": "https://www.ndl.go.jp/",
+      "type": "Agent",
+      "label": {
+        "ja": [
+          "国立国会図書館"
+        ],
+        "en": [
+          "National Diet Library"
+        ]
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "https://dl.ndl.go.jp/api/iiif/1288349/canvas/5",
+      "type": "Canvas",
+      "label": {
+        "ja": [
+          "俵藤太秀郷絵巻（5 コマ目）"
+        ]
+      },
+      "width": 6144,
+      "height": 4096,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/page/1288349-5",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/painting/1288349-5",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dl.ndl.go.jp/api/iiif/1288349/R0000005/full/full/0/default.jpg",
+                "type": "Image",
+                "format": "image/jpeg",
+                "width": 6144,
+                "height": 4096,
+                "service": [
+                  {
+                    "id": "https://dl.ndl.go.jp/api/iiif/1288349/R0000005",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ]
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/1288349/canvas/5"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotations/1288349-5",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotation/g1",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": {
+                "type": "TextualBody",
+                "value": "<h2>異界の描かれ方～境界～</h2><p>私たちの身近には様々な境界がある。両岸をつなぐ橋や山と里をつなぐ坂、山道の上りと下りの境目である峠、水面と接する水辺などである。言うなれば、2つの世界をつなぐと同時に、どちらの世界にも属する曖昧な場所であるそれらは、しばしば人間界と異界の境界として想像され、妖怪が現れたり、不思議なことが起こったりしやすい場所とされてきた。　物語の中では、妖怪が現れる場所が橋であったり、橋を渡るとそこに異界が開けることがある。そうした境界の場面が描かれた絵巻を紹介する。</p>",
+                "format": "text/html",
+                "language": "ja"
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/1288349/canvas/5"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotation/g1-1",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": {
+                "type": "TextualBody",
+                "value": "<h2>俵藤太秀郷絵巻</h2><p>41　 俵藤太秀郷繪巻　 [江戸時代]写 【WB35-1】</p><p>平安時代前期の武者藤原秀郷(ふじわらのひでさと)による百足(むかで)退治・竜宮行きの伝説と、平将門討伐の伝説を描いた絵巻です。展示箇所は、秀郷が渡る近江の瀬田唐橋に大蛇が横たわっている場面です。この後、橋下に2000年以上住む小男が現れて、秀郷に百足退治を頼みます。</p>",
+                "format": "text/html",
+                "language": "ja"
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/1288349/canvas/5#xywh=776,363,4632,3328"
+            }
+          ]
+        }
+      ],
+      "seeAlso": [
+        {
+          "id": "https://dl.ndl.go.jp/pid/1288349/1/5",
+          "type": "Text",
+          "format": "text/html",
+          "label": {
+            "ja": [
+              "国立国会図書館デジタルコレクション「俵藤太秀郷繪巻」"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "https://dl.ndl.go.jp/api/iiif/2542577/canvas/15",
+      "type": "Canvas",
+      "label": {
+        "ja": [
+          "華厳縁起（15 コマ目）"
+        ]
+      },
+      "width": 7192,
+      "height": 8758,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/page/2542577-15",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/painting/2542577-15",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dl.ndl.go.jp/api/iiif/2542577/R0000015/full/full/0/default.jpg",
+                "type": "Image",
+                "format": "image/jpeg",
+                "width": 7192,
+                "height": 8758,
+                "service": [
+                  {
+                    "id": "https://dl.ndl.go.jp/api/iiif/2542577/R0000015",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ]
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/2542577/canvas/15"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotations/2542577-15",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotation/g1-2",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": {
+                "type": "TextualBody",
+                "value": "<h2>華厳縁起</h2><p>43　 華厳縁起　書写年不明　※原本は鎌倉時代成立　【ん-13】</p><p>朝鮮に華厳宗を伝えた僧、義湘(ぎしょう)(625-702年)と元暁(げんぎょう)(617-685年)の伝記を描いた絵巻です。展示箇所は、2人が仏教を学ぶために唐に向かう途中、大雨で前に進めなくなり、塚(墓)に泊まる場面です。墓で眠ることへの不安が、夢の中に鬼となって現れています。</p>",
+                "format": "text/html",
+                "language": "ja"
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/2542577/canvas/15#xywh=352,1175,5296,6032"
+            }
+          ]
+        }
+      ],
+      "seeAlso": [
+        {
+          "id": "https://dl.ndl.go.jp/pid/2542577/1/15",
+          "type": "Text",
+          "format": "text/html",
+          "label": {
+            "ja": [
+              "国立国会図書館デジタルコレクション「華厳縁起」"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "https://dl.ndl.go.jp/api/iiif/2589670/canvas/30",
+      "type": "Canvas",
+      "label": {
+        "ja": [
+          "石山寺縁起（30 コマ目）"
+        ]
+      },
+      "width": 8687,
+      "height": 7911,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/page/2589670-30",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/painting/2589670-30",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dl.ndl.go.jp/api/iiif/2589670/R0000030/full/full/0/default.jpg",
+                "type": "Image",
+                "format": "image/jpeg",
+                "width": 8687,
+                "height": 7911,
+                "service": [
+                  {
+                    "id": "https://dl.ndl.go.jp/api/iiif/2589670/R0000030",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ]
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/2589670/canvas/30"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotations/2589670-30",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotation/g1-3",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": {
+                "type": "TextualBody",
+                "value": "<h2>石山寺縁起</h2><p>45　 石山縁起　書写年不明　※原本は鎌倉後期から江戸後期の成立【ぬ二-6】</p><p>近江国石山寺の草創と観音の霊験を描いた寺社縁起です。展示箇所は、寺の龍穴という池のほとりで、歴海和尚が孔雀経を読む場面です。池の中から経に書かれた龍王たちが現れます。龍穴は、炎天下でも雨ごいの祈念をすれば必ず雨が降る、霊験あらたかな池とされています。</p>",
+                "format": "text/html",
+                "language": "ja"
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/2589670/canvas/30#xywh=352,951,8304,5568"
+            }
+          ]
+        }
+      ],
+      "seeAlso": [
+        {
+          "id": "https://dl.ndl.go.jp/pid/2589670/1/30",
+          "type": "Text",
+          "format": "text/html",
+          "label": {
+            "ja": [
+              "国立国会図書館デジタルコレクション「石山縁起. [2]」"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "https://dl.ndl.go.jp/api/iiif/1287887/canvas/12",
+      "type": "Canvas",
+      "label": {
+        "ja": [
+          "大江山酒吞童子絵巻（12 コマ目）"
+        ]
+      },
+      "width": 6144,
+      "height": 4096,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/page/1287887-12",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/painting/1287887-12",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dl.ndl.go.jp/api/iiif/1287887/R0000012/full/full/0/default.jpg",
+                "type": "Image",
+                "format": "image/jpeg",
+                "width": 6144,
+                "height": 4096,
+                "service": [
+                  {
+                    "id": "https://dl.ndl.go.jp/api/iiif/1287887/R0000012",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ]
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/1287887/canvas/12"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotations/1287887-12",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotation/g2",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": {
+                "type": "TextualBody",
+                "value": "<h2>異界の描かれ方～唐風と波模様～</h2><p>異界の建物や人物の服装は、唐風（中国風）に描かれる場合が多い。また、屏風や壁に波模様が描かれることもある。これには、平安時代頃に流布したインドや中国の観念「龍宮」が関係する。古来、日本人は海中に異界を想像してきたが、そこに海や川の楽園的世界の龍宮が結びつく。龍宮は、日本では当時、最も具体的に知り得た異郷である中国や朝鮮の宮殿をもとに描かれ、そのイメージが後に異界の他の建物の描写にも波及したとされる。また、水は生活に欠かせないが、水中で人は生きられない。ゆえに異界のイメージは水と強く結びつき、境界である水辺を想像させる波模様が描かれたとも考えられる。</p>",
+                "format": "text/html",
+                "language": "ja"
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/1287887/canvas/12"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotation/g2-1",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": {
+                "type": "TextualBody",
+                "value": "<h2>大江山酒吞童子絵巻</h2><p>42　 大江山酒天童子絵巻物　[江戸中期]写 【寄別1-4-8】</p><p>平安時代、源頼光らが大江山に住む鬼の酒天(呑)童子を退治する物語を描いた絵巻です。</p>",
+                "format": "text/html",
+                "language": "ja"
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/1287887/canvas/12#xywh=992,707,3992,2632"
+            }
+          ]
+        }
+      ],
+      "seeAlso": [
+        {
+          "id": "https://dl.ndl.go.jp/pid/1287887/1/12",
+          "type": "Text",
+          "format": "text/html",
+          "label": {
+            "ja": [
+              "国立国会図書館デジタルコレクション「大江山酒天童子絵巻物. 一」"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "https://dl.ndl.go.jp/api/iiif/1288381/canvas/25",
+      "type": "Canvas",
+      "label": {
+        "ja": [
+          "伊吹とうし（25 コマ目）"
+        ]
+      },
+      "width": 6144,
+      "height": 4096,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/page/1288381-25",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/painting/1288381-25",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dl.ndl.go.jp/api/iiif/1288381/R0000025/full/full/0/default.jpg",
+                "type": "Image",
+                "format": "image/jpeg",
+                "width": 6144,
+                "height": 4096,
+                "service": [
+                  {
+                    "id": "https://dl.ndl.go.jp/api/iiif/1288381/R0000025",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ]
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/1288381/canvas/25"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotations/1288381-25",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotation/g2-2",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": {
+                "type": "TextualBody",
+                "value": "<h2>伊吹とうし</h2><p>44　 伊吹とうし　 [江戸前期]写 【寄別10-48】</p><p>御伽草子にもみられる「酒吞童子」の生い立ちを描いた絵巻です。異界の鬼である酒呑童子の館は、唐風で波模様も描かれています。当館所蔵資料は物語の前半部分を欠いていますが、題簽の文字や表紙、料紙、巻物の軸、絵などの共通点から、大英博物館蔵本と元々は一対の上下2巻だったのではないかと指摘する研究者もいます。</p>",
+                "format": "text/html",
+                "language": "ja"
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/1288381/canvas/25#xywh=576,579,4536,3072"
+            }
+          ]
+        }
+      ],
+      "seeAlso": [
+        {
+          "id": "https://dl.ndl.go.jp/pid/1288381/1/25",
+          "type": "Text",
+          "format": "text/html",
+          "label": {
+            "ja": [
+              "国立国会図書館デジタルコレクション「伊吹とうし」"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "https://dl.ndl.go.jp/api/iiif/2574235/canvas/34",
+      "type": "Canvas",
+      "label": {
+        "ja": [
+          "鳥獣戯画（34 コマ目）"
+        ]
+      },
+      "width": 6486,
+      "height": 6755,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/page/2574235-34",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/painting/2574235-34",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dl.ndl.go.jp/api/iiif/2574235/R0000034/full/full/0/default.jpg",
+                "type": "Image",
+                "format": "image/jpeg",
+                "width": 6486,
+                "height": 6755,
+                "service": [
+                  {
+                    "id": "https://dl.ndl.go.jp/api/iiif/2574235/R0000034",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ]
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/2574235/canvas/34"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotations/2574235-34",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotation/g2-3",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": {
+                "type": "TextualBody",
+                "value": "<h2>鳥獣戯画</h2><p>46　鳥羽僧正覚融絵巻 安達真速　写 明治26（1893）年 ※原本は平安末期から鎌倉時代の成立【す-24】</p><p>「最も有名な絵巻」のひとつともいわれる。甲乙丙丁の4巻から成る。擬人化された動物が描かれる甲巻が有名だが、乙巻には龍や麒麟といった空想上の動物が描かれ、丙・丁巻には人物も多数描かれており、「鳥獣人物戯画」とも呼ばれる。展示資料は、安達真速が明治26（1893）年に東寺で模写したもの。原本の高山寺所蔵本と比較すると、写しの正確さがよくわかる。安達真速は京都在住の画家。展示資料で用いている「幽斎真速」の他にも複数の名義で活躍し、金工としても名前が残る。著作の『都紋百華』は鮮やかな色彩のデザイン集であり、鳥獣戯画に登場する動物と似たデザインも見られる。京都府所蔵（京都文化博物館管理）の「鳥獣人物戯画　甲巻」には、同じ明治26年の安達真速の名前の奥書がある。</p>",
+                "format": "text/html",
+                "language": "ja"
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/2574235/canvas/34#xywh=40,843,6312,4464"
+            }
+          ]
+        }
+      ],
+      "seeAlso": [
+        {
+          "id": "https://dl.ndl.go.jp/pid/2574235/1/34",
+          "type": "Text",
+          "format": "text/html",
+          "label": {
+            "ja": [
+              "国立国会図書館デジタルコレクション「鳥羽僧正覚融絵巻. [2]」"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "https://dl.ndl.go.jp/api/iiif/2540972/canvas/14",
+      "type": "Canvas",
+      "label": {
+        "ja": [
+          "百鬼夜行絵巻（14 コマ目）"
+        ]
+      },
+      "width": 8701,
+      "height": 6937,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/page/2540972-14",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/painting/2540972-14",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dl.ndl.go.jp/api/iiif/2540972/R0000014/full/full/0/default.jpg",
+                "type": "Image",
+                "format": "image/jpeg",
+                "width": 8701,
+                "height": 6937,
+                "service": [
+                  {
+                    "id": "https://dl.ndl.go.jp/api/iiif/2540972/R0000014",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ]
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/2540972/canvas/14"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotations/2540972-14",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotation/g2-4",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": {
+                "type": "TextualBody",
+                "value": "<h2>百鬼夜行絵巻</h2><p>38　 百鬼夜行絵巻　 [江戸中期]写　【す-138】</p><p>妖怪や鬼が行進するかのように並ぶおなじみの絵巻。模本は数多いが、基本的に詞書がなく、いくつもの系統がある上に異なる系統が混ざったものもあり、いつ誰が制作したのか、テーマはなにか、元はどのような絵巻だったのか、謎が多い絵巻でもある。研究者の間で当館の請求記号から「す本」とも呼ばれる展示資料は、江戸時代の写しとみられ、重要文化財である京都の大徳寺真珠庵所蔵本の系統である。冒頭の詞書と、それに続く男2人が語り合う導入部の絵は、展示資料のほかにはニューヨーク公共図書館スペンサー・コレクション所蔵本しか確認されておらず、非常に珍しい。また、絵巻の作者を藤原経隆とする文献は明治期にはすでにあるが、藤原経隆の奥書は、明治時代の図版でのみ確認できる御物（皇室の私有品）と展示資料にしかない。これら諸本との関係も含め、今後の研究が待たれる絵巻である。</p>",
+                "format": "text/html",
+                "language": "ja"
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/2540972/canvas/14#xywh=976,1396,7504,4128"
+            }
+          ]
+        }
+      ],
+      "seeAlso": [
+        {
+          "id": "https://dl.ndl.go.jp/pid/2540972/1/14",
+          "type": "Text",
+          "format": "text/html",
+          "label": {
+            "ja": [
+              "国立国会図書館デジタルコレクション「百鬼夜行絵巻」"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "https://dl.ndl.go.jp/api/iiif/2574271/canvas/15",
+      "type": "Canvas",
+      "label": {
+        "ja": [
+          "付喪神絵巻（15 コマ目）"
+        ]
+      },
+      "width": 7333,
+      "height": 4991,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/page/2574271-15",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/painting/2574271-15",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://dl.ndl.go.jp/api/iiif/2574271/R0000015/full/full/0/default.jpg",
+                "type": "Image",
+                "format": "image/jpeg",
+                "width": 7333,
+                "height": 4991,
+                "service": [
+                  {
+                    "id": "https://dl.ndl.go.jp/api/iiif/2574271/R0000015",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ]
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/2574271/canvas/15"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotations/2574271-15",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/annotation/g2-6",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": {
+                "type": "TextualBody",
+                "value": "<h2>付喪神絵巻</h2><p>40　 付喪神繪  [江戸時代]写 【す-36】</p><p>器物が100年経つと妖怪に変化し付喪神になるという。平安時代中期、康保（964－968）のころのこと。都では様々な古道具たちが新年行事のすす払いで打ち捨てられていた。古道具たちは人間への復讐を誓う。数珠が化けた一連上人は古道具たちをいさめるが、追い出されてしまう。古道具たちは、節分の夜に妖怪に変化し、人間や牛馬を食べ、街を行進する。困った帝は、高僧に護法童子を呼び出させ、退治させる。退治された妖怪たちは反省し、追い出した一連上人を山奥に訪ねて出家し仏となった。原本の作者や制作年代は不明。妖怪たちが行進するさまなど、「百鬼夜行絵巻」との絵の共通点も見られる。室町時代作で最古とされる奈良の崇徳寺所蔵本と、当館所蔵の3点を含む江戸時代以降に制作されたと思われる模本十数点の2系統があり、話の筋は同じだが絵が大きく異なる。</p>",
+                "format": "text/html",
+                "language": "ja"
+              },
+              "target": "https://dl.ndl.go.jp/api/iiif/2574271/canvas/15#xywh=2264,747,4976,2888"
+            }
+          ]
+        }
+      ],
+      "seeAlso": [
+        {
+          "id": "https://dl.ndl.go.jp/pid/2574271/1/15",
+          "type": "Text",
+          "format": "text/html",
+          "label": {
+            "ja": [
+              "国立国会図書館デジタルコレクション「付喪神繪. [1]」"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "structures": [
+    {
+      "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/range/toc",
+      "type": "Range",
+      "label": {
+        "ja": [
+          "異界・異類の描かれ方"
+        ]
+      },
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/range/g1",
+          "type": "Range",
+          "label": {
+            "ja": [
+              "異界の描かれ方～境界～"
+            ]
+          },
+          "items": [
+            {
+              "id": "https://dl.ndl.go.jp/api/iiif/1288349/canvas/5",
+              "type": "Canvas"
+            },
+            {
+              "id": "https://dl.ndl.go.jp/api/iiif/2542577/canvas/15",
+              "type": "Canvas"
+            },
+            {
+              "id": "https://dl.ndl.go.jp/api/iiif/2589670/canvas/30",
+              "type": "Canvas"
+            }
+          ]
+        },
+        {
+          "id": "https://kasane.ldas.jp/manifests/ndl-emaki-story.json/range/g2",
+          "type": "Range",
+          "label": {
+            "ja": [
+              "異界の描かれ方～唐風と波模様～"
+            ]
+          },
+          "items": [
+            {
+              "id": "https://dl.ndl.go.jp/api/iiif/1287887/canvas/12",
+              "type": "Canvas"
+            },
+            {
+              "id": "https://dl.ndl.go.jp/api/iiif/1288381/canvas/25",
+              "type": "Canvas"
+            },
+            {
+              "id": "https://dl.ndl.go.jp/api/iiif/2574235/canvas/34",
+              "type": "Canvas"
+            },
+            {
+              "id": "https://dl.ndl.go.jp/api/iiif/2540972/canvas/14",
+              "type": "Canvas"
+            },
+            {
+              "id": "https://dl.ndl.go.jp/api/iiif/2574271/canvas/15",
+              "type": "Canvas"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
