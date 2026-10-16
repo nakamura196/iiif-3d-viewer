@@ -144,6 +144,7 @@ The image is not sent anywhere. All reading happens inside your browser. The res
   With two or more places, the image is turned on opening so that north is up (a `rotation` in the URL opens it at that angle instead). The "Rotation" button above the image changes the angle, turns north up again, or resets it to 0°.
   The list on the right finds places by name, alternative name, ID and tag (katakana and hiragana, and full- and half-width characters, are treated alike). When the places have tags, click a tag under the search box to show only the places with it.
   When a manifest has two or more images with places, switch between them with “‹ ›” under the image. The image shown is written into the URL as `canvas` (the Canvas id, or its position in the manifest).
+  At the top right of the map you can switch the base map (standard, GSI pale map, GSI aerial photo, Rekichizu), search for a place name to move there with a marker (using OpenStreetMap Nominatim), and press the target button to go to your current location (the browser asks for permission).
 
 ## Sharing a link
 

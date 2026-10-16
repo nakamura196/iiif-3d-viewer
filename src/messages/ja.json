@@ -81,7 +81,18 @@
     "noResults": "結果が見つかりません",
     "filterByTag": "タグで絞り込む",
     "prevCanvas": "前の画像",
-    "nextCanvas": "次の画像"
+    "nextCanvas": "次の画像",
+    "basemap": "背景地図",
+    "basemapStandard": "標準",
+    "basemapGsiPale": "地理院 淡色地図",
+    "basemapGsiPhoto": "地理院 写真",
+    "basemapRekichizu": "れきちず",
+    "placeSearch": "地名を検索",
+    "placeSearching": "検索しています…",
+    "placeSearchFailed": "検索できませんでした。少し待ってからもう一度お試しください",
+    "placeSearchCredit": "検索: Nominatim / © OpenStreetMap contributors",
+    "geolocateFailed": "現在地を取得できませんでした",
+    "close": "閉じる"
   },
   "Home": {
     "developers": "開発者",

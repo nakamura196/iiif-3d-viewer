@@ -81,7 +81,18 @@
     "noResults": "No results found",
     "filterByTag": "Filter by tag",
     "prevCanvas": "Previous image",
-    "nextCanvas": "Next image"
+    "nextCanvas": "Next image",
+    "basemap": "Base map",
+    "basemapStandard": "Standard",
+    "basemapGsiPale": "GSI pale map",
+    "basemapGsiPhoto": "GSI aerial photo",
+    "basemapRekichizu": "Rekichizu",
+    "placeSearch": "Search places",
+    "placeSearching": "Searching…",
+    "placeSearchFailed": "Search failed. Please wait a moment and try again",
+    "placeSearchCredit": "Search: Nominatim / © OpenStreetMap contributors",
+    "geolocateFailed": "Could not get your location",
+    "close": "Close"
   },
   "Home": {
     "developers": "Developers",
