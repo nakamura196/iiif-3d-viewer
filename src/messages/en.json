@@ -92,7 +92,17 @@
     "placeSearchFailed": "Search failed. Please wait a moment and try again",
     "placeSearchCredit": "Search: Nominatim / © OpenStreetMap contributors",
     "geolocateFailed": "Could not get your location",
-    "close": "Close"
+    "close": "Close",
+    "entryTitle": "View an image beside a map",
+    "entryDescription": "Enter the URL of an IIIF Manifest or Canvas that carries places",
+    "entryHowTo": "How it works",
+    "entryHowTo1": "Shows an old map or bird’s-eye view (or a 3D model) beside a modern map. Selecting a place picks the same spot on both.",
+    "entryHowTo2": "With three or more places, the image can be laid over the map. You can also turn the image so that north is up.",
+    "entryHowTo3": "Places are read from IIIF Georeference Extension annotations (motivation georeferencing).",
+    "entryMoved": "geo.ldas.jp (IIIF Georeference Viewer) has moved here. Its main URL parameters still work.",
+    "entrySamples": "Samples",
+    "entrySampleTags": "Example with tags and descriptions (a single Canvas JSON)",
+    "entrySampleTagsNote": "Bird’s-eye view of the Imperial University campus. The list can be filtered by tag."
   },
   "Home": {
     "developers": "Developers",

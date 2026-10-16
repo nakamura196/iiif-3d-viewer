@@ -12,6 +12,8 @@ import ManifestInput from '@/components/Input';
 import RotationControl from '@/components/map/RotationControl';
 import Header from '@/components/Header';
 import { Link } from '@/i18n/routing';
+import { SITE_URL } from '@/lib/site';
+import { USE_CASES, hrefOf } from '@/lib/usecases';
 import MapView, { type MapImageOverlay } from '@/components/map/MapView';
 import { convertToV4 } from '@nakamura196/iiif-viewer/core';
 import {
@@ -86,6 +88,10 @@ const pairsOf = (features: GeoFeature[]) =>
     lng: f.geometry.coordinates[0],
     lat: f.geometry.coordinates[1],
   }));
+
+// 入口に並べる例: 地図と画像の画面で開くユースケースと、geo.ldas.jp から移したタグ付きの Canvas
+const GEOREF_USE_CASES = USE_CASES.filter((u) => u.open.page === 'georef');
+const TAGGED_CANVAS_HREF = hrefOf({ page: 'georef', manifest: `${SITE_URL}/manifests/geo-hongo-canvas-tags.json` });
 
 const GeoRefContent: NextPage = () => {
   const t = useTranslations('GeoRef');
@@ -542,8 +548,36 @@ const GeoRefContent: NextPage = () => {
             </SidePanel>
           </div>
         ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <ManifestInput onSubmit={handleManifestSubmit} />
+          <div className="w-full h-full overflow-y-auto flex px-4 py-8">
+            {/* 入口の画面。中身が画面より高いときは上から並べてスクロールさせ（真ん中寄せだと上が切れる）、幅はトップに近い 768px まで */}
+            <div className="m-auto w-full max-w-3xl">
+              <ManifestInput
+                onSubmit={handleManifestSubmit}
+                title={t('entryTitle')}
+                description={t('entryDescription')}
+                useCases={GEOREF_USE_CASES}
+              >
+                {/* geo.ldas.jp から転送されて来た人が、何の画面かと使い方を分かるように */}
+                <div className="text-left text-sm text-[var(--ds-fg)] space-y-6">
+                  <section>
+                    <h3 className="font-medium mb-2">{t('entryHowTo')}</h3>
+                    <ul className="list-disc pl-5 space-y-1 text-[var(--ds-fg-muted)]">
+                      <li>{t('entryHowTo1')}</li>
+                      <li>{t('entryHowTo2')}</li>
+                      <li>{t('entryHowTo3')}</li>
+                    </ul>
+                    <p className="mt-3 text-[var(--ds-fg-muted)]">{t('entryMoved')}</p>
+                  </section>
+                  <section>
+                    <h3 className="font-medium mb-2">{t('entrySamples')}</h3>
+                    <Link href={TAGGED_CANVAS_HREF} className="text-[var(--ds-primary)] hover:underline">
+                      {t('entrySampleTags')}
+                    </Link>
+                    <p className="text-xs text-[var(--ds-fg-muted)]">{t('entrySampleTagsNote')}</p>
+                  </section>
+                </div>
+              </ManifestInput>
+            </div>
           </div>
         )}
       </main>

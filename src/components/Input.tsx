@@ -3,19 +3,27 @@ import { useState } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { buttonClass } from '@nakamura196/react-ui';
-import { FEATURED_USE_CASES, clipOf, hrefOf, thumbnailOf } from '@/lib/usecases';
+import { FEATURED_USE_CASES, clipOf, hrefOf, thumbnailOf, type UseCase } from '@/lib/usecases';
 import UseCaseClip from '@/components/usecases/UseCaseClip';
 
 const ManifestInput = ({
   onSubmit,
   children,
   compact = false,
+  title,
+  description,
+  useCases = FEATURED_USE_CASES,
 }: {
   onSubmit: (url: string, tab?: string) => void;
   // トップページ用: 大きなアイコンを出さず、入力欄とボタンを 1 行に並べる
   compact?: boolean;
   // フォームとユースケース一覧のあいだに差し込む内容（トップページのデモ動画など）
   children?: React.ReactNode;
+  // 見出しと説明を差し替える（地図と画像の画面など、ページ専用の入口にするとき）
+  title?: string;
+  description?: string;
+  // 並べるユースケース。既定はトップと同じ featured の 6 件
+  useCases?: UseCase[];
 }) => {
   const t = useTranslations('Input');
   const locale = useLocale() === 'en' ? 'en' : 'ja';
@@ -62,9 +70,9 @@ const ManifestInput = ({
             className={`${compact ? 'text-xl' : 'text-2xl'} font-bold text-[var(--ds-fg)] mb-2`}
             style={{ fontFamily: 'var(--ds-font-serif)' }}
           >
-            {t('title')}
+            {title ?? t('title')}
           </h2>
-          <p className={`text-[var(--ds-fg-muted)] ${compact ? 'text-sm' : ''}`}>{t('description')}</p>
+          <p className={`text-[var(--ds-fg-muted)] ${compact ? 'text-sm' : ''}`}>{description ?? t('description')}</p>
         </div>
 
         <form
@@ -100,8 +108,8 @@ const ManifestInput = ({
       <div className="mt-8 text-sm text-[var(--ds-fg-muted)]">
         <h3 className="font-medium mb-2">{t('sampleManifest')}:</h3>
         {/* 開いたときの画面（短い動画）つきで並べ、何ができるかを見せる。6 件を 3 列 × 2 行（主な機能の 3 列とそろえる） */}
-        <ul className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-left">
-          {FEATURED_USE_CASES.map((u) => (
+        <ul className={`grid grid-cols-2 ${useCases.length < 3 ? '' : 'sm:grid-cols-3'} gap-3 text-left`}>
+          {useCases.map((u) => (
             <li key={u.id}>
               <Link
                 href={hrefOf(u.open)}
