@@ -195,7 +195,8 @@ function PageOverlays({ host, pages }: { host: React.RefObject<HTMLDivElement | 
 function RegionHighlight({ host, container }: { host: React.RefObject<HTMLDivElement | null>; container: ContainerInfo }) {
   const focus = useAtomValue(focusAtom);
   const storyOpen = useAtomValue(storyOpenAtom);
-  const xywh = !storyOpen && focus && focus.target.canvasId === container.id ? focus.target.xywh : undefined;
+  const xywh =
+    !storyOpen && focus && focus.highlight !== false && focus.target.canvasId === container.id ? focus.target.xywh : undefined;
   const [box, setBox] = useState<{ left: number; top: number; width: number; height: number } | null>(null);
   const cw = container.width;
   const ch = container.height;

@@ -29,6 +29,8 @@ import { annotationsAtom, manifestAtom, manifestUrlAtom, modelChoicesAtom, paint
 export interface NavRequest {
   seq: number;
   target: CanvasTarget;
+  /** false: move there without drawing the box around the region (the asker marks it itself). */
+  highlight?: boolean;
 }
 
 export const navRequestAtom = atom<NavRequest | null>(null);
