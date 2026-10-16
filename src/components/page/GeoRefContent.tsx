@@ -33,6 +33,7 @@ import { useTranslations, useLocale } from 'next-intl';
 import {
   applyGeorefPatch,
   autoRotateOnSelectParams,
+  clusteringParams,
   contentParam,
   imageViewParams,
   localNorthUpRotation,
@@ -113,6 +114,8 @@ const GeoRefContent: NextPage = () => {
   const [rotation, setRotation] = useState(0);
   // 地図か一覧で地点を選んだら、その近くで北が上になるよう回すか。URL の autoRotateOnSelect と同じ
   const [autoRotateOnSelect, setAutoRotateOnSelect] = useState(false);
+  // 近い地点を 1 つにまとめて件数を出すか（地図と画像の両方）。URL の clustering と同じ。既定はまとめる
+  const [clustering, setClustering] = useState(true);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -120,6 +123,7 @@ const GeoRefContent: NextPage = () => {
     setUrlState(state);
     if (state.rotation !== undefined) setRotation(state.rotation);
     if (state.autoRotateOnSelect) setAutoRotateOnSelect(true);
+    if (state.clustering === false) setClustering(false);
     if (!state.manifest) return;
     setManifestUrl(state.manifest);
   }, [setManifestUrl]);
@@ -153,6 +157,14 @@ const GeoRefContent: NextPage = () => {
     (on: boolean) => {
       setAutoRotateOnSelect(on);
       writeParams(autoRotateOnSelectParams(on));
+    },
+    [writeParams]
+  );
+
+  const changeClustering = useCallback(
+    (on: boolean) => {
+      setClustering(on);
+      writeParams(clusteringParams(on));
     },
     [writeParams]
   );
@@ -308,8 +320,15 @@ const GeoRefContent: NextPage = () => {
           <div className="flex flex-col lg:flex-row w-full h-full">
             {/* Map */}
             <div className="flex-1 min-h-0 lg:h-full lg:flex-[2] relative border-b lg:border-b-0 lg:border-r border-gray-200 dark:border-gray-700">
-              <div className="absolute top-4 left-4 z-10 bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow text-sm font-medium text-gray-700 dark:text-gray-300">
-                {t('map')}
+              <div className="absolute top-4 left-4 z-10 flex items-center gap-2">
+                <div className="bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {t('map')}
+                </div>
+                {/* 地図と画像の両方に効く */}
+                <label className="flex items-center gap-1.5 cursor-pointer bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow text-sm text-gray-700 dark:text-gray-300">
+                  <input type="checkbox" checked={clustering} onChange={(e) => changeClustering(e.target.checked)} />
+                  {t('clustering')}
+                </label>
               </div>
               <MapView
                 features={geoFeatures}
@@ -320,6 +339,7 @@ const GeoRefContent: NextPage = () => {
                 focus={urlState?.focus}
                 initialSelectedId={urlState?.id ? featureIdFromParam(geoFeatures, urlState.id) : null}
                 onViewChange={handleMapViewChange}
+                clustering={clustering}
                 fitKey={geoCanvasId}
               />
             </div>
@@ -356,6 +376,7 @@ const GeoRefContent: NextPage = () => {
                   initialView={useUrlImageView ? urlState?.image : undefined}
                   onViewChange={handleImageViewChange}
                   rotation={rotation}
+                  clustering={clustering}
                 />
               )}
               {/* 地点の付いた Canvas が 2 つ以上あるとき、前後に切り替える */}

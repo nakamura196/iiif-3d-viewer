@@ -8,6 +8,7 @@
 //   rotation               画像の回転（度、反時計回りが正）。OpenSeadragon には符号を反転して渡していた。
 //                          無ければ、地点が 2 つ以上あるとき北が上になるよう自動で回す
 //   autoRotateOnSelect     true のとき、地図か一覧で地点を選ぶたびに、その近くで北が上になるよう回す
+//   clustering             false のとき、近い地点をまとめずに 1 つずつ出す（既定はまとめる）
 //   id                     選んでいる地点
 //   canvas                 見ている Canvas の id（地点の付いた Canvas が 2 つ以上あるとき）。
 //                          geo.ldas.jp には無い（いつも最初の Canvas で開いた）。Kasane のビューアの canvas と同じ名前
@@ -38,6 +39,8 @@ export interface GeorefUrlState {
   rotation?: number;
   /** 地点を選んだときに、その近くで北が上になるよう回すか。 */
   autoRotateOnSelect?: boolean;
+  /** 近い地点をまとめて出すか。URL に clustering=false があるときだけ false。 */
+  clustering?: boolean;
   id?: string;
   canvas?: string;
 }
@@ -101,6 +104,9 @@ export function readGeorefParams(params: URLSearchParams, manifestFromOther: str
   // geo.ldas.jp は 'true' か 'false' を書く。'true' のときだけ入れる
   if (params.get('autoRotateOnSelect') === 'true') state.autoRotateOnSelect = true;
 
+  // geo.ldas.jp は 'true' か 'false' を書く。'false' のときだけ切る
+  if (params.get('clustering') === 'false') state.clustering = false;
+
   const id = params.get('id');
   if (id) state.id = id;
   const canvas = params.get('canvas');
@@ -109,7 +115,7 @@ export function readGeorefParams(params: URLSearchParams, manifestFromOther: str
 }
 
 /** 書き戻す引数。null の項目は URL から消す。 */
-export type GeorefParamPatch = Partial<Record<'mapZoom' | 'mapLat' | 'mapLng' | 'zoom' | 'centerX' | 'centerY' | 'rotation' | 'autoRotateOnSelect' | 'id' | 'canvas', string | null>>;
+export type GeorefParamPatch = Partial<Record<'mapZoom' | 'mapLat' | 'mapLng' | 'zoom' | 'centerX' | 'centerY' | 'rotation' | 'autoRotateOnSelect' | 'clustering' | 'id' | 'canvas', string | null>>;
 
 export const mapViewParams = (v: GeorefMapView): GeorefParamPatch => ({
   mapZoom: String(Number(v.zoom.toFixed(2))),
@@ -131,6 +137,11 @@ export const rotationParams = (rotation: number): GeorefParamPatch => ({
 /** 切ったときは引数ごと消す（geo.ldas.jp も、無いときは切ったものとして読む）。 */
 export const autoRotateOnSelectParams = (on: boolean): GeorefParamPatch => ({
   autoRotateOnSelect: on ? 'true' : null,
+});
+
+/** 既定（まとめる）のときは引数ごと消す。 */
+export const clusteringParams = (on: boolean): GeorefParamPatch => ({
+  clustering: on ? null : 'false',
 });
 
 /** 角度を -180 より大きく 180 以下にそろえる。 */

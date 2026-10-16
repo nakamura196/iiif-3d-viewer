@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   applyGeorefPatch,
   autoRotateOnSelectParams,
+  clusteringParams,
   imageViewParams,
   imageViewToStage,
   localNorthUpRotation,
@@ -190,6 +191,19 @@ describe('autoRotateOnSelect', () => {
   it('writes true, and removes the parameter when off', () => {
     expect(autoRotateOnSelectParams(true)).toEqual({ autoRotateOnSelect: 'true' });
     expect(applyGeorefPatch('u=x&autoRotateOnSelect=true', autoRotateOnSelectParams(false))).toBe('u=x');
+  });
+});
+
+describe('clustering', () => {
+  it('is off only when the link says false', () => {
+    expect(read('clustering=false').clustering).toBe(false);
+    expect(read('clustering=true').clustering).toBeUndefined();
+    expect(read('').clustering).toBeUndefined();
+  });
+
+  it('writes false, and removes the parameter when on', () => {
+    expect(clusteringParams(false)).toEqual({ clustering: 'false' });
+    expect(applyGeorefPatch('u=x&clustering=false', clusteringParams(true))).toBe('u=x');
   });
 });
 

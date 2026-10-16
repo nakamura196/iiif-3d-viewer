@@ -63,12 +63,29 @@ interface MapViewProps {
   initialSelectedId?: string | null;
   /** 地図を動かし終えるたびに呼ぶ。 */
   onViewChange?: (view: GeorefMapView) => void;
+  /** 近い地点を 1 つにまとめて件数を出すか（URL の clustering）。既定は出す。 */
+  clustering?: boolean;
   /** これが変わったら、すべての地点が収まる縮尺に合わせ直す（地点の付いた Canvas を切り替えたとき）。 */
   fitKey?: string;
 }
 
 const OVERLAY_SOURCE = 'georef-overlay';
 const OVERLAY_LAYER = 'georef-overlay';
+const POINTS_SOURCE = 'georef-points';
+const SELECTED_SOURCE = 'georef-selected';
+const CLUSTERS_LAYER = 'georef-clusters';
+const CLUSTER_COUNT_LAYER = 'georef-cluster-count';
+const POINT_LAYER = 'georef-point';
+const SELECTED_LAYER = 'georef-selected';
+const POINT_LAYERS = [CLUSTERS_LAYER, CLUSTER_COUNT_LAYER, POINT_LAYER, SELECTED_LAYER];
+const POINT_COLOR = '#3b82f6';
+const SELECTED_COLOR = '#ef4444';
+// まとめる距離（画面の px）と、まとめるのをやめる縮尺。geo.ldas.jp は 50 と 14 だが、
+// 14 では近い建物どうしが重なって押し分けられないので、もっと寄るまでまとめる
+const CLUSTER_RADIUS = 50;
+const CLUSTER_MAX_ZOOM = 19;
+// 同じ場所の地点の一覧に出す上限
+const CLUSTER_LIST_MAX = 100;
 
 // 「全体を表示」ボタン。手で拡大・移動したあと、すべてのピンが収まる縮尺に戻す。
 // 拡大・縮小のボタン（NavigationControl）と同じ見た目の枠に入れる
@@ -109,12 +126,14 @@ export default function MapView({
   focus,
   initialSelectedId,
   onViewChange,
+  clustering = true,
   fitKey,
 }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
-  const markersRef = useRef<Map<string, maplibregl.Marker>>(new Map());
+  // 地点の上を通ったときの名前と、同じ場所の地点の一覧
   const activePopupRef = useRef<maplibregl.Popup | null>(null);
+  const listPopupRef = useRef<maplibregl.Popup | null>(null);
   const { resolvedTheme } = useTheme();
   const locale = useLocale();
   const t = useTranslations('GeoRef');
@@ -128,6 +147,8 @@ export default function MapView({
   selectedIdRef.current = selectedId;
   onFeatureClickRef.current = onFeatureClick;
   const onViewChangeRef = useRef(onViewChange);
+  const clusteringRef = useRef(clustering);
+  clusteringRef.current = clustering;
 
   // 今の縮尺と中心。地図を作り直したとき（テーマ・言語の切り替え）もここから始める
   const viewRef = useRef<GeorefMapView | null>(initialView ?? null);
@@ -153,7 +174,7 @@ export default function MapView({
   overlayStateRef.current = { visible: overlayVisible, opacity: overlayOpacity };
 
   // 画像を地図に貼る。四隅を指定すると、地図ライブラリがその間を埋めて描く。
-  // マーカーは地図の上に重なる別の要素なので、画像より常に手前に出る
+  // 地点の層より下に入れ、地点は画像より常に手前に出す
   const syncOverlay = () => {
     const m = map.current;
     if (!m || !mapReadyRef.current) return;
@@ -173,7 +194,7 @@ export default function MapView({
       source: OVERLAY_SOURCE,
       layout: { visibility: visible ? 'visible' : 'none' },
       paint: { 'raster-opacity': opacity, 'raster-fade-duration': 0 },
-    });
+    }, m.getLayer(CLUSTERS_LAYER) ? CLUSTERS_LAYER : undefined);
   };
 
   // 言語コードをOpenMapTiles形式に変換
@@ -185,94 +206,229 @@ export default function MapView({
     }
   };
 
-  // マーカーを追加する関数（Refを使用）
-  const addMarkersToMap = () => {
-    if (!map.current || !mapReadyRef.current) return;
+  // 地点を地図の層として描く（HTML の印を 1 つずつ置くと、数千件で動かすたびに重くなる）。
+  // 近い地点は 1 つの円にまとめて件数を出す（clustering）。まとめは地図ライブラリが別スレッドで数える。
+  // 選んだ地点は、まとまりに隠れないよう、別の層で一番上に赤く描く
+  const pointsData = (): GeoJSON.FeatureCollection<GeoJSON.Point> => {
+    const all = featuresRef.current;
+    return {
+      type: 'FeatureCollection',
+      features: all.flatMap((feature, idx) => {
+        // Web Mercator投影で表示できない座標（緯度±85度超）をスキップ
+        const [, lat] = feature.geometry.coordinates;
+        if (lat > 85 || lat < -85) return [];
+        return [{
+          type: 'Feature' as const,
+          geometry: { type: 'Point' as const, coordinates: feature.geometry.coordinates },
+          properties: { fid: geoFeatureIdOf(feature, idx) },
+        }];
+      }),
+    };
+  };
+  const selectedData = (): GeoJSON.FeatureCollection<GeoJSON.Point> => ({
+    type: 'FeatureCollection',
+    features: pointsData().features.filter((f) => f.properties?.fid === selectedIdRef.current),
+  });
 
-    // Clear existing markers
-    markersRef.current.forEach(marker => marker.remove());
-    markersRef.current.clear();
-
-    const currentFeatures = featuresRef.current;
-    const currentSelectedId = selectedIdRef.current;
-    const currentOnFeatureClick = onFeatureClickRef.current;
-
-    // Add markers for each feature
-    currentFeatures.forEach((feature) => {
-      // Web Mercator投影で表示できない座標（緯度±85度超）をスキップ
-      const [lng, lat] = feature.geometry.coordinates;
-      if (lat > 85 || lat < -85) {
-        return;
-      }
-      const featureId = geoFeatureIdOf(feature, currentFeatures.indexOf(feature));
-      const title = feature.properties.title;
-      const thumbnail = feature.depictions?.[0]?.['@id'];
-      const altNames = feature.names?.filter(n => n.toponym !== title).map(n => n.toponym).join(', ');
-
-      const el = document.createElement('div');
-      el.className = 'marker';
-      el.style.width = '24px';
-      el.style.height = '24px';
-      el.style.borderRadius = '50%';
-      el.style.backgroundColor = featureId === currentSelectedId ? '#ef4444' : '#3b82f6';
-      el.style.border = '3px solid white';
-      el.style.boxShadow = '0 2px 4px rgba(0,0,0,0.3)';
-      el.style.cursor = 'pointer';
-
-      const isDark = resolvedTheme === 'dark';
-      const thumbnailHtml = thumbnail
-        ? `<div style="width: 100%; max-width: 150px; margin-bottom: 8px; border-radius: 4px; overflow: hidden;">
-            <img src="${escapeHtml(thumbnail)}" alt="${escapeHtml(title)}" style="width: 100%; height: auto; display: block;" onerror="this.parentElement.style.display='none'" />
-          </div>`
-        : '';
-      const altNamesHtml = altNames
-        ? `<div style="font-size: 12px; color: ${isDark ? '#9ca3af' : '#6b7280'}; margin-top: 4px;">${escapeHtml(altNames)}</div>`
-        : '';
-      const popup = new maplibregl.Popup({
-        offset: 25,
-        closeButton: false,
-        closeOnClick: false,
-        className: isDark ? 'dark-popup' : '',
-        maxWidth: '200px'
-      }).setHTML(
-        `<div style="padding: 8px; background-color: ${isDark ? '#1f2937' : '#ffffff'}; color: ${isDark ? '#f3f4f6' : '#111827'}; border-radius: 4px;">
-          ${thumbnailHtml}
-          <div style="font-weight: bold;">${escapeHtml(title)}</div>
-          ${altNamesHtml}
-        </div>`
-      );
-
-      el.addEventListener('mouseenter', () => {
-        if (activePopupRef.current) {
-          activePopupRef.current.remove();
-        }
-        popup.setLngLat(feature.geometry.coordinates).addTo(map.current!);
-        activePopupRef.current = popup;
-      });
-      el.addEventListener('mouseleave', () => {
-        popup.remove();
-        if (activePopupRef.current === popup) {
-          activePopupRef.current = null;
-        }
-      });
-
-      el.addEventListener('click', () => {
-        popup.remove();
-        if (activePopupRef.current === popup) {
-          activePopupRef.current = null;
-        }
-        currentOnFeatureClick(featureId);
-      });
-
-      const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
-        .setLngLat(feature.geometry.coordinates)
-        .addTo(map.current!);
-
-      markersRef.current.set(featureId, marker);
+  const addPointLayers = () => {
+    const m = map.current;
+    if (!m || !mapReadyRef.current) return;
+    for (const id of POINT_LAYERS) if (m.getLayer(id)) m.removeLayer(id);
+    for (const id of [POINTS_SOURCE, SELECTED_SOURCE]) if (m.getSource(id)) m.removeSource(id);
+    m.addSource(POINTS_SOURCE, {
+      type: 'geojson',
+      data: pointsData(),
+      cluster: clusteringRef.current,
+      clusterRadius: CLUSTER_RADIUS,
+      clusterMaxZoom: CLUSTER_MAX_ZOOM,
     });
+    m.addSource(SELECTED_SOURCE, { type: 'geojson', data: selectedData() });
+    m.addLayer({
+      id: CLUSTERS_LAYER,
+      type: 'circle',
+      source: POINTS_SOURCE,
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': POINT_COLOR,
+        'circle-opacity': 0.9,
+        // 件数が多いほど大きく
+        'circle-radius': ['step', ['get', 'point_count'], 14, 10, 17, 100, 21, 1000, 25],
+        'circle-stroke-width': 3,
+        'circle-stroke-color': '#ffffff',
+      },
+    });
+    m.addLayer({
+      id: CLUSTER_COUNT_LAYER,
+      type: 'symbol',
+      source: POINTS_SOURCE,
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': ['get', 'point_count_abbreviated'],
+        // 明るい地図・暗い地図のどちらのスタイルにもある字体
+        'text-font': ['Noto Sans Regular'],
+        'text-size': 12,
+        'text-allow-overlap': true,
+        'text-ignore-placement': true,
+      },
+      paint: { 'text-color': '#ffffff' },
+    });
+    m.addLayer({
+      id: POINT_LAYER,
+      type: 'circle',
+      source: POINTS_SOURCE,
+      filter: ['!', ['has', 'point_count']],
+      paint: {
+        'circle-color': POINT_COLOR,
+        'circle-radius': 9,
+        'circle-stroke-width': 3,
+        'circle-stroke-color': '#ffffff',
+      },
+    });
+    m.addLayer({
+      id: SELECTED_LAYER,
+      type: 'circle',
+      source: SELECTED_SOURCE,
+      paint: {
+        'circle-color': SELECTED_COLOR,
+        'circle-radius': 10,
+        'circle-stroke-width': 3,
+        'circle-stroke-color': '#ffffff',
+      },
+    });    // 地点の層を描いたことの目印（計測と試験で、描き終えたかを見分けるため。地点は要素を持たない）
+    mapContainer.current?.setAttribute('data-georef-map-points', '');
+  };
 
+  // 地点が変わったら描き直し、全体が見える縮尺に合わせる
+  const updatePoints = () => {
+    const m = map.current;
+    if (!m || !mapReadyRef.current) return;
+    const source = m.getSource<maplibregl.GeoJSONSource>(POINTS_SOURCE);
+    if (source) {
+      source.setData(pointsData());
+      m.getSource<maplibregl.GeoJSONSource>(SELECTED_SOURCE)?.setData(selectedData());
+    } else {
+      addPointLayers();
+    }
     fitAll(0, true);
   };
+
+  // 地点の上に出す名前と画像
+  const popupHtml = (feature: GeoFeature) => {
+    const isDark = resolvedTheme === 'dark';
+    const title = feature.properties.title;
+    const thumbnail = feature.depictions?.[0]?.['@id'];
+    const altNames = feature.names?.filter(n => n.toponym !== title).map(n => n.toponym).join(', ');
+    const thumbnailHtml = thumbnail
+      ? `<div style="width: 100%; max-width: 150px; margin-bottom: 8px; border-radius: 4px; overflow: hidden;">
+          <img src="${escapeHtml(thumbnail)}" alt="${escapeHtml(title)}" style="width: 100%; height: auto; display: block;" onerror="this.parentElement.style.display='none'" />
+        </div>`
+      : '';
+    const altNamesHtml = altNames
+      ? `<div style="font-size: 12px; color: ${isDark ? '#9ca3af' : '#6b7280'}; margin-top: 4px;">${escapeHtml(altNames)}</div>`
+      : '';
+    return `<div style="padding: 8px; background-color: ${isDark ? '#1f2937' : '#ffffff'}; color: ${isDark ? '#f3f4f6' : '#111827'}; border-radius: 4px;">
+        ${thumbnailHtml}
+        <div style="font-weight: bold;">${escapeHtml(title)}</div>
+        ${altNamesHtml}
+      </div>`;
+  };
+
+  const featureById = (fid: string): GeoFeature | undefined => {
+    const all = featuresRef.current;
+    const idx = all.findIndex((f, i) => geoFeatureIdOf(f, i) === fid);
+    return idx < 0 ? undefined : all[idx];
+  };
+
+  const closePopup = () => {
+    activePopupRef.current?.remove();
+    activePopupRef.current = null;
+  };
+  const closeList = () => {
+    listPopupRef.current?.remove();
+    listPopupRef.current = null;
+  };
+
+  // 同じ場所の地点のまとまり。一番寄っても分かれないので、名前の一覧を出して選ばせる
+  const showClusterList = (lngLat: maplibregl.LngLatLike, fids: string[]) => {
+    const m = map.current;
+    if (!m) return;
+    closePopup();
+    closeList();
+    const isDark = resolvedTheme === 'dark';
+    const items = fids
+      .map((fid) => ({ fid, title: featureById(fid)?.properties.title ?? fid }))
+      .map(({ fid, title }) =>
+        `<li><button type="button" data-fid="${escapeHtml(fid)}" style="display:block;width:100%;text-align:left;padding:4px 8px;border-radius:4px;cursor:pointer">${escapeHtml(title)}</button></li>`)
+      .join('');
+    const popup = new maplibregl.Popup({ offset: 20, closeButton: true, closeOnClick: true, maxWidth: '240px', className: isDark ? 'dark-popup' : '' })
+      .setLngLat(lngLat)
+      .setHTML(
+        `<ul style="max-height:240px;overflow-y:auto;margin:0;padding:4px 0;list-style:none;background-color:${isDark ? '#1f2937' : '#ffffff'};color:${isDark ? '#f3f4f6' : '#111827'}">${items}</ul>`
+      )
+      .addTo(m);
+    popup.getElement().addEventListener('click', (e) => {
+      const fid = (e.target as HTMLElement).closest<HTMLElement>('[data-fid]')?.dataset.fid;
+      if (!fid) return;
+      popup.remove();
+      onFeatureClickRef.current(fid);
+    });
+    listPopupRef.current = popup;
+  };
+
+  // 地点・まとまりを押したとき、上を通ったとき。層ごとに受けると重なった層で 2 回届くので、一番上の 1 つだけを見る
+  const handleMapClick = async (e: maplibregl.MapMouseEvent) => {
+    const m = map.current;
+    if (!m || !m.getLayer(POINT_LAYER)) return;
+    const hit = m.queryRenderedFeatures(e.point, { layers: [SELECTED_LAYER, POINT_LAYER, CLUSTERS_LAYER] })[0];
+    if (!hit) return;
+    if (hit.layer.id !== CLUSTERS_LAYER) {
+      closePopup();
+      closeList();
+      onFeatureClickRef.current(String(hit.properties.fid));
+      return;
+    }
+    const source = m.getSource<maplibregl.GeoJSONSource>(POINTS_SOURCE);
+    if (!source) return;
+    const clusterId = Number(hit.properties.cluster_id);
+    const center = (hit.geometry as GeoJSON.Point).coordinates as [number, number];
+    const zoom = await source.getClusterExpansionZoom(clusterId);
+    // まとめる上限の縮尺を超えないと分かれない（同じ場所の地点）なら、一覧を出す
+    if (zoom > CLUSTER_MAX_ZOOM) {
+      const leaves = await source.getClusterLeaves(clusterId, CLUSTER_LIST_MAX, 0);
+      showClusterList(center, leaves.map((l) => String(l.properties?.fid)));
+      return;
+    }
+    keepViewRef.current = true;
+    m.easeTo({ center, zoom, duration: 500 });
+  };
+
+  const hoveredRef = useRef<string | null>(null);
+  const handleMapHover = (e: maplibregl.MapMouseEvent) => {
+    const m = map.current;
+    if (!m || !m.getLayer(POINT_LAYER)) return;
+    const hit = m.queryRenderedFeatures(e.point, { layers: [SELECTED_LAYER, POINT_LAYER, CLUSTERS_LAYER] })[0];
+    m.getCanvas().style.cursor = hit ? 'pointer' : '';
+    const fid = hit && hit.layer.id !== CLUSTERS_LAYER ? String(hit.properties.fid) : null;
+    if (fid === hoveredRef.current) return;
+    hoveredRef.current = fid;
+    closePopup();
+    const feature = fid ? featureById(fid) : undefined;
+    if (!feature) return;
+    activePopupRef.current = new maplibregl.Popup({
+      offset: 14,
+      closeButton: false,
+      closeOnClick: false,
+      className: resolvedTheme === 'dark' ? 'dark-popup' : '',
+      maxWidth: '200px'
+    })
+      .setLngLat(feature.geometry.coordinates)
+      .setHTML(popupHtml(feature))
+      .addTo(m);
+  };
+  const handleMapClickRef = useRef(handleMapClick);
+  handleMapClickRef.current = handleMapClick;
+  const handleMapHoverRef = useRef(handleMapHover);
+  handleMapHoverRef.current = handleMapHover;
 
   // すべてのピンが収まるように合わせる（地球儀なら大陸の規模、街なら通りの規模になる）。
   // ピンが 1 つ・ごく近いときに寄りすぎないよう、上限は建物が見える程度。
@@ -334,6 +490,13 @@ export default function MapView({
       viewRef.current = { zoom: m.getZoom(), lat: c.lat, lng: c.lng };
       onViewChangeRef.current?.(viewRef.current);
     };
+    map.current.on('click', (e) => void handleMapClickRef.current(e));
+    map.current.on('mousemove', (e) => handleMapHoverRef.current(e));
+    map.current.on('mouseout', () => {
+      hoveredRef.current = null;
+      activePopupRef.current?.remove();
+      activePopupRef.current = null;
+    });
     map.current.on('moveend', (e) => {
       if (e.originalEvent) keepViewRef.current = true;
       reportView();
@@ -378,9 +541,10 @@ export default function MapView({
       // 開いたときの縮尺と中心も URL に書く（動かさなければ moveend が来ないため）
       reportView();
 
-      // マップ準備完了後に画像とマーカーを追加
+      // マップ準備完了後に地点と画像を追加
+      addPointLayers();
       syncOverlay();
-      addMarkersToMap();
+      fitAll(0, true);
     });
 
     return () => {
@@ -390,11 +554,20 @@ export default function MapView({
     };
   }, [locale, resolvedTheme]);
 
-  // featuresが変わったらマーカーを再追加
+  // 地点が変わったら描き直す
   useEffect(() => {
-    addMarkersToMap();
+    updatePoints();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [features]);
+
+  // まとめる・まとめないを切り替える
+  useEffect(() => {
+    const source = map.current?.getSource<maplibregl.GeoJSONSource>(POINTS_SOURCE);
+    if (!source || !mapReadyRef.current) return;
+    listPopupRef.current?.remove();
+    listPopupRef.current = null;
+    void source.setClusterOptions({ cluster: clustering, clusterRadius: CLUSTER_RADIUS, clusterMaxZoom: CLUSTER_MAX_ZOOM });
+  }, [clustering]);
 
   // 重ねる画像が変わったら貼り直し、全体が見える縮尺に戻す
   useEffect(() => {
@@ -418,12 +591,9 @@ export default function MapView({
     m.setPaintProperty(OVERLAY_LAYER, 'raster-opacity', overlayOpacity);
   }, [overlayVisible, overlayOpacity]);
 
-  // Update marker colors when selection changes
+  // 選んだ地点を赤く描く
   useEffect(() => {
-    markersRef.current.forEach((marker, id) => {
-      const el = marker.getElement();
-      el.style.backgroundColor = id === selectedId ? '#ef4444' : '#3b82f6';
-    });
+    if (mapReadyRef.current) map.current?.getSource<maplibregl.GeoJSONSource>(SELECTED_SOURCE)?.setData(selectedData());
 
     if (selectedId && firstSelectionRef.current) {
       firstSelectionRef.current = false;
