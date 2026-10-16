@@ -1,0 +1,39 @@
+{
+  "@context": "http://iiif.io/api/presentation/3/context.json",
+  "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/collection.json",
+  "type": "Collection",
+  "label": {
+    "ja": [
+      "IIIF Kasane の使い方動画（YouTube）"
+    ],
+    "en": [
+      "IIIF Kasane tutorials (YouTube)"
+    ]
+  },
+  "items": [
+    {
+      "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-ja.json",
+      "type": "Manifest",
+      "label": {
+        "ja": [
+          "IIIF Kasane の使い方動画（日本語）"
+        ],
+        "en": [
+          "IIIF Kasane tutorials (Japanese)"
+        ]
+      }
+    },
+    {
+      "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json",
+      "type": "Manifest",
+      "label": {
+        "ja": [
+          "IIIF Kasane の使い方動画（英語）"
+        ],
+        "en": [
+          "IIIF Kasane tutorials (English)"
+        ]
+      }
+    }
+  ]
+}

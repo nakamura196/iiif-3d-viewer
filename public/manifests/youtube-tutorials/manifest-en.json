@@ -1,0 +1,277 @@
+{
+  "@context": "http://iiif.io/api/presentation/3/context.json",
+  "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json",
+  "type": "Manifest",
+  "label": {
+    "ja": [
+      "IIIF Kasane の使い方動画（英語）"
+    ],
+    "en": [
+      "IIIF Kasane tutorials (English)"
+    ]
+  },
+  "summary": {
+    "ja": [
+      "YouTube に置いた IIIF Kasane の使い方動画を、IIIF の Video として参照するマニフェスト。字幕は自作の WebVTT。"
+    ],
+    "en": [
+      "IIIF Kasane tutorial videos hosted on YouTube, referenced as IIIF Video bodies, with our own WebVTT captions."
+    ]
+  },
+  "requiredStatement": {
+    "label": {
+      "ja": [
+        "作成"
+      ],
+      "en": [
+        "Author"
+      ]
+    },
+    "value": {
+      "ja": [
+        "中村 覚（東京大学）"
+      ],
+      "en": [
+        "Satoru Nakamura (The University of Tokyo)"
+      ]
+    }
+  },
+  "items": [
+    {
+      "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/1",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "IIIF Kasane: Boxes in a video — annotations on a time and a region, shown only at their time"
+        ]
+      },
+      "width": 1920,
+      "height": 1080,
+      "duration": 208.6,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/1/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/1/painting",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://www.youtube.com/watch?v=4_zBRW-oS1w",
+                "type": "Video",
+                "format": "video/mp4",
+                "width": 1920,
+                "height": 1080,
+                "duration": 208.6
+              },
+              "target": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/1"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/1/captions",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/1/captions/1",
+              "type": "Annotation",
+              "motivation": "supplementing",
+              "body": {
+                "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/kasane-video-objects.en.vtt",
+                "type": "Text",
+                "format": "text/vtt",
+                "language": "en",
+                "label": {
+                  "en": [
+                    "Captions"
+                  ]
+                }
+              },
+              "target": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/2",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "IIIF Kasane: Story — read the Wako zukan handscroll scene by scene"
+        ]
+      },
+      "width": 1920,
+      "height": 1080,
+      "duration": 160.267,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/2/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/2/painting",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://www.youtube.com/watch?v=fXIwtvfEZ-Q",
+                "type": "Video",
+                "format": "video/mp4",
+                "width": 1920,
+                "height": 1080,
+                "duration": 160.267
+              },
+              "target": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/2"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/2/captions",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/2/captions/1",
+              "type": "Annotation",
+              "motivation": "supplementing",
+              "body": {
+                "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/kasane-story-tab.en.vtt",
+                "type": "Text",
+                "format": "text/vtt",
+                "language": "en",
+                "label": {
+                  "en": [
+                    "Captions"
+                  ]
+                }
+              },
+              "target": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/3",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "IIIF Kasane: comparing two Tenpō provincial maps of Ōmi with a swipe"
+        ]
+      },
+      "width": 1920,
+      "height": 1080,
+      "duration": 201.233,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/3/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/3/painting",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://www.youtube.com/watch?v=OPX9OJ8voDc",
+                "type": "Video",
+                "format": "video/mp4",
+                "width": 1920,
+                "height": 1080,
+                "duration": 201.233
+              },
+              "target": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/3"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/3/captions",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/3/captions/1",
+              "type": "Annotation",
+              "motivation": "supplementing",
+              "body": {
+                "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/kasane-kuniezu.en.vtt",
+                "type": "Text",
+                "format": "text/vtt",
+                "language": "en",
+                "label": {
+                  "en": [
+                    "Captions"
+                  ]
+                }
+              },
+              "target": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/4",
+      "type": "Canvas",
+      "label": {
+        "en": [
+          "IIIF Kasane: comparing the Shelley manuscript in ordinary and transmitted light"
+        ]
+      },
+      "width": 1920,
+      "height": 1080,
+      "duration": 188.567,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/4/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/4/painting",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://www.youtube.com/watch?v=06oQxj2AXV4",
+                "type": "Video",
+                "format": "video/mp4",
+                "width": 1920,
+                "height": 1080,
+                "duration": 188.567
+              },
+              "target": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/4"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/4/captions",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/4/captions/1",
+              "type": "Annotation",
+              "motivation": "supplementing",
+              "body": {
+                "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/kasane-shelley.en.vtt",
+                "type": "Text",
+                "format": "text/vtt",
+                "language": "en",
+                "label": {
+                  "en": [
+                    "Captions"
+                  ]
+                }
+              },
+              "target": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/4"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

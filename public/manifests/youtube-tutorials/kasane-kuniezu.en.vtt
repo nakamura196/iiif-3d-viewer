@@ -1,0 +1,133 @@
+WEBVTT
+
+1
+00:00:00.001 --> 00:00:05.076
+IIIF Kasane: comparing provincial maps (Tenpō kuniezu, Ōmi) — Opening it from Use cases
+
+2
+00:00:05.079 --> 00:00:13.679
+IIIF Kasane is a viewer that layers IIIF images, 3D models and annotations in a single view.
+
+3
+00:00:13.682 --> 00:00:18.482
+The Use cases page lists examples with real collections.
+
+4
+00:00:18.494 --> 00:00:22.944
+In this video, we use the Tenpō provincial map of Ōmi.
+
+5
+00:00:22.948 --> 00:00:29.498
+Kuniezu are large maps of each province, made at the order of the Tokugawa shogunate.
+
+6
+00:00:29.500 --> 00:00:35.450
+The first is the official map of Ōmi, held by the National Archives of Japan.
+
+7
+00:00:35.454 --> 00:00:43.579
+The second is a copy of the same size, made a year earlier. It is held by Stanford University Libraries.
+
+8
+00:00:43.581 --> 00:00:48.531
+Click "Open in Kasane" to open a page for comparing the two.
+
+9
+00:00:49.901 --> 00:00:54.676
+IIIF Kasane: comparing provincial maps (Tenpō kuniezu, Ōmi) — Comparing with a swipe
+
+10
+00:00:54.692 --> 00:01:00.892
+This is the "Swipe" view. A is shown left of the divider, and B to the right.
+
+11
+00:01:00.899 --> 00:01:06.849
+A is the official map from the National Archives, and B the copy from Stanford.
+
+12
+00:01:06.854 --> 00:01:12.079
+Both maps are drawn the same way, with east at the top and north on the left.
+
+13
+00:01:12.084 --> 00:01:18.759
+Drag the divider to the left, and the copy spreads out. Lake Biwa is left pale.
+
+14
+00:01:18.764 --> 00:01:26.939
+Drag it to the right for the official map. The lake is painted deep blue, and the neighbouring provinces are coloured too.
+
+15
+00:01:29.394 --> 00:01:33.669
+Zoom in on the south-west shore of the lake with the mouse wheel.
+
+16
+00:01:34.829 --> 00:01:43.379
+The ovals that stand for villages are filled in red on the official map. Around here on the copy, they are left blank.
+
+17
+00:01:43.386 --> 00:01:48.436
+The two maps are not aligned, so they drift apart a little when zoomed in.
+
+18
+00:01:48.441 --> 00:01:52.266
+The divider can also run across, with "Up–down".
+
+19
+00:01:53.968 --> 00:01:59.043
+IIIF Kasane: comparing provincial maps (Tenpō kuniezu, Ōmi) — Choosing images and modes
+
+20
+00:01:59.045 --> 00:02:03.170
+"Side by side" puts the two maps next to each other.
+
+21
+00:02:03.176 --> 00:02:06.276
+Both sides zoom and move together.
+
+22
+00:02:08.036 --> 00:02:14.936
+In "Spyglass", B is shown only inside a round window. Move it to peek at the copy.
+
+23
+00:02:14.941 --> 00:02:20.166
+The B menu lists three images from Stanford University Libraries.
+
+24
+00:02:20.171 --> 00:02:25.446
+The second shows the outside of the folded map, with its title written on it.
+
+25
+00:02:27.683 --> 00:02:33.008
+Click "Sources" to list what is open: one Collection, with four images.
+
+26
+00:02:33.011 --> 00:02:38.261
+Type another URL below and click "Add" to compare more sources.
+
+27
+00:02:40.234 --> 00:02:44.959
+IIIF Kasane: comparing provincial maps (Tenpō kuniezu, Ōmi) — Where the data comes from
+
+28
+00:02:44.963 --> 00:02:49.638
+This comparison starts from a single IIIF Collection.
+
+29
+00:02:49.641 --> 00:02:57.341
+It holds the two Manifests published by the National Archives of Japan and by Stanford University Libraries.
+
+30
+00:02:57.347 --> 00:03:01.847
+Click "Open in the viewer" to open A in the ordinary viewer.
+
+31
+00:03:03.063 --> 00:03:10.888
+The panel on the right shows the catalogue record of the National Archives. The date is 1838.
+
+32
+00:03:10.892 --> 00:03:15.167
+Stanford's record dates the copy to 1837.
+
+33
+00:03:15.169 --> 00:03:19.294
+For the terms of use, please see each institution's site.
