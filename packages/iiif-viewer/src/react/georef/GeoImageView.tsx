@@ -10,12 +10,13 @@ import {
   type ImageLayer,
 } from '../../core';
 import { ImageLayers } from '../displays/ImageTiles';
-import ImageView, { INITIAL_VIEW, type StageInfo, type ViewState } from '../displays/ImageView';
+import ImageView, { homeView, INITIAL_VIEW, rotatePoint, type StageInfo, type ViewState } from '../displays/ImageView';
 
 // ジオリファレンスの画面（/georef）で、地点の付いた画像（絵図・古地図）を出す。
 // 地点（resourceCoords の x, y）を画像の上に印で出し、印を押すと onSelect を呼ぶ。
 // selectedId が変わると、その地点が画面の真ん中に来るよう画像を動かす（地図・一覧からの連動）。
 // 拡大率と中心は OpenSeadragon の座標（画像の幅を 1 とする）で受け渡す。URL の zoom・centerX・centerY に使う。
+// rotation で画像を回す（反時計回りが正。geo.ldas.jp の rotation と同じ向き）。印と番号は回さずに立てておく。
 
 export interface GeoImagePoint {
   id: string;
@@ -34,6 +35,8 @@ export interface GeoImageViewProps {
   initialView?: GeorefImageView;
   /** 拡大・移動するたびに呼ぶ。 */
   onViewChange?: (view: GeorefImageView) => void;
+  /** 画像の回転（度、反時計回りが正）。変わると、画面の真ん中を軸に回す。 */
+  rotation?: number;
 }
 
 /** How far to zoom in, at least, when a point is chosen from the map or the list. */
@@ -44,13 +47,32 @@ const MARKER = 14;
 // The view that puts Canvas point (x, y) at the middle of the box.
 // The stage is centred in the box and scaled around its centre, so a point at stage offset d
 // (from the stage centre) shows at tx + scale * d from the box centre.
-export const centerOn = (stage: StageInfo, cw: number, ch: number, x: number, y: number, scale: number): ViewState => ({
-  scale,
-  tx: -scale * (x / cw - 0.5) * stage.stageW,
-  ty: -scale * (y / ch - 0.5) * stage.stageH,
-});
+// A turned stage (`rotation`, clockwise degrees) shows it at tx + scale * R d.
+export const centerOn = (
+  stage: StageInfo,
+  cw: number,
+  ch: number,
+  x: number,
+  y: number,
+  scale: number,
+  rotation = 0,
+): ViewState => {
+  const [dx, dy] = rotatePoint((x / cw - 0.5) * stage.stageW, (y / ch - 0.5) * stage.stageH, rotation);
+  return { scale, tx: -scale * dx, ty: -scale * dy, rotation };
+};
 
-export default function GeoImageView({ canvas, points, selectedId, onSelect, initialView, onViewChange }: GeoImageViewProps) {
+// 回転を変えたときの表示。全体を出しているときは、回した後の全体が収まるよう縮め直す。
+// それ以外は、画面の真ん中に出ている場所を軸に回す（拡大率はそのまま）
+const turnView = (v: ViewState, stage: StageInfo, rotation: number): ViewState => {
+  const before = v.rotation ?? 0;
+  const home = homeView(stage, before);
+  const atHome = v.tx === 0 && v.ty === 0 && Math.abs(v.scale - home.scale) < 1e-9;
+  if (atHome) return homeView(stage, rotation);
+  const [tx, ty] = rotatePoint(v.tx, v.ty, rotation - before);
+  return { scale: v.scale, tx, ty, rotation };
+};
+
+export default function GeoImageView({ canvas, points, selectedId, onSelect, initialView, onViewChange, rotation = 0 }: GeoImageViewProps) {
   const [view, setView] = useState<ViewState>(INITIAL_VIEW);
   const stageRef = useRef<StageInfo | null>(null);
   const layers: ImageLayer[] = canvas.paintings.flatMap((p) => p.options[0]?.layer ?? []);
@@ -60,10 +82,12 @@ export default function GeoImageView({ canvas, points, selectedId, onSelect, ini
   const [ready, setReady] = useState(false);
   // 最後に寄った地点。開いたときの選択（URL の id）に、後から重ねて寄らないようにする
   const shownIdRef = useRef<string | null>(null);
-  const startRef = useRef({ initialView, selectedId, points });
+  // 台の回転（時計回り）。rotation とは向きが逆
+  const turn = rotation ? -rotation : 0;
+  const startRef = useRef({ initialView, selectedId, points, turn });
   const onViewChangeRef = useRef(onViewChange);
   useEffect(() => {
-    startRef.current = { initialView, selectedId, points };
+    startRef.current = { initialView, selectedId, points, turn };
     onViewChangeRef.current = onViewChange;
   });
 
@@ -75,10 +99,11 @@ export default function GeoImageView({ canvas, points, selectedId, onSelect, ini
     const tick = () => {
       const stage = stageRef.current;
       if (stage && stage.stageW > 0) {
-        const { initialView: iv, selectedId: sel, points: pts } = startRef.current;
+        const { initialView: iv, selectedId: sel, points: pts, turn: rot } = startRef.current;
         const p = pts.find((pt) => pt.id === sel);
-        if (iv) setView(imageViewToStage(iv, stage, width, height));
-        else if (p) setView(centerOn(stage, width, height, p.x, p.y, FOCUS_SCALE));
+        if (iv) setView(imageViewToStage(iv, stage, width, height, rot));
+        else if (p) setView(centerOn(stage, width, height, p.x, p.y, FOCUS_SCALE, rot));
+        else setView(homeView(stage, rot));
         shownIdRef.current = sel;
         setReady(true);
         return;
@@ -96,8 +121,15 @@ export default function GeoImageView({ canvas, points, selectedId, onSelect, ini
     const p = points.find((pt) => pt.id === selectedId);
     if (!stage || !p || !width || !height || stage.stageW === 0) return;
     shownIdRef.current = selectedId;
-    setView((v) => centerOn(stage, width, height, p.x, p.y, Math.max(v.scale, FOCUS_SCALE)));
+    setView((v) => centerOn(stage, width, height, p.x, p.y, Math.max(v.scale, FOCUS_SCALE), v.rotation));
   }, [ready, selectedId, points, width, height]);
+
+  // 回転が変わったら回す（スライダー・自動回転・URL）
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!ready || !stage || stage.stageW === 0) return;
+    setView((v) => ((v.rotation ?? 0) === turn ? v : turnView(v, stage, turn)));
+  }, [ready, turn]);
 
   // 拡大率と中心を知らせる（URL に書く）
   useEffect(() => {
@@ -142,8 +174,8 @@ export default function GeoImageView({ canvas, points, selectedId, onSelect, ini
                     top: `${(p.y / height) * 100}%`,
                     width: MARKER * (selected ? 1.6 : 1),
                     height: MARKER * (selected ? 1.6 : 1),
-                    // 拡大しても印の大きさは画面上で一定にする
-                    transform: `translate(-50%, -50%) scale(${1 / stage.scale})`,
+                    // 拡大しても印の大きさは画面上で一定にする。画像を回しても、番号は立てたままにする
+                    transform: `translate(-50%, -50%) ${turn ? `rotate(${-turn}deg) ` : ''}scale(${1 / stage.scale})`,
                   }}
                 >
                   {selected ? i + 1 : null}
