@@ -142,6 +142,8 @@ The image is not sent anywhere. All reading happens inside your browser. The res
 - Map and image (`/en/georef/?iiif-content=<URL>`): shows a georeferenced image next to a map. When the image has control points, it can be laid over the map.
   The map's zoom and centre (`mapZoom`, `mapLat`, `mapLng`), the image's zoom and centre (`zoom`, `centerX`, `centerY`), the image's rotation (`rotation`, degrees, counter-clockwise) and the selected place (`id`) are written into the URL as you move around, so the URL opens the same view. The parameter names are the same as in the IIIF Georeference Viewer (geo.ldas.jp), so the part after `?` of its links works here too (`u=` for the manifest is read as well). Add `&lat=<latitude>&lng=<longitude>` to open with a marker at that point.
   With two or more places, the image is turned on opening so that north is up (a `rotation` in the URL opens it at that angle instead). The "Rotation" button above the image changes the angle, turns north up again, or resets it to 0°.
+  The list on the right finds places by name, alternative name, ID and tag (katakana and hiragana, and full- and half-width characters, are treated alike). When the places have tags, click a tag under the search box to show only the places with it.
+  When a manifest has two or more images with places, switch between them with “‹ ›” under the image. The image shown is written into the URL as `canvas` (the Canvas id, or its position in the manifest).
 
 ## Sharing a link
 

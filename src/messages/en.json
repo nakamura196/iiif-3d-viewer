@@ -78,7 +78,10 @@
     "rotationReset": "Reset to 0°",
     "autoRotateOnSelect": "When a point is selected, turn its surroundings north up",
     "clustering": "Group nearby places",
-    "noResults": "No results found"
+    "noResults": "No results found",
+    "filterByTag": "Filter by tag",
+    "prevCanvas": "Previous image",
+    "nextCanvas": "Next image"
   },
   "Home": {
     "developers": "Developers",

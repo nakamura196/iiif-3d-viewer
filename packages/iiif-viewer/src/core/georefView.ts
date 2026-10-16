@@ -10,6 +10,8 @@
 //   autoRotateOnSelect     true のとき、地図か一覧で地点を選ぶたびに、その近くで北が上になるよう回す
 //   clustering             false のとき、近い地点をまとめずに 1 つずつ出す（既定はまとめる）
 //   id                     選んでいる地点
+//   canvas                 見ている Canvas の id（地点の付いた Canvas が 2 つ以上あるとき）。
+//                          geo.ldas.jp には無い（いつも最初の Canvas で開いた）。Kasane のビューアの canvas と同じ名前
 
 /** 地図の縮尺と中心。 */
 export interface GeorefMapView {
@@ -40,6 +42,7 @@ export interface GeorefUrlState {
   /** 近い地点をまとめて出すか。URL に clustering=false があるときだけ false。 */
   clustering?: boolean;
   id?: string;
+  canvas?: string;
 }
 
 /** 中心だけが指定されたときの地図の縮尺（lat・lng のときの geo.ldas.jp の既定と同じ）。 */
@@ -106,11 +109,13 @@ export function readGeorefParams(params: URLSearchParams, manifestFromOther: str
 
   const id = params.get('id');
   if (id) state.id = id;
+  const canvas = params.get('canvas');
+  if (canvas) state.canvas = canvas;
   return state;
 }
 
 /** 書き戻す引数。null の項目は URL から消す。 */
-export type GeorefParamPatch = Partial<Record<'mapZoom' | 'mapLat' | 'mapLng' | 'zoom' | 'centerX' | 'centerY' | 'rotation' | 'autoRotateOnSelect' | 'clustering' | 'id', string | null>>;
+export type GeorefParamPatch = Partial<Record<'mapZoom' | 'mapLat' | 'mapLng' | 'zoom' | 'centerX' | 'centerY' | 'rotation' | 'autoRotateOnSelect' | 'clustering' | 'id' | 'canvas', string | null>>;
 
 export const mapViewParams = (v: GeorefMapView): GeorefParamPatch => ({
   mapZoom: String(Number(v.zoom.toFixed(2))),

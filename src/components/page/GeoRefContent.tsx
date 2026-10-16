@@ -14,7 +14,19 @@ import Header from '@/components/Header';
 import { Link } from '@/i18n/routing';
 import MapView, { type MapImageOverlay } from '@/components/map/MapView';
 import { convertToV4 } from '@nakamura196/iiif-viewer/core';
-import { parseManifestV4, geoAnnotations, geoFeatureIdOf, overlayCorners, type GeoFeature, type ImageLayer } from '@nakamura196/iiif-viewer/core';
+import {
+  parseManifestV4,
+  geoAnnotations,
+  geoCanvasesOf,
+  geoFeatureIdOf,
+  overlayCorners,
+  filterGeorefFeatures,
+  georefTagFacets,
+  labelIn,
+  type GeoCanvas,
+  type GeoFeature,
+  type ImageLayer,
+} from '@nakamura196/iiif-viewer/core';
 import { AnnotationCard } from '@nakamura196/iiif-viewer';
 import { SidePanel } from '@nakamura196/iiif-viewer';
 import { useTranslations, useLocale } from 'next-intl';
@@ -66,6 +78,15 @@ const featureIdFromParam = (features: GeoFeature[], id: string): string | undefi
   return idx < 0 ? undefined : geoFeatureIdOf(features[idx], idx);
 };
 
+// 画像と地図の組（画像の地点 x, y と地図の経度・緯度）
+const pairsOf = (features: GeoFeature[]) =>
+  features.map((f) => ({
+    x: f.properties.resourceCoords[0],
+    y: f.properties.resourceCoords[1],
+    lng: f.geometry.coordinates[0],
+    lat: f.geometry.coordinates[1],
+  }));
+
 const GeoRefContent: NextPage = () => {
   const t = useTranslations('GeoRef');
   const locale = useLocale();
@@ -80,6 +101,12 @@ const GeoRefContent: NextPage = () => {
   const [selectedAnnotationId, setSelectedAnnotationId] = useAtom(selectedAnnotationIdAtom);
   const [geoFeatures, setGeoFeatures] = useState<GeoFeature[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  // 一覧で選んでいるタグ（どれかを持つ地点を残す）
+  const [tagFilter, setTagFilter] = useState<string[]>([]);
+  // 地点の付いた Canvas すべて（geo.ldas.jp と同じく、1 つずつ切り替えて見る）
+  const [geoCanvases, setGeoCanvases] = useState<GeoCanvas[]>([]);
+  // URL の画像の拡大率・中心は、開いたときの Canvas にだけ使う
+  const [useUrlImageView, setUseUrlImageView] = useState(true);
   const annotationRefs = useRef<Map<string, HTMLDivElement>>(new Map());
   // 開いたときの URL から読んだ表示の状態（geo.ldas.jp と同じ名前の引数）
   const [urlState, setUrlState] = useState<GeorefUrlState | null>(null);
@@ -148,8 +175,21 @@ const GeoRefContent: NextPage = () => {
     fetchManifest(manifestUrl).then((raw) => {
       if (!raw) return;
       const manifest = convertToV4(raw);
-      const { modelUrl, geoFeatures, annotations, geoCanvasId } = parseManifestV4(manifest);
+      const parsed = parseManifestV4(manifest);
+      const { modelUrl, annotations } = parsed;
+      let { geoFeatures, geoCanvasId } = parsed;
+      // 地点の付いた Canvas が 2 つ以上あれば、URL の canvas のものを開く
+      const canvases = geoCanvasId ? geoCanvasesOf(manifest) : [];
+      // ビューアと同じく、番号（1 から。マニフェストの何枚目か）でも id でもよい
+      const want = urlState?.canvas;
+      const wantId = want && /^\d+$/.test(want) ? manifest.items?.[Number(want) - 1]?.id : want;
+      const fromUrl = canvases.find((c) => c.id === wantId);
+      if (fromUrl) {
+        geoFeatures = fromUrl.features;
+        geoCanvasId = fromUrl.id;
+      }
       setGlbUrl(modelUrl);
+      setGeoCanvases(canvases);
       setGeoCanvasId(geoCanvasId);
       setManifest(manifest);
       setAttribution(getAttribution(manifest as unknown as Record<string, unknown>, locale));
@@ -178,16 +218,7 @@ const GeoRefContent: NextPage = () => {
   }, [selectedAnnotationId, geoFeatures, writeParams]);
 
   // 画像の地点と地図の地点の組
-  const georefPairs = useMemo(
-    () =>
-      geoFeatures.map((f) => ({
-        x: f.properties.resourceCoords[0],
-        y: f.properties.resourceCoords[1],
-        lng: f.geometry.coordinates[0],
-        lat: f.geometry.coordinates[1],
-      })),
-    [geoFeatures]
-  );
+  const georefPairs = useMemo(() => pairsOf(geoFeatures), [geoFeatures]);
   // 北が上になる回転。地点が 2 つ以上あるときだけ求まる
   const autoRotation = useMemo(() => northUpRotation(georefPairs), [georefPairs]);
 
@@ -229,6 +260,32 @@ const GeoRefContent: NextPage = () => {
     );
     return corners ? { url: overlayUrlOf(layer), corners } : null;
   }, [geoCanvas, geoFeatures]);
+
+  // 別の Canvas に切り替える。地点・一覧・画像の向きをその Canvas のものにし、URL の canvas に書く
+  const geoCanvasIndex = geoCanvases.findIndex((c) => c.id === geoCanvasId);
+  const showGeoCanvas = (index: number) => {
+    const c = geoCanvases[index];
+    if (!c || c.id === geoCanvasId) return;
+    setGeoCanvasId(c.id);
+    setGeoFeatures(c.features);
+    setAnnotations(geoAnnotations(c.features, []));
+    setSelectedAnnotationId(null);
+    setTagFilter([]);
+    setUseUrlImageView(false);
+    // 開いたときと同じく、北が上になるよう回す（地点が 2 つ未満なら回さない）
+    changeRotation(northUpRotation(pairsOf(c.features)) ?? 0);
+    writeParams({ canvas: index === 0 ? null : c.id, zoom: null, centerX: null, centerY: null });
+  };
+
+  // 一覧の絞り込み。番号と注記は絞り込む前の並びで引く
+  const tagFacets = useMemo(() => georefTagFacets(annotations), [annotations]);
+  const visibleIndices = useMemo(
+    () => filterGeorefFeatures(geoFeatures, annotations, { query: searchQuery, tags: tagFilter }),
+    [geoFeatures, annotations, searchQuery, tagFilter]
+  );
+  const filtering = searchQuery.trim() !== '' || tagFilter.length > 0;
+  const toggleTag = (tag: string) =>
+    setTagFilter((cur) => (cur.includes(tag) ? cur.filter((t) => t !== tag) : [...cur, tag]));
 
   // 画像の印から選んだとき。画像は回さない（見ている向きのまま印を押したので）
   const handleFeatureClick = (id: string) => {
@@ -283,6 +340,7 @@ const GeoRefContent: NextPage = () => {
                 initialSelectedId={urlState?.id ? featureIdFromParam(geoFeatures, urlState.id) : null}
                 onViewChange={handleMapViewChange}
                 clustering={clustering}
+                fitKey={geoCanvasId}
               />
             </div>
             {/* 3D Viewer, or the georeferenced picture */}
@@ -310,15 +368,47 @@ const GeoRefContent: NextPage = () => {
               </div>
               {geoCanvas && (
                 <GeoImageView
+                  key={geoCanvasId}
                   canvas={geoCanvas}
                   points={imagePoints}
                   selectedId={selectedAnnotationId}
                   onSelect={handleFeatureClick}
-                  initialView={urlState?.image}
+                  initialView={useUrlImageView ? urlState?.image : undefined}
                   onViewChange={handleImageViewChange}
                   rotation={rotation}
                   clustering={clustering}
                 />
+              )}
+              {/* 地点の付いた Canvas が 2 つ以上あるとき、前後に切り替える */}
+              {geoCanvases.length > 1 && geoCanvasIndex >= 0 && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1 bg-white dark:bg-gray-800 rounded-full shadow px-1 py-1 text-sm text-gray-700 dark:text-gray-300">
+                  <button
+                    type="button"
+                    onClick={() => showGeoCanvas(geoCanvasIndex - 1)}
+                    disabled={geoCanvasIndex === 0}
+                    aria-label={t('prevCanvas')}
+                    title={t('prevCanvas')}
+                    className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:hover:bg-transparent"
+                  >
+                    ‹
+                  </button>
+                  <span className="px-1 max-w-[16rem] truncate" title={labelIn(geoCanvases[geoCanvasIndex].label, locale)}>
+                    {geoCanvasIndex + 1} / {geoCanvases.length}
+                    {labelIn(geoCanvases[geoCanvasIndex].label, locale) && (
+                      <span className="ml-2 text-gray-500 dark:text-gray-400">{labelIn(geoCanvases[geoCanvasIndex].label, locale)}</span>
+                    )}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => showGeoCanvas(geoCanvasIndex + 1)}
+                    disabled={geoCanvasIndex === geoCanvases.length - 1}
+                    aria-label={t('nextCanvas')}
+                    title={t('nextCanvas')}
+                    className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 disabled:hover:bg-transparent"
+                  >
+                    ›
+                  </button>
+                </div>
               )}
               {glbUrl && (
                 <Suspense
@@ -336,7 +426,7 @@ const GeoRefContent: NextPage = () => {
             <SidePanel breakpoint="lg" className="bg-white dark:bg-gray-800 flex flex-col">
               <div className="sticky top-0 bg-white dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700 z-10">
                 <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('annotations')} ({geoFeatures.length})
+                  {t('annotations')} ({filtering ? `${visibleIndices.length} / ${geoFeatures.length}` : geoFeatures.length})
                 </h2>
                 <div className="relative">
                   <input
@@ -365,24 +455,41 @@ const GeoRefContent: NextPage = () => {
                     </button>
                   )}
                 </div>
+                {/* タグで絞り込む（件数の多い順。押すたびに入れる・外す） */}
+                {tagFacets.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-1.5 max-h-24 overflow-y-auto" role="group" aria-label={t('filterByTag')}>
+                    {tagFacets.map(({ value, count }) => {
+                      const on = tagFilter.includes(value);
+                      return (
+                        <button
+                          key={value}
+                          type="button"
+                          aria-pressed={on}
+                          onClick={() => toggleTag(value)}
+                          className={`rounded-full border px-2.5 py-0.5 text-xs transition-colors ${
+                            on
+                              ? 'border-blue-600 bg-blue-600 text-white'
+                              : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                          }`}
+                        >
+                          {value} ({count})
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                {geoFeatures
-                  .map((feature, index) => ({ feature, index })) // 番号と注記は絞り込む前の並びで引く
-                  .filter(({ feature }) => {
-                    const query = searchQuery.toLowerCase();
-                    // Search in title
-                    if (feature.properties.title.toLowerCase().includes(query)) return true;
-                    // Search in names array
-                    if (feature.names?.some(name => name.toponym.toLowerCase().includes(query))) return true;
-                    return false;
-                  })
+                {visibleIndices
+                  .map((index) => ({ feature: geoFeatures[index], index }))
                   .map(({ feature, index }) => {
                     // 中身（説明・画像・タグ・参照）は 3D の画面の一覧と同じカードで出す
                     const annotation = annotations[index];
                     if (!annotation) return null;
                     const wikipediaLink = feature.links?.find(link => link.type === 'primaryTopicOf')?.identifier;
                     const altNames = feature.names?.filter(name => name.toponym !== feature.properties.title);
+                    // geo.ldas.jp の一覧の ID の列（ID でも探せる）
+                    const featureId = feature.id ?? feature['@id'];
                     return (
                       <AnnotationCard
                         key={annotation.id}
@@ -394,6 +501,11 @@ const GeoRefContent: NextPage = () => {
                           if (el) annotationRefs.current.set(annotation.id, el);
                         }}
                       >
+                        {featureId && (
+                          <div className="mt-2 pl-9 text-xs text-gray-400 dark:text-gray-500 truncate" title={featureId}>
+                            ID: {featureId}
+                          </div>
+                        )}
                         {/* 地名の別名と Wikipedia は、georef の地物（Linked Places 形式）だけが持つ */}
                         {altNames && altNames.length > 0 && (
                           <div className="mt-2 pl-9 text-xs text-gray-500 dark:text-gray-400">
@@ -421,12 +533,7 @@ const GeoRefContent: NextPage = () => {
                     {t('noAnnotations')}
                   </p>
                 )}
-                {geoFeatures.length > 0 && searchQuery && geoFeatures.filter((feature) => {
-                  const query = searchQuery.toLowerCase();
-                  if (feature.properties.title.toLowerCase().includes(query)) return true;
-                  if (feature.names?.some(name => name.toponym.toLowerCase().includes(query))) return true;
-                  return false;
-                }).length === 0 && (
+                {geoFeatures.length > 0 && visibleIndices.length === 0 && (
                   <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
                     {t('noResults')}
                   </p>

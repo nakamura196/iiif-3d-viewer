@@ -1,5 +1,6 @@
 import type { ComponentType } from 'react';
 import type { ContainerInfo } from '../../core';
+import type { StageInfo } from '../displays/ImageView';
 
 // 画像の上に重ねる表示（注釈の枠・点・ホットスポットなど）の契約。
 // 重ねる層は「画像と同じ大きさの透明な箱」で、画像のズーム・移動に追従する（担当: image）。
@@ -8,6 +9,8 @@ export interface OverlayProps {
   container: ContainerInfo;
   canvasWidth: number;
   canvasHeight: number;
+  /** The current zoom and move of the view (to draw only what is on screen). */
+  stage?: StageInfo;
 }
 
 export interface Overlay {

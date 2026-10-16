@@ -20,3 +20,4 @@ export * from './transcript';
 export * from './features';
 export * from './georefView';
 export * from './pointClusters';
+export * from './georefList';

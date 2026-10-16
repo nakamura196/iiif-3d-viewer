@@ -78,7 +78,10 @@
     "rotationReset": "0° に戻す",
     "autoRotateOnSelect": "地点を選んだら、その近くで北を上に",
     "clustering": "近い地点をまとめる",
-    "noResults": "結果が見つかりません"
+    "noResults": "結果が見つかりません",
+    "filterByTag": "タグで絞り込む",
+    "prevCanvas": "前の画像",
+    "nextCanvas": "次の画像"
   },
   "Home": {
     "developers": "開発者",
