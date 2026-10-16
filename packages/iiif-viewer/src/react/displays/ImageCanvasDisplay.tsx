@@ -9,6 +9,7 @@ import {
   layerThumbnailUrl,
   manifestItemsOf,
   paintsImage,
+  physdimOf,
   rawCanvasOf,
   thumbnailUrlOf,
   type CanvasImages,
@@ -22,6 +23,7 @@ import {
   orderLayers,
   playbackSettings,
   type PaintingContent,
+  type Physdim,
 } from '../../core';
 import {
   canvasLayersAtom,
@@ -38,6 +40,7 @@ import { useAuthPanels } from '../auth/authStore';
 import { AnnotationBoxes, MediaCover } from './ImageExtras';
 import ImageLayerView from './ImageTiles';
 import ImageView from './ImageView';
+import PhysicalRuler from './PhysicalRuler';
 import { useRawManifest } from './rawManifest';
 import { useVideoPoster } from './videoPoster';
 import Waveform from './Waveform';
@@ -68,10 +71,12 @@ function ImageBody({
   props,
   images,
   paintings,
+  physdim,
 }: {
   props: DisplayProps;
   images: CanvasImages;
   paintings: CanvasPainting[];
+  physdim?: Physdim;
 }) {
   const { container } = props;
   const [failedBase, setFailedBase] = useState(false);
@@ -170,6 +175,11 @@ function ImageBody({
             detailWidth={detailWidthOf(items.map((it) => it.layer))}
             container={container}
             extra={<AnnotationBoxes annotations={annotations} canvasWidth={width} canvasHeight={height} />}
+            over={
+              physdim
+                ? (stage) => <PhysicalRuler physdim={physdim} canvasWidth={width} canvasHeight={height} stage={stage} />
+                : undefined
+            }
           >
             {(stage) =>
               drawn.map((it) => (
@@ -303,6 +313,7 @@ function ImageCanvasDisplay(props: DisplayProps) {
   const waiting = raw === undefined && container.kind === 'Scene';
   const source = useMemo(() => rawCanvasOf(raw ?? props.manifest, container.id), [raw, props.manifest, container.id]);
   const images = useMemo(() => canvasImagesOf(source), [source]);
+  const physdim = useMemo(() => physdimOf(source), [source]);
   const imagePaintings = useMemo(() => images.paintings.filter(paintsImage), [images]);
 
   if (waiting) {
@@ -321,7 +332,7 @@ function ImageCanvasDisplay(props: DisplayProps) {
 
   let body: React.ReactNode;
   if (imagePaintings.length > 0) {
-    body = <ImageBody props={props} images={images} paintings={imagePaintings} />;
+    body = <ImageBody props={props} images={images} paintings={imagePaintings} physdim={physdim} />;
   } else if (mediaPainting) {
     const kind = mediaPainting.options.find((o) => o.kind === 'Video' || o.kind === 'Audio')!.kind as 'Video' | 'Audio';
     body = <MediaBody props={props} images={images} kind={kind} />;

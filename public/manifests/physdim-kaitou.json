@@ -1,0 +1,612 @@
+{
+  "@context": "http://iiif.io/api/presentation/3/context.json",
+  "id": "https://kasane.ldas.jp/manifests/physdim-kaitou.json",
+  "type": "Manifest",
+  "label": {
+    "ja": [
+      "海東諸国紀"
+    ]
+  },
+  "rights": "https://www.hi.u-tokyo.ac.jp/faq/reuse",
+  "logo": [
+    {
+      "id": "https://www.hi.u-tokyo.ac.jp/icon.png",
+      "type": "Image"
+    }
+  ],
+  "requiredStatement": {
+    "label": {
+      "ja": [
+        "帰属"
+      ]
+    },
+    "value": {
+      "ja": [
+        "東京大学史料編纂所"
+      ]
+    }
+  },
+  "metadata": [
+    {
+      "label": {
+        "ja": [
+          "タイトル"
+        ]
+      },
+      "value": {
+        "ja": [
+          "海東諸国紀"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "著者"
+        ]
+      },
+      "value": {
+        "ja": [
+          "申叔舟（シンスクチュ、1417〜75）"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "成立年"
+        ]
+      },
+      "value": {
+        "ja": [
+          "朝鮮成宗2年（文明3年、1471）"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "形態"
+        ]
+      },
+      "value": {
+        "ja": [
+          "朝鮮活字版 冊子"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "法量"
+        ]
+      },
+      "value": {
+        "ja": [
+          "縦32.6cm × 横21.2cm"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "所蔵"
+        ]
+      },
+      "value": {
+        "ja": [
+          "東京大学史料編纂所"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "利用条件"
+        ]
+      },
+      "value": {
+        "ja": [
+          "<a href=\"https://www.hi.u-tokyo.ac.jp/faq/reuse\">東京大学史料編纂所 画像利用について</a>"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "備考"
+        ]
+      },
+      "value": {
+        "ja": [
+          "朝鮮成宗の王命を受けて申叔舟が編纂した海東諸国（日本国・琉球国）についての研究書。表紙裏にある内賜記に「正徳7年（1512）」の年紀があることから善本とされる。"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "関連リンク"
+        ]
+      },
+      "value": {
+        "ja": [
+          "<a href=\"https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/nihonzu/\">15世紀の日本図・琉球図デジタルアーカイブ</a>"
+        ]
+      }
+    }
+  ],
+  "viewingDirection": "right-to-left",
+  "items": [
+    {
+      "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p1",
+      "type": "Canvas",
+      "label": {
+        "none": [
+          "[1]"
+        ]
+      },
+      "width": 4474,
+      "height": 3918,
+      "service": [
+        {
+          "@context": "http://iiif.io/api/annex/services/physdim/1/context.json",
+          "profile": "http://iiif.io/api/annex/services/physdim",
+          "physicalScale": 0.04738,
+          "physicalUnits": "mm"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p1/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p1/page/imageanno",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/image",
+                "type": "Image",
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "id": "https://cantaloupe.lab.hi.u-tokyo.ac.jp/iiif/2/clioimg%2F6ac7a5b6-1a7a-4371-92fa-5b43e689ac52.tif",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ],
+                "width": 4474,
+                "height": 3918
+              },
+              "target": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p1"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p2",
+      "type": "Canvas",
+      "label": {
+        "none": [
+          "[2]"
+        ]
+      },
+      "width": 4474,
+      "height": 3918,
+      "service": [
+        {
+          "@context": "http://iiif.io/api/annex/services/physdim/1/context.json",
+          "profile": "http://iiif.io/api/annex/services/physdim",
+          "physicalScale": 0.04738,
+          "physicalUnits": "mm"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p2/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p2/page/imageanno",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/image",
+                "type": "Image",
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "id": "https://cantaloupe.lab.hi.u-tokyo.ac.jp/iiif/2/clioimg%2Fff8066bd-cd9b-4d6f-bf11-dde51d85a137.tif",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ],
+                "width": 4474,
+                "height": 3918
+              },
+              "target": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p2"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p3",
+      "type": "Canvas",
+      "label": {
+        "none": [
+          "[3]"
+        ]
+      },
+      "width": 4474,
+      "height": 3918,
+      "service": [
+        {
+          "@context": "http://iiif.io/api/annex/services/physdim/1/context.json",
+          "profile": "http://iiif.io/api/annex/services/physdim",
+          "physicalScale": 0.04738,
+          "physicalUnits": "mm"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p3/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p3/page/imageanno",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/image",
+                "type": "Image",
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "id": "https://cantaloupe.lab.hi.u-tokyo.ac.jp/iiif/2/clioimg%2F5e3c7d04-00b1-4bc6-b48c-47e849b7dc2e.tif",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ],
+                "width": 4474,
+                "height": 3918
+              },
+              "target": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p3"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p4",
+      "type": "Canvas",
+      "label": {
+        "none": [
+          "[4]"
+        ]
+      },
+      "width": 4474,
+      "height": 3918,
+      "service": [
+        {
+          "@context": "http://iiif.io/api/annex/services/physdim/1/context.json",
+          "profile": "http://iiif.io/api/annex/services/physdim",
+          "physicalScale": 0.04738,
+          "physicalUnits": "mm"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p4/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p4/page/imageanno",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/image",
+                "type": "Image",
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "id": "https://cantaloupe.lab.hi.u-tokyo.ac.jp/iiif/2/clioimg%2F72dbc922-9a52-44a0-afd4-dc0fbd02b776.tif",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ],
+                "width": 4474,
+                "height": 3918
+              },
+              "target": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p4"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p5",
+      "type": "Canvas",
+      "label": {
+        "none": [
+          "[5]"
+        ]
+      },
+      "width": 4474,
+      "height": 3918,
+      "service": [
+        {
+          "@context": "http://iiif.io/api/annex/services/physdim/1/context.json",
+          "profile": "http://iiif.io/api/annex/services/physdim",
+          "physicalScale": 0.04738,
+          "physicalUnits": "mm"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p5/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p5/page/imageanno",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/image",
+                "type": "Image",
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "id": "https://cantaloupe.lab.hi.u-tokyo.ac.jp/iiif/2/clioimg%2F787b1f7d-272f-4ee1-9b9c-390ec461f940.tif",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ],
+                "width": 4474,
+                "height": 3918
+              },
+              "target": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p5"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p6",
+      "type": "Canvas",
+      "label": {
+        "none": [
+          "[6]"
+        ]
+      },
+      "width": 4474,
+      "height": 3918,
+      "service": [
+        {
+          "@context": "http://iiif.io/api/annex/services/physdim/1/context.json",
+          "profile": "http://iiif.io/api/annex/services/physdim",
+          "physicalScale": 0.04738,
+          "physicalUnits": "mm"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p6/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p6/page/imageanno",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/image",
+                "type": "Image",
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "id": "https://cantaloupe.lab.hi.u-tokyo.ac.jp/iiif/2/clioimg%2F1dd6a91e-6c72-4622-96ce-e278e161c932.tif",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ],
+                "width": 4474,
+                "height": 3918
+              },
+              "target": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p6"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p7",
+      "type": "Canvas",
+      "label": {
+        "none": [
+          "[7]"
+        ]
+      },
+      "width": 4474,
+      "height": 3918,
+      "service": [
+        {
+          "@context": "http://iiif.io/api/annex/services/physdim/1/context.json",
+          "profile": "http://iiif.io/api/annex/services/physdim",
+          "physicalScale": 0.04738,
+          "physicalUnits": "mm"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p7/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p7/page/imageanno",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/image",
+                "type": "Image",
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "id": "https://cantaloupe.lab.hi.u-tokyo.ac.jp/iiif/2/clioimg%2F69af0a94-4eca-47bb-ba01-59946c7d02bc.tif",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ],
+                "width": 4474,
+                "height": 3918
+              },
+              "target": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p8",
+      "type": "Canvas",
+      "label": {
+        "none": [
+          "[8]"
+        ]
+      },
+      "width": 2215,
+      "height": 3867,
+      "service": [
+        {
+          "@context": "http://iiif.io/api/annex/services/physdim/1/context.json",
+          "profile": "http://iiif.io/api/annex/services/physdim",
+          "physicalScale": 0.04738,
+          "physicalUnits": "mm"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p8/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p8/page/imageanno",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/image",
+                "type": "Image",
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "id": "https://cantaloupe.lab.hi.u-tokyo.ac.jp/iiif/2/clioimg%2Ffcab5482-fd45-4c73-8d48-f49559b88062.tif",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ],
+                "width": 2215,
+                "height": 3867
+              },
+              "target": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p8"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p9",
+      "type": "Canvas",
+      "label": {
+        "none": [
+          "[9]"
+        ]
+      },
+      "width": 2198,
+      "height": 3867,
+      "service": [
+        {
+          "@context": "http://iiif.io/api/annex/services/physdim/1/context.json",
+          "profile": "http://iiif.io/api/annex/services/physdim",
+          "physicalScale": 0.04738,
+          "physicalUnits": "mm"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p9/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p9/page/imageanno",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/image",
+                "type": "Image",
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "id": "https://cantaloupe.lab.hi.u-tokyo.ac.jp/iiif/2/clioimg%2F2d55c565-b9c7-4f4c-a115-8e52c5867fbb.tif",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ],
+                "width": 2198,
+                "height": 3867
+              },
+              "target": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p9"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p10",
+      "type": "Canvas",
+      "label": {
+        "none": [
+          "[10]"
+        ]
+      },
+      "width": 2268,
+      "height": 3887,
+      "service": [
+        {
+          "@context": "http://iiif.io/api/annex/services/physdim/1/context.json",
+          "profile": "http://iiif.io/api/annex/services/physdim",
+          "physicalScale": 0.04738,
+          "physicalUnits": "mm"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p10/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p10/page/imageanno",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/image",
+                "type": "Image",
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "id": "https://cantaloupe.lab.hi.u-tokyo.ac.jp/iiif/2/clioimg%2F8f66467a-b74c-4d57-a78d-d44a20837b91.tif",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ],
+                "width": 2268,
+                "height": 3887
+              },
+              "target": "https://drupal.lab.hi.u-tokyo.ac.jp/api/iiif/3/4aced7b8-20c0-4112-8c96-8fdf9698f48e/canvas/p10"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

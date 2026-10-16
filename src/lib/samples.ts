@@ -52,6 +52,24 @@ export const SAMPLES: Sample[] = [
     },
     manifest: withBasePath('/manifests/sample-manifest-video-objects.json'), tab: 'canvasAnnotations',
   },
+  {
+    id: 'physdim-hyakki', media: 'image',
+    title: { ja: '実寸の物差し: 百鬼夜行図', en: 'Physical ruler: Hyakki Yagyo scroll' },
+    note: {
+      ja: '横長の絵巻（約 7.9 m）の例。キャンバスに実寸（physdim）が書いてあるので、画像の上端と左端に物差しが出ます。拡大すると目盛りが細かくなります。左上の歯車で単位（mm・cm・in）や色を変えられます',
+      en: 'A long handscroll (about 7.9 m). The Canvas carries its physical size (physdim), so a ruler appears along the top and left edges and its ticks get finer as you zoom. The gear at the top left changes the unit (mm, cm, in) and colours',
+    },
+    manifest: withBasePath('/manifests/physdim-hyakki.json'),
+  },
+  {
+    id: 'physdim-kaitou', media: 'image',
+    title: { ja: '実寸の物差し: 海東諸国紀', en: 'Physical ruler: Kaito Shokokuki' },
+    note: {
+      ja: '10 ページの冊子の例。どのページにも実寸（physdim）が書いてあり、ページを移しても物差しが付きます',
+      en: 'A 10-page book. Every page carries its physical size (physdim), so the ruler stays as you turn pages',
+    },
+    manifest: withBasePath('/manifests/physdim-kaitou.json'),
+  },
 ];
 
 // 「開く」の行き先（/viewer）。一覧の画面と、サムネイルを撮るスクリプトの両方で使う

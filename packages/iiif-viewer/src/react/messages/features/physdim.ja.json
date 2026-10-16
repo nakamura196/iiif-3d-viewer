@@ -1,0 +1,12 @@
+{
+  "Viewer": {
+    "rulerShow": "定規",
+    "rulerSettings": "定規の設定",
+    "rulerHide": "定規を隠す",
+    "rulerFontSize": "文字の大きさ",
+    "rulerTickSize": "目盛りの長さ",
+    "rulerColor": "色",
+    "rulerOpacity": "背景の濃さ",
+    "rulerUnit": "単位"
+  }
+}
