@@ -21,9 +21,9 @@ v4 form directly (Scene, PointSelector / WKTSelector, PerspectiveCamera).
   元は https://geo.ldas.jp/manifest.json（nakamura196/iiif_geo）。対応点に OpenStreetMap の現在の建物名を付けた。
   経緯は `docs/notes/georef-overlay.md`
 
-- `physdim-hyakki.json` / `physdim-kaitou.json` / `physdim-ryukyu.json` - 実寸の物差し（IIIF physdim service）の例。
+- `physdim-hyakki.json` - 実寸の物差し（IIIF physdim service）の例。
   Canvas の service に `physicalScale`（1 ピクセルあたりの実寸）と `physicalUnits` を持つ画像。
-  元は mirador-physical-ruler の `demo/`。画像は東京大学の IIIF サーバから読む。ただし `physdim-ryukyu.json` の画像は元のサーバが 404 を返すため、一覧（`src/lib/samples.ts`）には載せていない（2026-10-16 時点）。経緯は `docs/notes/physdim-ruler.md`
+  元は mirador-physical-ruler の `demo/`。画像は東京大学の IIIF サーバから読む。経緯は `docs/notes/physdim-ruler.md`
 
 - `youtube-tutorials/` - YouTube の動画を IIIF の Video として参照する例。`collection.json` に日本語版・英語版のマニフェスト 2 件、各 4 本（IIIF Kasane の使い方動画、作成は中村 覚）。
   字幕は動画を作ったときの WebVTT を複製した。YouTube 側は限定公開
