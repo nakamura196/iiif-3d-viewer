@@ -19,3 +19,4 @@ export * from './contentState';
 export * from './transcript';
 export * from './features';
 export * from './georefView';
+export * from './georefList';

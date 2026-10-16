@@ -63,6 +63,8 @@ interface MapViewProps {
   initialSelectedId?: string | null;
   /** 地図を動かし終えるたびに呼ぶ。 */
   onViewChange?: (view: GeorefMapView) => void;
+  /** これが変わったら、すべての地点が収まる縮尺に合わせ直す（地点の付いた Canvas を切り替えたとき）。 */
+  fitKey?: string;
 }
 
 const OVERLAY_SOURCE = 'georef-overlay';
@@ -107,6 +109,7 @@ export default function MapView({
   focus,
   initialSelectedId,
   onViewChange,
+  fitKey,
 }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<maplibregl.Map | null>(null);
@@ -398,6 +401,15 @@ export default function MapView({
     syncOverlay();
     fitAll(0, true);
   }, [overlay?.url, overlay?.corners]);
+
+  // 別の Canvas に切り替えたら、手で動かした後でも、その地点が収まる縮尺に合わせ直す
+  const fitKeyRef = useRef(fitKey);
+  useEffect(() => {
+    if (fitKeyRef.current === fitKey) return;
+    fitKeyRef.current = fitKey;
+    keepViewRef.current = false;
+    fitAll(600, true);
+  }, [fitKey]);
 
   useEffect(() => {
     const m = map.current;

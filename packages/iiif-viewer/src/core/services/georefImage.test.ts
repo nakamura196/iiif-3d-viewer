@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { convertToV4 } from './manifestConverter';
-import { geoAnnotations, geoFeatureIdOf, parseManifestV4 } from './manifestParser';
+import { geoAnnotations, geoCanvasesOf, geoFeatureIdOf, parseManifestV4 } from './manifestParser';
 
 // 画像（Canvas）に付いたジオリファレンス。geo.ldas.jp/manifest.json と同じ形（地点 2 件に縮めたもの）。
 const feature = (n: number, xy: [number, number], lnglat: [number, number]) => ({
@@ -82,3 +82,54 @@ describe('georeferencing on a Canvas (a georeferenced picture)', () => {
     expect(geoFeatureIdOf({ ...f, '@id': '', id: undefined }, 4)).toBe('geo-feature-4');
   });
 });
+
+describe('a Manifest with several georeferenced Canvases', () => {
+  const canvas1 = imageManifest.items[0];
+  const plain = { ...canvas1, id: 'https://example.org/iiif/canvas/plain', annotations: [] };
+  const second = {
+    ...canvas1,
+    id: 'https://example.org/iiif/canvas/2',
+    label: { ja: ['二枚目'] },
+    annotations: [
+      {
+        ...canvas1.annotations[0],
+        items: [
+          {
+            ...canvas1.annotations[0].items[0],
+            body: {
+              ...canvas1.annotations[0].items[0].body,
+              features: [{ ...feature(3, [10, 20], [135.5, 34.7]), properties: { resourceCoords: [10, 20], title: '工学部棟', tags: ['工学部', '建物'] } }],
+            },
+          },
+        ],
+      },
+    ],
+  };
+  const manifest = convertToV4({ ...imageManifest, items: [plain, canvas1, second] });
+
+  it('lists every Canvas with places, in order, skipping one without', () => {
+    const canvases = geoCanvasesOf(manifest);
+    expect(canvases.map((c) => c.id)).toEqual(['https://example.org/iiif/canvas/1', 'https://example.org/iiif/canvas/2']);
+    expect(canvases.map((c) => c.features.length)).toEqual([2, 1]);
+    expect(canvases[1].label).toEqual({ ja: ['二枚目'] });
+  });
+
+  it('still opens the first one by default', () => {
+    expect(parseManifestV4(manifest).geoCanvasId).toBe('https://example.org/iiif/canvas/1');
+  });
+
+  it('gives the tags of a place to its annotation', () => {
+    const [, c2] = geoCanvasesOf(manifest);
+    const [a] = geoAnnotations(c2.features, []);
+    expect(a.tags).toEqual([{ value: '工学部' }, { value: '建物' }]);
+  });
+
+  it('reads tags from metadata (geo.ldas.jp older form) too', () => {
+    const f = { ...parsed1(), metadata: { tags: ['旧形式'] } };
+    expect(geoAnnotations([f], [])[0].tags).toEqual([{ value: '旧形式' }]);
+  });
+});
+
+function parsed1() {
+  return parseManifestV4(convertToV4(imageManifest)).geoFeatures[0];
+}
