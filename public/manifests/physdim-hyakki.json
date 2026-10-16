@@ -1,0 +1,169 @@
+{
+  "@context": "http://iiif.io/api/presentation/3/context.json",
+  "id": "https://kasane.ldas.jp/manifests/physdim-hyakki.json",
+  "type": "Manifest",
+  "label": {
+    "ja": [
+      "百鬼夜行図"
+    ]
+  },
+  "requiredStatement": {
+    "label": {
+      "ja": [
+        "帰属"
+      ]
+    },
+    "value": {
+      "ja": [
+        "東京大学総合図書館"
+      ]
+    }
+  },
+  "metadata": [
+    {
+      "label": {
+        "ja": [
+          "タイトル"
+        ]
+      },
+      "value": {
+        "ja": [
+          "百鬼夜行図"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "編著者"
+        ]
+      },
+      "value": {
+        "ja": [
+          "藤原行秀 [原] 筆; 源廣迢 [摸] 冩"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "成立"
+        ]
+      },
+      "value": {
+        "ja": [
+          "[江戸中期]"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "形態"
+        ]
+      },
+      "value": {
+        "ja": [
+          "紙本著色 絵巻 1軸"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "法量"
+        ]
+      },
+      "value": {
+        "ja": [
+          "縦28cm（横は公開されておらず、画像の縦横比から約7.2mと推定）"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "所蔵"
+        ]
+      },
+      "value": {
+        "ja": [
+          "東京大学総合図書館"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "出典"
+        ]
+      },
+      "value": {
+        "ja": [
+          "<a href=\"https://da.dl.itc.u-tokyo.ac.jp/portal/assets/fbd0479b-dbb4-4eaa-95b8-f27e1c423e4b\">東京大学デジタルアーカイブ</a>"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "備考"
+        ]
+      },
+      "value": {
+        "ja": [
+          "本デモの physicalScale は、公開法量「縦28cm」を本紙の高さとし、画像から本紙領域の高さ（上下のスキャン余白を除いた約2,802px）を実測して算出した推定値です（280mm ÷ 2,802px ≒ 0.09993 mm/px）。"
+        ]
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/fbd0479b-dbb4-4eaa-95b8-f27e1c423e4b/canvas/p1",
+      "type": "Canvas",
+      "label": {
+        "none": [
+          "[1]"
+        ]
+      },
+      "width": 79508,
+      "height": 3082,
+      "service": [
+        {
+          "@context": "http://iiif.io/api/annex/services/physdim/1/context.json",
+          "profile": "http://iiif.io/api/annex/services/physdim",
+          "physicalScale": 0.09993,
+          "physicalUnits": "mm"
+        }
+      ],
+      "items": [
+        {
+          "id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/fbd0479b-dbb4-4eaa-95b8-f27e1c423e4b/canvas/p1/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/fbd0479b-dbb4-4eaa-95b8-f27e1c423e4b/canvas/p1/page/imageanno",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://iiif.dl.itc.u-tokyo.ac.jp/iiif/hyakki/images/hyakki.tif/full/max/0/default.jpg",
+                "type": "Image",
+                "format": "image/jpeg",
+                "service": [
+                  {
+                    "id": "https://iiif.dl.itc.u-tokyo.ac.jp/iiif/hyakki/images/hyakki.tif",
+                    "type": "ImageService2",
+                    "profile": "level2"
+                  }
+                ],
+                "width": 79508,
+                "height": 3082
+              },
+              "target": "https://iiif.dl.itc.u-tokyo.ac.jp/repo/iiif/fbd0479b-dbb4-4eaa-95b8-f27e1c423e4b/canvas/p1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

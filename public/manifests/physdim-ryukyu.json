@@ -1,0 +1,162 @@
+{
+  "@context": "http://iiif.io/api/presentation/3/context.json",
+  "id": "https://kasane.ldas.jp/manifests/physdim-ryukyu.json",
+  "type": "Manifest",
+  "label": {
+    "ja": [
+      "正保琉球国悪鬼納島絵図写"
+    ]
+  },
+  "rights": "https://www.hi.u-tokyo.ac.jp/faq/reuse",
+  "logo": [
+    {
+      "id": "https://www.hi.u-tokyo.ac.jp/icon.png",
+      "type": "Image"
+    }
+  ],
+  "requiredStatement": {
+    "label": {
+      "ja": [
+        "帰属"
+      ]
+    },
+    "value": {
+      "ja": [
+        "東京大学史料編纂所"
+      ]
+    }
+  },
+  "metadata": [
+    {
+      "label": {
+        "ja": [
+          "タイトル"
+        ]
+      },
+      "value": {
+        "ja": [
+          "正保琉球国悪鬼納島絵図写"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "請求記号"
+        ]
+      },
+      "value": {
+        "ja": [
+          "Ｓ島津 76-2-5"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "法量"
+        ]
+      },
+      "value": {
+        "ja": [
+          "縦353.7cm × 横621.6cm"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "所蔵"
+        ]
+      },
+      "value": {
+        "ja": [
+          "東京大学史料編纂所"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "利用条件"
+        ]
+      },
+      "value": {
+        "ja": [
+          "<a href=\"https://www.hi.u-tokyo.ac.jp/faq/reuse\">東京大学史料編纂所 画像利用について</a>"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "関連リンク"
+        ]
+      },
+      "value": {
+        "ja": [
+          "<a href=\"https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/ryukyu/\">正保琉球国絵図デジタルアーカイブ</a>"
+        ]
+      }
+    }
+  ],
+  "viewingDirection": "right-to-left",
+  "items": [
+    {
+      "id": "https://kasane.ldas.jp/manifests/physdim-ryukyu.json/canvas/1",
+      "type": "Canvas",
+      "label": {
+        "ja": [
+          "正保琉球国悪鬼納島絵図写"
+        ]
+      },
+      "width": 49797,
+      "height": 28435,
+      "service": [
+        {
+          "@context": "http://iiif.io/api/annex/services/physdim/1/context.json",
+          "profile": "http://iiif.io/api/annex/services/physdim",
+          "physicalScale": 0.12483,
+          "physicalUnits": "mm"
+        }
+      ],
+      "thumbnail": [
+        {
+          "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/ryukyu/data/files/tile/0002/full/778,/0/default.jpg",
+          "type": "Image",
+          "format": "image/jpeg",
+          "width": 778,
+          "height": 444
+        }
+      ],
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/physdim-ryukyu.json/canvas/1/page",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/physdim-ryukyu.json/canvas/1/page/annotation",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/ryukyu/data/files/tile/0002/full/max/0/default.jpg",
+                "type": "Image",
+                "format": "image/jpeg",
+                "width": 49797,
+                "height": 28435,
+                "service": [
+                  {
+                    "id": "https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/ryukyu/data/files/tile/0002",
+                    "type": "ImageService2",
+                    "profile": "level0"
+                  }
+                ]
+              },
+              "target": "https://kasane.ldas.jp/manifests/physdim-ryukyu.json/canvas/1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

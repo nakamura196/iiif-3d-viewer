@@ -1,0 +1,12 @@
+{
+  "Viewer": {
+    "rulerShow": "Ruler",
+    "rulerSettings": "Ruler settings",
+    "rulerHide": "Hide the ruler",
+    "rulerFontSize": "Font size",
+    "rulerTickSize": "Tick length",
+    "rulerColor": "Colour",
+    "rulerOpacity": "Background opacity",
+    "rulerUnit": "Unit"
+  }
+}
