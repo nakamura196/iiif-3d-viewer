@@ -40,7 +40,9 @@ export interface GeoFeature {
   type: 'Feature';
   geometry: { coordinates: [number, number]; type: 'Point' };
   /** resourceCoords: 3D の模型なら [x, y, z]、画像なら Canvas 座標の [x, y]。 */
-  properties: { title: string; resourceCoords: [number, number] | [number, number, number] };
+  properties: { title: string; resourceCoords: [number, number] | [number, number, number]; tags?: string[] };
+  /** geo.ldas.jp の古い形式。タグを properties ではなくここに書いていた。 */
+  metadata?: { tags?: string[] };
   names?: GeoFeatureName[];
   links?: GeoFeatureLink[];
   depictions?: GeoFeatureDepiction[];
@@ -345,27 +347,32 @@ const buildAnnotation = (
   };
 };
 
-// The first Canvas that carries a georeferencing Annotation (a georeferenced map or picture).
-const geoCanvasOf = (manifest: ManifestV4): CanvasV4 | undefined =>
-  (manifest.items ?? []).find(
-    (c): c is CanvasV4 =>
-      (c as { type?: string })?.type === 'Canvas' &&
-      extractGeoFeatures(flattenAllPages((c as CanvasV4).annotations)).length > 0
-  );
+/** A Canvas that carries georeferenced places (a map or a picture). */
+export interface GeoCanvas {
+  id: string;
+  /** The Canvas label as the JSON gives it (a language map or a string). */
+  label?: unknown;
+  features: GeoFeature[];
+}
+
+// Every Canvas that carries a georeferencing Annotation, in the Manifest's order.
+// geo.ldas.jp shows one at a time and pages through them.
+export const geoCanvasesOf = (manifest: ManifestV4): GeoCanvas[] =>
+  (manifest.items ?? []).flatMap((c) => {
+    if ((c as { type?: string })?.type !== 'Canvas') return [];
+    const canvas = c as CanvasV4;
+    const features = extractGeoFeatures(flattenAllPages(canvas.annotations));
+    return features.length > 0 ? [{ id: canvas.id, label: (canvas as { label?: unknown }).label, features }] : [];
+  });
 
 // Reads the Scene `sceneId` (default: the first Scene). A Manifest without a Scene gives the
 // places of its first georeferenced Canvas (geoCanvasId) instead.
 export const parseManifestV4 = (manifest: ManifestV4, sceneId?: string | null): ParsedManifest => {
   const scene = sceneOf(manifest, sceneId);
   if (!scene) {
-    const canvas = geoCanvasOf(manifest);
+    const canvas = geoCanvasesOf(manifest)[0];
     if (canvas) {
-      return {
-        modelUrl: null,
-        annotations: [],
-        geoFeatures: extractGeoFeatures(flattenAllPages(canvas.annotations)),
-        geoCanvasId: canvas.id,
-      };
+      return { modelUrl: null, annotations: [], geoFeatures: canvas.features, geoCanvasId: canvas.id };
     }
   }
   const modelUrl = extractModelUrl(scene);
@@ -393,9 +400,14 @@ export const parseManifestV4 = (manifest: ManifestV4, sceneId?: string | null): 
 export const geoFeatureIdOf = (feature: GeoFeature, idx: number): string =>
   feature['@id'] || feature.id || `geo-feature-${idx}`;
 
+// The tags of a feature: properties.tags, or metadata.tags (geo.ldas.jp's older form).
+export const geoFeatureTagsOf = (feature: GeoFeature): string[] =>
+  (feature.properties.tags ?? feature.metadata?.tags ?? []).filter((t): t is string => typeof t === 'string' && t !== '');
+
 export const geoFeaturesToAnnotations = (features: GeoFeature[]): Annotation[] =>
   features.map((feature, idx) => {
     const [x, y, z = 0] = feature.properties.resourceCoords;
+    const tags = geoFeatureTagsOf(feature);
     const coords: [number, number, number] = [x, y, z];
     return {
       id: geoFeatureIdOf(feature, idx),
@@ -405,6 +417,7 @@ export const geoFeaturesToAnnotations = (features: GeoFeature[]): Annotation[] =
       media: [],
       wikidata: [],
       bibliography: [],
+      ...(tags.length > 0 ? { tags: tags.map((value) => ({ value })) } : {}),
       position: { x: coords[0], y: coords[1], z: coords[2] },
       data: {
         body: { value: '', label: feature.properties.title },
@@ -487,7 +500,8 @@ export const geoAnnotations = (features: GeoFeature[], annotations: Annotation[]
   return features.map((feature, idx) => {
     const id = plain[idx].id;
     const match = annotations.find((a) => describes(a, id));
-    const base = match ? { ...match, id } : plain[idx];
+    // 説明の注釈にタグが無ければ、地物のタグを使う
+    const base = match ? { ...match, id, tags: match.tags?.length ? match.tags : plain[idx].tags } : plain[idx];
     const depictions = (feature.depictions ?? []).filter((d) => typeof d['@id'] === 'string');
     return !base.images?.length && depictions.length > 0
       ? { ...base, images: depictions.map((d) => ({ id: d['@id'] })) }
