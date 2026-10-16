@@ -1,0 +1,117 @@
+WEBVTT
+
+1
+00:00:00.001 --> 00:00:06.401
+IIIF Kasane: Boxes in a video (annotations on a time and a region) — Opening it from the use case
+
+2
+00:00:06.403 --> 00:00:13.203
+This is the IIIF Kasane use case page for the Ashinoshiri Dosojin Festival.
+
+3
+00:00:13.207 --> 00:00:20.757
+It uses a documentary film from the Nagano Prefectural Library, published on Shinshu Digital Commons.
+
+4
+00:00:20.759 --> 00:00:31.409
+On top of the film, boxes on people found by AI are written as IIIF annotations. Each box appears over the video only at its own time.
+
+5
+00:00:31.410 --> 00:00:40.010
+The boxes are AI output. But a person checked them by eye, and kept only the boxes that really show a person.
+
+6
+00:00:40.012 --> 00:00:42.637
+Press Open in Kasane.
+
+7
+00:00:44.517 --> 00:00:49.242
+The video opens, with the Annotations tab in the right panel.
+
+8
+00:00:50.867 --> 00:00:57.267
+IIIF Kasane: Boxes in a video (annotations on a time and a region) — Boxes appear as it plays
+
+9
+00:00:57.278 --> 00:01:04.303
+The video is on the left, and the list of annotations is on the right. There are twenty-seven.
+
+10
+00:01:04.306 --> 00:01:08.731
+Each one shows the word Person, and its time in the video.
+
+11
+00:01:08.734 --> 00:01:10.859
+Let us play it.
+
+12
+00:01:12.160 --> 00:01:20.010
+After five seconds, blue boxes appear: a man in front of the mask, and a person with a camera at the back on the right.
+
+13
+00:01:20.014 --> 00:01:27.789
+A box shows only for the time written in its annotation, and gives way to the next boxes as the scene moves on.
+
+14
+00:01:27.793 --> 00:01:32.293
+In this film, the boxes run from five to fifteen seconds.
+
+15
+00:01:34.402 --> 00:01:41.027
+IIIF Kasane: Boxes in a video (annotations on a time and a region) — Jumping to a time from the list
+
+16
+00:01:41.032 --> 00:01:45.732
+Click an annotation in the list, and the video moves to its time.
+
+17
+00:01:46.877 --> 00:01:54.277
+We are now at eleven point five seconds. The box of the annotation you clicked is shown in orange.
+
+18
+00:01:54.280 --> 00:01:58.080
+It holds the man standing in front of the straw mask.
+
+19
+00:01:58.082 --> 00:02:01.382
+Let us click one more, at five seconds.
+
+20
+00:02:02.481 --> 00:02:12.356
+This time the box holds a person with a camera, at the back on the right. Every box in this sample was checked by eye to really show a person.
+
+21
+00:02:14.034 --> 00:02:20.684
+IIIF Kasane: Boxes in a video (annotations on a time and a region) — Just IIIF annotations
+
+22
+00:02:20.685 --> 00:02:26.360
+Behind each box is an annotation in IIIF, written in the manifest.
+
+23
+00:02:26.361 --> 00:02:30.911
+Let us look at the annotation at eleven point five seconds.
+
+24
+00:02:30.913 --> 00:02:39.488
+Its target names the canvas of the video, with hash t equals for the time, and x y w h equals for the region.
+
+25
+00:02:39.490 --> 00:02:49.490
+The time runs from eleven point five to twelve point five seconds. The region is in pixels of the video: left, top, width and height.
+
+26
+00:02:49.494 --> 00:02:52.469
+The body is just the word Person.
+
+27
+00:02:52.471 --> 00:03:02.646
+The data comes from ArchiveBase Video Search. The boxes on people its AI found frame by frame were rewritten as annotations of this form.
+
+28
+00:03:02.646 --> 00:03:19.196
+The boxes are AI output. The AI also put person boxes on the straw mask and on shadows. So each of the one hundred and twenty-five boxes was checked against the film, and only the twenty-seven that really show a person were kept.
+
+29
+00:03:19.199 --> 00:03:26.899
+Write annotations in this form for any other video, and Kasane will lay the boxes over it in the same way.

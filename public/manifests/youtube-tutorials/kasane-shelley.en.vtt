@@ -1,0 +1,133 @@
+WEBVTT
+
+1
+00:00:00.001 --> 00:00:05.076
+IIIF Kasane: comparing the Shelley manuscript — Opening it from Use cases
+
+2
+00:00:05.079 --> 00:00:13.679
+IIIF Kasane is a viewer that layers IIIF images, 3D models and annotations in a single view.
+
+3
+00:00:13.683 --> 00:00:18.483
+The Use cases page lists examples with real collections.
+
+4
+00:00:18.488 --> 00:00:22.288
+In this video, we use the Shelley manuscript.
+
+5
+00:00:22.293 --> 00:00:28.843
+There are two photographs of the same sheet: one in ordinary light, and one in transmitted light.
+
+6
+00:00:28.845 --> 00:00:34.470
+The transmitted-light image is taken with light shining through the paper from behind.
+
+7
+00:00:34.473 --> 00:00:39.423
+Click "Open in Kasane" to open a page for comparing the two.
+
+8
+00:00:41.401 --> 00:00:46.026
+IIIF Kasane: comparing the Shelley manuscript — Side by side
+
+9
+00:00:46.030 --> 00:00:51.380
+In the bar at the top, you choose how to show the images, and which two to compare.
+
+10
+00:00:51.384 --> 00:01:01.234
+Right now it is "Side by side". A is the original image, and B the transmitted-light one; the manifest names them in Japanese.
+
+11
+00:01:01.237 --> 00:01:06.762
+The original image has been flipped upside down, to make comparison easier.
+
+12
+00:01:06.768 --> 00:01:09.368
+Zoom in with the mouse wheel.
+
+13
+00:01:11.308 --> 00:01:14.408
+Both sides zoom and move together.
+
+14
+00:01:17.038 --> 00:01:24.238
+In the transmitted-light image, large pale letters appear. They are a watermark in the paper.
+
+15
+00:01:24.242 --> 00:01:29.117
+In the same place in the original image, the letters cannot be seen.
+
+16
+00:01:31.070 --> 00:01:36.345
+IIIF Kasane: comparing the Shelley manuscript — Swipe, spyglass and overlay
+
+17
+00:01:36.349 --> 00:01:40.774
+In "Swipe", A is shown left of the line, and B to the right.
+
+18
+00:01:40.780 --> 00:01:47.155
+Drag the line to the left, and the transmitted-light image spreads out, revealing the watermark.
+
+19
+00:01:47.162 --> 00:01:50.687
+Drag it back, and the watermark disappears.
+
+20
+00:01:50.691 --> 00:01:55.141
+In "Spyglass", B is shown only inside a round window.
+
+21
+00:01:55.143 --> 00:01:58.468
+Move it to trace the watermark letters.
+
+22
+00:01:58.836 --> 00:02:02.786
+The window can also magnify two or three times.
+
+23
+00:02:03.270 --> 00:02:07.520
+In "Overlay", B is laid over A, half transparent.
+
+24
+00:02:07.524 --> 00:02:12.299
+The "Opacity of B" slider fades from one image to the other.
+
+25
+00:02:14.068 --> 00:02:19.918
+The mode is kept in the URL, so you can share a comparison just by sending the link.
+
+26
+00:02:21.901 --> 00:02:26.626
+IIIF Kasane: comparing the Shelley manuscript — Where the data comes from
+
+27
+00:02:26.630 --> 00:02:30.880
+The panel on the right shows the details from the manifest.
+
+28
+00:02:30.887 --> 00:02:36.062
+The title is "Fragment of an Address to the Jews", by Percy Bysshe Shelley.
+
+29
+00:02:36.066 --> 00:02:41.491
+The original is held by the University of Tokyo General Library.
+
+30
+00:02:41.493 --> 00:02:49.793
+The manifest and the images are published by the source project. Both images sit on one canvas, as a choice.
+
+31
+00:02:49.794 --> 00:02:54.944
+Kasane reads that choice, and turns it into the A and B options.
+
+32
+00:02:54.949 --> 00:03:00.724
+For details of the manuscript and the terms of use, please see the source project's site.
+
+33
+00:03:00.726 --> 00:03:06.626
+Any other manifest whose images carry a choice can be compared in the same way.
