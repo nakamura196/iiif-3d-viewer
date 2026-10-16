@@ -32,6 +32,11 @@
     "canvasAnnotationsGranularity_paragraph": "Paragraph",
     "canvasAnnotationsGranularity_line": "Line",
     "canvasAnnotationsGranularity_word": "Word",
-    "canvasAnnotationsGranularity_glyph": "Glyph"
+    "canvasAnnotationsGranularity_glyph": "Glyph",
+    "canvasAnnotationsSearch": "Search the annotations",
+    "canvasAnnotationsTotal": "{count} annotations",
+    "canvasAnnotationsSearchCount": "{count} of {total}",
+    "canvasAnnotationsNoMatch": "No annotations match",
+    "canvasAnnotationsFocusOnSelect": "Zoom to the chosen annotation"
   }
 }

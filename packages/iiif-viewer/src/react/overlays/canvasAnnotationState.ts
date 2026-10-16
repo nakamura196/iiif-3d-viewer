@@ -17,3 +17,9 @@ export interface LocalAnnotationPage {
 }
 
 export const localAnnotationPagesAtom = atom<LocalAnnotationPage[]>([]);
+
+// 右パネルの注釈の検索欄の文字。画像の上の印も、当たった注釈だけに絞る。
+export const canvasAnnotationQueryAtom = atom<string>('');
+
+// 一覧で注釈を選んだとき、画像をその場所へ寄せるか（既定は寄せない）。
+export const canvasAnnotationFocusOnSelectAtom = atom<boolean>(false);

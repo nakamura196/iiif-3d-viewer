@@ -411,6 +411,25 @@ export const USE_CASES: UseCase[] = [
     video: { ja: 'LvrLzdqbCfk', en: '4_zBRW-oS1w' },
     site: 'https://ab.ldas.jp/ja/na-kamura-1263/video',
   },
+  {
+    id: 'suikeichuzu-annotations',
+    added: '2026-10-16',
+    title: {
+      ja: '東洋文庫水経注図データベース『水経注図』（注釈 2 万件の検索）',
+      en: 'Suikeichuzu, Toyo Bunko (searching 20,000 annotations)',
+    },
+    note: {
+      ja: '1 枚の大きな地図『水経注図』に、地名の注釈が 21,245 件付いています。右の「注釈」タブは見えている分だけを描くので、この件数でも一覧を軽く送れます。検索欄に地名を入れると、一覧と画像の上の印が当たったものだけになります。「選んだ注釈へ画像を寄せる」を入れると、押した地名の場所へ画像が拡大されます。',
+      en: 'One large map, the Suikeichuzu, carries 21,245 annotations on place names. The Annotations tab draws only the rows in view, so the list scrolls smoothly even at this size. Type a place name in the search box and both the list and the marks on the image narrow to the matches. With “Zoom to the chosen annotation” on, clicking a place zooms the image to it.',
+    },
+    open: {
+      page: 'viewer',
+      manifest: 'https://iiif-annotation-viewer.vercel.app/data/manifest_v3_with_metadata.json',
+      tab: 'canvasAnnotations',
+    },
+    features: ['annotations', 'search'],
+    site: 'https://toyobunko-lab.jp/app/suikeichuzu/',
+  },
 ];
 
 /** 新しく足した順。同じ日なら定義の順のまま */

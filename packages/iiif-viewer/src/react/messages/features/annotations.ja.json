@@ -32,6 +32,11 @@
     "canvasAnnotationsGranularity_paragraph": "段落",
     "canvasAnnotationsGranularity_line": "行",
     "canvasAnnotationsGranularity_word": "語",
-    "canvasAnnotationsGranularity_glyph": "文字"
+    "canvasAnnotationsGranularity_glyph": "文字",
+    "canvasAnnotationsSearch": "注釈の中を検索",
+    "canvasAnnotationsTotal": "{count} 件",
+    "canvasAnnotationsSearchCount": "{count} 件 / 全 {total} 件",
+    "canvasAnnotationsNoMatch": "当てはまる注釈がありません",
+    "canvasAnnotationsFocusOnSelect": "選んだ注釈へ画像を寄せる"
   }
 }

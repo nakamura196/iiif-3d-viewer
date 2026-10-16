@@ -77,10 +77,10 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
   const rtl = viewing.direction === 'right-to-left';
 
   const go = useCallback(
-    (index: number, target?: CanvasTarget) => {
+    (index: number, target?: CanvasTarget, highlight?: boolean) => {
       if (index < 0 || index >= containers.length) return;
       if (index !== selected) onSelect(index);
-      setFocus(target && (target.xywh || target.t) ? { seq: nextSeq(), target } : null);
+      setFocus(target && (target.xywh || target.t) ? { seq: nextSeq(), target, highlight } : null);
       setCompare([]);
       multiRun.current++;
       setCompareMulti(null);
@@ -136,7 +136,7 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
   useEffect(() => {
     if (!request) return;
     const index = containers.findIndex((c) => c.id === request.target.canvasId);
-    if (index >= 0) go(index, request.target);
+    if (index >= 0) go(index, request.target, request.highlight);
     setRequest(null);
   }, [request, containers, go, setRequest]);
 
