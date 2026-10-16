@@ -20,8 +20,10 @@ import { SidePanel } from '@nakamura196/iiif-viewer';
 import { useTranslations, useLocale } from 'next-intl';
 import {
   applyGeorefPatch,
+  autoRotateOnSelectParams,
   contentParam,
   imageViewParams,
+  localNorthUpRotation,
   manifestFromParams,
   mapViewParams,
   northUpRotation,
@@ -82,12 +84,15 @@ const GeoRefContent: NextPage = () => {
   const [urlState, setUrlState] = useState<GeorefUrlState | null>(null);
   // 画像の回転（度、反時計回りが正）。URL の rotation と同じ値
   const [rotation, setRotation] = useState(0);
+  // 地図か一覧で地点を選んだら、その近くで北が上になるよう回すか。URL の autoRotateOnSelect と同じ
+  const [autoRotateOnSelect, setAutoRotateOnSelect] = useState(false);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const state = readGeorefParams(params, manifestFromParams(params));
     setUrlState(state);
     if (state.rotation !== undefined) setRotation(state.rotation);
+    if (state.autoRotateOnSelect) setAutoRotateOnSelect(true);
     if (!state.manifest) return;
     setManifestUrl(state.manifest);
   }, [setManifestUrl]);
@@ -114,6 +119,13 @@ const GeoRefContent: NextPage = () => {
       const r = normalizeAngle(deg);
       setRotation(r);
       writeParams(rotationParams(r));
+    },
+    [writeParams]
+  );
+  const changeAutoRotateOnSelect = useCallback(
+    (on: boolean) => {
+      setAutoRotateOnSelect(on);
+      writeParams(autoRotateOnSelectParams(on));
     },
     [writeParams]
   );
@@ -153,19 +165,19 @@ const GeoRefContent: NextPage = () => {
     writeParams({ id: idx < 0 ? null : (geoFeatures[idx].id ?? geoFeatureIdOf(geoFeatures[idx], idx)) });
   }, [selectedAnnotationId, geoFeatures, writeParams]);
 
-  // 北が上になる回転。地点が 2 つ以上あるときだけ求まる
-  const autoRotation = useMemo(
+  // 画像の地点と地図の地点の組
+  const georefPairs = useMemo(
     () =>
-      northUpRotation(
-        geoFeatures.map((f) => ({
-          x: f.properties.resourceCoords[0],
-          y: f.properties.resourceCoords[1],
-          lng: f.geometry.coordinates[0],
-          lat: f.geometry.coordinates[1],
-        }))
-      ),
+      geoFeatures.map((f) => ({
+        x: f.properties.resourceCoords[0],
+        y: f.properties.resourceCoords[1],
+        lng: f.geometry.coordinates[0],
+        lat: f.geometry.coordinates[1],
+      })),
     [geoFeatures]
   );
+  // 北が上になる回転。地点が 2 つ以上あるときだけ求まる
+  const autoRotation = useMemo(() => northUpRotation(georefPairs), [georefPairs]);
 
   // 開いたとき、URL に rotation が無ければ北が上になるよう回す（geo.ldas.jp と同じ）。1 つの資料につき 1 回だけ
   const autoRotatedFor = useRef<string | null>(null);
@@ -206,8 +218,18 @@ const GeoRefContent: NextPage = () => {
     return corners ? { url: overlayUrlOf(layer), corners } : null;
   }, [geoCanvas, geoFeatures]);
 
+  // 画像の印から選んだとき。画像は回さない（見ている向きのまま印を押したので）
   const handleFeatureClick = (id: string) => {
     setSelectedAnnotationId(id);
+  };
+
+  // 地図か一覧から選んだとき。スイッチが入っていれば、その地点の近くで北が上になるよう回す（geo.ldas.jp と同じ）
+  const handleFeatureSelect = (id: string) => {
+    setSelectedAnnotationId(id);
+    if (!autoRotateOnSelect) return;
+    const idx = geoFeatures.findIndex((f, i) => geoFeatureIdOf(f, i) === id);
+    const r = idx < 0 ? null : localNorthUpRotation(georefPairs, idx);
+    if (r !== null) changeRotation(r);
   };
 
   // 選択されたアノテーションにスクロール
@@ -235,7 +257,7 @@ const GeoRefContent: NextPage = () => {
               <MapView
                 features={geoFeatures}
                 selectedId={selectedAnnotationId}
-                onFeatureClick={handleFeatureClick}
+                onFeatureClick={handleFeatureSelect}
                 overlay={mapOverlay}
                 initialView={urlState?.map}
                 focus={urlState?.focus}
@@ -257,7 +279,13 @@ const GeoRefContent: NextPage = () => {
                   {t('openInViewer')}
                 </Link>
                 {geoCanvas && (
-                  <RotationControl rotation={rotation} onChange={changeRotation} northUp={autoRotation} />
+                  <RotationControl
+                    rotation={rotation}
+                    onChange={changeRotation}
+                    northUp={autoRotation}
+                    autoRotateOnSelect={autoRotateOnSelect}
+                    onAutoRotateOnSelectChange={changeAutoRotateOnSelect}
+                  />
                 )}
               </div>
               {geoCanvas && (
@@ -340,7 +368,7 @@ const GeoRefContent: NextPage = () => {
                         annotation={annotation}
                         number={index + 1}
                         selected={selectedAnnotationId === annotation.id}
-                        onSelect={handleFeatureClick}
+                        onSelect={handleFeatureSelect}
                         cardRef={(el) => {
                           if (el) annotationRefs.current.set(annotation.id, el);
                         }}

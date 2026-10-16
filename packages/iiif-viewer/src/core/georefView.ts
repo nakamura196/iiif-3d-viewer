@@ -7,6 +7,7 @@
 //   zoom・centerX・centerY  画像の拡大率と中心。OpenSeadragon の座標で、画像の幅を 1 とする
 //   rotation               画像の回転（度、反時計回りが正）。OpenSeadragon には符号を反転して渡していた。
 //                          無ければ、地点が 2 つ以上あるとき北が上になるよう自動で回す
+//   autoRotateOnSelect     true のとき、地図か一覧で地点を選ぶたびに、その近くで北が上になるよう回す
 //   id                     選んでいる地点
 
 /** 地図の縮尺と中心。 */
@@ -33,6 +34,8 @@ export interface GeorefUrlState {
   image?: GeorefImageView;
   /** 画像の回転（度、反時計回りが正。geo.ldas.jp の rotation と同じ向き）。 */
   rotation?: number;
+  /** 地点を選んだときに、その近くで北が上になるよう回すか。 */
+  autoRotateOnSelect?: boolean;
   id?: string;
 }
 
@@ -92,13 +95,16 @@ export function readGeorefParams(params: URLSearchParams, manifestFromOther: str
   const rotation = num(params, 'rotation');
   if (rotation !== undefined) state.rotation = normalizeAngle(rotation);
 
+  // geo.ldas.jp は 'true' か 'false' を書く。'true' のときだけ入れる
+  if (params.get('autoRotateOnSelect') === 'true') state.autoRotateOnSelect = true;
+
   const id = params.get('id');
   if (id) state.id = id;
   return state;
 }
 
 /** 書き戻す引数。null の項目は URL から消す。 */
-export type GeorefParamPatch = Partial<Record<'mapZoom' | 'mapLat' | 'mapLng' | 'zoom' | 'centerX' | 'centerY' | 'rotation' | 'id', string | null>>;
+export type GeorefParamPatch = Partial<Record<'mapZoom' | 'mapLat' | 'mapLng' | 'zoom' | 'centerX' | 'centerY' | 'rotation' | 'autoRotateOnSelect' | 'id', string | null>>;
 
 export const mapViewParams = (v: GeorefMapView): GeorefParamPatch => ({
   mapZoom: String(Number(v.zoom.toFixed(2))),
@@ -115,6 +121,11 @@ export const imageViewParams = (v: GeorefImageView): GeorefParamPatch => ({
 /** 回転は 0.1 度まで書く（スライダーは 1 度刻み、自動回転は端数が出る）。 */
 export const rotationParams = (rotation: number): GeorefParamPatch => ({
   rotation: String(Number(normalizeAngle(rotation).toFixed(1))),
+});
+
+/** 切ったときは引数ごと消す（geo.ldas.jp も、無いときは切ったものとして読む）。 */
+export const autoRotateOnSelectParams = (on: boolean): GeorefParamPatch => ({
+  autoRotateOnSelect: on ? 'true' : null,
 });
 
 /** 角度を -180 より大きく 180 以下にそろえる。 */
@@ -160,6 +171,27 @@ export function northUpRotation(pairs: GeorefPair[]): number | null {
   }
   if (cross === 0 && dot === 0) return null;
   return normalizeAngle((Math.atan2(cross, dot) * 180) / Math.PI);
+}
+
+/** 局所の回転に使う地点の数（選んだ地点を含む）。geo.ldas.jp と同じ。 */
+export const LOCAL_ROTATION_POINTS = 3;
+
+/**
+ * 選んだ地点の近くで北が上になる回転（度、反時計回りが正）。
+ * 画像の上で選んだ地点に近い順に 3 つ（選んだ地点を含む）を取り、northUpRotation と同じ当てはめをする。
+ * 古地図は場所によって向きがずれるので、全体の当てはめより、見ている辺りの北に合う。
+ * geo.ldas.jp は 3 つのうち最も離れた 2 つだけを 2 点用の式で使っていたが、その式は 90 度ずれるので移さない。
+ */
+export function localNorthUpRotation(pairs: GeorefPair[], index: number): number | null {
+  const target = pairs[index];
+  if (!target || !Number.isFinite(target.x) || !Number.isFinite(target.y)) return null;
+  const near = pairs
+    .filter((p) => [p.x, p.y, p.lng, p.lat].every(Number.isFinite))
+    .map((p) => ({ p, d: (p.x - target.x) ** 2 + (p.y - target.y) ** 2 }))
+    .sort((a, b) => a.d - b.d)
+    .slice(0, LOCAL_ROTATION_POINTS)
+    .map(({ p }) => p);
+  return northUpRotation(near);
 }
 
 /** 引数を書き換えた後の検索文字列（先頭の ? は付けない）。ほかの引数は触らない。 */

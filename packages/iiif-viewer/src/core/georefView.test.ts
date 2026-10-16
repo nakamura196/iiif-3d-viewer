@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   applyGeorefPatch,
+  autoRotateOnSelectParams,
   imageViewParams,
   imageViewToStage,
+  localNorthUpRotation,
   mapViewParams,
   normalizeAngle,
   northUpRotation,
@@ -175,5 +177,46 @@ describe('northUpRotation', () => {
 
   it('ignores points that are not numbers', () => {
     expect(northUpRotation([pt(0, 0, 139, 35), pt(100, 0, 139, 36), pt(NaN, 0, 1, 1)])).toBeCloseTo(90);
+  });
+});
+
+describe('autoRotateOnSelect', () => {
+  it('is on only when the link says true', () => {
+    expect(read('autoRotateOnSelect=true').autoRotateOnSelect).toBe(true);
+    expect(read('autoRotateOnSelect=false').autoRotateOnSelect).toBeUndefined();
+    expect(read('').autoRotateOnSelect).toBeUndefined();
+  });
+
+  it('writes true, and removes the parameter when off', () => {
+    expect(autoRotateOnSelectParams(true)).toEqual({ autoRotateOnSelect: 'true' });
+    expect(applyGeorefPatch('u=x&autoRotateOnSelect=true', autoRotateOnSelectParams(false))).toBe('u=x');
+  });
+});
+
+describe('localNorthUpRotation', () => {
+  const pt = (x: number, y: number, lng: number, lat: number) => ({ x, y, lng, lat });
+  // the left half of the picture is north up; the right half is drawn turned 90° (its right is north)
+  const pairs = [
+    pt(0, 0, 0, 0),
+    pt(100, 0, 1, 0),
+    pt(0, 100, 0, -1),
+    pt(1000, 0, 10, 0),
+    pt(1100, 0, 10, 1),
+    pt(1000, 100, 11, 0),
+  ];
+
+  it('follows the three points nearest the chosen one', () => {
+    expect(localNorthUpRotation(pairs, 0)).toBeCloseTo(0);
+    expect(localNorthUpRotation(pairs, 4)).toBeCloseTo(90);
+  });
+
+  it('uses the two there are when there are only two', () => {
+    expect(localNorthUpRotation([pt(0, 0, 139, 35), pt(100, 0, 139, 36)], 1)).toBeCloseTo(90);
+  });
+
+  it('is null for a lone point or a point that is not there', () => {
+    expect(localNorthUpRotation([pt(0, 0, 139, 35)], 0)).toBeNull();
+    expect(localNorthUpRotation(pairs, 99)).toBeNull();
+    expect(localNorthUpRotation([pt(NaN, 0, 1, 1), ...pairs], 0)).toBeNull();
   });
 });

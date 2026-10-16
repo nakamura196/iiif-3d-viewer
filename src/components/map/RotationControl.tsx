@@ -5,15 +5,18 @@ import { useTranslations } from 'next-intl';
 
 // 地図と画像の画面で、画像の回転を変える。ボタンを押すと、スライダー・数値・「北を上に」「元に戻す」が開く。
 // 角度は反時計回りが正（geo.ldas.jp の回転の画面と同じ向き・範囲）。
+// 「選んだ地点の近くで北を上に」は geo.ldas.jp の autoRotateOnSelect。向こうには画面のスイッチが無く、URL でしか入れられなかった。
 
 interface Props {
   rotation: number;
   onChange: (degrees: number) => void;
   /** 北が上になる角度。地点が足りず求まらないときは null（「北を上に」を押せなくする）。 */
   northUp: number | null;
+  autoRotateOnSelect: boolean;
+  onAutoRotateOnSelectChange: (on: boolean) => void;
 }
 
-export default function RotationControl({ rotation, onChange, northUp }: Props) {
+export default function RotationControl({ rotation, onChange, northUp, autoRotateOnSelect, onAutoRotateOnSelectChange }: Props) {
   const t = useTranslations('GeoRef');
   const [open, setOpen] = useState(false);
   const label = `${Number(rotation.toFixed(1))}°`;
@@ -75,6 +78,16 @@ export default function RotationControl({ rotation, onChange, northUp }: Props) 
               {t('rotationReset')}
             </button>
           </div>
+          <label className="flex items-start gap-2">
+            <input
+              type="checkbox"
+              checked={autoRotateOnSelect}
+              onChange={(e) => onAutoRotateOnSelectChange(e.target.checked)}
+              disabled={northUp === null}
+              className="mt-0.5"
+            />
+            <span>{t('autoRotateOnSelect')}</span>
+          </label>
         </div>
       )}
     </div>
