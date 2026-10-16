@@ -3,17 +3,21 @@
 import { useEffect, useState } from 'react';
 import {
   candidatesOfManifest,
+  curationCandidatesOf,
+  curationManifestUrls,
   fetchJson,
   infoCandidateOf,
   inlineSharedServices,
   isCollectionJson,
+  isCuration,
   isImageInfoJson,
   memberManifestUrlsOf,
   upgradeToV3,
   type CompareCandidate,
 } from '../../core';
 
-// 別々の資料（Manifest・Collection・info.json）から、見比べる画像を集める。
+// 別々の資料（Manifest・Collection・Curation・info.json）から、見比べる画像を集める。
+// Curation は member ごとに 1 枚（領域で切り出した画像）。
 // 同じ URL の取得は 1 回にまとめる。読めなかった資料は黙って飛ばす。
 
 const jsonCache = new Map<string, Promise<unknown | null>>();
@@ -45,7 +49,15 @@ async function loadSource(url: string, locale: string, member = false): Promise<
     return { candidates: c ? [c] : [], collection: false };
   }
   // the upgrade rewrites what it is given: work on a copy, so that the cached JSON can be read again
-  const v3 = inlineSharedServices(upgradeToV3(structuredClone(json)));
+  const v3Of = (raw: unknown) => inlineSharedServices(upgradeToV3(structuredClone(raw)));
+  if (isCuration(json)) {
+    if (member) return { candidates: [], collection: true };
+    const urls = curationManifestUrls(json);
+    const raws = await Promise.all(urls.map(jsonOf));
+    const manifests = new Map(urls.flatMap((u, i) => (raws[i] == null ? [] : [[u, v3Of(raws[i])] as const])));
+    return { candidates: curationCandidatesOf(json, manifests, locale), collection: true };
+  }
+  const v3 = v3Of(json);
   if (isCollectionJson(v3)) {
     if (member) return { candidates: [], collection: true };
     const parts = await Promise.all(memberManifestUrlsOf(v3).map((u) => loadSource(u, locale, true)));
@@ -55,7 +67,7 @@ async function loadSource(url: string, locale: string, member = false): Promise<
 }
 
 /**
- * The images of several sources, in the order given. `collection`: one of them is a Collection
+ * The images of several sources, in the order given. `collection`: one of them is a Collection or a Curation
  * (a comparison of different sources, not of the Choice of one Canvas). `counts`: images per URL.
  * `ready`: all are read.
  */

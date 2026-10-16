@@ -151,7 +151,20 @@
     "unreadable": "Could not be read",
     "invalidUrl": "This is not a URL",
     "alreadyAdded": "This source is already in the list",
-    "addAnother": "Nothing to compare in this source alone. Add the URL of another source below"
+    "addAnother": "Nothing to compare in this source alone. Add the URL of another source below",
+    "blend": "Blend",
+    "blends": {
+      "normal": "Fade",
+      "difference": "Difference",
+      "tint": "Colours (A red, B cyan)"
+    },
+    "pair": "Pair",
+    "prevPair": "Previous pair",
+    "nextPair": "Next pair",
+    "pairUp": "Pair by number",
+    "align": "Align",
+    "alignFailed": "(this pair could not be aligned)",
+    "alignNone": "(no alignment for this pair)"
   },
   "Samples": {
     "media": {
