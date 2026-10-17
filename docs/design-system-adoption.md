@@ -138,7 +138,7 @@ const demoVideoId = locale === 'en' ? 'EN_ID' : 'JA_ID';
 <VideoEmbed videoId={demoVideoId} title={t('title')} />
 ```
 
-- `youtube-nocookie.com` のプライバシー強化モード・16:9・lazy。ロケールで動画を出し分ける場合は `videoId` を切り替える。
+- `youtube.com` の埋め込み（`youtube-nocookie.com` は 2026-10 時点で再生できなかった）・16:9・lazy。ロケールで動画を出し分ける場合は `videoId` を切り替える。
 
 ### SectionHeading
 

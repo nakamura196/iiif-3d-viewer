@@ -53,7 +53,7 @@ export default function RecipeDetailContent({ id }: { id: string }) {
           <div className="w-full overflow-hidden rounded-xl border border-[var(--ds-border)] bg-black shadow-md">
             <iframe
               className="aspect-video w-full"
-              src={`https://www.youtube-nocookie.com/embed/${clip.videoId}?start=${clip.start}${clip.end ? `&end=${clip.end}` : ''}`}
+              src={`https://www.youtube.com/embed/${clip.videoId}?start=${clip.start}${clip.end ? `&end=${clip.end}` : ''}`}
               title={`${r.id} ${r.title[locale]}`}
               referrerPolicy="strict-origin-when-cross-origin"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"

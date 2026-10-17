@@ -7,7 +7,13 @@
     "compositePause": "Pause",
     "compositeSeek": "Position",
     "youTubeCaptions": "Captions",
-    "youTubeCaptionsOff": "Off"
+    "youTubeCaptionsOff": "Off",
+    "youTubeError": "This video could not be played here",
+    "youTubeErrorBlocked": "The YouTube player could not be loaded. Check that an ad blocker or other extension is not blocking it, and that you are online.",
+    "youTubeErrorGone": "The video has been removed or made private.",
+    "youTubeErrorEmbed": "The owner does not allow this video to be played on other sites, or it has been removed or made private. Please check it on YouTube.",
+    "youTubeErrorOther": "YouTube could not play the video. Try again in a moment, or watch it on YouTube.",
+    "youTubeOpen": "Watch on YouTube"
   },
   "Transcript": {
     "language": "Language"
