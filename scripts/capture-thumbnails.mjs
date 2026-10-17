@@ -64,9 +64,10 @@ const PREPARE = {
   'click-outline-edonohanami': `[...document.querySelectorAll('div')].filter((e) => e.children.length === 0 && /^(クリックで切り出す|Click to outline)$/.test(e.textContent.trim()))[0]?.scrollIntoView({ block: 'center' })`,
   // ストーリーは開いた直後だと 1 枚目の全体なので、「次へ」で最初の場面に寄った画面を撮る
   'ndl-emaki-story': `[...document.querySelectorAll('button')].find((e) => e.textContent.includes('次へ') || e.textContent.includes('Next'))?.click()`,
+  'cma-fukutomi-story': `[...document.querySelectorAll('button')].find((e) => e.textContent.includes('次へ') || e.textContent.includes('Next'))?.click()`,
 };
 // 操作のあと撮るまでの待ち時間（既定 3 秒）。深く寄ると、細かいタイルが届くまで時間がかかる
-const PREPARE_WAIT = { 'ndl-emaki-story': 12000 };
+const PREPARE_WAIT = { 'ndl-emaki-story': 12000, 'cma-fukutomi-story': 12000 };
 
 const targets = [
   ...SAMPLES.map((s) => ({
