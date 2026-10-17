@@ -79,7 +79,7 @@ The panel shows tabs according to the content of the resource. A tab with nothin
 - **Annotation transcript**: shown when a transcript is given in the form of annotations.
 - **Annotations** (for images, audio and video): a list of the annotations on the current page.
 - **Annotations** (for 3D): a list of the annotations on the 3D model, with search by words and filtering by tags.
-- **Inference**: shown for image pages. It reads the text in the image inside your browser (see below).
+- **Inference**: shown for image pages. It reads text, finds faces and more in the image, inside your browser (see below).
 
 ## Controls
 
@@ -126,15 +126,37 @@ Annotations are shown on top of the resource.
 - Several annotations on the same place are grouped together.
 - Kasane is a viewer for annotations. It has no function for writing and saving new annotations.
 
-## Inference (reading text)
+## Inference (reading text, finding faces and more)
 
-The "Inference" tab reads the text in the image you are viewing. It uses OCR models published by the National Diet Library of Japan. You can choose "NDL Kotenseki OCR-Lite" for classical Japanese books in cursive script, or "NDLOCR-Lite" for modern printed text.
+The "Inference" tab runs machine-learning models on the image you are viewing, inside your browser. There are four kinds of model.
 
-1. Choose a model and press "Download". The model is saved in your browser the first time only. It is about 80 to 160 MB.
-2. Press "Run on this image".
-3. The result is shown on the image as annotations. You can save it as annotations (JSON) or as plain text.
+- **Reading text (OCR)**: reads the text line by line.
+  - "NDL Kotenseki OCR-Lite": for pre-modern Japanese books, including kuzushiji (cursive script).
+  - "NDLOCR-Lite": for printed Japanese material from the Meiji era on, vertical or horizontal.
+  - "PP-OCRv6" and "PP-OCRv5": for printed material, mainly horizontal, in Chinese, English and Japanese. PP-OCRv6 is newer and misses fewer characters in Japanese.
+  - "PP-OCRv5 (Latin script)": for printed text in French, German, Latin and other Latin-script languages.
+- **Faces in Japanese art**: finds the faces drawn in ukiyo-e, picture scrolls, modern bijin-ga and other Japanese art, and marks them with boxes. "Face outlines in Japanese art" marks each face with its traced outline instead of a box.
+- **Click to outline**: click on something in the image to trace its shape and mark it with an outline. Works on people, buildings, objects and more.
+- **Describe the picture and Objects (Florence-2)**: writes, in English, what the image shows, or marks people, animals, buildings and other things with boxes named in English. Best on photographs and modern pictures; it may miss on old paintings.
 
-The image is not sent anywhere. All reading happens inside your browser. The result is a machine estimate and contains errors. Cropped or rotated images are not supported yet.
+### How to use it
+
+1. Choose a model and press "Download". The model is saved in your browser the first time only. Models are about 10 to 360 MB; the size is shown on the button. Press "Remove" to delete a model you no longer need.
+2. Press "Run on this image" to read the whole image. For "Click to outline", press "Click on the image to outline" instead, then click on something in the image.
+3. The result is shown on the image as annotations. You can save it as annotations (JSON). Text and picture descriptions can also be saved as plain text.
+
+### Reading only the area you zoom into
+
+For long or very large images such as picture scrolls and big maps, reading the whole image may find nothing: the image is shrunk before it is given to the model, and text and faces become too small. In that case, zoom into the part you want and press "Run on the visible area". Only the visible area is cut out and read.
+
+- Move to another area and press "Run on the visible area" again to add to the results. You can read a picture scroll scene by scene.
+- "Run on this image" replaces the results so far.
+- If the area is too wide, you will see "The visible area is too large". Zoom in a little more and try again.
+- Reading the same place twice gives duplicate results.
+
+### Notes
+
+The image is not sent anywhere. All inference happens inside your browser. The result is a machine estimate and contains errors. Images that the manifest crops or rotates are not supported yet (rotating the view in the viewer is fine).
 
 ## Other pages
 
@@ -177,7 +199,7 @@ The content is of a kind that Kasane cannot handle yet. For 3D, Kasane supports 
 
 ### Inference says the image could not be loaded
 
-The image server may not allow reading from other sites, for the same reason as CORS above. An image can be displayed and still be unavailable for reading text.
+The image server may not allow reading from other sites, for the same reason as CORS above. An image can be displayed and still be unavailable for inference.
 
 ## Contact
 
