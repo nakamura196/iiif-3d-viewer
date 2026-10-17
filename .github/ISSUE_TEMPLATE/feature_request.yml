@@ -1,0 +1,25 @@
+name: Feature request
+description: Suggest a new feature or an improvement
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        English is preferred, but Japanese is also fine (日本語でも構いません).
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use case
+      description: What material are you working with, and what do you want to do with it?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed feature
+      description: How you imagine it would work
+  - type: textarea
+    id: examples
+    attributes:
+      label: Example manifests or references
+      description: Manifest URLs, IIIF specifications or Cookbook recipes, or other viewers that do this

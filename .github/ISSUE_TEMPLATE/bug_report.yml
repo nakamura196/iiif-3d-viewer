@@ -1,0 +1,41 @@
+name: Bug report
+description: Something does not display or work as expected
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting. English is preferred, but Japanese is also fine (日本語でも構いません).
+  - type: input
+    id: url
+    attributes:
+      label: URL
+      description: The Kasane URL you opened, including `manifest=` or other parameters
+      placeholder: https://kasane.ldas.jp/en/viewer?manifest=...
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you expected, and what happened instead
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the URL above
+        2. Click ...
+        3. See ...
+  - type: input
+    id: environment
+    attributes:
+      label: Browser and OS
+      placeholder: Chrome 141 on macOS 26
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console errors or screenshots
+      description: Errors from the browser's developer console, or screenshots
