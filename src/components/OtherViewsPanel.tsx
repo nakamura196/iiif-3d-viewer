@@ -17,21 +17,26 @@ import {
   type GalleryQuality,
 } from '@/lib/gallery';
 
-// 右パネルの「ほかの表示」タブ。同じ資料を Kasane の別のページ（地図・3D の美術館）で開く。
+// 右パネルの「ほかの表示」タブ。同じ資料を Kasane の別のページ（比較・地図・3D の美術館）で開く。
 // 以前はビューアの左下に常にボタンを出していたが、絵や動画に重なるのでタブに移した。
+// 比較は、表示中の模型か画像に候補（Choice）が 2 つ以上あるときだけ出す。
 // 美術館は歩き方・内装・画質・枚数を選んでから開く（どれも /gallery/ の URL 引数になる）。
 
 const BUTTON =
   'inline-block px-3 py-1.5 rounded text-sm text-white bg-blue-600 hover:bg-blue-700 no-underline';
 const SELECT = 'rounded border border-gray-300 dark:border-gray-600 bg-transparent px-1 py-0.5 text-xs';
 
+/** 比較のページに渡せるとき、表示中の Canvas / Scene の番号。渡せないときは null。 */
+export type CompareTarget = { selectedIndex: number } | null;
+
 interface Props {
   manifestUrl: string;
   hasGeo: boolean;
   galleryOk: boolean;
+  compare: CompareTarget;
 }
 
-function OtherViews({ manifestUrl, hasGeo, galleryOk }: Props) {
+function OtherViews({ manifestUrl, hasGeo, galleryOk, compare }: Props) {
   const t = useTranslations('OtherViews');
   const [mode, setMode] = useState<GalleryMode>('orbit');
   const [look, setLook] = useState<GalleryLook>('standard');
@@ -40,6 +45,18 @@ function OtherViews({ manifestUrl, hasGeo, galleryOk }: Props) {
 
   return (
     <div className="p-3 space-y-5 text-sm">
+      {compare && (
+        <section className="space-y-2">
+          <h3 className="font-semibold">{t('compareHeading')}</h3>
+          <p className="text-xs text-gray-600 dark:text-gray-300">{t('compareHint')}</p>
+          <Link
+            href={`/compare?${contentParam(manifestUrl)}${compare.selectedIndex > 0 ? `&canvas=${compare.selectedIndex}` : ''}`}
+            className={BUTTON}
+          >
+            {t('open')}
+          </Link>
+        </section>
+      )}
       {hasGeo && (
         <section className="space-y-2">
           <h3 className="font-semibold">{t('mapHeading')}</h3>
@@ -102,12 +119,12 @@ function OtherViews({ manifestUrl, hasGeo, galleryOk }: Props) {
   );
 }
 
-/** 地図か美術館のどちらかに渡せる資料のときだけ出すタブ。 */
+/** 比較・地図・美術館のどれかに渡せる資料のときだけ出すタブ。 */
 export const otherViewsPanel = (props: Props, label: string): Panel => ({
   id: OTHER_VIEWS_TAB,
   // パズル（110）の後ろ、いちばん右
   order: 120,
   label,
-  available: () => props.hasGeo || props.galleryOk,
+  available: () => !!props.compare || props.hasGeo || props.galleryOk,
   Component: () => <OtherViews {...props} />,
 });
