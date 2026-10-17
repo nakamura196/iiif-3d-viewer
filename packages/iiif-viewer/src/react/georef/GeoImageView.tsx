@@ -50,6 +50,8 @@ export interface GeoImageViewProps {
   rotation?: number;
   /** 近い地点を 1 つにまとめて件数を出すか（URL の clustering）。既定は出す。 */
   clustering?: boolean;
+  /** 地点の印と四角を描くか（URL の annotations）。切っても、選んだ地点へ画像を寄せるのは続ける。既定は描く。 */
+  showMarkers?: boolean;
 }
 
 /** How far to zoom in, at least, when a point is chosen from the map or the list. */
@@ -106,6 +108,7 @@ export default function GeoImageView({
   onViewChange,
   rotation = 0,
   clustering = true,
+  showMarkers = true,
 }: GeoImageViewProps) {
   const [view, setView] = useState<ViewState>(INITIAL_VIEW);
   const stageRef = useRef<StageInfo | null>(null);
@@ -348,7 +351,7 @@ export default function GeoImageView({
       detailWidth={detailWidthOf(layers)}
       view={view}
       onViewChange={setView}
-      over={markers}
+      over={showMarkers ? markers : undefined}
     >
       {(stage) => {
         stageRef.current = stage;
