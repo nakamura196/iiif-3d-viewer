@@ -29,8 +29,10 @@ export interface AuthState {
   access?: AuthAccessRef;
   /** The access service whose logout can be offered (after a login). */
   logoutOf?: AuthAccessRef;
-  /** Substitute resource (probe status 30x with `location`). */
+  /** Resource to load instead (probe status 30x with `location`), once allowed. */
   location?: AuthSubstitute;
+  /** Resource to show until the user is let in (probe status 401 with `substitute`, e.g. a degraded copy). */
+  substitute?: AuthSubstitute;
   heading?: string;
   note?: string;
 }
@@ -96,7 +98,7 @@ class Controller {
 
   private finishOk(r: AuthProbeResult, reload: boolean) {
     this.set(
-      { phase: 'ok', access: undefined, location: r.location, heading: undefined, note: undefined, epoch: this.state.epoch + (reload ? 1 : 0) },
+      { phase: 'ok', access: undefined, location: r.location, substitute: undefined, heading: undefined, note: undefined, epoch: this.state.epoch + (reload ? 1 : 0) },
     );
   }
 
@@ -108,6 +110,8 @@ class Controller {
     let last = await this.probeOnce();
     if (!live()) return;
     if (last && this.allowed(last)) return this.finishOk(last, reload);
+    // degraded access: show the substitute now, and go on to offer the access services
+    if (last?.substitute) this.set({ substitute: last.substitute });
     for (const a of this.probe.access) {
       const known = this.tokenFor(a.tokenId);
       if (!known) continue;

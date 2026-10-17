@@ -110,19 +110,22 @@ export default function ImageLayerView({
   const probe = given.auth ?? infoProbe;
   const auth = useAuth(probe, locale);
   const epoch = auth?.state.epoch ?? 0;
-  // a substitute resource (probe status 30x with `location`) replaces the image
-  const location = auth?.state.location;
+  // the probe's `location` (status 30x) replaces the image; its `substitute` (status 401, e.g. a
+  // degraded copy) stands in for it until the user is let in
+  const allowed = auth?.state.phase === 'ok';
+  const location = allowed ? auth?.state.location : auth?.state.substitute;
   const layer = useMemo(() => (location ? substituteLayer(given, location) : given), [given, location]);
   const state = useImageInfo(layer.service, !!probe, epoch);
   const infoJson = state.status === 'ready' ? state.json : undefined;
   useEffect(() => {
+    // (not from a substitute's info.json: it is another resource, usually without a probe)
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (!given.auth && infoJson) setInfoProbe(probeServiceOf(infoJson, locale));
-  }, [given.auth, infoJson, locale]);
+    if (!given.auth && infoJson && !location) setInfoProbe(probeServiceOf(infoJson, locale));
+  }, [given.auth, infoJson, locale, location]);
   const [failedUrl, setFailedUrl] = useState<string | null>(null);
   // the base image whose `full` request failed and is asked again as pixels (see below)
   const [retriedBase, setRetriedBase] = useState<string | null>(null);
-  const hidden = !!auth && auth.state.phase !== 'ok';
+  const hidden = !!auth && !allowed && !location;
 
   if (state.status === 'loading') {
     return (

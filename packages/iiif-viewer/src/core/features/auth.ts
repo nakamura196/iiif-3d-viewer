@@ -126,10 +126,26 @@ export interface AuthSubstitute {
 export interface AuthProbeResult {
   /** The HTTP status the resource would answer with. */
   status: number;
+  /** Status 30x: the resource to load instead (e.g. a signed URL). Nothing more to ask. */
   location?: AuthSubstitute;
+  /**
+   * Status 401: a resource the user may see meanwhile (e.g. a degraded copy). The access
+   * services are still offered. The first usable entry of `substitute`.
+   */
+  substitute?: AuthSubstitute;
   heading?: string;
   note?: string;
 }
+
+/** A `location` or `substitute` entry. It may be an image service itself, or carry one in `service`. */
+const resourceOf = (raw: Json): AuthSubstitute | undefined => {
+  const id = idOf(raw);
+  if (!id) return undefined;
+  const type = typeOf(raw);
+  const image = /ImageService/i.test(type) ? raw : servicesOf(raw).find((s) => /ImageService/i.test(typeOf(s)));
+  const serviceId = image && idOf(image);
+  return { id, type, ...(serviceId ? { serviceId: serviceId.replace(/\/+$/, '') } : {}) };
+};
 
 /** An AuthProbeResult2. */
 export const parseProbeResult = (json: unknown, locale = 'en'): AuthProbeResult | null => {
@@ -137,14 +153,14 @@ export const parseProbeResult = (json: unknown, locale = 'en'): AuthProbeResult 
   const status = Number(json.status);
   if (!Number.isInteger(status)) return null;
   const out: AuthProbeResult = { status };
-  if (isObj(json.location)) {
-    const id = idOf(json.location);
-    if (id) {
-      const image = servicesOf(json.location).find((s) => /ImageService/i.test(typeOf(s)));
-      const serviceId = image && idOf(image);
-      out.location = { id, type: typeOf(json.location), ...(serviceId ? { serviceId: serviceId.replace(/\/+$/, '') } : {}) };
-    }
-  }
+  const location = isObj(json.location) ? resourceOf(json.location) : undefined;
+  if (location) out.location = location;
+  // an array in Auth 2.0; a single object in some older servers
+  const substitute = (Array.isArray(json.substitute) ? json.substitute : [json.substitute])
+    .filter(isObj)
+    .map(resourceOf)
+    .find((s) => s);
+  if (substitute && status === 401) out.substitute = substitute;
   const heading = labelIn(json.heading, locale);
   const note = labelIn(json.note, locale);
   if (heading) out.heading = heading;
@@ -176,13 +192,13 @@ export const parseTokenMessage = (data: unknown, messageId: string, locale = 'en
 /**
  * The URL to load for a resource that is fetched whole (a 3D model): the resource itself when it
  * has no probe or the probe allows it, the probe's `location` when it gives one (e.g. a signed URL),
- * and null while the user has not been let in yet.
+ * and, while the user has not been let in yet, the probe's `substitute` or null.
  */
 export const authorizedUrl = (
   url: string,
-  state: { phase: string; location?: AuthSubstitute } | undefined,
+  state: { phase: string; location?: AuthSubstitute; substitute?: AuthSubstitute } | undefined,
 ): string | null => {
   if (!state) return url;
-  if (state.phase !== 'ok') return null;
+  if (state.phase !== 'ok') return state.substitute?.id ?? null;
   return state.location?.id ?? url;
 };

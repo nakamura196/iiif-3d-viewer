@@ -70,6 +70,25 @@ describe('parseProbeResult', () => {
     });
     expect(r?.location).toEqual({ id: 'https://x/y.jpg', type: 'Image', serviceId: 'https://x/y' });
   });
+  it('reads a substitute (status 401): an image service itself, or a resource with one', () => {
+    const svc = 'https://example.org/image/pic-degraded';
+    const r = parseProbeResult({
+      type: 'AuthProbeResult2',
+      status: 401,
+      substitute: [{ id: svc, type: 'ImageService3', profile: 'level0' }],
+    });
+    expect(r?.substitute).toEqual({ id: svc, type: 'ImageService3', serviceId: svc });
+    const viaBody = parseProbeResult({
+      type: 'AuthProbeResult2',
+      status: 401,
+      substitute: [{ id: `${svc}/full/max/0/default.jpg`, type: 'Image', service: [{ id: `${svc}/`, type: 'ImageService3' }] }],
+    });
+    expect(viaBody?.substitute?.serviceId).toBe(svc);
+    // a single object (older servers) is read too; a substitute with another status is not
+    expect(parseProbeResult({ type: 'AuthProbeResult2', status: 401, substitute: { id: svc, type: 'ImageService3' } })?.substitute?.id).toBe(svc);
+    expect(parseProbeResult({ type: 'AuthProbeResult2', status: 200, substitute: [{ id: svc, type: 'ImageService3' }] })?.substitute).toBeUndefined();
+    expect(parseProbeResult({ type: 'AuthProbeResult2', status: 401, substitute: [] })?.substitute).toBeUndefined();
+  });
   it('rejects other JSON', () => {
     expect(parseProbeResult({ type: 'Other', status: 200 })).toBeNull();
     expect(parseProbeResult('x')).toBeNull();
@@ -99,6 +118,11 @@ describe('authorizedUrl', () => {
   });
   it('waits while the user is not let in', () => {
     for (const phase of ['probing', 'prompt', 'working', 'denied']) expect(authorizedUrl(url, { phase })).toBeNull();
+  });
+  it('loads the substitute (e.g. a degraded copy) while the user is not let in', () => {
+    const low = 'https://example.org/model-low.glb';
+    expect(authorizedUrl(url, { phase: 'prompt', substitute: { id: low, type: 'Model' } })).toBe(low);
+    expect(authorizedUrl(url, { phase: 'ok', substitute: { id: low, type: 'Model' } })).toBe(url);
   });
   it('loads the probe location (e.g. a signed URL) once allowed, or the resource itself', () => {
     const signed = 'https://example.org/files/model.glb?exp=1&sig=x';
