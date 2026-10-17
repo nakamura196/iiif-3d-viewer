@@ -145,11 +145,16 @@ function imageServiceFromCanvas(canvas) {
  * どちらも取れなければ null。
  */
 function canvasSource(canvas, fallbackThumb = null) {
+  // 3D の Scene には壁に掛ける画像が無い。Scene(無ければ Manifest)の thumbnail を絵として掛ける
+  if (/Scene/i.test(canvas.type || "")) {
+    const t = thumbnailImage(canvas) || fallbackThumb;
+    return t ? { type: "image", ...t, thumbUrl: t.url } : null;
+  }
   const id = imageServiceFromCanvas(canvas);
   if (id) return { type: "iiif", id };
   const img = plainImageFromCanvas(canvas);
   if (!img) return null;
-  return { type: "image", ...img, thumbUrl: img.thumbUrl || fallbackThumb };
+  return { type: "image", ...img, thumbUrl: img.thumbUrl || fallbackThumb?.url || null };
 }
 
 /** service を持たない Canvas から静的画像 URL と寸法・サムネを拾う(v2/v3) */
@@ -176,6 +181,14 @@ function thumbnailUrl(node) {
   if (!first) return null;
   if (typeof first === "string") return first;
   return first.id || first["@id"] || null;
+}
+
+/** thumbnail の先頭を { url, width, height } で(寸法が無ければ null) */
+function thumbnailImage(node) {
+  const url = thumbnailUrl(node);
+  if (!url) return null;
+  const t = Array.isArray(node.thumbnail) ? node.thumbnail[0] : node.thumbnail;
+  return { url, width: t?.width || null, height: t?.height || null };
 }
 
 function serviceId(svc) {
@@ -225,7 +238,7 @@ function parseManifestDoc(m, { limit = 24, url = null } = {}) {
   const meta = extractMeta(m);
   // v2: sequences[0].canvases  /  v3: items
   const canvases = m.sequences?.[0]?.canvases || m.items || [];
-  const manThumb = thumbnailUrl(m);
+  const manThumb = thumbnailImage(m);
   const walls = [];
   for (const c of canvases) {
     const source = canvasSource(c, manThumb);
