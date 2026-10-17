@@ -145,6 +145,8 @@
     "specP2Note": "Converted to the 3.0 form on load.",
     "specImageTitle": "IIIF Image API 3.0",
     "specImageNote": "Used for deep zoom, rotation and thumbnails.",
+    "specPhysdimTitle": "IIIF Physical Dimensions service",
+    "specPhysdimNote": "If a Canvas states its real size (how many mm one pixel is), rulers appear along the top and left of the image. Read as a service in Presentation API 2.1 and 3.0.",
     "specContentStateTitle": "IIIF Content State API 1.0",
     "specContentStateNote": "The iiif-content parameter selects the resource, Canvas and region to open.",
     "specAuthTitle": "IIIF Authorization Flow API 2.0",

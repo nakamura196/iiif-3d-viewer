@@ -145,6 +145,8 @@
     "specP2Note": "読み込み時に 3.0 の形に変換して表示します。",
     "specImageTitle": "IIIF Image API 3.0",
     "specImageNote": "画像の深い拡大、回転、サムネイルに使います。",
+    "specPhysdimTitle": "IIIF Physical Dimensions service",
+    "specPhysdimNote": "Canvas に実寸（1 ピクセルが何 mm か）が書いてあれば、画像の上と左に物差しを出します。Presentation API 2.1 と 3.0 の service として読みます。",
     "specContentStateTitle": "IIIF Content State API 1.0",
     "specContentStateNote": "iiif-content パラメータで、開く資料・Canvas・場所を指定できます。",
     "specAuthTitle": "IIIF Authorization Flow API 2.0",
