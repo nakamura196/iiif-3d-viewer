@@ -1,16 +1,17 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { useAtom, useSetAtom } from 'jotai';
-import { imageLayerCount, toAnnotationPage, toPlainText, type ContainerInfo, type ManifestV4 } from '../../core';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
+import { imageLayerCount, toAnnotationPage, toPlainText, type ContainerInfo, type ImageRegion, type ManifestV4 } from '../../core';
 import { useLocale, useTranslations, type Translator } from '../env';
 import { runModel } from '../inference/client';
 import { downloadModel, modelStatus, removeModel, totalBytes, type ModelStatus } from '../inference/modelStore';
 import { MODELS } from '../inference/models/registry';
 import type { InferenceModel } from '../inference/models/types';
-import { SourceImageError, baseImageLayerOf, loadSourceImage } from '../inference/sourceImage';
+import { SourceImageError, baseImageLayerOf, loadSourceImage, loadSourceRegion } from '../inference/sourceImage';
 import { inferenceResultsAtom, resultKey, type InferenceResult } from '../inference/state';
 import { usePointOutline } from '../inference/usePointOutline';
+import { viewReaderAtom } from '../inference/viewState';
 import { localAnnotationPagesAtom, selectedCanvasAnnotationAtom } from '../overlays/canvasAnnotationState';
 import type { Panel, PanelContext } from './types';
 
@@ -39,6 +40,10 @@ const fileStem = (container: ContainerInfo, modelId: string) => {
 };
 
 const newId = () => `urn:uuid:${crypto.randomUUID()}`;
+
+/** Whether a box on the Canvas leaves out little of it (then reading it is reading the whole image). */
+const coversCanvas = (box: ImageRegion, container: ContainerInfo) =>
+  !!container.width && !!container.height && box.w * box.h >= 0.98 * container.width * container.height;
 
 function Progress({ value }: { value: number }) {
   return (
@@ -142,6 +147,8 @@ function ModelCard({ model, container, manifest }: { model: InferenceModel; cont
   const [results, setResults] = useAtom(inferenceResultsAtom);
   const setLocal = useSetAtom(localAnnotationPagesAtom);
   const result = results[resultKey(container.id, model.id)];
+  const viewReader = useAtomValue(viewReaderAtom);
+  const view = viewReader?.canvasId === container.id ? viewReader : null;
 
   useEffect(() => {
     let live = true;
@@ -190,16 +197,21 @@ function ModelCard({ model, container, manifest }: { model: InferenceModel; cont
     },
   });
 
-  const run = async () => {
+  // 画像全体で読んだ結果は置き換える。表示中の範囲で読んだ結果は、前の結果に足していく（絵巻を場面ごとに読み進める）
+  const run = async (inView = false) => {
     setError(null);
     const layer = baseImageLayerOf(manifest, container);
     if (!layer) {
       setError(t('noImage'));
       return;
     }
+    const box = inView && view ? view.read() : null;
+    const part = box && !coversCanvas(box, container) ? box : null;
     setRunning({ stage: 'image', done: 0, total: 1 });
     try {
-      const src = await loadSourceImage(layer, container, model.imageLongSide);
+      const src = part
+        ? await loadSourceRegion(layer, container, part, model.imageLongSide)
+        : await loadSourceImage(layer, container, model.imageLongSide);
       const r = await runModel(model.id, src.bitmap, (stage, done, total) => setRunning({ stage, done, total }));
       const page = toAnnotationPage(r.output, {
         canvasId: container.id,
@@ -207,18 +219,25 @@ function ModelCard({ model, container, manifest }: { model: InferenceModel; cont
         newId,
         generator: { id: model.homepage, name: model.name[locale] },
       });
-      const res: InferenceResult = {
-        canvasId: container.id,
-        modelId: model.id,
-        output: r.output,
-        page,
-        backends: r.backends,
-        ms: r.ms,
-        created: new Date().toISOString(),
-      };
-      setResults((rs) => ({ ...rs, [resultKey(container.id, model.id)]: res }));
+      const key = resultKey(container.id, model.id);
       const source = `inference:${model.id}`;
-      setLocal((ls) => [...ls.filter((l) => !(l.source === source && l.canvasId === container.id)), { source, canvasId: container.id, page }]);
+      setResults((rs) => {
+        const prev = part ? rs[key] : undefined;
+        const res: InferenceResult = {
+          canvasId: container.id,
+          modelId: model.id,
+          output: prev ? { ...r.output, items: [...prev.output.items, ...r.output.items] } : r.output,
+          page: prev ? { ...prev.page, items: [...(prev.page.items as unknown[]), ...(page.items as unknown[])] } : page,
+          backends: r.backends,
+          ms: r.ms,
+          created: new Date().toISOString(),
+        };
+        setLocal((ls) => [
+          ...ls.filter((l) => !(l.source === source && l.canvasId === container.id)),
+          { source, canvasId: container.id, page: res.page },
+        ]);
+        return { ...rs, [key]: res };
+      });
     } catch (e) {
       showError(e);
     } finally {
@@ -267,9 +286,16 @@ function ModelCard({ model, container, manifest }: { model: InferenceModel; cont
                 ) : null}
               </>
             ) : (
-              <button type="button" className={PRIMARY} disabled={busy} onClick={run}>
-                {result ? t('runAgain') : t('run')}
-              </button>
+              <>
+                <button type="button" className={PRIMARY} disabled={busy} onClick={() => run()}>
+                  {result ? t('runAgain') : t('run')}
+                </button>
+                {view ? (
+                  <button type="button" className={BUTTON} disabled={busy} title={t('runViewHint')} onClick={() => run(true)}>
+                    {t('runView')}
+                  </button>
+                ) : null}
+              </>
             )}
             <button type="button" className={BUTTON} disabled={busy || points.armed} onClick={remove}>
               {t('remove')}
