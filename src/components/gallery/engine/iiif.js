@@ -192,7 +192,14 @@ function isImageService(s) {
 }
 
 export async function fetchJson(url) {
-  const r = await fetchWithTimeout(url);
+  let r;
+  try {
+    r = await fetchWithTimeout(url);
+  } catch (err) {
+    // https のページからは http を読めない(CODH の見本の within など)。https で取り直す
+    if (!/^http:\/\//i.test(url)) throw err;
+    return fetchJson(url.replace(/^http:/i, "https:"));
+  }
   if (!r.ok) throw new Error(`${r.status}: ${url}`);
   return r.json();
 }
@@ -283,8 +290,7 @@ export async function loadCuration(url, opts = {}) {
 async function parseCurationDoc(cur, { selections = null, limit = 64 } = {}) {
   const sels = cur.selections || [];
   const chosen = selections ? selections.map((i) => sels[i]).filter(Boolean) : sels;
-  const members = [];
-  for (const s of chosen) for (const m of s.members || s.canvases || []) members.push(m);
+  const members = chosen.flatMap(selectionMembers);
   const walls = await resolveCurationMembers(members, { limit });
   if (!walls.length) throw new Error("curation から画像を抽出できませんでした");
   return walls;
@@ -317,7 +323,7 @@ async function resolveCurationMembers(members, { limit = 64 } = {}) {
       const svc = imageServiceFromCanvas(canvas);
       if (!svc) continue;
       walls.push({
-        label: plainLabel(m.label),
+        label: plainLabel(m.label) || plainLabel(canvas.label),
         by: cleanDescription(m.description),
         source: { type: "iiif", id: svc, region: xywh },
         meta: extractMeta(man),
@@ -327,6 +333,19 @@ async function resolveCurationMembers(members, { limit = 64 } = {}) {
     }
   }
   return walls;
+}
+
+// selection のメンバーを {@id, manifest, label, description} にそろえる。
+// CODH の見本のように、manifest をメンバーではなく selection の within に書く形や、
+// canvases を canvas @id の文字列の配列で書く形もある。
+function selectionMembers(sel) {
+  const within = sel.within;
+  const selManifest = typeof within === "string" ? within : within?.["@id"] || within?.id || null;
+  return (sel.members || sel.canvases || []).map((m) => {
+    const member = typeof m === "string" ? { "@id": m } : m;
+    if (!member || member.manifest || !selManifest) return member;
+    return { ...member, manifest: selManifest };
+  }).filter(Boolean);
 }
 
 function splitCanvasId(cid) {
@@ -340,7 +359,7 @@ function splitCanvasId(cid) {
 // 入口生成用: curation の各 selection の概要(ラベル・点数・先頭メンバー)を返す
 export function curationSelections(doc) {
   return (doc.selections || []).map((s, index) => {
-    const members = s.members || s.canvases || [];
+    const members = selectionMembers(s);
     return { index, label: plainLabel(s.label) || `展示 ${index + 1}`, count: members.length, first: members[0] };
   });
 }
