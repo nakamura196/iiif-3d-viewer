@@ -6,12 +6,9 @@ import {
   canvasImagesOf,
   detailWidthOf,
   imageChoiceOf,
-  layerThumbnailUrl,
-  manifestItemsOf,
   paintsImage,
   physdimOf,
   rawCanvasOf,
-  thumbnailUrlOf,
   type CanvasImages,
   type CanvasPainting,
   type ImageAnnotation,
@@ -33,7 +30,7 @@ import {
   layerPlaybackOptionsAtom,
   layerSettingsAtom,
 } from '../atoms';
-import { useLocale, useTranslations } from '../env';
+import { useTranslations } from '../env';
 import { usePlayback } from '../playback';
 import ChoiceBar from './ChoiceBar';
 import AuthPrompt from '../auth/AuthPrompt';
@@ -57,7 +54,6 @@ import type { Display, DisplayProps } from './types';
 // 大きさ・Image API の service・SpecificResource（回転や領域）・注釈の位置を落とすため。
 // 取り直しはブラウザのキャッシュに当たる。取れなかったときは、変換後の manifest で続ける。
 
-type Json = Record<string, unknown>;
 
 const hasKind = (p: CanvasPainting, ...kinds: string[]) => p.options.some((o) => kinds.includes(o.kind));
 
