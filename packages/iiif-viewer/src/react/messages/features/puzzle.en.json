@@ -1,0 +1,20 @@
+{
+  "Info": {
+    "puzzle": "Puzzle"
+  },
+  "Puzzle": {
+    "title": "Puzzle",
+    "hint": "Cuts the current image into a grid and shuffles it. Click two pieces in turn (or drag one onto another) to swap them. Put the picture back together to finish.",
+    "size": "Grid",
+    "sizeOption": "{n} × {n} ({total} pieces)",
+    "start": "Start",
+    "loading": "Loading the image…",
+    "error": "Could not load the image.",
+    "status": "In place {placed} / {total} · Moves {moves}",
+    "solved": "Solved in {moves} moves",
+    "piece": "Cell {cell}",
+    "reshuffle": "Shuffle again",
+    "sample": "Overlay the original",
+    "close": "Close"
+  }
+}
