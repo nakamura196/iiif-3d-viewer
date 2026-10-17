@@ -122,19 +122,26 @@ function StoryPanel({ manifest }: PanelContext) {
   const { heading, bodies } = stepText(step, locale);
   const chapter = story.chapters.find((c) => c.steps.includes(at));
   const button = 'px-3 py-1 rounded border border-[var(--ds-border)] text-sm disabled:opacity-40';
+  const prevButton = (
+    <button type="button" className={button} onClick={() => byHand(at - 1)} disabled={at <= 0}>
+      {rtl ? `${t('prev')} →` : `← ${t('prev')}`}
+    </button>
+  );
+  const nextButton = (
+    <button type="button" className={button} onClick={() => byHand(at + 1)} disabled={at >= total - 1}>
+      {rtl ? `← ${t('next')}` : `${t('next')} →`}
+    </button>
+  );
 
   return (
     <div className="p-3 space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
-        <button type="button" className={button} onClick={() => byHand(at - 1)} disabled={at <= 0}>
-          {rtl ? `${t('prev')} →` : `← ${t('prev')}`}
-        </button>
+        {/* on a right-to-left scroll "next" sits on the left, as on the caption card */}
+        {rtl ? nextButton : prevButton}
         <span className="text-sm tabular-nums text-[var(--ds-fg)] opacity-70" aria-live="polite">
           {t('position', { n: at + 1, total })}
         </span>
-        <button type="button" className={button} onClick={() => byHand(at + 1)} disabled={at >= total - 1}>
-          {rtl ? `← ${t('next')}` : `${t('next')} →`}
-        </button>
+        {rtl ? prevButton : nextButton}
         <button type="button" className={button} onClick={play} aria-pressed={playing}>
           {playing ? `❚❚ ${t('pause')}` : `▶ ${t('play')}`}
         </button>
