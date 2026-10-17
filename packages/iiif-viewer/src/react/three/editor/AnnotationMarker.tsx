@@ -1,5 +1,4 @@
 export default function AnnotationMarker({
-  number,
   content,
   isOpen,
   onClick,

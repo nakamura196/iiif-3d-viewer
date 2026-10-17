@@ -236,6 +236,7 @@ export function Provider({ provider, className = '' }: ProviderProps) {
       {provider.map((agent, index) => (
         <div key={index} className="mb-2 flex items-center gap-2">
           {agent.logo?.[0]?.id && (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={agent.logo[0].id}
               alt=""
@@ -299,6 +300,7 @@ export function Thumbnail({ thumbnail, className = '' }: ThumbnailProps) {
         const isImage = !item.type || item.type === 'Image' || (item.format || '').startsWith('image/');
         if (!isImage) return null;
         return (
+          // eslint-disable-next-line @next/next/no-img-element
           <img
             key={index}
             src={item.id}

@@ -16,7 +16,14 @@ export default defineConfig([
       'react-hooks/immutability': 'warn',
     },
   },
+  {
+    // Tests build loose IIIF JSON by hand and read deep into it.
+    files: ['**/*.test.{ts,tsx}'],
+    rules: { '@typescript-eslint/no-explicit-any': 'off' },
+  },
   globalIgnores(['.next/**', 'out/**', 'packages/*/dist/**', 'build/**', 'vercel-static/**', 'next-env.d.ts',
+    // Copied from node_modules at build time (scripts/copy-maplibre-worker.mjs)
+    'public/maplibre/**',
     // IIIF VR Gallery の描画部分。元リポジトリ(nakamura196/iiif-vr-gallery)の素の JavaScript をそのまま移したもの
     'src/components/gallery/engine/**']),
 ]);
