@@ -148,6 +148,11 @@ const seekVideos = (at) => `Promise.all([...document.querySelectorAll('video, au
   setTimeout(done, 5000);
 })))`;
 
+// ヘッドレスの Chrome は User-Agent に「HeadlessChrome」と名乗る。国立公文書館の画像サーバは
+// これを 403 で断る（manifest.json は通る）ので、ふつうの Chrome と同じ名乗りに替えて撮る
+const { userAgent } = await send('Browser.getVersion');
+const UA = userAgent.replace('HeadlessChrome', 'Chrome');
+
 let failed = 0;
 for (const t of targets) {
   const url = `${base}/${t.locale ?? 'ja'}${t.href}`;
@@ -156,6 +161,7 @@ for (const t of targets) {
   const { sessionId } = await send('Target.attachToTarget', { targetId, flatten: true });
   try {
     await send('Emulation.setDeviceMetricsOverride', { width, height: HEIGHT + HEADER, deviceScaleFactor: 1, mobile: false }, sessionId);
+    await send('Emulation.setUserAgentOverride', { userAgent: UA }, sessionId);
     await send('Page.navigate', { url }, sessionId);
     await sleep(waitArg ?? t.wait);
     if (PREPARE[t.id]) {
