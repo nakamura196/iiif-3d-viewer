@@ -27,9 +27,10 @@
     "more": "Show more ({count} left)",
     "scope": "Search in",
     "scopeService": "Provider's search",
-    "scopeLocal": "Annotations in this viewer",
-    "aboutLocal": "Searches the annotations loaded in this viewer (annotations of the item, and results of text recognition etc. from the Inference tab). Case and full/half width are ignored.",
+    "scopeLocal": "Annotations and captions in this viewer",
+    "aboutLocal": "Searches the annotations loaded in this viewer (annotations of the item, and results of text recognition etc. from the Inference tab), and the caption and transcript files of the item (WebVTT and plain text). Click a caption match to play from that time. Case and full/half width are ignored.",
     "loadingAnnotations": "Loading annotations ({done} / {total})…",
-    "missedPages": "{count} annotation pages could not be loaded and were not searched."
+    "missedPages": "{count} annotation pages or caption files could not be loaded and were not searched.",
+    "transcriptFile": "Transcript"
   }
 }

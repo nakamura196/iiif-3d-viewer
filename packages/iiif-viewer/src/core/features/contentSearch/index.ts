@@ -37,6 +37,10 @@ export interface ContentSearchMatch {
   before?: string;
   after?: string;
   granularity?: string;
+  /** 字幕の当たり: 台詞の時刻（秒、始まりと終わり） */
+  time?: [number, number];
+  /** 字幕・文字起こしのファイルの中の当たり */
+  transcript?: boolean;
 }
 
 export interface ContentSearchPage {
@@ -394,3 +398,4 @@ export function contentSearchAnnotationPage(canvasId: string, matches: ContentSe
 export const TEXT_GRANULARITIES = ['page', 'block', 'paragraph', 'line', 'word', 'glyph'] as const;
 
 export * from './local';
+export * from './transcripts';
