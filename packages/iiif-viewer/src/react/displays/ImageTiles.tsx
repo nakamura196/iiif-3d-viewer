@@ -206,16 +206,34 @@ export default function ImageLayerView({
   if (scheme && stage.boxW > 0 && stage.stageW > 0) {
     const toCanvas = canvasWidth / stage.stageW;
     // the box seen from the stage: its centre turned back, and the bounds of the turned box
-    const [cx, cy] = rotatePoint(-stage.tx / stage.scale, -stage.ty / stage.scale, -(stage.rotation ?? 0));
-    const r = ((stage.rotation ?? 0) * Math.PI) / 180;
-    const c = Math.abs(Math.cos(r));
-    const sn = Math.abs(Math.sin(r));
-    const hw = (stage.boxW * c + stage.boxH * sn) / 2 / stage.scale;
-    const hh = (stage.boxW * sn + stage.boxH * c) / 2 / stage.scale;
-    const x0 = cx - hw + stage.stageW / 2;
-    const x1 = cx + hw + stage.stageW / 2;
-    const y0 = cy - hh + stage.stageH / 2;
-    const y1 = cy + hh + stage.stageH / 2;
+    const seen = (v: { scale: number; tx: number; ty: number }) => {
+      const [cx, cy] = rotatePoint(-v.tx / v.scale, -v.ty / v.scale, -(stage.rotation ?? 0));
+      const r = ((stage.rotation ?? 0) * Math.PI) / 180;
+      const c = Math.abs(Math.cos(r));
+      const sn = Math.abs(Math.sin(r));
+      const hw = (stage.boxW * c + stage.boxH * sn) / 2 / v.scale;
+      const hh = (stage.boxW * sn + stage.boxH * c) / 2 / v.scale;
+      return { x0: cx - hw, x1: cx + hw, y0: cy - hh, y1: cy + hh };
+    };
+    let { x0, x1, y0, y1 } = seen(stage);
+    // While gliding sideways at about the same zoom (a slide along a scroll), also load what the glide
+    // passes over, so that the picture does not turn blurry on the way. Not for long jumps (too many tiles).
+    const from = stage.from;
+    if (from && Math.abs(Math.log2(from.scale / stage.scale)) < 1) {
+      const a = seen(from);
+      const w = Math.max(x1, a.x1) - Math.min(x0, a.x0);
+      const h = Math.max(y1, a.y1) - Math.min(y0, a.y0);
+      if (w * h <= (x1 - x0) * (y1 - y0) * 4) {
+        x0 = Math.min(x0, a.x0);
+        x1 = Math.max(x1, a.x1);
+        y0 = Math.min(y0, a.y0);
+        y1 = Math.max(y1, a.y1);
+      }
+    }
+    x0 += stage.stageW / 2;
+    x1 += stage.stageW / 2;
+    y0 += stage.stageH / 2;
+    y1 += stage.stageH / 2;
     const visibleCanvas: ImageRegion = { x: x0 * toCanvas, y: y0 * toCanvas, w: (x1 - x0) * toCanvas, h: (y1 - y0) * toCanvas };
     const local = canvasRectToLayer(place, visibleCanvas);
     const visible = intersect({ x: local.x + region.x, y: local.y + region.y, w: local.w, h: local.h }, region);

@@ -37,6 +37,20 @@ const viewer = (manifest: string, params: string) =>
 
 export const NEWS: NewsItem[] = [
   {
+    id: 'story-ui',
+    date: '2026-10-17',
+    title: {
+      ja: 'ストーリーの見せ方を新しくしました：絵巻の帯・解説の札・自動再生',
+      en: 'A new look for stories: a scroll strip, captions on the image, and autoplay',
+    },
+    body: {
+      ja: 'ストーリーを開くと、画面の上端に絵巻全体の細い帯が出て、今どこを見ているかが分かります。場面から場面へは横に滑るように移り、解説は絵の上の札に出ます。「再生」を押すと、場面を順に自動でめくります。',
+      en: 'When a story is open, a thin strip of the whole scroll along the top shows where you are. Moving between scenes glides sideways, and the commentary appears on a card over the image. Press Play to step through the scenes automatically.',
+    },
+    action: { href: hrefOfUseCase('cma-fukutomi-story') },
+    usecases: ['cma-fukutomi-story'],
+  },
+  {
     id: 'story-fukutomi',
     date: '2026-10-16',
     title: {

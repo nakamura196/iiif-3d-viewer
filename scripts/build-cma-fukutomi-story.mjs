@@ -27,7 +27,7 @@ const SCENES = [
   {
     x: [67800, 76716],
     ja: ['秀武の豊かな家', '米をつく下人、衣桁に掛かった色とりどりの着物、寝所でくつろぐ夫婦。放屁の芸ひとつで手に入れた、高向秀武の暮らしの豊かさを見せる。'],
-    en: ["Hidetake's prosperous house", 'Servants pound rice, colourful robes hang on a rack, and a couple relaxes in the bedroom. Takamuku Hidetake has grown rich on a single art: musical farting.'],
+    en: ["Hidetake's prosperous house", 'Servants pound rice, colourful robes hang on a rack, and a couple relaxes in the bedroom. Takamuko no Hidetake has grown rich on a single art: musical farting.'],
   },
   {
     x: [62490, 66420],
@@ -130,6 +130,8 @@ const manifest = {
   '@context': 'http://iiif.io/api/presentation/3/context.json',
   id: SELF,
   type: 'Manifest',
+  // a handscroll is read from right to left (the strip and the buttons of the story follow it)
+  viewingDirection: 'right-to-left',
   label: { ja: ['福富草紙（クリーブランド美術館）'], en: ['The Story of Fukutomi (Cleveland Museum of Art)'] },
   summary: {
     ja: ['放屁の芸をめぐる室町時代の滑稽な絵巻の後半を、1 枚の画像の中で場面ごとにたどるストーリー。'],

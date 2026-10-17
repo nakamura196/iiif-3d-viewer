@@ -2,6 +2,7 @@
   "@context": "http://iiif.io/api/presentation/3/context.json",
   "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json",
   "type": "Manifest",
+  "viewingDirection": "right-to-left",
   "label": {
     "ja": [
       "福富草紙（クリーブランド美術館）"
@@ -243,7 +244,7 @@
                 },
                 {
                   "type": "TextualBody",
-                  "value": "<h2>Hidetake's prosperous house</h2><p>Servants pound rice, colourful robes hang on a rack, and a couple relaxes in the bedroom. Takamuku Hidetake has grown rich on a single art: musical farting.</p>",
+                  "value": "<h2>Hidetake's prosperous house</h2><p>Servants pound rice, colourful robes hang on a rack, and a couple relaxes in the bedroom. Takamuko no Hidetake has grown rich on a single art: musical farting.</p>",
                   "format": "text/html",
                   "language": "en"
                 }

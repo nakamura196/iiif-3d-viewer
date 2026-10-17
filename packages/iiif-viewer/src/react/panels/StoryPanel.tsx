@@ -1,27 +1,24 @@
 'use client';
 
-import { atom, useAtom, useSetAtom } from 'jotai';
-import { useEffect, useMemo, useRef } from 'react';
+import { useAtom, useSetAtom } from 'jotai';
+import { useEffect, useRef } from 'react';
 import {
   chapterLabel,
-  containersOf,
   openingStep,
   sanitizeAnnotationHtml,
-  stepTarget,
   stepText,
   storyOf,
+  viewingOf,
   type AnnotationBodyItem,
   type Story,
   type StoryStep,
 } from '../../core';
 import { navRequestAtom, nextSeq } from '../displays/structureState';
-import { useLocale, useTranslations } from '../env';
+import { useTranslations } from '../env';
 import { selectedCanvasAnnotationAtom } from '../overlays/canvasAnnotationState';
-import { storyFrameAtom, storyOpenAtom } from '../overlays/storyState';
+import { storyCaptionAtom, storyFrameAtom, storyOpenAtom, storyPlayingAtom } from '../overlays/storyState';
+import { autoplayDelay, useStory } from '../overlays/useStory';
 import type { Panel, PanelContext } from './types';
-
-/** The step being read (index into the story's steps). Viewer に 1 つ（jotai store ごと）。 */
-const storyStepAtom = atom<number>(0);
 
 function Text({ body, large }: { body: AnnotationBodyItem; large?: boolean }) {
   const size = large ? 'text-base leading-relaxed' : 'text-sm';
@@ -50,28 +47,27 @@ const summaryOf = (step: StoryStep, locale: string): string => {
 };
 
 // ストーリー（ガイドツアー）: 説明の注釈を順に送り、その領域に寄って本文を読む。読み取りは core/features/story.ts。
+// 本文は絵の上の札（StoryOverlay）にも出る。自動再生の時計はこのタブが持つ（Viewer に 1 つだけ開くため）。
 function StoryPanel({ manifest }: PanelContext) {
   const t = useTranslations('Story');
-  const locale = useLocale();
-  const story = useMemo(() => storyOf(manifest, locale), [manifest, locale]);
-  const [index, setIndex] = useAtom(storyStepAtom);
+  const { story, at, total, go, setIndex, sizes, locale } = useStory(manifest);
   const [selected, setSelected] = useAtom(selectedCanvasAnnotationAtom);
   const setRequest = useSetAtom(navRequestAtom);
   const current = useRef<HTMLLIElement>(null);
   const setOpen = useSetAtom(storyOpenAtom);
   const [frame, setFrame] = useAtom(storyFrameAtom);
+  const [playing, setPlaying] = useAtom(storyPlayingAtom);
+  const [caption, setCaption] = useAtom(storyCaptionAtom);
+  const rtl = viewingOf(manifest).direction === 'right-to-left';
 
   // while this tab is shown, the annotation marks on the picture step back (see AnnotationOverlay)
   useEffect(() => {
     setOpen(true);
-    return () => setOpen(false);
-  }, [setOpen]);
-
-  const sizes = useMemo(() => {
-    const m = new Map<string, { width?: number; height?: number }>();
-    for (const c of containersOf(manifest)) m.set(c.id, { width: c.width, height: c.height });
-    return m;
-  }, [manifest]);
+    return () => {
+      setOpen(false);
+      setPlaying(false);
+    };
+  }, [setOpen, setPlaying]);
 
   // a mark chosen on the picture: follow it when it is a step (no move)
   useEffect(() => {
@@ -86,81 +82,99 @@ function StoryPanel({ manifest }: PanelContext) {
   useEffect(() => {
     if (opened.current || !story) return;
     opened.current = true;
-    const i = openingStep(story, index, selected);
-    if (i === null) return;
-    const s = story.steps[i];
-    setIndex(i);
-    setSelected(s.id);
-    setRequest({ seq: nextSeq(), target: stepTarget(s, sizes.get(s.canvasId)) });
-  }, [story, index, selected, sizes, setIndex, setSelected, setRequest]);
+    const i = openingStep(story, at, selected);
+    if (i !== null) go(i);
+  }, [story, at, selected, go]);
+
+  // autoplay: on to the next step after the time to read this one; stops after the last
+  useEffect(() => {
+    if (!playing || !story) return;
+    const id = window.setTimeout(() => {
+      if (at >= total - 1) setPlaying(false);
+      else go(at + 1);
+    }, autoplayDelay(story.steps[at], locale));
+    return () => window.clearTimeout(id);
+  }, [playing, story, at, total, locale, go, setPlaying]);
 
   useEffect(() => {
     current.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-  }, [index]);
+  }, [at]);
 
   if (!story) return null;
-  const total = story.steps.length;
-  const at = Math.min(Math.max(index, 0), total - 1);
   const step = story.steps[at];
 
-  const go = (i: number) => {
-    const s = story.steps[i];
-    if (!s) return;
-    setIndex(i);
-    setSelected(s.id);
-    setRequest({ seq: nextSeq(), target: stepTarget(s, sizes.get(s.canvasId)) });
+  // a step chosen by hand takes over from autoplay
+  const byHand = (i: number) => {
+    setPlaying(false);
+    go(i);
+  };
+  const play = () => {
+    if (playing) return setPlaying(false);
+    if (at >= total - 1) go(0);
+    setPlaying(true);
   };
   const whole = () => {
+    setPlaying(false);
     setSelected(null);
     setRequest({ seq: nextSeq(), target: { canvasId: step.canvasId, xywh: wholeOf(sizes.get(step.canvasId)) } });
   };
 
   const { heading, bodies } = stepText(step, locale);
   const chapter = story.chapters.find((c) => c.steps.includes(at));
+  const button = 'px-3 py-1 rounded border border-[var(--ds-border)] text-sm disabled:opacity-40';
+  const prevButton = (
+    <button type="button" className={button} onClick={() => byHand(at - 1)} disabled={at <= 0}>
+      {rtl ? `${t('prev')} →` : `← ${t('prev')}`}
+    </button>
+  );
+  const nextButton = (
+    <button type="button" className={button} onClick={() => byHand(at + 1)} disabled={at >= total - 1}>
+      {rtl ? `← ${t('next')}` : `${t('next')} →`}
+    </button>
+  );
 
   return (
     <div className="p-3 space-y-3">
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          className="px-3 py-1 rounded border border-[var(--ds-border)] text-sm disabled:opacity-40"
-          onClick={() => go(at - 1)}
-          disabled={at <= 0}
-        >
-          ← {t('prev')}
-        </button>
+      <div className="flex items-center gap-2 flex-wrap">
+        {/* on a right-to-left scroll "next" sits on the left, as on the caption card */}
+        {rtl ? nextButton : prevButton}
         <span className="text-sm tabular-nums text-[var(--ds-fg)] opacity-70" aria-live="polite">
           {t('position', { n: at + 1, total })}
         </span>
-        <button
-          type="button"
-          className="px-3 py-1 rounded border border-[var(--ds-border)] text-sm disabled:opacity-40"
-          onClick={() => go(at + 1)}
-          disabled={at >= total - 1}
-        >
-          {t('next')} →
+        {rtl ? prevButton : nextButton}
+        <button type="button" className={button} onClick={play} aria-pressed={playing}>
+          {playing ? `❚❚ ${t('pause')}` : `▶ ${t('play')}`}
         </button>
         <button type="button" className="ml-auto text-xs underline text-[var(--ds-fg)] opacity-70" onClick={whole}>
           {t('whole')}
         </button>
       </div>
-      <label className="flex items-center gap-2 text-xs text-[var(--ds-fg)] opacity-80">
-        <input type="checkbox" checked={frame} onChange={(e) => setFrame(e.target.checked)} />
-        {t('frame')}
-      </label>
+      <div className="flex flex-wrap gap-x-4 gap-y-1">
+        <label className="flex items-center gap-2 text-xs text-[var(--ds-fg)] opacity-80">
+          <input type="checkbox" checked={caption} onChange={(e) => setCaption(e.target.checked)} />
+          {t('caption')}
+        </label>
+        <label className="flex items-center gap-2 text-xs text-[var(--ds-fg)] opacity-80">
+          <input type="checkbox" checked={frame} onChange={(e) => setFrame(e.target.checked)} />
+          {t('frame')}
+        </label>
+      </div>
 
-      <article className="rounded border border-[var(--ds-border)] p-3 space-y-2">
-        {chapter && chapter.headStep !== at && chapterLabel(chapter, locale) ? (
-          <p className="text-xs text-[var(--ds-fg)] opacity-70">{chapterLabel(chapter, locale)}</p>
-        ) : null}
-        {heading ? <h3 className="text-lg font-semibold text-[var(--ds-fg)]">{heading}</h3> : null}
-        {bodies.map((b, i) => (
-          <Text key={i} body={b} large />
-        ))}
-      </article>
+      {/* the text is over the picture already; here only when the caption is closed */}
+      {caption ? null : (
+        <article className="rounded border border-[var(--ds-border)] p-3 space-y-2">
+          {chapter && chapter.headStep !== at && chapterLabel(chapter, locale) ? (
+            <p className="text-xs text-[var(--ds-fg)] opacity-70">{chapterLabel(chapter, locale)}</p>
+          ) : null}
+          {heading ? <h3 className="text-lg font-semibold text-[var(--ds-fg)]">{heading}</h3> : null}
+          {bodies.map((b, i) => (
+            <Text key={i} body={b} large />
+          ))}
+        </article>
+      )}
 
       <nav aria-label={t('steps')}>
-        <StepList story={story} at={at} locale={locale} onGo={go} currentRef={current} label={(n) => t('step', { n })} />
+        <StepList story={story} at={at} locale={locale} onGo={byHand} currentRef={current} label={(n) => t('step', { n })} />
       </nav>
     </div>
   );

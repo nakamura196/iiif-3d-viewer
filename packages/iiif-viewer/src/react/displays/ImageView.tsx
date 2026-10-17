@@ -23,6 +23,8 @@ export interface StageInfo {
   boxH: number;
   /** Clockwise degrees the stage is turned about its centre (0 when absent). */
   rotation?: number;
+  /** While the view glides to a region: where it started (the tiles keep what lies between). */
+  from?: ViewState;
 }
 
 /**
@@ -92,6 +94,19 @@ export const homeView = (
   return { scale, tx: 0, ty: 0, rotation };
 };
 
+/**
+ * How long the glide to a new view takes (ms): longer the farther it goes across the box or the more it
+ * zooms, so that a slide along a scroll can be followed by eye (0.6–1.8 s).
+ */
+export function glideTime(from: ViewState, to: ViewState, box: { w: number; h: number }): number {
+  const across = Math.hypot(to.tx - from.tx, to.ty - from.ty) / Math.max(box.w, box.h, 1);
+  const zoom = Math.abs(Math.log2(to.scale / from.scale));
+  return Math.round(Math.min(1800, 600 + across * 350 + zoom * 150));
+}
+
+const reducedMotion = () =>
+  typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
 /** The same region view for a stage turned by `rotation` (the region still lands in the middle of the box). */
 const turnRegionView = (v: ViewState, rotation: number | undefined): ViewState => {
   if (!rotation) return v;
@@ -154,17 +169,20 @@ export function OverlayLayer({
   canvasWidth,
   canvasHeight,
   stage,
+  layer = 'stage',
 }: {
   container: ContainerInfo;
   canvasWidth: number;
   canvasHeight: number;
   stage?: StageInfo;
+  /** 'box': the overlays that stay put over the view (Overlay.layer), drawn in box coordinates. */
+  layer?: 'stage' | 'box';
 }) {
-  const active = OVERLAYS.filter((o) => o.available(container));
+  const active = OVERLAYS.filter((o) => (o.layer ?? 'stage') === layer && o.available(container));
   if (active.length === 0) return null;
   const sized = { ...container, width: canvasWidth, height: canvasHeight };
   return (
-    <div className="absolute inset-0 pointer-events-none" data-iiif-overlay-layer>
+    <div className="absolute inset-0 pointer-events-none" data-iiif-overlay-layer={layer}>
       {active.map((o) => (
         <div key={o.id} className="absolute inset-0 pointer-events-none" data-iiif-overlay={o.id}>
           <o.Component container={sized} canvasWidth={canvasWidth} canvasHeight={canvasHeight} stage={stage} />
@@ -237,19 +255,28 @@ export default function ImageView({
   const focusXywh = container && focus?.target.canvasId === container.id ? focus.target.xywh : undefined;
   const focusSeq = focus?.seq ?? 0;
   const doneFocus = useRef(0);
-  const [gliding, setGliding] = useState(false);
+  // the glide under way: where it started and how long it takes
+  const [gliding, setGliding] = useState<{ from: ViewState; ms: number } | null>(null);
+  const glideTimer = useRef<number | undefined>(undefined);
   useEffect(() => {
     if (!focusXywh || doneFocus.current === focusSeq || !cw || !ch || stageW <= 0) return;
     doneFocus.current = focusSeq;
-    setGliding(true);
-    setView(
-      turnRegionView(
-        viewForRegion(focusXywh, { w: cw, h: ch }, { w: stageW, h: stageH }, size, { min: MIN, max: maxRef.current }),
-        viewRef.current.rotation,
-      ),
+    const from = viewRef.current;
+    const to = turnRegionView(
+      viewForRegion(focusXywh, { w: cw, h: ch }, { w: stageW, h: stageH }, size, { min: MIN, max: maxRef.current }),
+      from.rotation,
     );
-    window.setTimeout(() => setGliding(false), 700);
+    window.clearTimeout(glideTimer.current);
+    if (reducedMotion()) {
+      setGliding(null);
+    } else {
+      const ms = glideTime(from, to, size);
+      setGliding({ from, ms });
+      glideTimer.current = window.setTimeout(() => setGliding(null), ms + 100);
+    }
+    setView(to);
   }, [focusXywh, focusSeq, cw, ch, stageW, stageH, size, setView]);
+  useEffect(() => () => window.clearTimeout(glideTimer.current), []);
 
   useEffect(() => {
     const el = box.current;
@@ -291,8 +318,11 @@ export default function ImageView({
     boxW: size.w,
     boxH: size.h,
     rotation: view.rotation,
+    ...(gliding ? { from: gliding.from } : {}),
   };
-  const stageStyle = gliding ? { ...stageStyleOf(stage), transition: 'transform 600ms ease' } : stageStyleOf(stage);
+  const stageStyle = gliding
+    ? { ...stageStyleOf(stage), transition: `transform ${gliding.ms}ms cubic-bezier(0.65, 0, 0.35, 1)` }
+    : stageStyleOf(stage);
 
   return (
     <div
@@ -300,7 +330,7 @@ export default function ImageView({
       className="relative w-full h-full overflow-hidden touch-none select-none cursor-grab active:cursor-grabbing"
       title={t('zoomHint')}
       onPointerDown={(e) => {
-        setGliding(false);
+        setGliding(null);
         e.currentTarget.setPointerCapture(e.pointerId);
         drag.current = { x: e.clientX, y: e.clientY, tx: view.tx, ty: view.ty };
       }}
@@ -350,6 +380,9 @@ export default function ImageView({
         </div>
       )}
       {stageW > 0 && cw && ch && over?.(stage)}
+      {stageW > 0 && cw && ch && container && (
+        <OverlayLayer container={container} canvasWidth={cw} canvasHeight={ch} stage={stage} layer="box" />
+      )}
     </div>
   );
 }

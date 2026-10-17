@@ -17,6 +17,11 @@ export interface Overlay {
   id: string;
   /** Drawing order, smaller first (below). Without it the overlay goes on top. */
   order?: number;
+  /**
+   * 'box': drawn over the view without following its zoom and move (a caption, a strip), in CSS pixels
+   * of the view box; `stage` then tells where the view is. Without it, the layer that follows the image.
+   */
+  layer?: 'stage' | 'box';
   /** Whether this overlay has anything to draw for the container. */
   available: (container: ContainerInfo) => boolean;
   Component: ComponentType<OverlayProps>;
