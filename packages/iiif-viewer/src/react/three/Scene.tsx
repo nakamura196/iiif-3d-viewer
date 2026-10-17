@@ -8,10 +8,11 @@ import gsap from 'gsap';
 import Annotations from '../three/Annotations';
 import ModelErrorBoundary from './ModelErrorBoundary';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { manifestAtom, modelAnimationAtom, sceneIdAtom, showAnnotationsAtom } from '../atoms';
+import { manifestAtom, modelAnimationAtom, modelRadiusAtom, sceneIdAtom, showAnnotationsAtom } from '../atoms';
 import { defaultCameraOf, type DefaultCamera } from '../../core';
 import { runFocusFlight, type Vec3 } from '../../core';
 import { fitView, topView } from '../../core';
+import { ZOOM_MAX_FACTOR } from '../../core';
 
 // Place the camera where the manifest's default Camera says (Presentation 4.0:
 // the first Camera painted into the Scene). Without `lookAt`, look at the model's center.
@@ -22,10 +23,11 @@ function ManifestCamera({ cam, center, radius }: { cam: DefaultCamera; center: V
     camera.position.set(...cam.position);
     if (camera instanceof PerspectiveCamera) {
       if (cam.fieldOfView) camera.fov = cam.fieldOfView;
-      // keep the whole model inside the clipping range from wherever the camera is
+      // keep the whole model inside the clipping range from wherever the camera is,
+      // including as far out as the zoom buttons go
       const reach = camera.position.distanceTo(center) + radius;
       camera.near = Math.max(reach / 10000, 0.01);
-      camera.far = reach * 2;
+      camera.far = Math.max(reach * 2, radius * (ZOOM_MAX_FACTOR + 1) * 2);
       camera.updateProjectionMatrix();
     }
     camera.lookAt(target);
@@ -138,6 +140,11 @@ export default function Scene({
   const model = useGLTF(glbUrl);
   const cam = useMemo(() => defaultCameraOf(manifest, sceneId), [manifest, sceneId]);
   const sphere = useMemo(() => new Box3().setFromObject(model.scene).getBoundingSphere(new Sphere()), [model]);
+  const setModelRadius = useSetAtom(modelRadiusAtom);
+  useEffect(() => {
+    setModelRadius(sphere.radius);
+    return () => setModelRadius(null);
+  }, [sphere, setModelRadius]);
   const animationRoot = useModelAnimation(model);
   // A model with animations is drawn as it is loaded, not as a copy: the copy rebuilds each light
   // with a new target, so a spot light that the animation moves would keep pointing at the origin.

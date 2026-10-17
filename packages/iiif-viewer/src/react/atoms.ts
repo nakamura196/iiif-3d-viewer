@@ -60,3 +60,6 @@ export const manifestUrlAtom = atom<string | null>(null);
 
 // アノテーション表示/非表示のアトム
 export const showAnnotationsAtom = atom<boolean>(true);
+
+// 主モデルの外接球の半径（モデルの単位のまま）。ズームボタンの距離の制限に使う
+export const modelRadiusAtom = atom<number | null>(null);
