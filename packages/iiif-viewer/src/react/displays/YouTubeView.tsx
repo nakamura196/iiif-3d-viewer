@@ -40,12 +40,13 @@ interface YTNamespace {
   ) => YTPlayer;
 }
 
-declare global {
-  interface Window {
-    YT?: YTNamespace;
-    onYouTubeIframeAPIReady?: () => void;
-  }
-}
+// window.YT はグローバルの型として宣言しない。@nakamura196/react-ui も同じ名前を
+// 別の型で宣言しており、二重に宣言すると型エラーになるため、ここでは窓口を型づけして使う。
+type YTWindow = Window & {
+  YT?: YTNamespace;
+  onYouTubeIframeAPIReady?: () => void;
+};
+const ytWindow = (): YTWindow => window as YTWindow;
 
 const PLAYING = 1;
 
@@ -53,13 +54,14 @@ let apiPromise: Promise<YTNamespace> | null = null;
 
 // YouTube の IFrame API は 1 度だけ読み込み、出来上がりを皆で待つ
 const loadApi = (): Promise<YTNamespace> => {
-  if (window.YT?.Player) return Promise.resolve(window.YT);
+  const w = ytWindow();
+  if (w.YT?.Player) return Promise.resolve(w.YT);
   if (apiPromise) return apiPromise;
   apiPromise = new Promise<YTNamespace>((resolve, reject) => {
-    const prev = window.onYouTubeIframeAPIReady;
-    window.onYouTubeIframeAPIReady = () => {
+    const prev = w.onYouTubeIframeAPIReady;
+    w.onYouTubeIframeAPIReady = () => {
       prev?.();
-      if (window.YT) resolve(window.YT);
+      if (w.YT) resolve(w.YT);
     };
     const s = document.createElement('script');
     s.src = 'https://www.youtube.com/iframe_api';
