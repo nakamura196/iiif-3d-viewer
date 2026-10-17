@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { SceneV4 } from '../types/iiif';
-import { chosenUrl, labelIn, paintedModelsOf } from './paintedModels';
+import { chosenUrl, labelIn, paintedModelsOf, upgradeUrl } from './paintedModels';
 import { parseManifestV4 } from './manifestParser';
 
 const scene = {
@@ -69,6 +69,44 @@ describe('chosenUrl', () => {
     expect(chosenUrl(ground, {})).toBe('https://example.org/map.glb');
     expect(chosenUrl(ground, { [ground.id]: 1 })).toBe('https://example.org/roads.glb');
     expect(chosenUrl(ground, { [ground.id]: 9 })).toBe('https://example.org/map.glb');
+  });
+});
+
+describe('upgradeUrl', () => {
+  const progressive = {
+    items: [
+      {
+        items: [
+          {
+            id: 'p',
+            motivation: ['painting'],
+            body: {
+              type: 'Choice',
+              behavior: ['progressive'],
+              items: [
+                { id: 'light.glb', type: 'Model' },
+                { id: 'mid.glb', type: 'Model' },
+                { id: 'full.glb', type: 'Model' },
+              ],
+            },
+          },
+        ],
+      },
+    ],
+  } as unknown as SceneV4;
+
+  it('upgrades a progressive Choice to its last option until the user switches by hand', () => {
+    const m = paintedModelsOf(progressive)[0];
+    expect(m.progressive).toBe(true);
+    expect(chosenUrl(m, {})).toBe('light.glb');
+    expect(upgradeUrl(m, {})).toBe('full.glb');
+    expect(upgradeUrl(m, { p: 0 })).toBeNull();
+  });
+
+  it('leaves a plain Choice (different contents) to the user', () => {
+    const ground = paintedModelsOf(scene)[1];
+    expect(ground.progressive).toBe(false);
+    expect(upgradeUrl(ground, {})).toBeNull();
   });
 });
 
