@@ -2,7 +2,19 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { convertToV4 } from '../services/manifestConverter';
-import { openingStep, splitHeading, stepTarget, stepText, storyBodies, storyOf, type StoryStep } from './story';
+import {
+  openingStep,
+  readingTime,
+  scrollOf,
+  splitHeading,
+  stepAt,
+  stepTarget,
+  stepText,
+  storyBodies,
+  storyOf,
+  type Story,
+  type StoryStep,
+} from './story';
 
 // 倭寇図巻のストーリー（https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/cp/story/m.json）の
 // 先頭 7 件（章 3、細部 4）。2026-10-14 に保存。章と細部の区別は本文先頭の <h2> だけで書かれている。
@@ -152,5 +164,70 @@ describe('openingStep', () => {
     expect(openingStep(story!, 0, story!.steps[0].id)).toBeNull();
     expect(openingStep(story!, 99, null)).toBe(story!.steps.length - 1);
     expect(openingStep(story!, -1, null)).toBe(0);
+  });
+});
+
+describe('scrollOf (a story along one handscroll)', () => {
+  const step = (id: string, region: StoryStep['region'], canvasId = 'c'): StoryStep => ({
+    id,
+    canvasId,
+    region,
+    bodies: [{ kind: 'text', value: id, format: 'text/plain' }],
+  });
+  const band = (x: number, w: number) => ({ type: 'rect' as const, x, y: 0, w, h: 100 });
+  const story = (steps: StoryStep[]): Story => ({ steps, chapters: [] });
+
+  it('reads a long picture with full-height scenes as a scroll, every scene viewed as a square of its height', () => {
+    const s = scrollOf(story([step('intro', { type: 'canvas' }), step('a', band(800, 200)), step('b', band(0, 60))]), {
+      width: 1000,
+      height: 100,
+    });
+    expect(s?.spans).toEqual([null, [800, 1000], [0, 60]]);
+    // centred on the scene, kept inside the picture
+    expect(s?.views).toEqual([undefined, [850, 0, 100, 100], [0, 0, 100, 100]]);
+  });
+
+  it('is no scroll for a picture that is not long, or steps on several Canvases', () => {
+    expect(scrollOf(story([step('a', band(0, 50)), step('b', band(50, 50))]), { width: 250, height: 100 })).toBeNull();
+    expect(
+      scrollOf(story([step('a', band(0, 50)), step('b', band(50, 50), 'd')]), { width: 1000, height: 100 }),
+    ).toBeNull();
+  });
+
+  it('keeps the strip but fits each scene when the scenes are not full-height bands', () => {
+    const s = scrollOf(story([step('a', band(0, 50)), step('b', { type: 'rect', x: 300, y: 20, w: 40, h: 30 })]), {
+      width: 1000,
+      height: 100,
+    });
+    expect(s?.spans).toEqual([[0, 50], [300, 340]]);
+    expect(s?.views).toBeUndefined();
+  });
+
+  it('finds the step under a point of the strip: inside a span, the narrowest; outside, the nearest', () => {
+    const s = scrollOf(
+      story([step('wide', band(0, 500)), step('detail', { type: 'rect', x: 100, y: 10, w: 50, h: 50 }), step('c', band(700, 100))]),
+      { width: 1000, height: 100 },
+    )!;
+    expect(stepAt(s, 120)).toBe(1);
+    expect(stepAt(s, 300)).toBe(0);
+    expect(stepAt(s, 650)).toBe(2);
+  });
+});
+
+describe('readingTime', () => {
+  const textStep = (value: string): StoryStep => ({
+    id: 'x',
+    canvasId: 'c',
+    region: { type: 'canvas' },
+    bodies: [{ kind: 'text', value, format: 'text/html' }],
+  });
+
+  it('grows with the text, within 6 to 16 seconds', () => {
+    expect(readingTime(textStep('<h2>短い</h2>'), 'ja')).toBe(6000);
+    const ja = readingTime(textStep(`<h2>見出し</h2><p>${'あ'.repeat(60)}</p>`), 'ja');
+    expect(ja).toBeGreaterThan(9000);
+    expect(ja).toBeLessThan(11000);
+    expect(readingTime(textStep(`<p>${'word '.repeat(12)}</p>`), 'en')).toBe(10100);
+    expect(readingTime(textStep(`<p>${'あ'.repeat(500)}</p>`), 'ja')).toBe(16000);
   });
 });

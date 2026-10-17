@@ -219,3 +219,69 @@ export function openingStep(story: Story, index: number, selected: string | null
   const at = Math.min(Math.max(index, 0), story.steps.length - 1);
   return story.steps[at].id === selected ? null : at;
 }
+
+// ---- a long scroll -----------------------------------------------------------
+
+/** A story told along one long horizontal picture (a handscroll): the strip and the sideways slide use it. */
+export interface StoryScroll {
+  canvasId: string;
+  width: number;
+  height: number;
+  /** For each step, its span along the scroll in Canvas pixels ([from, to]), or null for the whole picture. */
+  spans: ([number, number] | null)[];
+  /**
+   * For each step, where the view goes: a square of the scroll's height around the scene, so that every
+   * scene is shown at the same zoom (the picture fills the height) and moving between them is a sideways slide.
+   * Only when the scenes are bands of the full height; otherwise undefined (the view fits each scene).
+   */
+  views?: (Xywh | undefined)[];
+}
+
+/** How much longer than high a picture must be to be read as a scroll. */
+const SCROLL_RATIO = 3;
+
+export function scrollOf(story: Story, size: { width?: number; height?: number } | undefined): StoryScroll | null {
+  const canvasId = story.steps[0]?.canvasId;
+  const width = size?.width ?? 0;
+  const height = size?.height ?? 0;
+  if (!canvasId || !story.steps.every((s) => s.canvasId === canvasId)) return null;
+  if (!(width > 0 && height > 0) || width / height < SCROLL_RATIO) return null;
+  const boxes = story.steps.map((s) => regionXywh(s.region));
+  const spans = boxes.map((b): [number, number] | null => (b ? [b[0], b[0] + b[2]] : null));
+  const bands = boxes.every((b) => !b || (b[1] <= height * 0.03 && b[3] >= height * 0.94));
+  if (!bands) return { canvasId, width, height, spans };
+  const side = Math.min(height, width);
+  const views = boxes.map((b): Xywh | undefined =>
+    b ? [Math.min(Math.max(b[0] + b[2] / 2 - side / 2, 0), width - side), 0, side, height] : undefined,
+  );
+  return { canvasId, width, height, spans, views };
+}
+
+/** The step whose span holds `x` (Canvas pixels along the scroll), else the nearest one; null when none has a span. */
+export function stepAt(scroll: StoryScroll, x: number): number | null {
+  let best: number | null = null;
+  let bestD = Infinity;
+  scroll.spans.forEach((sp, i) => {
+    if (!sp) return;
+    const d = x < sp[0] ? sp[0] - x : x > sp[1] ? x - sp[1] : 0;
+    // inside: the narrowest span wins (a detail inside a scene)
+    const key = d === 0 ? -1 / (sp[1] - sp[0] || 1) : d;
+    if (key < bestD) {
+      bestD = key;
+      best = i;
+    }
+  });
+  return best;
+}
+
+/**
+ * How long autoplay stays on a step (ms): time to read its text (about 9 characters a second, the
+ * same for Latin words of about 5 letters) on top of the move, within 6–16 seconds.
+ */
+export function readingTime(step: StoryStep, locale: string): number {
+  const { heading, bodies } = stepText(step, locale);
+  const text = [heading ?? '', ...bodies.map((b) => (isHtml(b) ? plain(b.value ?? '') : (b.value ?? '')))].join(' ');
+  const latin = /^[\x00-\x7f\s]*$/.test(text);
+  const chars = latin ? text.split(/\s+/).filter(Boolean).length * 5 : text.replace(/\s+/g, '').length;
+  return Math.round(Math.min(16000, Math.max(6000, 3500 + chars * 110)));
+}

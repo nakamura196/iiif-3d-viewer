@@ -2,6 +2,7 @@
   "@context": "http://iiif.io/api/presentation/3/context.json",
   "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json",
   "type": "Manifest",
+  "viewingDirection": "right-to-left",
   "label": {
     "ja": [
       "福富草紙（クリーブランド美術館）"

@@ -7,3 +7,12 @@ export const storyOpenAtom = atom<boolean>(false);
 
 /** Show the frame of the current scene (only that one, a thin line without fill). */
 export const storyFrameAtom = atom<boolean>(false);
+
+/** The step being read (index into the story's steps). */
+export const storyStepAtom = atom<number>(0);
+
+/** Autoplay: the story moves on by itself, a step after the time to read it. */
+export const storyPlayingAtom = atom<boolean>(false);
+
+/** The caption of the current step is drawn over the picture (closed with its ×, opened again from the tab). */
+export const storyCaptionAtom = atom<boolean>(true);

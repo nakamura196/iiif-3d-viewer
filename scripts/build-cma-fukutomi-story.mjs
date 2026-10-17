@@ -130,6 +130,8 @@ const manifest = {
   '@context': 'http://iiif.io/api/presentation/3/context.json',
   id: SELF,
   type: 'Manifest',
+  // a handscroll is read from right to left (the strip and the buttons of the story follow it)
+  viewingDirection: 'right-to-left',
   label: { ja: ['福富草紙（クリーブランド美術館）'], en: ['The Story of Fukutomi (Cleveland Museum of Art)'] },
   summary: {
     ja: ['放屁の芸をめぐる室町時代の滑稽な絵巻の後半を、1 枚の画像の中で場面ごとにたどるストーリー。'],

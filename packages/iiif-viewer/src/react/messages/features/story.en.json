@@ -9,6 +9,11 @@
     "steps": "Steps",
     "step": "Step {n}",
     "whole": "Whole picture",
-    "frame": "Show the frame of the scene"
+    "frame": "Show the frame of the scene",
+    "play": "Play",
+    "pause": "Pause",
+    "caption": "Show the text over the picture",
+    "close": "Close the text",
+    "strip": "The whole scroll (click to go to a scene)"
   }
 }
