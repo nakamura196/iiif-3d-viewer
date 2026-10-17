@@ -13,7 +13,10 @@ export interface Box {
 // 2 万件を DOM で描くと、拡大 1 段ごとに 190ms かかった（線の太さが拡大率で決まるため、全部を描き直す）。
 export const DOM_MARK_LIMIT = 500;
 
-/** The part of the Canvas on screen (clamped to the Canvas), or the whole Canvas without a stage. */
+/**
+ * The part of the Canvas on screen (clamped to the Canvas), or the whole Canvas without a stage. On a turned stage,
+ * the bounds of the turned screen.
+ */
 export const visibleBoxOf = (
   stage: StageInfo | undefined,
   canvasWidth: number,
@@ -22,14 +25,25 @@ export const visibleBoxOf = (
 ): Box => {
   const whole = { x: 0, y: 0, w: canvasWidth, h: canvasHeight };
   if (!stage || !(stage.stageW > 0) || !(stage.scale > 0) || !(stage.boxW > 0)) return whole;
-  // A point of the box is (b - box/2 - t) / scale + stage/2 in the stage (the transform origin is the centre).
+  // A point of the box is R(-rotation) · (b - box/2 - t) / scale + stage/2 in the stage (the transform origin is the centre).
   const toCanvas = canvasWidth / stage.stageW;
-  const halfW = (stage.boxW / 2) * (1 + margin);
-  const halfH = (stage.boxH / 2) * (1 + margin);
-  const x0 = ((-halfW - stage.tx) / stage.scale + stage.stageW / 2) * toCanvas;
-  const x1 = ((halfW - stage.tx) / stage.scale + stage.stageW / 2) * toCanvas;
-  const y0 = ((-halfH - stage.ty) / stage.scale + stage.stageH / 2) * toCanvas;
-  const y1 = ((halfH - stage.ty) / stage.scale + stage.stageH / 2) * toCanvas;
+  const r = ((stage.rotation ?? 0) * Math.PI) / 180;
+  const cos = Math.cos(r);
+  const sin = Math.sin(r);
+  const c = Math.abs(cos);
+  const s = Math.abs(sin);
+  const boxW = stage.boxW * (1 + margin);
+  const boxH = stage.boxH * (1 + margin);
+  const halfW = (boxW * c + boxH * s) / 2 / stage.scale;
+  const halfH = (boxW * s + boxH * c) / 2 / stage.scale;
+  const mx = -stage.tx / stage.scale;
+  const my = -stage.ty / stage.scale;
+  const cx = mx * cos + my * sin + stage.stageW / 2;
+  const cy = -mx * sin + my * cos + stage.stageH / 2;
+  const x0 = (cx - halfW) * toCanvas;
+  const x1 = (cx + halfW) * toCanvas;
+  const y0 = (cy - halfH) * toCanvas;
+  const y1 = (cy + halfH) * toCanvas;
   const x = Math.max(0, x0);
   const y = Math.max(0, y0);
   return { x, y, w: Math.max(0, Math.min(canvasWidth, x1) - x), h: Math.max(0, Math.min(canvasHeight, y1) - y) };

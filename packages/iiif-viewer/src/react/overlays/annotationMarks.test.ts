@@ -34,6 +34,11 @@ describe('visibleBoxOf', () => {
     expect(visibleBoxOf(stage(0.5), 2000, 1000)).toEqual({ x: 0, y: 0, w: 2000, h: 1000 });
   });
 
+  it('is the bounds of the turned screen on a turned stage', () => {
+    // turned a quarter: the 1000 x 500 box covers 500 x 1000 stage pixels, clamped to the 1000 x 500 stage
+    expect(visibleBoxOf({ ...stage(2), rotation: 90 }, 2000, 1000)).toEqual({ x: 750, y: 0, w: 500, h: 1000 });
+  });
+
   it('grows by the margin', () => {
     expect(visibleBoxOf(stage(4), 2000, 1000, 0.5)).toEqual({ x: 625, y: 312.5, w: 750, h: 375 });
   });

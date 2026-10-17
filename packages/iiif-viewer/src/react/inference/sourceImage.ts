@@ -4,19 +4,25 @@
 import {
   canvasImagesOf,
   imageInfoUrl,
+  imageRegionOfBox,
   imageRequestUrl,
   imageToCanvasOf,
   parseImageInfo,
   rawCanvasOf,
+  regionToCanvasOf,
   singleImageUrl,
+  tileSchemeOf,
+  tilesForRegion,
   type ContainerInfo,
+  type ImageInfo,
   type ImageLayer,
+  type ImageRegion,
   type ImageToCanvas,
   type ManifestV4,
 } from '../../core';
 
 export class SourceImageError extends Error {
-  constructor(public readonly reason: 'noImage' | 'unsupported' | 'fetch') {
+  constructor(public readonly reason: 'noImage' | 'unsupported' | 'fetch' | 'emptyView' | 'tooLarge') {
     super(reason);
   }
 }
@@ -29,12 +35,33 @@ export const baseImageLayerOf = (manifest: ManifestV4 | null | undefined, contai
   return undefined;
 };
 
+const infoOf = async (layer: ImageLayer): Promise<ImageInfo | null> => {
+  if (!layer.service) return null;
+  const res = await fetch(imageInfoUrl(layer.service));
+  return res.ok ? parseImageInfo(await res.json()) : null;
+};
+
+const fetchBitmap = async (url: string): Promise<ImageBitmap> => {
+  const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return createImageBitmap(await res.blob());
+};
+
+/** The bitmap at most `longSide` on the long side (closes the one given when it makes a smaller one). */
+const shrink = async (bitmap: ImageBitmap, longSide: number): Promise<ImageBitmap> => {
+  const k = longSide / Math.max(bitmap.width, bitmap.height);
+  if (k >= 1) return bitmap;
+  const w = Math.max(1, Math.round(bitmap.width * k));
+  const h = Math.max(1, Math.round(bitmap.height * k));
+  const small = await createImageBitmap(bitmap, { resizeWidth: w, resizeHeight: h, resizeQuality: 'high' });
+  bitmap.close();
+  return small;
+};
+
 /** The image URL at most `longSide` on the long side (IIIF Image API when there is one). Also used by the puzzle. */
 export const sourceImageUrl = async (layer: ImageLayer, longSide: number): Promise<string> => {
-  if (!layer.service) return layer.url;
-  const res = await fetch(imageInfoUrl(layer.service));
-  const info = res.ok ? parseImageInfo(await res.json()) : null;
-  if (!info) return layer.url;
+  const info = await infoOf(layer);
+  if (!layer.service || !info) return layer.url;
   const k = Math.min(1, longSide / Math.max(info.width, info.height));
   const width = Math.max(1, Math.round(info.width * k));
   if (info.level >= 1) return imageRequestUrl(layer.service, 'full', width);
@@ -53,21 +80,10 @@ export const loadSourceImage = async (
   let bitmap: ImageBitmap;
   try {
     url = await sourceImageUrl(layer, longSide);
-    const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const blob = await res.blob();
-    bitmap = await createImageBitmap(blob);
+    // サーバが大きいまま返したときは、ここで縮める
+    bitmap = await shrink(await fetchBitmap(url), longSide);
   } catch {
     throw new SourceImageError('fetch');
-  }
-  // サーバが大きいまま返したときは、ここで縮める
-  const k = longSide / Math.max(bitmap.width, bitmap.height);
-  if (k < 1) {
-    const w = Math.round(bitmap.width * k);
-    const h = Math.round(bitmap.height * k);
-    const small = await createImageBitmap(bitmap, { resizeWidth: w, resizeHeight: h, resizeQuality: 'high' });
-    bitmap.close();
-    bitmap = small;
   }
   const map = imageToCanvasOf(layer, container, bitmap.width, bitmap.height);
   if (!map) {
@@ -75,4 +91,94 @@ export const loadSourceImage = async (
     throw new SourceImageError('unsupported');
   }
   return { bitmap, map, url };
+};
+
+/** Static tiles of `region` at one scale factor, put together into one bitmap (region / scale factor in size). */
+const joinTiles = async (
+  region: ImageRegion,
+  scaleFactor: number,
+  tiles: { x: number; y: number; w: number; h: number; url: string }[],
+): Promise<ImageBitmap> => {
+  const out = new OffscreenCanvas(Math.max(1, Math.round(region.w / scaleFactor)), Math.max(1, Math.round(region.h / scaleFactor)));
+  const g = out.getContext('2d');
+  if (!g) throw new Error('2d');
+  const parts = await Promise.all(tiles.map(async (t) => ({ t, bitmap: await fetchBitmap(t.url) })));
+  for (const { t, bitmap } of parts) {
+    g.drawImage(bitmap, (t.x - region.x) / scaleFactor, (t.y - region.y) / scaleFactor, t.w / scaleFactor, t.h / scaleFactor);
+    bitmap.close();
+  }
+  return createImageBitmap(out);
+};
+
+/**
+ * Like `loadSourceImage`, for the part of the image under `box` (Canvas coordinates, for example the part on
+ * screen). The region comes from the Image API when the service can cut regions (level 1 and up), from its static
+ * tiles put together (level 0), or cut out of the whole image.
+ */
+export const loadSourceRegion = async (
+  layer: ImageLayer,
+  container: ContainerInfo,
+  box: ImageRegion,
+  longSide: number,
+): Promise<{ bitmap: ImageBitmap; map: ImageToCanvas; url: string }> => {
+  if (!imageToCanvasOf(layer, container, 1, 1)) throw new SourceImageError('unsupported');
+  const target = layer.target ?? { x: 0, y: 0, w: container.width ?? 0, h: container.height ?? 0 };
+  if (!(target.w > 0) || !(target.h > 0)) throw new SourceImageError('unsupported');
+
+  let info: ImageInfo | null = null;
+  try {
+    info = await infoOf(layer);
+  } catch {
+    info = null;
+  }
+  const scheme = info ? tileSchemeOf(info) : null;
+  let bitmap: ImageBitmap;
+  let region: ImageRegion | null;
+  let url: string;
+  let width: number;
+  let height: number;
+  if (layer.service && info && (info.level >= 1 || scheme)) {
+    width = info.width;
+    height = info.height;
+    region = imageRegionOfBox(box, target, width, height);
+    if (!region) throw new SourceImageError('emptyView');
+    if (info.level >= 1) {
+      const k = Math.min(1, longSide / Math.max(region.w, region.h));
+      url = imageRequestUrl(layer.service, region, Math.max(1, Math.round(region.w * k)));
+      try {
+        bitmap = await fetchBitmap(url);
+      } catch {
+        throw new SourceImageError('fetch');
+      }
+    } else {
+      const picked = tilesForRegion(layer.service, info, scheme!, region, longSide);
+      if (!picked) throw new SourceImageError('tooLarge');
+      url = picked.tiles[0]?.url ?? layer.service.id;
+      try {
+        bitmap = await joinTiles(region, picked.scaleFactor, picked.tiles);
+      } catch {
+        throw new SourceImageError('fetch');
+      }
+    }
+  } else {
+    // 範囲を切り出せないサーバ・画像そのもの: 取れるいちばん大きい画像から切り出す
+    url = layer.service && info ? singleImageUrl(layer.service, info, info.width) : layer.url;
+    let whole: ImageBitmap;
+    try {
+      whole = await fetchBitmap(url);
+    } catch {
+      throw new SourceImageError('fetch');
+    }
+    width = whole.width;
+    height = whole.height;
+    region = imageRegionOfBox(box, target, width, height);
+    if (!region) {
+      whole.close();
+      throw new SourceImageError('emptyView');
+    }
+    bitmap = await createImageBitmap(whole, region.x, region.y, region.w, region.h);
+    whole.close();
+  }
+  bitmap = await shrink(bitmap, longSide);
+  return { bitmap, map: regionToCanvasOf(region, target, width, height, bitmap.width, bitmap.height), url };
 };
