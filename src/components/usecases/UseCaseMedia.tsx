@@ -5,7 +5,8 @@ import { useTranslations } from 'next-intl';
 import { thumbnailOf, videoOf, type Locale, type UseCase } from '@/lib/usecases';
 
 // ユースケースの動画の枠。一覧のカードと詳細ページの両方で使う。
-// 動画があれば Kasane の画面に ▶ を重ねて出し、押したらその場で再生する。動画が無ければ「準備中」。
+// 動画があれば Kasane の画面に ▶ を重ねて出し、押したらその場で再生する。
+// 動画が無ければ Kasane の画面だけを出し、隅に「準備中」の札を付ける。
 // YouTube の埋め込みを最初から並べると、1 本ごとに再生用のプログラムを読み込んで重くなり、
 // YouTube 側の題名やロゴが重なってカードの見た目もそろわないため
 export default function UseCaseMedia({ useCase: u, locale }: { useCase: UseCase; locale: Locale }) {
@@ -58,8 +59,19 @@ export default function UseCaseMedia({ useCase: u, locale }: { useCase: UseCase;
     );
   }
   return (
-    <div className="aspect-video w-full rounded-xl border border-dashed border-[var(--ds-border)] flex items-center justify-center text-sm text-[var(--ds-fg-muted)]">
-      {t('videoPending')}
+    <div className="relative mx-auto w-full max-w-4xl overflow-hidden rounded-xl border border-[var(--ds-border)] bg-black shadow-md">
+      {/* eslint-disable-next-line @next/next/no-img-element -- 静的書き出しのため next/image は使わない */}
+      <img
+        src={thumbnailOf(u, locale)}
+        alt=""
+        width={1280}
+        height={720}
+        loading="lazy"
+        className="aspect-video w-full object-cover"
+      />
+      <span className="absolute bottom-2 right-2 rounded bg-black/70 px-2 py-0.5 text-xs text-white">
+        {t('videoPending')}
+      </span>
     </div>
   );
 }
