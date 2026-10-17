@@ -22,7 +22,7 @@
   "dependencies": {
     "@iiif/presentation-3": "^2.1.0",
     "@nakamura196/iiif-viewer": "*",
-    "@nakamura196/react-ui": "github:nakamura196/react-ui#v0.2.0",
+    "@nakamura196/react-ui": "github:nakamura196/react-ui#v0.5.0",
     "@next/third-parties": "^16.2.4",
     "@react-three/drei": "^10.6.0",
     "@react-three/fiber": "^9.2.0",
