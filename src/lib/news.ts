@@ -64,6 +64,7 @@ export const NEWS: NewsItem[] = [
     action: {
       href: viewer('https://purl.stanford.edu/hs631zg4177/iiif/manifest', 'tab=puzzle'),
     },
+    video: { ja: '-DT_kGvJOpU', en: 'zujWTk3s66U' },
     usecases: ['puzzle-kuniezu'],
   },
   {
@@ -108,6 +109,7 @@ export const NEWS: NewsItem[] = [
       en: 'The Annotations tab now draws only the rows in view, so even a map with 20,000 annotations scrolls smoothly. Type in the new search box and both the list and the marks on the image narrow to the matches. With “Zoom to the chosen annotation” on, clicking an annotation in the list zooms the image to it.',
     },
     action: { href: hrefOfUseCase('suikeichuzu-annotations') },
+    video: { ja: 'OUCUFk4GWM0', en: 'TQMXYxvUcDg' },
     usecases: ['suikeichuzu-annotations'],
   },
   {

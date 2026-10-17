@@ -447,6 +447,7 @@ export const USE_CASES: UseCase[] = [
     },
     features: ['annotations', 'search'],
     site: 'https://toyobunko-lab.jp/app/suikeichuzu/',
+    video: { ja: 'OUCUFk4GWM0', en: 'TQMXYxvUcDg' },
   },
   {
     id: 'rekion-audio',
@@ -477,6 +478,7 @@ export const USE_CASES: UseCase[] = [
     open: { page: 'viewer', manifest: `${SITE_URL}/manifests/physdim-hyakki.json` },
     features: ['image', 'measure'],
     site: 'https://da.dl.itc.u-tokyo.ac.jp/portal/assets/fbd0479b-dbb4-4eaa-95b8-f27e1c423e4b',
+    video: { ja: 'nz5GuFZfTNs', en: '55RG45ZYuyU' },
   },
   {
     id: 'gallery-walk',
@@ -541,6 +543,7 @@ export const USE_CASES: UseCase[] = [
     },
     open: { page: 'viewer', manifest: 'https://purl.stanford.edu/hs631zg4177/iiif/manifest', tab: 'puzzle' },
     features: ['image', 'puzzle'],
+    video: { ja: '-DT_kGvJOpU', en: 'zujWTk3s66U' },
   },
 ];
 
