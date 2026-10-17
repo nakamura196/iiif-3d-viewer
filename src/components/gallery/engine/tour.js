@@ -586,10 +586,13 @@ export function updateTour(dt) {
 }
 
 // UI: 一人称ツアー / 三人称ツアーの開始・停止ボタンを配線する。
+// 録画は紹介動画を作るための道具なので、URL に ?record=1 があるときだけ出す。
 export function setupTourUI() {
   const btnF = $("#tour-toggle");      // 一人称
   const btn3 = $("#tour-toggle-3p");   // 三人称(アバターが歩く)
   if (!btnF && !btn3) return;
+  if (new URLSearchParams(location.search).get("record") !== "1") return;
+  G.root?.classList.add("record-ui"); // 内装ボタンを録画ボタンの下へ(gallery.css)
   const onClick = (mode) => () => {
     if (tour) stopTour();
     else startTour({ record: true, mode }); // startTour 内で updateTourButton を呼ぶ

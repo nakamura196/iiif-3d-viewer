@@ -54,8 +54,9 @@
 #tour-toggle-3p { top: 126px; }
 #tour-toggle.recording, #tour-toggle-3p.recording { border-color: #e0584f; color: #f4b0aa; background: rgba(40,18,18,.85); }
 #tour-toggle:disabled, #tour-toggle-3p:disabled { opacity: .4; cursor: default; }
-#look-toggle { top: 160px; right: 18px; display: none; padding: 6px 14px; font-size: 11px; color: #c8c2b2; }
+#look-toggle { top: 92px; right: 18px; display: none; padding: 6px 14px; font-size: 11px; color: #c8c2b2; }
 #look-toggle.show { display: block; }
+#vrg.record-ui #look-toggle { top: 160px; } /* 録画ボタン(?record=1)の下へずらす */
 
 /* バーチャルコントローラ(スマホ用ジョイスティック) */
 #joystick { position: absolute; left: 24px; bottom: 24px; width: 124px; height: 124px;
