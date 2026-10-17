@@ -1,0 +1,498 @@
+{
+  "@context": "http://iiif.io/api/presentation/3/context.json",
+  "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json",
+  "type": "Manifest",
+  "label": {
+    "ja": [
+      "福富草紙（クリーブランド美術館）"
+    ],
+    "en": [
+      "The Story of Fukutomi (Cleveland Museum of Art)"
+    ]
+  },
+  "summary": {
+    "ja": [
+      "放屁の芸をめぐる室町時代の滑稽な絵巻の後半を、1 枚の画像の中で場面ごとにたどるストーリー。"
+    ],
+    "en": [
+      "A story that moves scene by scene through one image of a comic Muromachi-period handscroll about the art of farting."
+    ]
+  },
+  "metadata": [
+    {
+      "label": {
+        "ja": [
+          "所蔵"
+        ],
+        "en": [
+          "Collection"
+        ]
+      },
+      "value": {
+        "ja": [
+          "クリーブランド美術館（1953.358）"
+        ],
+        "en": [
+          "The Cleveland Museum of Art (1953.358)"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "時代"
+        ],
+        "en": [
+          "Date"
+        ]
+      },
+      "value": {
+        "ja": [
+          "室町時代・15 世紀半ば"
+        ],
+        "en": [
+          "Muromachi period, mid-1400s"
+        ]
+      }
+    },
+    {
+      "label": {
+        "ja": [
+          "法量"
+        ],
+        "en": [
+          "Measurements"
+        ]
+      },
+      "value": {
+        "ja": [
+          "画面 35.3 × 1028.8 cm"
+        ],
+        "en": [
+          "Image: 35.3 × 1028.8 cm"
+        ]
+      }
+    }
+  ],
+  "requiredStatement": {
+    "label": {
+      "ja": [
+        "出典"
+      ],
+      "en": [
+        "Source"
+      ]
+    },
+    "value": {
+      "ja": [
+        "画像・解説：クリーブランド美術館（CC0、https://clevelandart.org/art/1953.358）。「はじめに」は解説を AI（Claude）で訳したもの。場面の区切りと解説は中村 覚（東京大学）が AI（Claude）を用いて新たに作成。筋はコトバンク「福富草紙」（https://kotobank.jp/word/%E7%A6%8F%E5%AF%8C%E8%8D%89%E7%B4%99-1585606）と兵庫県立歴史博物館「福富草紙」（https://www.hyogo-c.ed.jp/~rekihaku-bo/historystation/rekihaku-meet/seminar/fukutomi/emaki/kou.html）のあらすじ（一巻本）、人名の割り振りは大阪大谷大学の論文（https://osaka-ohtani.repo.nii.ac.jp/record/384/files/%E8%8B%AB%E5%90%8D.pdf）による伝本の分け方を参考にした。場面の並び（腰を踏む妻・祈祷する妻・排便する翁・薬を請う妻）はコトバンク・兵庫県立歴史博物館の解説による。かみつく場面の周りの人々（場面 12・13）は同じ論文の春浦院本の記述を参考にした"
+      ],
+      "en": [
+        "Image and description: The Cleveland Museum of Art (CC0, https://clevelandart.org/art/1953.358). Scene divisions and scene texts are new, by Satoru Nakamura (The University of Tokyo) with AI (Claude), with reference to Kotobank (https://kotobank.jp/word/%E7%A6%8F%E5%AF%8C%E8%8D%89%E7%B4%99-1585606) and the plot summary (one-scroll version) by the Hyogo Prefectural Museum of History (https://www.hyogo-c.ed.jp/~rekihaku-bo/historystation/rekihaku-meet/seminar/fukutomi/emaki/kou.html) and, for the names, the classification of versions in a paper from Osaka Ohtani University (https://osaka-ohtani.repo.nii.ac.jp/record/384/files/%E8%8B%AB%E5%90%8D.pdf). The order of scenes 9–11 follows Kotobank and the Hyogo museum’s commentary; the onlookers around the biting (scenes 12–13) follow the same paper’s description of the Shun’poin version"
+      ]
+    }
+  },
+  "rights": "http://creativecommons.org/publicdomain/zero/1.0/",
+  "homepage": [
+    {
+      "id": "https://clevelandart.org/art/1953.358",
+      "type": "Text",
+      "format": "text/html",
+      "label": {
+        "ja": [
+          "クリーブランド美術館の作品ページ"
+        ],
+        "en": [
+          "The Cleveland Museum of Art object page"
+        ]
+      }
+    }
+  ],
+  "seeAlso": [
+    {
+      "id": "https://kotobank.jp/word/%E7%A6%8F%E5%AF%8C%E8%8D%89%E7%B4%99-1585606",
+      "type": "Text",
+      "format": "text/html",
+      "label": {
+        "ja": [
+          "参考：コトバンク「福富草紙」"
+        ],
+        "en": [
+          "Reference: Kotobank, “Fukutomi zōshi”"
+        ]
+      }
+    },
+    {
+      "id": "https://www.hyogo-c.ed.jp/~rekihaku-bo/historystation/rekihaku-meet/seminar/fukutomi/emaki/kou.html",
+      "type": "Text",
+      "format": "text/html",
+      "label": {
+        "ja": [
+          "参考：兵庫県立歴史博物館「福富草紙」"
+        ],
+        "en": [
+          "Reference: Hyogo Prefectural Museum of History, “Fukutomi zōshi”"
+        ]
+      }
+    },
+    {
+      "id": "https://osaka-ohtani.repo.nii.ac.jp/record/384/files/%E8%8B%AB%E5%90%8D.pdf",
+      "type": "Text",
+      "format": "application/pdf",
+      "label": {
+        "ja": [
+          "参考：大阪大谷大学の論文（伝本の系統）"
+        ],
+        "en": [
+          "Reference: Osaka Ohtani University paper (lineages of the versions)"
+        ]
+      }
+    }
+  ],
+  "provider": [
+    {
+      "id": "https://www.clevelandart.org/",
+      "type": "Agent",
+      "label": {
+        "ja": [
+          "クリーブランド美術館"
+        ],
+        "en": [
+          "The Cleveland Museum of Art"
+        ]
+      }
+    }
+  ],
+  "items": [
+    {
+      "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1",
+      "type": "Canvas",
+      "label": {
+        "ja": [
+          "福富草紙"
+        ],
+        "en": [
+          "The Story of Fukutomi"
+        ]
+      },
+      "width": 76716,
+      "height": 2577,
+      "items": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/page/1",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/painting/1",
+              "type": "Annotation",
+              "motivation": "painting",
+              "body": {
+                "id": "https://nakamura196.github.io/iiif_image_repo/cleveland/cma-1953.358/full/2400,/0/default.jpg",
+                "type": "Image",
+                "format": "image/jpeg",
+                "width": 76716,
+                "height": 2577,
+                "service": [
+                  {
+                    "id": "https://nakamura196.github.io/iiif_image_repo/cleveland/cma-1953.358",
+                    "type": "ImageService2",
+                    "profile": "http://iiif.io/api/image/2/level0.json"
+                  }
+                ]
+              },
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1"
+            }
+          ]
+        }
+      ],
+      "annotations": [
+        {
+          "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotations/1",
+          "type": "AnnotationPage",
+          "items": [
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/0",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>福富草紙（クリーブランド美術館）</h2><p>この絵巻は、手っ取り早く富を得ようとした男が、音を奏でる放屁の芸を習おうとする奇妙な話の後半を描いている。大事な芸の前に、師匠であり商売敵でもある男が、下剤である朝顔の種を飲むよう勧める。男は芸の最中に粗相し、恥辱のうちに生涯を終える。</p><p>大胆な筋立てと、生き生きと描かれた人物のすぐ脇に台詞を書き込む描き方は、初期のグラフィック・ノベルといえる。この絵巻は、この話の現存する本のうち 2 番目に古い。</p><p>室町時代・15 世紀半ば。紙本著色、画面 35.3 × 1028.8 cm。右から左へ、場面を順にたどる。</p><p>出典：この「はじめに」の最初の 2 段落は、クリーブランド美術館の作品ページの解説（英語、CC0、2026 年 10 月 16 日に同館の Open Access API から取得）を、AI（Claude）で日本語に訳したもの。3 段落目は同館の作品情報による。次からの 13 場面の区切りと解説は、同館の解説には無いため、コトバンク（日本大百科全書ほか）・兵庫県立歴史博物館の解説・大阪大谷大学の論文で筋を確かめ、絵を見て新たに書いた（AI で下書き）。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>The Story of Fukutomi (Cleveland Museum of Art)</h2><p>This handscroll shows the second half of an odd tale in which a ne’er-do-well seeks the path to quick fortune and learns the art of musical flatulence. Prior to a major performance, a mentor (and competitor) advises him to consume morning glory seeds, a laxative. Thus, while performing he fouls himself and ends his days in humiliation.</p><p>The audacious nature of this story and its presentation—well-animated figures with dialogue adjacent to the appropriate moments of action—create a primitive graphic novel. This scroll is treasured as the second oldest surviving version of this story.</p><p>Japan, Muromachi period, mid-1400s. Handscroll; ink and color on paper, image 35.3 × 1028.8 cm. Follow the scenes from right to left.</p><p>Source: the first two paragraphs are the Cleveland Museum of Art’s object description (CC0, retrieved from its Open Access API on 16 October 2026), slightly shortened; the third is from the museum’s catalogue data. The museum gives no scene-by-scene text, so the thirteen scene divisions and texts that follow are new, drafted with AI (Claude) after checking the plot against Kotobank (Nihon Daihyakka Zensho and others), the Hyogo Prefectural Museum of History and a paper from Osaka Ohtani University.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/1",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>秀武の豊かな家</h2><p>米をつく下人、衣桁に掛かった色とりどりの着物、寝所でくつろぐ夫婦。放屁の芸ひとつで手に入れた、高向秀武の暮らしの豊かさを見せる。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>Hidetake's prosperous house</h2><p>Servants pound rice, colourful robes hang on a rack, and a couple relaxes in the bedroom. Takamuku Hidetake has grown rich on a single art: musical farting.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1#xywh=67800,0,8916,2577"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/2",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>福富と妻</h2><p>一方、隣に住む福富の家は貧しい。妻は、秀武に芸を習ってこいと夫をせき立てる。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>Fukutomi and his wife</h2><p>His neighbour Fukutomi is poor. His wife urges him to go and learn the art from Hidetake.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1#xywh=62490,0,3930,2577"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/3",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>弟子入り</h2><p>福富は秀武を訪ね、芸の秘訣を乞う。秀武は、芸の前に朝顔の種を飲めと教える。じつは下剤で、師匠であり商売敵でもある男の罠だった。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>Becoming a pupil</h2><p>Fukutomi visits Hidetake and begs for his secret. Hidetake tells him to take morning glory seeds before performing. They are a laxative: the mentor is also a rival.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1#xywh=59290,0,2940,2577"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/4",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>中将の屋敷で</h2><p>福富は褒美を当て込んで貴人の屋敷へ行き、庭で芸を始める。縁の上から、主人や女房たちが見ている。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>At the nobleman's mansion</h2><p>Hoping for a reward, Fukutomi goes to a nobleman’s mansion and begins his act in the garden, watched by the master and the ladies of the house.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1#xywh=51700,0,5330,2577"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/5",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>大失敗</h2><p>薬が効き、福富は芸の最中に粗相してしまう。侍たちが打ちすえ、烏帽子や髪をつかんで追い出す。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>Disaster</h2><p>The seeds take effect and Fukutomi soils himself mid-performance. The attendants beat him and drag him out by his cap and hair.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1#xywh=47970,0,3730,2577"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/6",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>血まみれの帰り道</h2><p>打たれて血に染まった福富が、杖をついて帰る。子どもたちがはやし立て、近所の人が窓からのぞく。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>The bloody walk home</h2><p>Beaten and bleeding, Fukutomi limps home on a stick. Children jeer, and neighbours peer out of their windows.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1#xywh=41970,0,6000,2577"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/7",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>赤い袖</h2><p>遠くに夫の赤い袖を見た妻は、褒美に紅の衣をもらったのだと思い込み、駆け出していく。うれしさのあまり、古い着物を焼いてしまう。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>Red sleeves</h2><p>Seeing red sleeves in the distance, the wife thinks her husband has been given crimson robes as a reward. She runs out and, in her joy, burns their old clothes.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1#xywh=36110,0,5860,2577"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/8",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>着る物もない</h2><p>赤いのは血だった。着物は焼けてしまい、福富は裸でうずくまるしかない。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>Nothing to wear</h2><p>The red was blood. With the old clothes burnt, Fukutomi can only crouch there naked.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1#xywh=31110,0,5000,2577"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/9",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>腰を踏む妻</h2><p>福富は寝込んでしまう。妻は子を背負ったまま、痛む夫の腰を踏んでやる。子が椀を運び、かまどでは粥が煮える。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>The wife treads on his back</h2><p>Fukutomi falls ill. With a baby on her back, his wife treads on his aching back, while a child carries a bowl and gruel simmers on the stove.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1#xywh=25850,0,2930,2577"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/10",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>妻の祈り</h2><p>妻は神に祈る。そばには烏が舞い降りている。その左では、福富がまだ腹をくだして苦しんでいる。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>The wife's prayer</h2><p>The wife prays to the gods as a crow alights nearby. To the left, Fukutomi is still suffering from diarrhoea.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1#xywh=19190,0,5330,2577"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/11",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>薬を請う妻</h2><p>妻は屋敷を訪ね、縁の下にひざまずいて、夫のための薬を請う。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>The wife begs for medicine</h2><p>The wife goes to a mansion and kneels below the veranda to beg for medicine for her husband.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1#xywh=12790,0,4470,2577"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/12",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>妻、秀武にかみつく</h2><p>路上で秀武に出会った妻が、夫をだました仕返しに、その腕にかみつく。子どもが止めに駆け寄り、別の子どもは逃げ出す。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>The wife bites Hidetake</h2><p>Meeting Hidetake in the street, the wife takes her revenge for the trick played on her husband and bites his arm. A child runs to stop her; another runs away.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1#xywh=6670,0,2920,2577"
+            },
+            {
+              "id": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/annotation/13",
+              "type": "Annotation",
+              "motivation": "describing",
+              "body": [
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>見物する町の人々</h2><p>この騒ぎに、町の人々が足を止める。指さして笑う若者、杖をついて語り合う老人たち、吠える犬。新しい出来事は起こらず、絵巻は見物人の姿で終わる。</p>",
+                  "format": "text/html",
+                  "language": "ja"
+                },
+                {
+                  "type": "TextualBody",
+                  "value": "<h2>The townspeople look on</h2><p>The commotion stops people in the street: young men point and laugh, two old men with staffs talk it over, a dog barks. Nothing further happens; the scroll ends with the onlookers.</p>",
+                  "format": "text/html",
+                  "language": "en"
+                }
+              ],
+              "target": "https://kasane.ldas.jp/manifests/cma-fukutomi-story.json/canvas/1#xywh=0,0,6670,2577"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
