@@ -546,9 +546,11 @@ export const defaultCameraOf = (
 
 // The commenting Annotation that describes a georeferenced feature: the one whose id
 // is the feature's @id, or ends with "#<@id>" / "/<@id>" (as in the sample manifests,
-// where both are minted from the same key).
+// where both are minted from the same key), or is the @id without a trailing "/gcp"
+// (a control point minted from the annotation's id, as in hongo-campus-iiif).
 const describes = (anno: Annotation, featureId: string) =>
-  anno.id === featureId || anno.id.endsWith(`#${featureId}`) || anno.id.endsWith(`/${featureId}`);
+  anno.id === featureId || anno.id.endsWith(`#${featureId}`) || anno.id.endsWith(`/${featureId}`) ||
+  (featureId.endsWith('/gcp') && anno.id === featureId.slice(0, -'/gcp'.length));
 
 // Annotations for the georeferencing page: one per feature, keyed by the feature's id
 // (the map selects by it). A feature takes the description, images, tags and camera of
