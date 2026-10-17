@@ -61,7 +61,7 @@ export type UseCaseOpen =
     };
 
 /** 何を見せる例か。一覧に札として出す。表示名は messages の UseCases.features */
-export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'search', 'ocr', 'auth', 'story', 'audio', 'measure', 'gallery', 'inference', 'puzzle'] as const;
+export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'search', 'ocr', 'auth', 'story', 'audio', 'video', 'measure', 'gallery', 'inference', 'puzzle'] as const;
 export type UseCaseFeature = (typeof USE_CASE_FEATURES)[number];
 
 export interface UseCase {
@@ -425,7 +425,7 @@ export const USE_CASES: UseCase[] = [
       en: 'A documentary film from the Nagano Prefectural Library, with boxes on people that ArchiveBase Video Search found with AI, written as IIIF annotations on a time and a region (#t=…&xywh=…). The boxes are AI output. The AI also put “person” boxes on things such as the straw god mask, so a person checked every box by eye and kept only the 27 that really show a person. Each box appears over the video only at its time. Click an annotation in the list to go there.',
     },
     open: { page: 'viewer', manifest: `${SITE_URL}/manifests/sample-manifest-video-objects.json`, tab: 'canvasAnnotations' },
-    features: ['annotations'],
+    features: ['annotations', 'video'],
     video: { ja: 'LvrLzdqbCfk', en: '4_zBRW-oS1w' },
     site: 'https://ab.ldas.jp/ja/na-kamura-1263/video',
   },
@@ -513,6 +513,20 @@ export const USE_CASES: UseCase[] = [
     features: ['image', 'inference'],
     video: { ja: 'RCZvHpaHSc8', en: 'rRyTJmxkckM' },
     site: 'https://nakamura196.github.io/ndl-face-finder/',
+  },
+  {
+    id: 'youtube-tutorials',
+    added: '2026-10-17',
+    title: {
+      ja: 'IIIF Kasane の使い方動画（YouTube の動画をマニフェストから再生）',
+      en: 'IIIF Kasane tutorials (playing YouTube videos from a manifest)',
+    },
+    note: {
+      ja: 'YouTube に置いた Kasane の使い方動画（日本語・英語 各 4 本）を、IIIF のマニフェストに Video として書いたコレクションです。一覧から日本語か英語を選んで開きます。本体の URL に YouTube の動画のアドレスを書くだけで、YouTube のプレーヤーで再生されます。字幕は自作の WebVTT をマニフェストに付けてあり、プレーヤーの上に重ねて出します。右の「文字起こし」タブでは話している行が光り、行を押すとその時刻へ移ります。',
+      en: 'A collection of Kasane tutorial videos on YouTube (four each in Japanese and English), written into IIIF manifests as Video. Pick Japanese or English from the list to open it. Just put the address of a YouTube video as the body and it plays in the YouTube player. Our own WebVTT captions are attached in the manifest and drawn over the player. In the Transcript tab on the right, the line being spoken lights up, and clicking a line jumps to that time.',
+    },
+    open: { page: 'viewer', manifest: `${SITE_URL}/manifests/youtube-tutorials/collection.json` },
+    features: ['video'],
   },
   {
     id: 'puzzle-kuniezu',

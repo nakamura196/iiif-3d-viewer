@@ -283,6 +283,7 @@
       "auth": "Authentication",
       "story": "Story",
       "audio": "Audio",
+      "video": "Video",
       "measure": "Real size",
       "gallery": "Gallery",
       "inference": "Inference",

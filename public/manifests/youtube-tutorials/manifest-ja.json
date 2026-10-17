@@ -101,12 +101,12 @@
       "type": "Canvas",
       "label": {
         "ja": [
-          "IIIF Kasane の新機能「ストーリー」— 倭寇図巻を、場面ごとに寄りながら説明を読む"
+          "IIIF Kasane の使い方 — IIIF Curation API のキュレーションを開く（CODH のサンプル）"
         ]
       },
       "width": 1920,
       "height": 1080,
-      "duration": 205.833,
+      "duration": 219.6,
       "items": [
         {
           "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-ja.json/canvas/2/page",
@@ -117,12 +117,12 @@
               "type": "Annotation",
               "motivation": "painting",
               "body": {
-                "id": "https://www.youtube.com/watch?v=VDXuQE6P34s",
+                "id": "https://www.youtube.com/watch?v=LnkuxXYNCSs",
                 "type": "Video",
                 "format": "video/mp4",
                 "width": 1920,
                 "height": 1080,
-                "duration": 205.833
+                "duration": 219.6
               },
               "target": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-ja.json/canvas/2"
             }
@@ -139,7 +139,7 @@
               "type": "Annotation",
               "motivation": "supplementing",
               "body": {
-                "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/kasane-story-tab.ja.vtt",
+                "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/kasane-curation.ja.vtt",
                 "type": "Text",
                 "format": "text/vtt",
                 "language": "ja",

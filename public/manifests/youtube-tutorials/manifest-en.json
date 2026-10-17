@@ -101,12 +101,12 @@
       "type": "Canvas",
       "label": {
         "en": [
-          "IIIF Kasane: Story — read the Wako zukan handscroll scene by scene"
+          "IIIF Kasane — opening a IIIF Curation API curation (CODH sample)"
         ]
       },
       "width": 1920,
       "height": 1080,
-      "duration": 160.267,
+      "duration": 181.8,
       "items": [
         {
           "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/2/page",
@@ -117,12 +117,12 @@
               "type": "Annotation",
               "motivation": "painting",
               "body": {
-                "id": "https://www.youtube.com/watch?v=fXIwtvfEZ-Q",
+                "id": "https://www.youtube.com/watch?v=qvLPzS2hCzo",
                 "type": "Video",
                 "format": "video/mp4",
                 "width": 1920,
                 "height": 1080,
-                "duration": 160.267
+                "duration": 181.8
               },
               "target": "https://kasane.ldas.jp/manifests/youtube-tutorials/manifest-en.json/canvas/2"
             }
@@ -139,7 +139,7 @@
               "type": "Annotation",
               "motivation": "supplementing",
               "body": {
-                "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/kasane-story-tab.en.vtt",
+                "id": "https://kasane.ldas.jp/manifests/youtube-tutorials/kasane-curation.en.vtt",
                 "type": "Text",
                 "format": "text/vtt",
                 "language": "en",

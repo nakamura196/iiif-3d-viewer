@@ -1,0 +1,97 @@
+WEBVTT
+
+1
+00:00:00.003 --> 00:00:06.028
+IIIF Kasane (Curation) — Picking the use case
+
+2
+00:00:06.030 --> 00:00:16.705
+IIIF Kasane is a viewer that reads IIIF manifests and shows images, 3D models, audio and video together with their annotations.
+
+3
+00:00:16.720 --> 00:00:25.395
+From the Use cases page, we open this example: the IIIF Curation API sample published by CODH.
+
+4
+00:00:25.402 --> 00:00:30.077
+It is a small curation that picks eight places from two books.
+
+5
+00:00:30.085 --> 00:00:34.760
+Press "Open in Kasane" to open the curation in the viewer.
+
+6
+00:00:37.069 --> 00:00:43.169
+IIIF Kasane (Curation) — Opening the curation
+
+7
+00:00:43.181 --> 00:00:48.656
+The curation is open. On the right, the Contents tab is shown.
+
+8
+00:00:48.677 --> 00:00:54.652
+The contents are grouped by book. The first group is from Ehon Mushi Erami,
+
+9
+00:00:54.665 --> 00:01:01.690
+and the second is from Karaito Soshi. Under each, four selected places are listed.
+
+10
+00:01:01.696 --> 00:01:07.996
+This link opens the fourth entry. The yellow box marks the selected region.
+
+11
+00:01:08.004 --> 00:01:13.229
+Entries marked "Target region" point to part of a page, not the whole page.
+
+12
+00:01:13.242 --> 00:01:23.292
+The pager at the top counts six pages. The same page appears twice, once whole and once as a region, so there are fewer pages than entries.
+
+13
+00:01:25.103 --> 00:01:31.378
+IIIF Kasane (Curation) — Jumping from the contents
+
+14
+00:01:31.381 --> 00:01:38.781
+Choose an entry in the contents to go to that page. You stay in the same view, even across books.
+
+15
+00:01:40.291 --> 00:01:46.591
+First, the first entry from Ehon Mushi Erami. The whole page opens.
+
+16
+00:01:49.748 --> 00:01:53.798
+Next, page nine from the other book, Karaito Soshi.
+
+17
+00:01:56.277 --> 00:02:04.827
+Finally, the "Target region" entry on page eleven. The page opens, with a yellow box around the selected region.
+
+18
+00:02:06.635 --> 00:02:13.060
+IIIF Kasane (Curation) — Opening your own curation
+
+19
+00:02:13.063 --> 00:02:22.038
+The IIIF Curation API is an extension of the IIIF Presentation API, defined by CODH.
+
+20
+00:02:22.043 --> 00:02:31.018
+A collection groups whole manifests. A curation instead gathers rectangular regions of pages, across manifests.
+
+21
+00:02:31.048 --> 00:02:37.273
+To open your own curation, put its URL in the box on the top page and press "View".
+
+22
+00:02:37.727 --> 00:02:46.177
+Add pos with a number to the viewer URL to open at that entry. In this example it was the fourth.
+
+23
+00:02:46.182 --> 00:02:52.232
+To browse a curation as a filterable list, use "Search a collection or curation".
+
+24
+00:02:52.236 --> 00:02:59.911
+The sample curation and the Curation API specification are published on the CODH website.
