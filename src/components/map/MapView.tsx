@@ -8,43 +8,16 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 maplibregl.setWorkerUrl(`${process.env.NEXT_PUBLIC_BASE_PATH ?? ''}/maplibre/maplibre-gl-worker.mjs`);
 import { useTheme } from 'next-themes';
 import { useLocale, useTranslations } from 'next-intl';
-import { geoFeatureIdOf, type GeorefMapView, type LngLat } from '@nakamura196/iiif-viewer/core';
+import {
+  geoFeatureIdOf,
+  geoFeatureLinksOf,
+  geoFeatureTagsOf,
+  type GeoFeature,
+  type GeorefMapView,
+  type LngLat,
+} from '@nakamura196/iiif-viewer/core';
 import { BASEMAPS, basemapOf, type BasemapId } from './basemaps';
 import { searchPlaces, type PlaceResult } from './placeSearch';
-
-interface GeoFeatureName {
-  toponym: string;
-  lang: string;
-  citations?: {
-    label: string;
-    '@id': string;
-  }[];
-}
-
-interface GeoFeatureLink {
-  type: string;
-  identifier: string;
-}
-
-interface GeoFeatureDepiction {
-  '@id': string;
-}
-
-interface GeoFeature {
-  '@id': string;
-  type: 'Feature';
-  geometry: {
-    coordinates: [number, number];
-    type: 'Point';
-  };
-  properties: {
-    title: string;
-    resourceCoords: [number, number] | [number, number, number];
-  };
-  names?: GeoFeatureName[];
-  links?: GeoFeatureLink[];
-  depictions?: GeoFeatureDepiction[];
-}
 
 /** 地図に重ねる画像（絵図・古地図）。corners は左上・右上・右下・左下の経度・緯度。 */
 export interface MapImageOverlay {
@@ -375,7 +348,13 @@ export default function MapView({
     fitAll(0, true);
   };
 
-  // 地点の上に出す名前と画像
+  // リンクの種類の名前。知らない種類はそのまま出す（geo.ldas.jp と同じ）
+  const linkLabel = (type: string): string => {
+    const key = `linkType.${type}`;
+    return t.has(key) ? t(key) : type;
+  };
+
+  // 地点の上に出す名前・画像・タグ・リンク
   const popupHtml = (feature: GeoFeature) => {
     const isDark = resolvedTheme === 'dark';
     const title = feature.properties.title;
@@ -389,10 +368,24 @@ export default function MapView({
     const altNamesHtml = altNames
       ? `<div style="font-size: 12px; color: ${isDark ? '#9ca3af' : '#6b7280'}; margin-top: 4px;">${escapeHtml(altNames)}</div>`
       : '';
+    const tags = geoFeatureTagsOf(feature);
+    const tagsHtml = tags.length > 0
+      ? `<div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px;">${tags
+          .map((tag) => `<span style="font-size: 11px; padding: 1px 6px; border-radius: 9999px; background-color: ${isDark ? '#374151' : '#e5e7eb'};">${escapeHtml(tag)}</span>`)
+          .join('')}</div>`
+      : '';
+    const links = geoFeatureLinksOf(feature);
+    const linksHtml = links.length > 0
+      ? `<div style="margin-top: 8px; font-size: 12px;">${links
+          .map((link) => `<a href="${escapeHtml(link.href)}" target="_blank" rel="noopener noreferrer" style="color: ${isDark ? '#60a5fa' : '#2563eb'}; text-decoration: underline;">${escapeHtml(linkLabel(link.type))}</a>`)
+          .join(' | ')}</div>`
+      : '';
     return `<div style="padding: 8px; background-color: ${isDark ? '#1f2937' : '#ffffff'}; color: ${isDark ? '#f3f4f6' : '#111827'}; border-radius: 4px;">
         ${thumbnailHtml}
         <div style="font-weight: bold;">${escapeHtml(title)}</div>
         ${altNamesHtml}
+        ${tagsHtml}
+        ${linksHtml}
       </div>`;
   };
 
@@ -402,10 +395,22 @@ export default function MapView({
     return idx < 0 ? undefined : all[idx];
   };
 
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelClose = () => {
+    if (closeTimerRef.current) clearTimeout(closeTimerRef.current);
+    closeTimerRef.current = null;
+  };
   const closePopup = () => {
+    cancelClose();
     activePopupRef.current?.remove();
     activePopupRef.current = null;
   };
+  // 印から外れても少し待つ。その間にポップアップへ乗れば閉じない（中のリンクを押せるように）
+  const closePopupSoon = () => {
+    cancelClose();
+    closeTimerRef.current = setTimeout(closePopup, 300);
+  };
+  const pinnedRef = useRef(false);
   const closeList = () => {
     listPopupRef.current?.remove();
     listPopupRef.current = null;
@@ -443,11 +448,15 @@ export default function MapView({
     const m = map.current;
     if (!m || !m.getLayer(POINT_LAYER)) return;
     const hit = m.queryRenderedFeatures(e.point, { layers: [SELECTED_LAYER, POINT_LAYER, CLUSTERS_LAYER] })[0];
+    if (!hit || hit.layer.id === CLUSTERS_LAYER) closePopup();
     if (!hit) return;
     if (hit.layer.id !== CLUSTERS_LAYER) {
-      closePopup();
+      const fid = String(hit.properties.fid);
       closeList();
-      onFeatureClickRef.current(String(hit.properties.fid));
+      // 押した地点のポップアップは、閉じるボタンか地図の別の所を押すまで残す（タッチの画面でもリンクを押せるように）
+      const feature = featureById(fid);
+      if (feature) openFeaturePopup(feature, true);
+      onFeatureClickRef.current(fid);
       return;
     }
     const source = m.getSource<maplibregl.GeoJSONSource>(POINTS_SOURCE);
@@ -474,12 +483,23 @@ export default function MapView({
     const fid = hit && hit.layer.id !== CLUSTERS_LAYER ? String(hit.properties.fid) : null;
     if (fid === hoveredRef.current) return;
     hoveredRef.current = fid;
-    closePopup();
     const feature = fid ? featureById(fid) : undefined;
-    if (!feature) return;
-    activePopupRef.current = new maplibregl.Popup({
+    if (!feature) {
+      if (!pinnedRef.current) closePopupSoon();
+      return;
+    }
+    openFeaturePopup(feature, false);
+  };
+
+  // 地点の名前・タグ・リンクのポップアップ。pinned は押して開いたもの（閉じるボタンを付け、印から外れても消さない）
+  const openFeaturePopup = (feature: GeoFeature, pinned: boolean) => {
+    const m = map.current;
+    if (!m) return;
+    closePopup();
+    pinnedRef.current = pinned;
+    const popup = new maplibregl.Popup({
       offset: 14,
-      closeButton: false,
+      closeButton: pinned,
       closeOnClick: false,
       className: resolvedTheme === 'dark' ? 'dark-popup' : '',
       maxWidth: '200px'
@@ -487,6 +507,20 @@ export default function MapView({
       .setLngLat(feature.geometry.coordinates)
       .setHTML(popupHtml(feature))
       .addTo(m);
+    popup.on('close', () => {
+      if (activePopupRef.current === popup) {
+        activePopupRef.current = null;
+        pinnedRef.current = false;
+      }
+    });
+    const el = popup.getElement();
+    el.addEventListener('mouseenter', cancelClose);
+    el.addEventListener('mouseleave', () => {
+      if (pinnedRef.current) return;
+      hoveredRef.current = null;
+      closePopupSoon();
+    });
+    activePopupRef.current = popup;
   };
   const handleMapClickRef = useRef(handleMapClick);
   handleMapClickRef.current = handleMapClick;
@@ -555,10 +589,10 @@ export default function MapView({
     };
     map.current.on('click', (e) => void handleMapClickRef.current(e));
     map.current.on('mousemove', (e) => handleMapHoverRef.current(e));
+    // 地図の外へ出たとき。ポップアップの上へ移ったときもここに来るので、すぐには閉じない
     map.current.on('mouseout', () => {
       hoveredRef.current = null;
-      activePopupRef.current?.remove();
-      activePopupRef.current = null;
+      if (!pinnedRef.current) closePopupSoon();
     });
     map.current.on('moveend', (e) => {
       if (e.originalEvent) keepViewRef.current = true;

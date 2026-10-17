@@ -102,7 +102,15 @@
     "entryMoved": "geo.ldas.jp（IIIF Georeference Viewer）はこの画面に移りました。主な URL の引数はそのまま使えます。",
     "entrySamples": "サンプル",
     "entrySampleTags": "タグと説明の付いた例（Canvas 単体の JSON）",
-    "entrySampleTagsNote": "東京帝國大學本部構内及農學部建物鳥瞰圖。一覧をタグで絞り込めます。"
+    "entrySampleTagsNote": "東京帝國大學本部構内及農學部建物鳥瞰圖。一覧をタグで絞り込めます。",
+    "linkType": {
+      "detail": "詳細",
+      "primaryTopicOf": "詳細ページ",
+      "exactMatch": "同一",
+      "closeMatch": "類似",
+      "seeAlso": "関連情報",
+      "subjectOf": "言及文献"
+    }
   },
   "Home": {
     "developers": "開発者",
