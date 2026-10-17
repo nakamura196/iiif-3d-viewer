@@ -89,6 +89,31 @@ export function viewingOf(manifest: unknown): ViewingInfo {
   };
 }
 
+export interface StepArrows {
+  /** 「前へ」の矢印 */
+  prev: string;
+  /** 「次へ」の矢印 */
+  next: string;
+  /** 横に並べたボタンで「次へ」を先（左）に置くか。右から左・下から上で true */
+  nextFirst: boolean;
+  /** 上下に読む向きか */
+  vertical: boolean;
+}
+
+/** 読む向きに合わせた、前へ／次へ の矢印と並べ方。 */
+export function stepArrows(direction: ViewingDirection): StepArrows {
+  switch (direction) {
+    case 'right-to-left':
+      return { prev: '→', next: '←', nextFirst: true, vertical: false };
+    case 'top-to-bottom':
+      return { prev: '↑', next: '↓', nextFirst: false, vertical: true };
+    case 'bottom-to-top':
+      return { prev: '↓', next: '↑', nextFirst: true, vertical: true };
+    default:
+      return { prev: '←', next: '→', nextFirst: false, vertical: false };
+  }
+}
+
 /** Canvas ごとの behavior（Canvas の id から引く）。 */
 export function canvasBehaviorsOf(manifest: unknown): Map<string, string[]> {
   const out = new Map<string, string[]>();

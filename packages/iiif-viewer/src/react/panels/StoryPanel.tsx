@@ -7,6 +7,7 @@ import {
   openingStep,
   sanitizeAnnotationHtml,
   stepText,
+  stepArrows,
   storyOf,
   viewingOf,
   type AnnotationBodyItem,
@@ -58,7 +59,7 @@ function StoryPanel({ manifest }: PanelContext) {
   const [frame, setFrame] = useAtom(storyFrameAtom);
   const [playing, setPlaying] = useAtom(storyPlayingAtom);
   const [caption, setCaption] = useAtom(storyCaptionAtom);
-  const rtl = viewingOf(manifest).direction === 'right-to-left';
+  const arrows = stepArrows(viewingOf(manifest).direction);
 
   // while this tab is shown, the annotation marks on the picture step back (see AnnotationOverlay)
   useEffect(() => {
@@ -124,24 +125,24 @@ function StoryPanel({ manifest }: PanelContext) {
   const button = 'px-3 py-1 rounded border border-[var(--ds-border)] text-sm disabled:opacity-40';
   const prevButton = (
     <button type="button" className={button} onClick={() => byHand(at - 1)} disabled={at <= 0}>
-      {rtl ? `${t('prev')} →` : `← ${t('prev')}`}
+      {arrows.nextFirst ? `${t('prev')} ${arrows.prev}` : `${arrows.prev} ${t('prev')}`}
     </button>
   );
   const nextButton = (
     <button type="button" className={button} onClick={() => byHand(at + 1)} disabled={at >= total - 1}>
-      {rtl ? `← ${t('next')}` : `${t('next')} →`}
+      {arrows.nextFirst ? `${arrows.next} ${t('next')}` : `${t('next')} ${arrows.next}`}
     </button>
   );
 
   return (
     <div className="p-3 space-y-3">
       <div className="flex items-center gap-2 flex-wrap">
-        {/* on a right-to-left scroll "next" sits on the left, as on the caption card */}
-        {rtl ? nextButton : prevButton}
+        {/* right to left and bottom to top put "next" first, as on the caption card */}
+        {arrows.nextFirst ? nextButton : prevButton}
         <span className="text-sm tabular-nums text-[var(--ds-fg)] opacity-70" aria-live="polite">
           {t('position', { n: at + 1, total })}
         </span>
-        {rtl ? prevButton : nextButton}
+        {arrows.nextFirst ? prevButton : nextButton}
         <button type="button" className={button} onClick={play} aria-pressed={playing}>
           {playing ? `❚❚ ${t('pause')}` : `▶ ${t('play')}`}
         </button>

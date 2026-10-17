@@ -6,6 +6,7 @@ import {
   chapterLabel,
   sanitizeAnnotationHtml,
   stepAt,
+  stepArrows,
   stepText,
   viewingOf,
   type AnnotationBodyItem,
@@ -175,7 +176,7 @@ function StoryLayerOpen({ container, stage }: OverlayProps) {
   const { heading, bodies } = stepText(step, locale);
   const chapter = story.chapters.find((c) => c.steps.includes(at));
   const chapterText = chapter && chapter.headStep !== at ? chapterLabel(chapter, locale) : '';
-  const rtl = viewingOf(manifest).direction === 'right-to-left';
+  const arrows = stepArrows(viewingOf(manifest).direction);
   const strip = scroll && scroll.canvasId === container.id ? scroll : null;
   const stripH = strip ? Math.min(48, Math.max(14, ((stage.boxW - MARGIN * 2) * strip.height) / strip.width)) : 0;
   const image = container.painting[0]?.options.find((o) => o.kind === 'Image')?.url;
@@ -191,9 +192,9 @@ function StoryLayerOpen({ container, stage }: OverlayProps) {
   };
   const ctl =
     'w-8 h-8 inline-flex items-center justify-center rounded-full text-white/90 hover:bg-white/15 disabled:opacity-30 disabled:hover:bg-transparent';
-  // the previous step lies to the right on a scroll read from right to left
-  const back = rtl ? '→' : '←';
-  const fore = rtl ? '←' : '→';
+  // the arrows follow the viewing direction (on a right-to-left scroll the previous step lies to the right)
+  const back = arrows.prev;
+  const fore = arrows.next;
 
   return (
     <div ref={root} className="absolute inset-0 pointer-events-none" data-story-layer>
@@ -223,8 +224,8 @@ function StoryLayerOpen({ container, stage }: OverlayProps) {
             ))}
           </div>
           <div className="flex items-center gap-1 px-2 py-1.5 border-t border-white/10">
-            {/* in reading order: on a right-to-left scroll "next" sits on the left */}
-            {(rtl
+            {/* in reading order: right to left and bottom to top put "next" first */}
+            {(arrows.nextFirst
               ? [
                   { key: 'next', label: t('next'), icon: fore, on: () => byHand(at + 1), off: at >= total - 1 },
                   { key: 'play', label: playing ? t('pause') : t('play'), icon: playing ? '❚❚' : '▶', on: toggle, off: false },
