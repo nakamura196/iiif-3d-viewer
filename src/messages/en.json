@@ -102,7 +102,15 @@
     "entryMoved": "geo.ldas.jp (IIIF Georeference Viewer) has moved here. Its main URL parameters still work.",
     "entrySamples": "Samples",
     "entrySampleTags": "Example with tags and descriptions (a single Canvas JSON)",
-    "entrySampleTagsNote": "Bird’s-eye view of the Imperial University campus. The list can be filtered by tag."
+    "entrySampleTagsNote": "Bird’s-eye view of the Imperial University campus. The list can be filtered by tag.",
+    "linkType": {
+      "detail": "Detail",
+      "primaryTopicOf": "Main page",
+      "exactMatch": "Same as",
+      "closeMatch": "Similar",
+      "seeAlso": "See also",
+      "subjectOf": "Mentioned in"
+    }
   },
   "Home": {
     "developers": "Developers",

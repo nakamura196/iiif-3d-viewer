@@ -40,7 +40,13 @@ export interface GeoFeature {
   type: 'Feature';
   geometry: { coordinates: [number, number]; type: 'Point' };
   /** resourceCoords: 3D の模型なら [x, y, z]、画像なら Canvas 座標の [x, y]。 */
-  properties: { title: string; resourceCoords: [number, number] | [number, number, number]; tags?: string[] };
+  properties: {
+    title: string;
+    resourceCoords: [number, number] | [number, number, number];
+    tags?: string[];
+    /** geo.ldas.jp の古い形式。links が無いときの「詳細」のリンク。 */
+    url?: string;
+  };
   /** geo.ldas.jp の古い形式。タグを properties ではなくここに書いていた。 */
   metadata?: { tags?: string[] };
   names?: GeoFeatureName[];
@@ -403,6 +409,34 @@ export const geoFeatureIdOf = (feature: GeoFeature, idx: number): string =>
 // The tags of a feature: properties.tags, or metadata.tags (geo.ldas.jp's older form).
 export const geoFeatureTagsOf = (feature: GeoFeature): string[] =>
   (feature.properties.tags ?? feature.metadata?.tags ?? []).filter((t): t is string => typeof t === 'string' && t !== '');
+
+/** 地点のリンク。type は Linked Places の関係（primaryTopicOf など）。properties.url から作ったものは 'detail'。 */
+export interface GeoFeatureLinkView {
+  type: string;
+  href: string;
+}
+
+// http(s) のリンクだけ通す（javascript: などをポップアップの href に入れない）
+const httpUrl = (s: unknown): string | null => {
+  if (typeof s !== 'string') return null;
+  try {
+    const u = new URL(s);
+    return u.protocol === 'http:' || u.protocol === 'https:' ? u.href : null;
+  } catch {
+    return null;
+  }
+};
+
+// The links of a feature: links (Linked Places), or properties.url (geo.ldas.jp's older form) as 'detail'.
+export const geoFeatureLinksOf = (feature: GeoFeature): GeoFeatureLinkView[] => {
+  const links = (Array.isArray(feature.links) ? feature.links : []).flatMap((link) => {
+    const href = httpUrl(link?.identifier);
+    return href ? [{ type: typeof link.type === 'string' && link.type ? link.type : 'detail', href }] : [];
+  });
+  if (links.length > 0) return links;
+  const url = httpUrl(feature.properties.url);
+  return url ? [{ type: 'detail', href: url }] : [];
+};
 
 export const geoFeaturesToAnnotations = (features: GeoFeature[]): Annotation[] =>
   features.map((feature, idx) => {
