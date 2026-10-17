@@ -21,6 +21,8 @@
 - OpenSeadragon は CDN ではなく npm の 4.1.1（元と同じ版）
 - 言語は `?lang=` ではなく Kasane の URL（`/ja/`・`/en/`）で決める
 - 描画の大きさは画面全体ではなく `#scene` の大きさ。クリック位置も描画領域の左上から測る
+- 3D の Scene は、Scene（無ければ Manifest）の `thumbnail` を絵として壁に掛ける。thumbnail が無い Scene は飛ばす。
+  拡大表示の「Kasane で開く」で、3D のままビューアに渡る
 
 ## URL で指定できること（元と同じ）
 
