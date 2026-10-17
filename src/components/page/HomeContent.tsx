@@ -168,7 +168,7 @@ export default function HomeContent() {
 
           <section className="mb-16">
             <SectionHeading>{t('specs')}</SectionHeading>
-            <ul className="space-y-3">
+            <ul className="grid md:grid-cols-2 gap-3">
               {specs.map((spec) => (
                 <li
                   key={spec.key}
