@@ -19,8 +19,6 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    # github-actions does not support semver-*-days; listing them makes the whole config invalid
     cooldown:
       default-days: 5
-      semver-major-days: 30
-      semver-minor-days: 7
-      semver-patch-days: 3
