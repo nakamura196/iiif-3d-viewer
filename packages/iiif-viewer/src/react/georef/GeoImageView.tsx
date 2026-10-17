@@ -24,6 +24,8 @@ import ImageView, { homeView, INITIAL_VIEW, maxScaleOf, rotatePoint, type StageI
 // clustering のとき、画面の上で近い地点を 1 つの印にまとめて件数を出す。押すと分かれるまで寄り、
 // 一番寄っても分かれない（同じ場所の）地点は名前の一覧を出す。選んだ地点はまとめずに上に出す。
 // 印は表示枠の座標で、見えている分だけ描く（数千件でも、動かすたびに全部を描き直さない）。
+// 範囲（box、geo.ldas.jp の xywh）のある地点は、印に加えて画像上に四角を描く。四角はまとめず、
+// 画像と一緒に回す。押すとその地点を選ぶ（印の下に置くので、印が先に押される）。
 
 export interface GeoImagePoint {
   id: string;
@@ -31,6 +33,8 @@ export interface GeoImagePoint {
   /** Canvas 座標。 */
   x: number;
   y: number;
+  /** 画像上の範囲（Canvas 座標）。あれば四角で描く。 */
+  box?: { x: number; y: number; w: number; h: number };
 }
 
 export interface GeoImageViewProps {
@@ -56,6 +60,8 @@ const MARKER = 14;
 const CLUSTER_RADIUS = 40;
 /** 表示枠の外でも、これだけ（px）はみ出た印までは描く（端で切れて見えないように）。 */
 const CULL_MARGIN = 40;
+/** これより小さく（画面の px）しか見えない四角は描かない（縮めたときに点が散らばらないように）。 */
+const BOX_MIN = 6;
 /** まとまりの印に名前を出す数。 */
 const TITLE_MAX = 5;
 
@@ -221,6 +227,34 @@ export default function GeoImageView({
       else setView(centerOn(stage, width, height, c.x, c.y, s, stage.rotation));
     };
 
+    // 範囲の四角。中心を表示枠に移し、大きさは拡大率を掛け、台と同じだけ回す
+    const boxes = points.flatMap((p) => {
+      if (!p.box) return [];
+      const w = p.box.w * unitPx * stage.scale;
+      const h = p.box.h * unitPx * stage.scale;
+      if (w < BOX_MIN && h < BOX_MIN) return [];
+      const at = project(p.box.x + p.box.w / 2, p.box.y + p.box.h / 2);
+      const reach = Math.hypot(w, h) / 2;
+      if (at[0] < -reach || at[1] < -reach || at[0] > stage.boxW + reach || at[1] > stage.boxH + reach) return [];
+      const selected = p.id === selectedId;
+      return [
+        <button
+          key={`box:${p.id}`}
+          type="button"
+          title={p.title}
+          aria-label={p.title}
+          tabIndex={-1}
+          data-georef-box={p.id}
+          {...stop}
+          onClick={() => onSelect(p.id)}
+          className={`absolute pointer-events-auto border-2 ${
+            selected ? 'border-red-500 bg-red-500/15' : 'border-blue-500 bg-blue-500/10 hover:bg-blue-500/25'
+          }`}
+          style={{ left: at[0], top: at[1], width: w, height: h, transform: `translate(-50%, -50%) rotate(${rot}deg)` }}
+        />,
+      ];
+    });
+
     const items = clustersFor(unitPx, stage.scale).flatMap((c) => {
       const at = project(c.x, c.y);
       if (!visible(at)) return [];
@@ -264,6 +298,7 @@ export default function GeoImageView({
     const listAt = list ? project(list.x, list.y) : null;
     return (
       <div className="absolute inset-0 pointer-events-none overflow-hidden" data-georef-marks>
+        {boxes}
         {items}
         {selectedPoint && selectedAt && visible(selectedAt) && (
           <button

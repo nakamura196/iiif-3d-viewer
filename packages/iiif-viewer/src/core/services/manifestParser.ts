@@ -40,9 +40,17 @@ export interface GeoFeature {
   type: 'Feature';
   geometry: { coordinates: [number, number]; type: 'Point' };
   /** resourceCoords: 3D の模型なら [x, y, z]、画像なら Canvas 座標の [x, y]。 */
-  properties: { title: string; resourceCoords: [number, number] | [number, number, number]; tags?: string[] };
-  /** geo.ldas.jp の古い形式。タグを properties ではなくここに書いていた。 */
-  metadata?: { tags?: string[] };
+  properties: {
+    title: string;
+    resourceCoords: [number, number] | [number, number, number];
+    tags?: string[];
+    /** 画像上の範囲（Canvas 座標の "x,y,w,h"）。geo.ldas.jp は四角で描く。 */
+    xywh?: string;
+  };
+  /** geo.ldas.jp の古い形式。タグや範囲を properties ではなくここに書いていた。 */
+  metadata?: { tags?: string[]; xywh?: string };
+  /** geo.ldas.jp のさらに古い形式（範囲を地物の直下に書く）。 */
+  xywh?: string;
   names?: GeoFeatureName[];
   links?: GeoFeatureLink[];
   depictions?: GeoFeatureDepiction[];
@@ -403,6 +411,27 @@ export const geoFeatureIdOf = (feature: GeoFeature, idx: number): string =>
 // The tags of a feature: properties.tags, or metadata.tags (geo.ldas.jp's older form).
 export const geoFeatureTagsOf = (feature: GeoFeature): string[] =>
   (feature.properties.tags ?? feature.metadata?.tags ?? []).filter((t): t is string => typeof t === 'string' && t !== '');
+
+export interface GeoFeatureBox {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+// The box of a feature on the picture (Canvas coordinates): properties.xywh, metadata.xywh,
+// or xywh on the feature itself (geo.ldas.jp's older forms). A "pixel:" prefix (as in a media
+// fragment) is allowed; "percent:" and anything that does not give 4 numbers with a positive
+// width and height are not boxes.
+export const geoFeatureBoxOf = (feature: GeoFeature): GeoFeatureBox | null => {
+  const raw = feature.properties.xywh ?? feature.metadata?.xywh ?? feature.xywh;
+  if (typeof raw !== 'string') return null;
+  const body = raw.trim().replace(/^xywh=/, '').replace(/^pixel:/, '');
+  const nums = body.split(',').map((v) => (v.trim() === '' ? NaN : Number(v)));
+  if (nums.length !== 4 || nums.some((n) => !Number.isFinite(n))) return null;
+  const [x, y, w, h] = nums;
+  return w > 0 && h > 0 ? { x, y, w, h } : null;
+};
 
 export const geoFeaturesToAnnotations = (features: GeoFeature[]): Annotation[] =>
   features.map((feature, idx) => {
