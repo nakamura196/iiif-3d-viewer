@@ -81,8 +81,13 @@ const SCENES = [
   },
   {
     x: [6670, 9590],
-    ja: ['妻、秀武にかみつく', '外へ出た秀武を妻が待ち伏せ、かみつく。周りの人々は逃げまどう。'],
-    en: ['The wife bites Hidetake', 'When Hidetake goes out, the wife ambushes him and bites him. Bystanders flee.'],
+    ja: ['妻、秀武にかみつく', '路上で秀武に出会った妻が、夫をだました仕返しに、その腕にかみつく。子どもが止めに駆け寄り、別の子どもは逃げ出す。'],
+    en: ['The wife bites Hidetake', 'Meeting Hidetake in the street, the wife takes her revenge for the trick played on her husband and bites his arm. A child runs to stop her; another runs away.'],
+  },
+  {
+    x: [0, 6670],
+    ja: ['見物する町の人々', 'この騒ぎに、町の人々が足を止める。指さして笑う若者、杖をついて語り合う老人たち、吠える犬。新しい出来事は起こらず、絵巻は見物人の姿で終わる。'],
+    en: ['The townspeople look on', 'The commotion stops people in the street: young men point and laugh, two old men with staffs talk it over, a dog barks. Nothing further happens; the scroll ends with the onlookers.'],
   },
 ];
 
@@ -92,14 +97,14 @@ const INTRO = {
     'この絵巻は、手っ取り早く富を得ようとした男が、音を奏でる放屁の芸を習おうとする奇妙な話の後半を描いている。大事な芸の前に、師匠であり商売敵でもある男が、下剤である朝顔の種を飲むよう勧める。男は芸の最中に粗相し、恥辱のうちに生涯を終える。',
     '大胆な筋立てと、生き生きと描かれた人物のすぐ脇に台詞を書き込む描き方は、初期のグラフィック・ノベルといえる。この絵巻は、この話の現存する本のうち 2 番目に古い。',
     '室町時代・15 世紀半ば。紙本著色、画面 35.3 × 1028.8 cm。右から左へ、場面を順にたどる。',
-    '出典：この「はじめに」の 3 段落は、クリーブランド美術館の作品ページの解説（英語、CC0、2026 年 10 月 16 日に同館の Open Access API から取得）を、AI（Claude）で日本語に訳したもの。次からの 12 場面の区切りと解説は、同館の解説には無いため、コトバンク（日本大百科全書ほか）と兵庫県立歴史博物館の解説で筋を確かめ、絵を見て新たに書いた（AI で下書き）。',
+    '出典：この「はじめに」の最初の 2 段落は、クリーブランド美術館の作品ページの解説（英語、CC0、2026 年 10 月 16 日に同館の Open Access API から取得）を、AI（Claude）で日本語に訳したもの。3 段落目は同館の作品情報による。次からの 13 場面の区切りと解説は、同館の解説には無いため、コトバンク（日本大百科全書ほか）・兵庫県立歴史博物館の解説・大阪大谷大学の論文で筋を確かめ、絵を見て新たに書いた（AI で下書き）。',
   ],
   en: [
     'The Story of Fukutomi (Cleveland Museum of Art)',
     'This handscroll shows the second half of an odd tale in which a ne’er-do-well seeks the path to quick fortune and learns the art of musical flatulence. Prior to a major performance, a mentor (and competitor) advises him to consume morning glory seeds, a laxative. Thus, while performing he fouls himself and ends his days in humiliation.',
     'The audacious nature of this story and its presentation—well-animated figures with dialogue adjacent to the appropriate moments of action—create a primitive graphic novel. This scroll is treasured as the second oldest surviving version of this story.',
     'Japan, Muromachi period, mid-1400s. Handscroll; ink and color on paper, image 35.3 × 1028.8 cm. Follow the scenes from right to left.',
-    'Source: the first two paragraphs are the Cleveland Museum of Art’s object description (CC0, retrieved from its Open Access API on 16 October 2026), slightly shortened. The museum gives no scene-by-scene text, so the twelve scene divisions and texts that follow are new, drafted with AI (Claude) after checking the plot against Kotobank (Nihon Daihyakka Zensho and others) and the Hyogo Prefectural Museum of History.',
+    'Source: the first two paragraphs are the Cleveland Museum of Art’s object description (CC0, retrieved from its Open Access API on 16 October 2026), slightly shortened; the third is from the museum’s catalogue data. The museum gives no scene-by-scene text, so the thirteen scene divisions and texts that follow are new, drafted with AI (Claude) after checking the plot against Kotobank (Nihon Daihyakka Zensho and others), the Hyogo Prefectural Museum of History and a paper from Osaka Ohtani University.',
   ],
 };
 
@@ -138,8 +143,8 @@ const manifest = {
   requiredStatement: {
     label: { ja: ['出典'], en: ['Source'] },
     value: {
-      ja: [`画像・解説：クリーブランド美術館（CC0、${OBJECT_URL}）。「はじめに」は解説を AI（Claude）で訳したもの。場面の区切りと解説は中村 覚（東京大学）が AI（Claude）を用いて新たに作成。筋はコトバンク「福富草紙」（${KOTOBANK_URL}）と兵庫県立歴史博物館「福富草紙」（${HYOGO_URL}）のあらすじ（一巻本）、人名の割り振りは大阪大谷大学の論文（${OHTANI_URL}）による伝本の分け方を参考にした。場面の並び（腰を踏む妻・祈祷する妻・排便する翁・薬を請う妻）はコトバンク・兵庫県立歴史博物館の解説による`],
-      en: [`Image and description: The Cleveland Museum of Art (CC0, ${OBJECT_URL}). Scene divisions and scene texts are new, by Satoru Nakamura (The University of Tokyo) with AI (Claude), with reference to Kotobank (${KOTOBANK_URL}) and the plot summary (one-scroll version) by the Hyogo Prefectural Museum of History (${HYOGO_URL}) and, for the names, the classification of versions in a paper from Osaka Ohtani University (${OHTANI_URL}). The order of scenes 9–11 follows Kotobank and the Hyogo museum’s commentary`],
+      ja: [`画像・解説：クリーブランド美術館（CC0、${OBJECT_URL}）。「はじめに」は解説を AI（Claude）で訳したもの。場面の区切りと解説は中村 覚（東京大学）が AI（Claude）を用いて新たに作成。筋はコトバンク「福富草紙」（${KOTOBANK_URL}）と兵庫県立歴史博物館「福富草紙」（${HYOGO_URL}）のあらすじ（一巻本）、人名の割り振りは大阪大谷大学の論文（${OHTANI_URL}）による伝本の分け方を参考にした。場面の並び（腰を踏む妻・祈祷する妻・排便する翁・薬を請う妻）はコトバンク・兵庫県立歴史博物館の解説による。かみつく場面の周りの人々（場面 12・13）は同じ論文の春浦院本の記述を参考にした`],
+      en: [`Image and description: The Cleveland Museum of Art (CC0, ${OBJECT_URL}). Scene divisions and scene texts are new, by Satoru Nakamura (The University of Tokyo) with AI (Claude), with reference to Kotobank (${KOTOBANK_URL}) and the plot summary (one-scroll version) by the Hyogo Prefectural Museum of History (${HYOGO_URL}) and, for the names, the classification of versions in a paper from Osaka Ohtani University (${OHTANI_URL}). The order of scenes 9–11 follows Kotobank and the Hyogo museum’s commentary; the onlookers around the biting (scenes 12–13) follow the same paper’s description of the Shun’poin version`],
     },
   },
   rights: 'http://creativecommons.org/publicdomain/zero/1.0/',

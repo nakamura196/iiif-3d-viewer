@@ -375,8 +375,8 @@ export const USE_CASES: UseCase[] = [
       en: 'Following the Tale of Fukutomi through one handscroll, Cleveland Museum of Art (story)',
     },
     note: {
-      ja: '長さ 76,716 ピクセルの絵巻 1 枚を、右から左へ 12 の場面に分けたストーリーです。「次へ」を押すと、巻物を繰るように次の場面へ寄り、その場面の解説を読めます。解説は日英の 2 か国語で、画面の言語に合わせて切り替わります。画像は美術館の CC0 の画像を IIIF のタイルにしたものです。',
-      en: 'A story that divides a single 76,716-pixel handscroll into twelve scenes, read from right to left. Press Next to glide to the next scene, as if unrolling the scroll, and read its commentary. The text is in Japanese and English and follows the language of the interface. The image is the museum’s CC0 photograph, tiled for IIIF.',
+      ja: '長さ 76,716 ピクセルの絵巻 1 枚を、右から左へ 13 の場面に分けたストーリーです。「次へ」を押すと、巻物を繰るように次の場面へ寄り、その場面の解説を読めます。解説は日英の 2 か国語で、画面の言語に合わせて切り替わります。画像は美術館の CC0 の画像を IIIF のタイルにしたものです。',
+      en: 'A story that divides a single 76,716-pixel handscroll into thirteen scenes, read from right to left. Press Next to glide to the next scene, as if unrolling the scroll, and read its commentary. The text is in Japanese and English and follows the language of the interface. The image is the museum’s CC0 photograph, tiled for IIIF.',
     },
     open: { page: 'viewer', manifest: `${SITE_URL}/manifests/cma-fukutomi-story.json`, tab: 'story' },
     features: ['image', 'annotations', 'story'],
