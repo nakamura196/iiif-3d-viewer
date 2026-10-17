@@ -380,6 +380,7 @@ export const USE_CASES: UseCase[] = [
     },
     open: { page: 'viewer', manifest: `${SITE_URL}/manifests/cma-fukutomi-story.json`, tab: 'story' },
     features: ['image', 'annotations', 'story'],
+    video: { ja: '2woP78hHCs8', en: '2T5SDTOdcMg' },
     site: 'https://www.clevelandart.org/art/1953.358',
   },
   {
