@@ -496,6 +496,7 @@ export const USE_CASES: UseCase[] = [
       tab: 'inference',
     },
     features: ['image', 'inference'],
+    video: { ja: 'RCZvHpaHSc8', en: 'rRyTJmxkckM' },
     site: 'https://nakamura196.github.io/ndl-face-finder/',
   },
   {
