@@ -11,16 +11,20 @@ import {
   findContentSearchService,
   groupMatchesByCanvas,
   labelIn,
-  manifestHasCanvasAnnotations,
+  manifestHasSearchableText,
   readCanvasAnnotations,
   runContentSearch,
   searchLocalAnnotations,
+  searchTranscripts,
+  transcriptFilesOf,
+  type TranscriptSource,
   type LocalSearchSource,
   type ContentSearchMatch,
   type ContentSearchResult,
   type ContentSearchService,
   type ContentSearchTerm,
 } from '../../core';
+import { fmt } from '../displays/TranscriptPanel';
 import { navRequestAtom, nextSeq } from '../displays/structureState';
 import { useLocale, useTranslations } from '../env';
 import { inferenceResultsAtom } from '../inference/state';
@@ -30,7 +34,8 @@ import type { Panel, PanelContext } from './types';
 
 // 資料の中の文字を探す。探す先は 2 つ:
 // - 窓口（IIIF Content Search API 1.0 / 2.0）。マニフェストの service に書かれたもの
-// - 手元の注釈。マニフェストの注釈（参照だけのページは取りに行く）と、ブラウザ内の推論の結果
+// - 手元の注釈。マニフェストの注釈（参照だけのページは取りに行く）と、ブラウザ内の推論の結果、
+//   字幕・文字起こしのファイル（WebVTT と text/plain。字幕の当たりは押すとその時刻へ移る）
 // 当たりは一覧に出し、画像の上にも印を出す（推論の結果と同じ「手元の注釈」の仕組みを使う）。
 // 押すとそのページに移り、当たった所へ寄る。単位（行・語）が書いてあれば、それで絞り込める。
 
@@ -78,6 +83,12 @@ const fetchJson = async (url: string): Promise<unknown> => {
   return r.json();
 };
 
+const fetchText = async (url: string): Promise<string> => {
+  const r = await fetch(url, { credentials: 'omit' });
+  if (!r.ok) throw new Error(`HTTP ${r.status}`);
+  return r.text();
+};
+
 const urlParam = (name: string): string => {
   if (typeof window === 'undefined') return '';
   return new URLSearchParams(window.location.search).get(name)?.trim() ?? '';
@@ -94,9 +105,12 @@ const localSearchPages = (local: LocalAnnotationPage[], inference: Record<string
   return out;
 };
 
-/** 手元の注釈で探せるか（タブを出すか）。3D の Scene では探さない。 */
+/**
+ * 手元で探せるか（タブを出すか）。3D の Scene では探さない。
+ * 字幕のファイルを指すだけの注釈しか無い資料（Cookbook 0219 など）では、探せる文字が無いので出さない。
+ */
 const canSearchLocal = ({ container, manifest, localAnnotationCount }: PanelContext) =>
-  container?.kind === 'Canvas' && (manifestHasCanvasAnnotations(manifest) || (localAnnotationCount ?? 0) > 0);
+  container?.kind === 'Canvas' && (manifestHasSearchableText(manifest) || (localAnnotationCount ?? 0) > 0);
 
 const granularityRank = (g: string) => {
   const i = (TEXT_GRANULARITIES as readonly string[]).indexOf(g);
@@ -176,17 +190,35 @@ export function ContentSearchPanelBody(ctx: PanelContext) {
     setState({ run, manifestId, q: word, scope: where, status: 'running' });
     if (where === 'local') {
       const pages = localSearchPages(local, inference);
-      collectManifestAnnotations(manifest, fetchPage, {
-        signal: ctl.signal,
-        onProgress: (done, total) => total > 0 && put({ status: 'running', progress: { done, total } }),
-      }).then(
-        ({ sources, failed, skipped }) => {
+      // 字幕・文字起こしのファイルは注釈と並行して読む。読めなかったものは「読み込めなかった」の数に入れる
+      const transcripts = Promise.all(
+        transcriptFilesOf(manifest).map((f) =>
+          fetchText(f.url).then(
+            (text): TranscriptSource => ({ ...f, text }),
+            () => null,
+          ),
+        ),
+      );
+      Promise.all([
+        collectManifestAnnotations(manifest, fetchPage, {
+          signal: ctl.signal,
+          onProgress: (done, total) => total > 0 && put({ status: 'running', progress: { done, total } }),
+        }),
+        transcripts,
+      ]).then(
+        ([{ sources, failed, skipped }, files]) => {
           const fromLocal: LocalSearchSource[] = pages.map((l) => ({
             canvasId: l.canvasId,
             annotations: readCanvasAnnotations(l.canvasId, [l.page]),
           }));
-          const matches = searchLocalAnnotations([...sources, ...fromLocal], word, MAX_MATCHES);
-          put({ status: 'done', result: { matches, truncated: matches.length >= MAX_MATCHES }, missed: failed + skipped });
+          const found = searchLocalAnnotations([...sources, ...fromLocal], word, MAX_MATCHES);
+          const read = files.filter((f): f is TranscriptSource => f !== null);
+          const matches = [...found, ...searchTranscripts(read, word, MAX_MATCHES - found.length)];
+          put({
+            status: 'done',
+            result: { matches, truncated: matches.length >= MAX_MATCHES },
+            missed: failed + skipped + (files.length - read.length),
+          });
         },
         () => put({ status: 'error' }),
       );
@@ -261,6 +293,11 @@ export function ContentSearchPanelBody(ctx: PanelContext) {
 
   const open = (m: ContentSearchMatch) => {
     setSelected(m.id);
+    // 字幕の当たりは、その Canvas のその時刻へ
+    if (m.time) {
+      setRequest({ seq: nextSeq(), target: { canvasId: m.canvasId, t: m.time } });
+      return;
+    }
     const box = m.regions.find((r) => r.canvasId === m.canvasId && r.xywh)?.xywh;
     setRequest({ seq: nextSeq(), target: { canvasId: m.canvasId, ...(box ? { xywh: box } : {}) } });
   };
@@ -372,10 +409,13 @@ export function ContentSearchPanelBody(ctx: PanelContext) {
           ) : null}
           {result && matches.length > 0 ? (
             <div className="flex flex-wrap items-center gap-2">
-              <label className="inline-flex items-center gap-1 text-xs">
-                <input type="checkbox" checked={showMarks} onChange={(e) => setShowMarks(e.target.checked)} />
-                {t('showOnImage')}
-              </label>
+              {/* 字幕の当たりには画像の上の印が無いので、印の出る当たりがあるときだけ */}
+              {matches.some((m) => m.regions.length > 0) ? (
+                <label className="inline-flex items-center gap-1 text-xs">
+                  <input type="checkbox" checked={showMarks} onChange={(e) => setShowMarks(e.target.checked)} />
+                  {t('showOnImage')}
+                </label>
+              ) : null}
               <button type="button" className={BUTTON} onClick={copyLink}>
                 {copied ? t('copied') : t('copyLink')}
               </button>
@@ -429,7 +469,13 @@ export function ContentSearchPanelBody(ctx: PanelContext) {
                       : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
                   }`}
                 >
+                  {m.time ? (
+                    <span className="mr-2 text-xs tabular-nums text-blue-700 dark:text-blue-300">{fmt(m.time[0])}</span>
+                  ) : null}
                   <MatchText match={m} />
+                  {m.transcript && !m.time ? (
+                    <span className="ml-2 text-[10px] text-gray-500 dark:text-gray-400">{t('transcriptFile')}</span>
+                  ) : null}
                   {m.granularity ? (
                     <span className="ml-2 text-[10px] text-gray-500 dark:text-gray-400">
                       {(TEXT_GRANULARITIES as readonly string[]).includes(m.granularity) ? t(`granularity_${m.granularity}`) : m.granularity}
@@ -451,7 +497,7 @@ export function ContentSearchPanelBody(ctx: PanelContext) {
 }
 
 // 文字の検索。マニフェストに検索の窓口（SearchService2 / SearchService1）が書かれているか、
-// 手元に探せる注釈（マニフェストの注釈・推論の結果）があるときに出す。
+// 手元に探せる文字（本文のある注釈・推論の結果・字幕と文字起こしのファイル）があるときに出す。
 export const contentSearchPanel: Panel = {
   id: 'contentSearch',
   // 書き起こし（70）と Canvas の注釈（80）の間
