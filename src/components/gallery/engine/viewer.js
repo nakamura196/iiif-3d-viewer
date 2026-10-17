@@ -3,7 +3,7 @@
 
 import OpenSeadragon from "openseadragon";
 import { G, $, IDLE_MS, labelHtml, escapeHtml } from "./state.js";
-import { t } from "./i18n.js";
+import { t, getLang } from "./i18n.js";
 
 export function isOverlayOpen() {
   return $("#osd-overlay").classList.contains("show");
@@ -41,6 +41,31 @@ function renderPanel(wallCfg) {
   info.style.display = has ? "" : "none"; // 情報が無ければ ⓘ を隠す
 }
 
+// IIIF Content State(Annotation)を base64url にする。Kasane のビューアは
+// ?iiif-content= でこれを読み、マニフェストを開いて target の Canvas(と #xywh の範囲)を表示する
+function contentStateParam({ manifest, canvas }) {
+  const json = JSON.stringify({
+    "@context": "http://iiif.io/api/presentation/3/context.json",
+    type: "Annotation",
+    motivation: ["contentState"],
+    target: { id: canvas, type: "Canvas", partOf: [{ id: manifest, type: "Manifest" }] },
+  });
+  const bytes = new TextEncoder().encode(json);
+  let bin = "";
+  bytes.forEach((b) => (bin += String.fromCharCode(b)));
+  return btoa(bin).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+}
+
+// 「Kasane で開く」: 元のマニフェストが分かる作品だけ出す(config の単品画像などは出さない)
+function renderKasaneLink(wallCfg) {
+  const a = $("#osd-kasane");
+  if (!a) return;
+  const origin = wallCfg.origin;
+  a.classList.toggle("show", !!origin);
+  if (origin) a.href = `${G.basePath}/${getLang()}/viewer/?iiif-content=${contentStateParam(origin)}`;
+  else a.removeAttribute("href");
+}
+
 // フェードの長さ(gallery.css の #osd-overlay の transition と揃える)
 const FADE_MS = 250;
 let fadeTimer = null;
@@ -50,6 +75,7 @@ export function openViewer(wallCfg, resolved) {
   $("#osd-overlay").classList.add("show"); // CSS で FADE_MS かけて現れる
   $("#osd-title").innerHTML = labelHtml(wallCfg);
   renderPanel(wallCfg);
+  renderKasaneLink(wallCfg);
   $("#osd-panel").classList.remove("show"); // 既定は閉じる(ⓘで開く)
   G.pendingRegion = resolved.region || null;
 
