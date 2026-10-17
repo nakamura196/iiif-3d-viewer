@@ -236,7 +236,7 @@ export const USE_CASES: UseCase[] = [
     },
     note: {
       ja: '人物の目の描き方が違う 2 つの版（引目・開目）から、同じ人物の箇所を切り出したキュレーション 2 本を、組ごとに送って見比べます。位置は事前に合わせてあり、紙の伸び縮みによる局所的なずれも補正しています。「色分け」や「差」で重ねると、本文はほぼ消え、目や冠など描き方の違う所だけが浮かびます。所蔵: 大阪公立大学中百舌鳥図書館（引目）、奈良女子大学学術情報センター（開目）、提供: 国文学研究資料館。',
-      en: 'Two curations cut from two editions of the Genji Hyakunin Isshu that draw the eyes differently (hikime and kaimoku), stepped through pair by pair. The pairs are pre-aligned, including local correction for paper stretch. Overlaid with Tint or Difference, the text nearly vanishes and only what is drawn differently — eyes, headgear — stands out. Holdings: Osaka Metropolitan University Nakamozu Library (hikime) and Nara Women’s University Academic Information Center (kaimoku), provided by the National Institute of Japanese Literature.',
+      en: 'Two curations cut from two editions of the Genji Hyakunin Isshu that draw the eyes differently (hikime and kaimoku), stepped through pair by pair. The pairs are pre-aligned, including local correction for paper stretch. Overlaid with Colours or Difference, the text nearly vanishes and only what is drawn differently — eyes, headgear — stands out. Holdings: Osaka Metropolitan University Nakamozu Library (hikime) and Nara Women’s University Academic Information Center (kaimoku), provided by the National Institute of Japanese Literature.',
     },
     open: {
       page: 'compare',
@@ -249,6 +249,7 @@ export const USE_CASES: UseCase[] = [
       align: `${SITE_URL}/data/align/genji-hyakunin.json`,
     },
     features: ['image', 'compare', 'curation'],
+    video: { ja: 'DwSaF5YSNCk', en: 'mxe0RRMGbaE' },
     site: 'https://genji.lib.u-tokyo.ac.jp/',
   },
   {
