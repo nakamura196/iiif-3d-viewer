@@ -25,6 +25,9 @@ v4 form directly (Scene, PointSelector / WKTSelector, PerspectiveCamera).
   Canvas の service に `physicalScale`（1 ピクセルあたりの実寸）と `physicalUnits` を持つ画像。
   元は mirador-physical-ruler の `demo/`。画像は東京大学の IIIF サーバから読む。経緯は `docs/notes/physdim-ruler.md`
 
+- `ndl-emaki-story.json` - 国立国会図書館の電子展示会「絵巻の世界」第2章第2節を、ストーリー（describing 注釈を順に読む）にしたもの。
+  8 資料・10 段・2 章（Range）。本文と場面の領域は展示会のページのまま。`scripts/build-ndl-emaki-story.mjs` で作り直す。経緯は `docs/notes/storytelling.md`
+
 - `youtube-tutorials/` - YouTube の動画を IIIF の Video として参照する例。`collection.json` に日本語版・英語版のマニフェスト 2 件、各 4 本（IIIF Kasane の使い方動画、作成は中村 覚）。
   字幕は動画を作ったときの WebVTT を複製した。YouTube 側は限定公開
 

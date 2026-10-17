@@ -29,7 +29,8 @@ export const baseImageLayerOf = (manifest: ManifestV4 | null | undefined, contai
   return undefined;
 };
 
-const urlFor = async (layer: ImageLayer, longSide: number): Promise<string> => {
+/** The image URL at most `longSide` on the long side (IIIF Image API when there is one). Also used by the puzzle. */
+export const sourceImageUrl = async (layer: ImageLayer, longSide: number): Promise<string> => {
   if (!layer.service) return layer.url;
   const res = await fetch(imageInfoUrl(layer.service));
   const info = res.ok ? parseImageInfo(await res.json()) : null;
@@ -51,7 +52,7 @@ export const loadSourceImage = async (
   let url: string;
   let bitmap: ImageBitmap;
   try {
-    url = await urlFor(layer, longSide);
+    url = await sourceImageUrl(layer, longSide);
     const res = await fetch(url, { mode: 'cors', credentials: 'omit' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const blob = await res.blob();

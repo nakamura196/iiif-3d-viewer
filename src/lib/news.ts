@@ -37,6 +37,22 @@ const viewer = (manifest: string, params: string) =>
 
 export const NEWS: NewsItem[] = [
   {
+    id: 'puzzle-tab',
+    date: '2026-10-16',
+    title: {
+      ja: '表示中の画像でジグソーパズルができるようになりました',
+      en: 'Turn the current image into a jigsaw puzzle',
+    },
+    body: {
+      ja: '右のパネルに「パズル」タブを足しました。マスの数を選んで「はじめる」を押すと、表示中の画像が切り分けられて混ざります。2 つのピースを順に押す（またはドラッグする）と入れ替わり、元の絵に戻せば完成です。',
+      en: 'A new Puzzle tab in the right-hand panel. Choose a grid and press Start, and the current image is cut up and shuffled. Click two pieces in turn (or drag one onto another) to swap them, and finish by putting the picture back together.',
+    },
+    action: {
+      href: viewer('https://purl.stanford.edu/hs631zg4177/iiif/manifest', 'tab=puzzle'),
+    },
+    usecases: ['puzzle-kuniezu'],
+  },
+  {
     id: 'inference-ppocr-v6',
     date: '2026-10-16',
     title: {
@@ -212,12 +228,11 @@ export const NEWS: NewsItem[] = [
       en: 'A new Story tab',
     },
     body: {
-      ja: 'マニフェストの注釈を順に送りながら、その場面に寄って説明を読めます。倭寇図巻などの、既にあるストーリー用のマニフェストをそのまま開けます。',
-      en: 'Step through the annotations of a manifest, gliding to each scene as you read. Existing tour manifests such as the Wakō zukan story open as they are.',
+      ja: 'マニフェストの注釈を順に送りながら、その場面に寄って説明を読めます。既にあるストーリー用のマニフェストも、そのまま開けます。',
+      en: 'Step through the annotations of a manifest, gliding to each scene as you read. Existing tour manifests open as they are.',
     },
-    action: { href: hrefOfUseCase('wakozukan-story') },
-    usecases: ['wakozukan-story'],
-    video: { ja: 'VDXuQE6P34s', en: 'fXIwtvfEZ-Q' },
+    action: { href: hrefOfUseCase('ndl-emaki-story') },
+    usecases: ['ndl-emaki-story'],
   },
   {
     id: 'inference-ocr',

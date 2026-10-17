@@ -61,7 +61,7 @@ export type UseCaseOpen =
     };
 
 /** 何を見せる例か。一覧に札として出す。表示名は messages の UseCases.features */
-export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'search', 'ocr', 'auth', 'story', 'audio', 'measure', 'gallery', 'inference'] as const;
+export const USE_CASE_FEATURES = ['image', '3d', 'annotations', 'compare', 'layers', 'georef', 'curation', 'search', 'ocr', 'auth', 'story', 'audio', 'measure', 'gallery', 'inference', 'puzzle'] as const;
 export type UseCaseFeature = (typeof USE_CASE_FEATURES)[number];
 
 export interface UseCase {
@@ -368,25 +368,19 @@ export const USE_CASES: UseCase[] = [
     site: 'https://www.digitale-sammlungen.de/view/bsb00026283',
   },
   {
-    id: 'wakozukan-story',
-    added: '2026-10-14',
+    id: 'ndl-emaki-story',
+    added: '2026-10-16',
     title: {
-      ja: '東京大学史料編纂所「倭寇図巻」（ストーリー）',
-      en: 'Wakō zukan, Historiographical Institute, The University of Tokyo (story)',
+      ja: '国立国会図書館「絵巻の世界」の異界の場面（ストーリー）',
+      en: 'Scenes of other worlds from the NDL exhibition “Emaki no Sekai” (story)',
     },
     note: {
-      ja: '長さ 90,000 px を超える絵巻を、ストーリータブで開きます。「次へ」を押すと、場面ごとにその部分へ寄りながら説明を読み進められます。説明は IIIF のマニフェストに書かれた注釈そのもので、専用の形式は使っていません。',
-      en: 'A handscroll over 90,000 px long, opened in the Story tab. Press Next to glide to each scene and read its description. The tour is just the annotations written in the IIIF manifest, with no special format.',
+      ja: '国立国会図書館の電子展示会「絵巻の世界」の一節を、ストーリーとして読めるマニフェストにしました。鳥獣戯画や百鬼夜行絵巻など 8 点の絵巻を、ストーリータブで開きます。「次へ」を押すと、資料をまたいで展示箇所へ寄りながら、展示会の解説を読み進められます。',
+      en: 'A section of the National Diet Library online exhibition “Emaki no Sekai”, turned into a manifest you read as a story. It opens eight handscrolls, including Chōjū giga and Hyakki yagyō emaki, in the Story tab. Press Next to move across the scrolls to each exhibited scene and read the exhibition’s commentary (in Japanese).',
     },
-    open: {
-      page: 'viewer',
-      manifest: 'https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/data/cp/story/m.json',
-      tab: 'story',
-    },
+    open: { page: 'viewer', manifest: `${SITE_URL}/manifests/ndl-emaki-story.json`, tab: 'story' },
     features: ['image', 'annotations', 'story'],
-    site: 'https://www.hi.u-tokyo.ac.jp/collection/digitalgallery/wakozukan/',
-    // 動画はお知らせ story-tab と同じ（同じ倭寇図巻をストーリータブで読む）
-    video: { ja: 'VDXuQE6P34s', en: 'fXIwtvfEZ-Q' },
+    site: 'https://www.ndl.go.jp/d_exhibitions/emaki/22',
   },
   {
     id: 'wellcome-auth',
@@ -503,6 +497,20 @@ export const USE_CASES: UseCase[] = [
     },
     features: ['image', 'inference'],
     site: 'https://nakamura196.github.io/ndl-face-finder/',
+  },
+  {
+    id: 'puzzle-kuniezu',
+    added: '2026-10-16',
+    title: {
+      ja: '近江国絵図（天保国絵図の写し）でジグソーパズル',
+      en: 'A jigsaw puzzle of the Ōmi provincial map (a copy of the Tenpō kuniezu)',
+    },
+    note: {
+      ja: 'スタンフォード大学図書館が所蔵する近江国絵図（天保国絵図の写し）を、右の「パズル」タブでジグソーパズルにします。マスの数（3 × 3〜8 × 8）を選んで「はじめる」を押すと、画像が切り分けられて混ざります。2 つのピースを順に押すと入れ替わり、元の絵に戻せば完成です。ほかの資料でも、開いてこのタブを選べば同じように遊べます。所蔵: スタンフォード大学図書館。',
+      en: 'A copy of the Tenpō provincial map of Ōmi, held by Stanford University Libraries, turned into a jigsaw puzzle in the Puzzle tab on the right. Choose a grid (3 × 3 to 8 × 8) and press Start to cut up and shuffle the image. Click two pieces in turn to swap them, and finish by putting the picture back together. Any other image works the same way: open it and pick this tab. Holder: Stanford University Libraries.',
+    },
+    open: { page: 'viewer', manifest: 'https://purl.stanford.edu/hs631zg4177/iiif/manifest', tab: 'puzzle' },
+    features: ['image', 'puzzle'],
   },
 ];
 

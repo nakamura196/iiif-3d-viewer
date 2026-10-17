@@ -20,6 +20,7 @@ import {
   parseManifestV4,
   geoAnnotations,
   geoCanvasesOf,
+  geoFeatureBoxOf,
   geoFeatureIdOf,
   overlayCorners,
   filterGeorefFeatures,
@@ -239,12 +240,16 @@ const GeoRefContent: NextPage = () => {
 
   const imagePoints = useMemo(
     () =>
-      geoFeatures.map((f, idx) => ({
-        id: geoFeatureIdOf(f, idx),
-        title: f.properties.title,
-        x: f.properties.resourceCoords[0],
-        y: f.properties.resourceCoords[1],
-      })),
+      geoFeatures.map((f, idx) => {
+        const box = geoFeatureBoxOf(f);
+        return {
+          id: geoFeatureIdOf(f, idx),
+          title: f.properties.title,
+          x: f.properties.resourceCoords[0],
+          y: f.properties.resourceCoords[1],
+          ...(box ? { box } : {}),
+        };
+      }),
     [geoFeatures]
   );
 

@@ -46,9 +46,13 @@ export interface GeoFeature {
     tags?: string[];
     /** geo.ldas.jp の古い形式。links が無いときの「詳細」のリンク。 */
     url?: string;
+    /** 画像上の範囲（Canvas 座標の "x,y,w,h"）。geo.ldas.jp は四角で描く。 */
+    xywh?: string;
   };
-  /** geo.ldas.jp の古い形式。タグを properties ではなくここに書いていた。 */
-  metadata?: { tags?: string[] };
+  /** geo.ldas.jp の古い形式。タグや範囲を properties ではなくここに書いていた。 */
+  metadata?: { tags?: string[]; xywh?: string };
+  /** geo.ldas.jp のさらに古い形式（範囲を地物の直下に書く）。 */
+  xywh?: string;
   names?: GeoFeatureName[];
   links?: GeoFeatureLink[];
   depictions?: GeoFeatureDepiction[];
@@ -436,6 +440,27 @@ export const geoFeatureLinksOf = (feature: GeoFeature): GeoFeatureLinkView[] => 
   if (links.length > 0) return links;
   const url = httpUrl(feature.properties.url);
   return url ? [{ type: 'detail', href: url }] : [];
+};
+
+export interface GeoFeatureBox {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
+// The box of a feature on the picture (Canvas coordinates): properties.xywh, metadata.xywh,
+// or xywh on the feature itself (geo.ldas.jp's older forms). A "pixel:" prefix (as in a media
+// fragment) is allowed; "percent:" and anything that does not give 4 numbers with a positive
+// width and height are not boxes.
+export const geoFeatureBoxOf = (feature: GeoFeature): GeoFeatureBox | null => {
+  const raw = feature.properties.xywh ?? feature.metadata?.xywh ?? feature.xywh;
+  if (typeof raw !== 'string') return null;
+  const body = raw.trim().replace(/^xywh=/, '').replace(/^pixel:/, '');
+  const nums = body.split(',').map((v) => (v.trim() === '' ? NaN : Number(v)));
+  if (nums.length !== 4 || nums.some((n) => !Number.isFinite(n))) return null;
+  const [x, y, w, h] = nums;
+  return w > 0 && h > 0 ? { x, y, w, h } : null;
 };
 
 export const geoFeaturesToAnnotations = (features: GeoFeature[]): Annotation[] =>
