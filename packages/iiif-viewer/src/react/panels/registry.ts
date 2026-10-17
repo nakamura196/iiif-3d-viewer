@@ -13,9 +13,13 @@ const isPanel = (v: unknown): v is Panel =>
 
 const orderOf = (p: Panel) => p.order ?? Number.MAX_SAFE_INTEGER;
 
-export const PANELS: Panel[] = MODULES.flatMap((m) => Object.values(m).filter(isPanel)).sort(
-  (a, b) => orderOf(a) - orderOf(b) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0),
-);
+const byOrder = (a: Panel, b: Panel) => orderOf(a) - orderOf(b) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+
+export const PANELS: Panel[] = MODULES.flatMap((m) => Object.values(m).filter(isPanel)).sort(byOrder);
+
+/** パッケージのタブに、使う側のページが足すタブ（Viewer の panels）を混ぜて並べる。 */
+export const withExtraPanels = (extra: Panel[] | undefined): Panel[] =>
+  extra?.length ? [...PANELS, ...extra].sort(byOrder) : PANELS;
 
 /** ?tab= に指定できるタブの id。 */
 export const PANEL_IDS: string[] = PANELS.map((p) => p.id);

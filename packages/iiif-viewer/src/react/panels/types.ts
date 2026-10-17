@@ -16,6 +16,8 @@ export interface Panel {
   id: string;
   /** Tab position, smaller first. Without it the tab goes after the numbered ones. */
   order?: number;
+  /** Tab name. Without it the name comes from Info.<id> in the viewer's messages (tabs added by the host page give their own). */
+  label?: string;
   /** Whether the tab is shown for this container. */
   available: (ctx: PanelContext) => boolean;
   Component: ComponentType<PanelContext>;

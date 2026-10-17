@@ -26,3 +26,32 @@ export function canOpenInGallery(raw: Json): boolean {
   if (type === 'Collection' || type === 'sc:Collection' || type === 'cr:Curation') return true;
   return hasImageBody(o);
 }
+
+// 美術館に入るときの設定。どれも /gallery/ の URL 引数になる（engine/main.js が読む）。
+export type GalleryMode = 'thirdperson' | 'walk' | 'orbit';
+export type GalleryQuality = 'auto' | 'high' | 'medium' | 'low';
+export type GalleryLook = 'standard' | 'museum';
+
+export interface GalleryOptions {
+  mode?: GalleryMode;
+  quality?: GalleryQuality;
+  look?: GalleryLook;
+  /** 壁に掛ける最大の枚数。省略すると美術館の既定（Manifest・Collection は 24、Curation は 64） */
+  limit?: number;
+}
+
+// Manifest を ?u= で開くと、美術館は「見回す」で入る（三人称は ?mode= で頼んだときだけ）
+export const GALLERY_MODES: GalleryMode[] = ['orbit', 'thirdperson', 'walk'];
+export const GALLERY_QUALITIES: GalleryQuality[] = ['auto', 'high', 'medium', 'low'];
+export const GALLERY_LOOKS: GalleryLook[] = ['standard', 'museum'];
+export const GALLERY_LIMITS = [12, 24, 48, 96] as const;
+
+/** /gallery/ へのリンクの ? 以降。既定の値（見回す・画質の自動・標準の内装）は書かない。 */
+export function galleryQuery(url: string, opts: GalleryOptions = {}): string {
+  const q = new URLSearchParams({ u: url });
+  if (opts.mode && opts.mode !== 'orbit') q.set('mode', opts.mode);
+  if (opts.quality && opts.quality !== 'auto') q.set('quality', opts.quality);
+  if (opts.look === 'museum') q.set('look', 'museum');
+  if (opts.limit && opts.limit > 0) q.set('limit', String(Math.floor(opts.limit)));
+  return q.toString();
+}
