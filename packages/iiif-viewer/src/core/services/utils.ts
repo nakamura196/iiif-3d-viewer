@@ -3,6 +3,7 @@ import { upgradeToV3 } from './upgradeV2';
 import { isImageInfoJson } from '../features/compareSources';
 import { manifestFromImageInfo } from './imageInfoManifest';
 import { manifestFromCanvas } from './canvasManifest';
+import { manifestFromAnnotationPage } from './annotationPageManifest';
 import { inlineSharedServices } from './sharedServices';
 
 const getJson = async (url: string): Promise<unknown> => {
@@ -36,6 +37,9 @@ export const fetchManifest = async (manifestUrl: string) => {
     // Canvas 単体（geo.ldas.jp の canvas.json など）は、その Canvas だけを載せた仮のマニフェストにする
     const fromCanvas = manifestFromCanvas(raw, manifestUrl);
     if (fromCanvas) return fromCanvas;
+    // AnnotationPage 単体（geo.ldas.jp・Allmaps の地点の注釈）は、注釈が指す画像ごとに Canvas を立てたマニフェストにする
+    const fromPage = manifestFromAnnotationPage(raw, manifestUrl);
+    if (fromPage) return fromPage;
     // キュレーション（cr:Curation）は、元のマニフェストを取ってきて 1 冊の仮のマニフェストにする
     if (isCuration(raw)) {
       const built = await resolveCuration(raw, fetchJson);
