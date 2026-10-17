@@ -1,14 +1,15 @@
 'use client';
 
-import { Suspense, useEffect, useImperativeHandle, useMemo, useRef, type Ref } from 'react';
+import { startTransition, Suspense, useEffect, useImperativeHandle, useMemo, useRef, type Ref } from 'react';
 import { Clone, useAnimations, useGLTF, Bounds } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
-import { Box3, Group, PerspectiveCamera, Sphere, Vector3 } from 'three';
+import { Box3, Group, PerspectiveCamera, Points, PointsMaterial, Sphere, Vector3, type Object3D } from 'three';
 import gsap from 'gsap';
 import Annotations from '../three/Annotations';
 import ModelErrorBoundary from './ModelErrorBoundary';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
-import { manifestAtom, modelAnimationAtom, modelRadiusAtom, sceneIdAtom, showAnnotationsAtom } from '../atoms';
+import { manifestAtom, modelAnimationAtom, modelChoicesAtom, modelRadiusAtom, paintedModelsAtom, sceneIdAtom, showAnnotationsAtom } from '../atoms';
+import { upgradeUrl } from '../../core';
 import { defaultCameraOf, type DefaultCamera } from '../../core';
 import { runFocusFlight, type Vec3 } from '../../core';
 import { fitView, topView } from '../../core';
@@ -18,7 +19,11 @@ import { ZOOM_MAX_FACTOR } from '../../core';
 // the first Camera painted into the Scene). Without `lookAt`, look at the model's center.
 function ManifestCamera({ cam, center, radius }: { cam: DefaultCamera; center: Vector3; radius: number }) {
   const { camera, controls } = useThree();
+  // once per Camera: a progressive model swapped in later must not pull the view back
+  const applied = useRef<DefaultCamera | null>(null);
   useEffect(() => {
+    if (applied.current === cam) return;
+    applied.current = cam;
     const target = cam.lookAt ? new Vector3(...cam.lookAt) : center;
     camera.position.set(...cam.position);
     if (camera instanceof PerspectiveCamera) {
@@ -81,6 +86,37 @@ function ViewController({ handle, center, radius }: { handle: Ref<ViewHandle>; c
   return null;
 }
 
+// A glTF point cloud without a material is drawn by three.js one pixel per point,
+// which leaves a sparse cloud almost invisible. Give such points a size in metres
+// from their spacing (area seen from above / count), so that they touch.
+function sizePoints(root: Object3D, fov: number) {
+  root.traverse((o) => {
+    if (!(o instanceof Points) || !(o.material instanceof PointsMaterial) || o.material.sizeAttenuation) return;
+    const box = new Box3().setFromObject(o);
+    const count = o.geometry.getAttribute('position')?.count ?? 0;
+    if (count === 0) return;
+    const spacing = Math.sqrt(((box.max.x - box.min.x) * (box.max.z - box.min.z)) / count);
+    // three.js draws a point size*(h/2)/depth px tall; an m-metre object is m*(h/2)/(depth*tan(fov/2))
+    o.material.size = (1.5 * spacing) / Math.tan(((fov / 2) * Math.PI) / 180);
+    o.material.sizeAttenuation = true;
+    o.material.needsUpdate = true;
+  });
+}
+
+function useSizedPoints(root: Object3D) {
+  const { camera } = useThree();
+  const fov = camera instanceof PerspectiveCamera ? camera.fov : 50;
+  useMemo(() => sizePoints(root, fov), [root, fov]);
+}
+
+// Loads a progressive model's detailed version without showing it, then makes it the
+// chosen option. useGLTF caches the result, so the swap itself does not suspend.
+function Upgrade({ url, onReady }: { url: string; onReady: () => void }) {
+  useGLTF(url);
+  useEffect(onReady, [onReady]);
+  return null;
+}
+
 export interface PlacedModel {
   url: string;
   position: [number, number, number];
@@ -90,6 +126,7 @@ export interface PlacedModel {
 // in its own Suspense so that switching it does not hide the rest of the scene.
 function PlacedGLTF({ url, position }: PlacedModel) {
   const model = useGLTF(url);
+  useSizedPoints(model.scene);
   return (
     <group position={position}>
       <Clone object={model.scene} />
@@ -137,7 +174,18 @@ export default function Scene({
   const [showAnnotations] = useAtom(showAnnotationsAtom);
   const [manifest] = useAtom(manifestAtom);
   const sceneId = useAtomValue(sceneIdAtom);
+  const [paintedModels] = useAtom(paintedModelsAtom);
+  const [choices, setChoices] = useAtom(modelChoicesAtom);
   const model = useGLTF(glbUrl);
+  useSizedPoints(model.scene);
+  const upgrades = useMemo(
+    () =>
+      paintedModels.flatMap((m) => {
+        const url = upgradeUrl(m, choices);
+        return url ? [{ id: m.id, url, index: m.options.length - 1 }] : [];
+      }),
+    [paintedModels, choices],
+  );
   const cam = useMemo(() => defaultCameraOf(manifest, sceneId), [manifest, sceneId]);
   const sphere = useMemo(() => new Box3().setFromObject(model.scene).getBoundingSphere(new Sphere()), [model]);
   const setModelRadius = useSetAtom(modelRadiusAtom);
@@ -177,6 +225,17 @@ export default function Scene({
         <ModelErrorBoundary key={`${i}:${m.url}`}>
           <Suspense fallback={null}>
             <PlacedGLTF url={m.url} position={m.position} />
+          </Suspense>
+        </ModelErrorBoundary>
+      ))}
+      {upgrades.map((u) => (
+        // a detailed version that fails to load is given up; the light one stays
+        <ModelErrorBoundary key={u.id}>
+          <Suspense fallback={null}>
+            <Upgrade
+              url={u.url}
+              onReady={() => startTransition(() => setChoices((c) => (u.id in c ? c : { ...c, [u.id]: u.index })))}
+            />
           </Suspense>
         </ModelErrorBoundary>
       ))}

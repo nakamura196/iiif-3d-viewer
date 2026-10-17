@@ -2,6 +2,11 @@
 // Scene.items whose body is a Model). A body may also be a Choice of Models
 // (e.g. the same ground as a map or as a street surface); the client shows one
 // of them, the first by default, and may let the user switch.
+//
+// A Choice with behavior "progressive" lists the same content at rising detail
+// (lightest first). The client shows the first at once, loads the last in the
+// background and swaps it in when it has arrived. A client that does not know
+// the behavior just shows the first, light one.
 
 import type { SceneV4 } from '../types/iiif';
 
@@ -21,6 +26,8 @@ export interface PaintedModel {
   options: ModelOption[];
   // where the model's origin is placed in the Scene (target PointSelector)
   position: [number, number, number];
+  // the options are one model at rising detail: upgrade to the last on its own
+  progressive: boolean;
 }
 
 type Json = Record<string, unknown>;
@@ -64,6 +71,7 @@ export const paintedModelsOf = (scene: SceneV4 | undefined): PaintedModel[] => {
           label: b.type === 'Choice' ? b.label : options[0].label,
           options,
           position: positionOf(anno),
+          progressive: b.type === 'Choice' && options.length > 1 && asList(b.behavior).includes('progressive'),
         });
       });
     }
@@ -80,6 +88,11 @@ export const chosenOption = (model: PaintedModel, choices: Record<string, number
 // The URL shown for a painted model.
 export const chosenUrl = (model: PaintedModel, choices: Record<string, number>): string =>
   chosenOption(model, choices).url;
+
+// The option to load in the background and swap in, for a progressive model the
+// user has not switched by hand; null when there is nothing to upgrade.
+export const upgradeUrl = (model: PaintedModel, choices: Record<string, number>): string | null =>
+  model.progressive && choices[model.id] === undefined ? model.options[model.options.length - 1].url : null;
 
 // A IIIF label in the reader's language: the locale, then "none", then any.
 export const labelIn = (label: unknown, locale: string): string => {
