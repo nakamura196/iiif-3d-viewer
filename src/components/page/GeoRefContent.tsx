@@ -31,9 +31,10 @@ import {
   type ImageLayer,
 } from '@nakamura196/iiif-viewer/core';
 import { AnnotationCard } from '@nakamura196/iiif-viewer';
-import { SidePanel } from '@nakamura196/iiif-viewer';
+import { SidePanel, rightsPanel } from '@nakamura196/iiif-viewer';
 import { useTranslations, useLocale } from 'next-intl';
 import {
+  annotationsParams,
   applyGeorefPatch,
   autoRotateOnSelectParams,
   clusteringParams,
@@ -46,9 +47,11 @@ import {
   normalizeAngle,
   readGeorefParams,
   rotationParams,
+  sideTabParams,
   type GeorefImageView,
   type GeorefMapView,
   type GeorefParamPatch,
+  type GeorefSideTab,
   type GeorefUrlState,
 } from '@nakamura196/iiif-viewer/core';
 
@@ -98,7 +101,7 @@ const GeoRefContent: NextPage = () => {
   const t = useTranslations('GeoRef');
   const locale = useLocale();
   const [manifestUrl, setManifestUrl] = useAtom(manifestUrlAtom);
-  const [, setManifest] = useAtom(manifestAtom);
+  const [manifest, setManifest] = useAtom(manifestAtom);
   const [glbUrl, setGlbUrl] = useState<string | null>(null);
   // 地点が画像（絵図・古地図）に付いているときは、その Canvas を 3D の代わりに出す
   const [geoCanvasId, setGeoCanvasId] = useState<string | undefined>(undefined);
@@ -123,6 +126,10 @@ const GeoRefContent: NextPage = () => {
   const [autoRotateOnSelect, setAutoRotateOnSelect] = useState(false);
   // 近い地点を 1 つにまとめて件数を出すか（地図と画像の両方）。URL の clustering と同じ。既定はまとめる
   const [clustering, setClustering] = useState(true);
+  // 画像に地点の印を出すか。URL の annotations と同じ。切っても地図の印と一覧はそのまま
+  const [showImageMarks, setShowImageMarks] = useState(true);
+  // 右の欄で出すもの（地点の一覧か権利）。URL の search・license と同じ
+  const [sideTab, setSideTab] = useState<GeorefSideTab>('list');
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -131,6 +138,8 @@ const GeoRefContent: NextPage = () => {
     if (state.rotation !== undefined) setRotation(state.rotation);
     if (state.autoRotateOnSelect) setAutoRotateOnSelect(true);
     if (state.clustering === false) setClustering(false);
+    if (state.annotations === false) setShowImageMarks(false);
+    if (state.sideTab) setSideTab(state.sideTab);
     if (!state.manifest) return;
     setManifestUrl(state.manifest);
   }, [setManifestUrl]);
@@ -175,6 +184,26 @@ const GeoRefContent: NextPage = () => {
     },
     [writeParams]
   );
+
+  const changeShowImageMarks = useCallback(
+    (on: boolean) => {
+      setShowImageMarks(on);
+      writeParams(annotationsParams(on));
+    },
+    [writeParams]
+  );
+
+  const changeSideTab = useCallback(
+    (tab: GeorefSideTab) => {
+      setSideTab(tab);
+      writeParams(sideTabParams(tab));
+    },
+    [writeParams]
+  );
+
+  // 権利のタブは、マニフェストに出典表記かライセンスがあるときだけ出す（ビューアの権利のタブと同じ）
+  const hasRights = useMemo(() => !!manifest && rightsPanel.available({ manifest }), [manifest]);
+  const shownSideTab: GeorefSideTab = sideTab === 'rights' && hasRights ? 'rights' : 'list';
 
   useEffect(() => {
     if (!manifestUrl) return;
@@ -368,6 +397,12 @@ const GeoRefContent: NextPage = () => {
                   {t('openInViewer')}
                 </Link>
                 {geoCanvas && (
+                  <label className="flex items-center gap-1.5 cursor-pointer bg-white dark:bg-gray-800 px-3 py-1 rounded-full shadow text-sm text-gray-700 dark:text-gray-300">
+                    <input type="checkbox" checked={showImageMarks} onChange={(e) => changeShowImageMarks(e.target.checked)} />
+                    {t('showImageMarks')}
+                  </label>
+                )}
+                {geoCanvas && (
                   <RotationControl
                     rotation={rotation}
                     onChange={changeRotation}
@@ -388,6 +423,7 @@ const GeoRefContent: NextPage = () => {
                   onViewChange={handleImageViewChange}
                   rotation={rotation}
                   clustering={clustering}
+                  showMarkers={showImageMarks}
                 />
               )}
               {/* 地点の付いた Canvas が 2 つ以上あるとき、前後に切り替える */}
@@ -434,122 +470,151 @@ const GeoRefContent: NextPage = () => {
               )}
             </div>
             {/* Annotations */}
-            <SidePanel breakpoint="lg" className="bg-white dark:bg-gray-800 flex flex-col">
-              <div className="sticky top-0 bg-white dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700 z-10">
-                <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t('annotations')} ({filtering ? `${visibleIndices.length} / ${geoFeatures.length}` : geoFeatures.length})
-                </h2>
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder={t('searchPlaceholder')}
-                    className="w-full px-3 py-1.5 pl-8 text-sm rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                  />
-                  <svg
-                    className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                  </svg>
-                  {searchQuery && (
+            {/* geo.ldas.jp の search=1・license=1 のリンクは、欄を畳んでいても開いて出す */}
+            <SidePanel breakpoint="lg" className="bg-white dark:bg-gray-800 flex flex-col" openOnStart={!!urlState.sideTab}>
+              {hasRights && (
+                <div role="tablist" className="flex gap-1 px-4 pr-10 pt-2 border-b border-gray-200 dark:border-gray-700">
+                  {(['list', 'rights'] as const).map((tab) => (
                     <button
-                      onClick={() => setSearchQuery('')}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                      key={tab}
+                      type="button"
+                      role="tab"
+                      aria-selected={shownSideTab === tab}
+                      onClick={() => changeSideTab(tab)}
+                      className={`px-3 py-1.5 text-sm border-b-2 -mb-px ${
+                        shownSideTab === tab
+                          ? 'border-blue-600 text-blue-600 dark:text-blue-400 font-medium'
+                          : 'border-transparent text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
+                      }`}
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                      </svg>
+                      {tab === 'list' ? t('annotations') : t('rights')}
                     </button>
+                  ))}
+                </div>
+              )}
+              {shownSideTab === 'rights' && manifest ? (
+                <div className="flex-1 overflow-y-auto">
+                  <rightsPanel.Component manifest={manifest} />
+                </div>
+              ) : (
+                <>
+                <div className="sticky top-0 bg-white dark:bg-gray-800 px-4 py-3 border-b border-gray-200 dark:border-gray-700 z-10">
+                  <h2 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t('annotations')} ({filtering ? `${visibleIndices.length} / ${geoFeatures.length}` : geoFeatures.length})
+                  </h2>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder={t('searchPlaceholder')}
+                      className="w-full px-3 py-1.5 pl-8 text-sm rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    />
+                    <svg
+                      className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    {searchQuery && (
+                      <button
+                        onClick={() => setSearchQuery('')}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    )}
+                  </div>
+                  {/* タグで絞り込む（件数の多い順。押すたびに入れる・外す） */}
+                  {tagFacets.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-1.5 max-h-24 overflow-y-auto" role="group" aria-label={t('filterByTag')}>
+                      {tagFacets.map(({ value, count }) => {
+                        const on = tagFilter.includes(value);
+                        return (
+                          <button
+                            key={value}
+                            type="button"
+                            aria-pressed={on}
+                            onClick={() => toggleTag(value)}
+                            className={`rounded-full border px-2.5 py-0.5 text-xs transition-colors ${
+                              on
+                                ? 'border-blue-600 bg-blue-600 text-white'
+                                : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                            }`}
+                          >
+                            {value} ({count})
+                          </button>
+                        );
+                      })}
+                    </div>
                   )}
                 </div>
-                {/* タグで絞り込む（件数の多い順。押すたびに入れる・外す） */}
-                {tagFacets.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1.5 max-h-24 overflow-y-auto" role="group" aria-label={t('filterByTag')}>
-                    {tagFacets.map(({ value, count }) => {
-                      const on = tagFilter.includes(value);
+                <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                  {visibleIndices
+                    .map((index) => ({ feature: geoFeatures[index], index }))
+                    .map(({ feature, index }) => {
+                      // 中身（説明・画像・タグ・参照）は 3D の画面の一覧と同じカードで出す
+                      const annotation = annotations[index];
+                      if (!annotation) return null;
+                      const wikipediaLink = feature.links?.find(link => link.type === 'primaryTopicOf')?.identifier;
+                      const altNames = feature.names?.filter(name => name.toponym !== feature.properties.title);
+                      // geo.ldas.jp の一覧の ID の列（ID でも探せる）
+                      const featureId = feature.id ?? feature['@id'];
                       return (
-                        <button
-                          key={value}
-                          type="button"
-                          aria-pressed={on}
-                          onClick={() => toggleTag(value)}
-                          className={`rounded-full border px-2.5 py-0.5 text-xs transition-colors ${
-                            on
-                              ? 'border-blue-600 bg-blue-600 text-white'
-                              : 'border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                          }`}
+                        <AnnotationCard
+                          key={annotation.id}
+                          annotation={annotation}
+                          number={index + 1}
+                          selected={selectedAnnotationId === annotation.id}
+                          onSelect={handleFeatureSelect}
+                          cardRef={(el) => {
+                            if (el) annotationRefs.current.set(annotation.id, el);
+                          }}
                         >
-                          {value} ({count})
-                        </button>
+                          {featureId && (
+                            <div className="mt-2 pl-9 text-xs text-gray-400 dark:text-gray-500 truncate" title={featureId}>
+                              ID: {featureId}
+                            </div>
+                          )}
+                          {/* 地名の別名と Wikipedia は、georef の地物（Linked Places 形式）だけが持つ */}
+                          {altNames && altNames.length > 0 && (
+                            <div className="mt-2 pl-9 text-xs text-gray-500 dark:text-gray-400">
+                              {altNames.map(n => n.toponym).join(', ')}
+                            </div>
+                          )}
+                          {wikipediaLink && (
+                            <div className="mt-1 pl-9">
+                              <a
+                                href={wikipediaLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-xs text-blue-500 dark:text-blue-400 hover:underline"
+                              >
+                                Wikipedia
+                              </a>
+                            </div>
+                          )}
+                        </AnnotationCard>
                       );
                     })}
-                  </div>
-                )}
-              </div>
-              <div className="flex-1 overflow-y-auto p-4 space-y-2">
-                {visibleIndices
-                  .map((index) => ({ feature: geoFeatures[index], index }))
-                  .map(({ feature, index }) => {
-                    // 中身（説明・画像・タグ・参照）は 3D の画面の一覧と同じカードで出す
-                    const annotation = annotations[index];
-                    if (!annotation) return null;
-                    const wikipediaLink = feature.links?.find(link => link.type === 'primaryTopicOf')?.identifier;
-                    const altNames = feature.names?.filter(name => name.toponym !== feature.properties.title);
-                    // geo.ldas.jp の一覧の ID の列（ID でも探せる）
-                    const featureId = feature.id ?? feature['@id'];
-                    return (
-                      <AnnotationCard
-                        key={annotation.id}
-                        annotation={annotation}
-                        number={index + 1}
-                        selected={selectedAnnotationId === annotation.id}
-                        onSelect={handleFeatureSelect}
-                        cardRef={(el) => {
-                          if (el) annotationRefs.current.set(annotation.id, el);
-                        }}
-                      >
-                        {featureId && (
-                          <div className="mt-2 pl-9 text-xs text-gray-400 dark:text-gray-500 truncate" title={featureId}>
-                            ID: {featureId}
-                          </div>
-                        )}
-                        {/* 地名の別名と Wikipedia は、georef の地物（Linked Places 形式）だけが持つ */}
-                        {altNames && altNames.length > 0 && (
-                          <div className="mt-2 pl-9 text-xs text-gray-500 dark:text-gray-400">
-                            {altNames.map(n => n.toponym).join(', ')}
-                          </div>
-                        )}
-                        {wikipediaLink && (
-                          <div className="mt-1 pl-9">
-                            <a
-                              href={wikipediaLink}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                              className="text-xs text-blue-500 dark:text-blue-400 hover:underline"
-                            >
-                              Wikipedia
-                            </a>
-                          </div>
-                        )}
-                      </AnnotationCard>
-                    );
-                  })}
-                {geoFeatures.length === 0 && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
-                    {t('noAnnotations')}
-                  </p>
-                )}
-                {geoFeatures.length > 0 && visibleIndices.length === 0 && (
-                  <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
-                    {t('noResults')}
-                  </p>
-                )}
-              </div>
+                  {geoFeatures.length === 0 && (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
+                      {t('noAnnotations')}
+                    </p>
+                  )}
+                  {geoFeatures.length > 0 && visibleIndices.length === 0 && (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 text-center py-8">
+                      {t('noResults')}
+                    </p>
+                  )}
+                </div>
+                </>
+              )}
             </SidePanel>
           </div>
         ) : (

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  annotationsParams,
   applyGeorefPatch,
   autoRotateOnSelectParams,
   clusteringParams,
@@ -12,6 +13,7 @@ import {
   readGeorefParams,
   rewriteOldGeoHost,
   rotationParams,
+  sideTabParams,
   stageToImageView,
 } from './georefView';
 
@@ -204,6 +206,35 @@ describe('clustering', () => {
   it('writes false, and removes the parameter when on', () => {
     expect(clusteringParams(false)).toEqual({ clustering: 'false' });
     expect(applyGeorefPatch('u=x&clustering=false', clusteringParams(true))).toBe('u=x');
+  });
+});
+
+describe('annotations', () => {
+  it('hides the image marks only when the link says false', () => {
+    expect(read('annotations=false').annotations).toBe(false);
+    expect(read('annotations=true').annotations).toBeUndefined();
+    expect(read('').annotations).toBeUndefined();
+  });
+
+  it('writes false, and removes the parameter when shown', () => {
+    expect(annotationsParams(false)).toEqual({ annotations: 'false' });
+    expect(applyGeorefPatch('u=x&annotations=false', annotationsParams(true))).toBe('u=x');
+  });
+});
+
+describe('search and license', () => {
+  it('opens the list or the rights, as geo.ldas.jp opened its panes', () => {
+    expect(read('search=1').sideTab).toBe('list');
+    expect(read('license=1').sideTab).toBe('rights');
+    // both open in geo.ldas.jp; the rights are the more specific ask
+    expect(read('search=1&license=1').sideTab).toBe('rights');
+    expect(read('search=0').sideTab).toBeUndefined();
+    expect(read('').sideTab).toBeUndefined();
+  });
+
+  it('writes license=1 only for the rights, and drops search once a tab is chosen', () => {
+    expect(applyGeorefPatch('u=x&search=1', sideTabParams('rights'))).toBe('u=x&license=1');
+    expect(applyGeorefPatch('u=x&license=1', sideTabParams('list'))).toBe('u=x');
   });
 });
 

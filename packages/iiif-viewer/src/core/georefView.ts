@@ -9,6 +9,9 @@
 //                          無ければ、地点が 2 つ以上あるとき北が上になるよう自動で回す
 //   autoRotateOnSelect     true のとき、地図か一覧で地点を選ぶたびに、その近くで北が上になるよう回す
 //   clustering             false のとき、近い地点をまとめずに 1 つずつ出す（既定はまとめる）
+//   annotations            false のとき、画像に地点の印を出さない（既定は出す。地図の印はそのまま）
+//   search・license         1 のとき、右の欄を開いて一覧（search）か権利（license）を出す。
+//                          geo.ldas.jp では検索・ライセンスの欄を開く引数だった。両方あれば権利を出す
 //   id                     選んでいる地点
 //   canvas                 見ている Canvas の id（地点の付いた Canvas が 2 つ以上あるとき）。
 //                          geo.ldas.jp には無い（いつも最初の Canvas で開いた）。Kasane のビューアの canvas と同じ名前
@@ -41,9 +44,16 @@ export interface GeorefUrlState {
   autoRotateOnSelect?: boolean;
   /** 近い地点をまとめて出すか。URL に clustering=false があるときだけ false。 */
   clustering?: boolean;
+  /** 画像に地点の印を出すか。URL に annotations=false があるときだけ false。 */
+  annotations?: boolean;
+  /** 開いたときに右の欄で出すもの。search=1 か license=1 があるときだけ入る（欄を畳んでいても開く）。 */
+  sideTab?: GeorefSideTab;
   id?: string;
   canvas?: string;
 }
+
+/** 右の欄のタブ。list は地点の一覧（検索・タグの絞り込みを含む）、rights は権利。 */
+export type GeorefSideTab = 'list' | 'rights';
 
 /** 中心だけが指定されたときの地図の縮尺（lat・lng のときの geo.ldas.jp の既定と同じ）。 */
 export const FOCUS_MAP_ZOOM = 15;
@@ -107,6 +117,13 @@ export function readGeorefParams(params: URLSearchParams, manifestFromOther: str
   // geo.ldas.jp は 'true' か 'false' を書く。'false' のときだけ切る
   if (params.get('clustering') === 'false') state.clustering = false;
 
+  // geo.ldas.jp は 'true' か 'false' を書く。'false' のときだけ消す
+  if (params.get('annotations') === 'false') state.annotations = false;
+
+  // geo.ldas.jp は開いている欄を 1 で書く（読むだけで、書き戻しはしなかった）
+  if (params.get('license') === '1') state.sideTab = 'rights';
+  else if (params.get('search') === '1') state.sideTab = 'list';
+
   const id = params.get('id');
   if (id) state.id = id;
   const canvas = params.get('canvas');
@@ -115,7 +132,7 @@ export function readGeorefParams(params: URLSearchParams, manifestFromOther: str
 }
 
 /** 書き戻す引数。null の項目は URL から消す。 */
-export type GeorefParamPatch = Partial<Record<'mapZoom' | 'mapLat' | 'mapLng' | 'zoom' | 'centerX' | 'centerY' | 'rotation' | 'autoRotateOnSelect' | 'clustering' | 'id' | 'canvas', string | null>>;
+export type GeorefParamPatch = Partial<Record<'mapZoom' | 'mapLat' | 'mapLng' | 'zoom' | 'centerX' | 'centerY' | 'rotation' | 'autoRotateOnSelect' | 'clustering' | 'annotations' | 'search' | 'license' | 'id' | 'canvas', string | null>>;
 
 export const mapViewParams = (v: GeorefMapView): GeorefParamPatch => ({
   mapZoom: String(Number(v.zoom.toFixed(2))),
@@ -142,6 +159,20 @@ export const autoRotateOnSelectParams = (on: boolean): GeorefParamPatch => ({
 /** 既定（まとめる）のときは引数ごと消す。 */
 export const clusteringParams = (on: boolean): GeorefParamPatch => ({
   clustering: on ? null : 'false',
+});
+
+/** 出すときは引数ごと消す（geo.ldas.jp も、無いときは出すものとして読む）。 */
+export const annotationsParams = (on: boolean): GeorefParamPatch => ({
+  annotations: on ? null : 'false',
+});
+
+/**
+ * 右の欄のタブ。権利のときだけ license=1 を書く。一覧はふだんの表示なので書かず、
+ * geo.ldas.jp から来た search=1 も、タブを選び直したら消す（開いたときの指定は役目を終えている）。
+ */
+export const sideTabParams = (tab: GeorefSideTab): GeorefParamPatch => ({
+  search: null,
+  license: tab === 'rights' ? '1' : null,
 });
 
 /** 角度を -180 より大きく 180 以下にそろえる。 */

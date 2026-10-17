@@ -57,9 +57,11 @@ type Props = {
   // 横に並ぶ幅（この幅より狭いと下に置く）
   breakpoint?: 'sm' | 'lg';
   className?: string;
+  // 畳んだ保存があっても開いて始める（リンクが欄の中身を指しているとき）。保存は書き換えない
+  openOnStart?: boolean;
 };
 
-export default function SidePanel({ children, breakpoint = 'sm', className = '' }: Props) {
+export default function SidePanel({ children, breakpoint = 'sm', className = '', openOnStart = false }: Props) {
   const t = useTranslations('SidePanel');
   const c = CLASSES[breakpoint];
   const [open, setOpen] = useState(true);
@@ -74,7 +76,7 @@ export default function SidePanel({ children, breakpoint = 'sm', className = '' 
     } catch {
       // 保存が使えないときは画面の幅だけで決める
     }
-    setOpen(saved !== null ? saved === '1' : !window.matchMedia(NARROW).matches);
+    setOpen(openOnStart || (saved !== null ? saved === '1' : !window.matchMedia(NARROW).matches));
     try {
       const w = Number(window.localStorage.getItem(WIDTH_KEY));
       if (w >= MIN_WIDTH) setWidth(w);
@@ -87,6 +89,8 @@ export default function SidePanel({ children, breakpoint = 'sm', className = '' 
     } catch {
       // 保存が使えないときは既定の高さ
     }
+    // 開いたときの 1 回だけ見る
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // axis が x なら左の境界で幅を、y なら上の境界で高さを変える
