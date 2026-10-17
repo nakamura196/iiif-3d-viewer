@@ -43,7 +43,7 @@ export async function generateMetadata({
       .replace('{category}', m.category[r.category])
       .replace('{status}', m.status[r.status]);
   const alternates = alternatesFor(locale, `samples/${id}/`);
-  // レシピごとの画像は無いので、og:image は指定せず layout.tsx の既定に任せる（Twitter のカードも既定のまま）
+  // レシピごとの画像は無いので、og:image は指定せず layout.tsx の既定に任せる
   return {
     title,
     description,
@@ -57,6 +57,6 @@ export async function generateMetadata({
       type: 'article',
       images: [{ url: '/opengraph-image.png', width: 1200, height: 630, alt: 'IIIF Kasane' }],
     },
-    twitter: { card: 'summary', title, description, images: ['/twitter-image.png'] },
+    twitter: { card: 'summary_large_image', title, description, images: ['/twitter-image.png'] },
   };
 }

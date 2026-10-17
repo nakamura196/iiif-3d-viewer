@@ -114,6 +114,15 @@ describe('geoAnnotations (georeferencing page)', () => {
     expect(g.images).toHaveLength(1);
   });
 
+  it('takes the commenting annotation whose id is the feature id without "/gcp"', () => {
+    const [a] = load(manifestWith([{ type: 'TextualBody', value: 'Height 21.4 m' }])).annotations;
+    const [g] = geoAnnotations([feature(`${a.id}/gcp`)], [a]);
+    expect(g.id).toBe(`${a.id}/gcp`);
+    expect(g.description).toBe('Height 21.4 m');
+    // only "/gcp": another suffix is a different resource
+    expect(geoAnnotations([feature(`${a.id}/camera`)], [a])[0].description).not.toBe('Height 21.4 m');
+  });
+
   it('falls back to the feature alone, with its depictions as images', () => {
     const [g] = geoAnnotations([feature('x', 'https://example.org/d.jpg')], []);
     expect(g.title).toBe('x');

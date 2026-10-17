@@ -37,6 +37,8 @@ const DICT = {
     serverTimeout: "画像の提供元（{host}）が応答しません。時間をおいて試してください。",
     serverUnreachable: "画像の提供元（{host}）に接続できません。",
     zoom: "拡大する",
+    openInKasane: "Kasane で開く",
+    openInKasaneTitle: "注釈や目次も見られる Kasane のビューアで、この作品を新しいタブに開く",
     zoomHintE: "E で拡大",
     helpHtml:
       "見回す: ドラッグ/ホイール ・ 歩く: WASD／矢印（スマホはスティック）<br>作品にカーソル → <b>拡大ボタン</b>（歩行中は<b>E</b>）で拡大 ・ Esc で戻る",
@@ -88,6 +90,8 @@ const DICT = {
     serverTimeout: "The image provider ({host}) is not responding. Please try again later.",
     serverUnreachable: "Could not connect to the image provider ({host}).",
     zoom: "Zoom",
+    openInKasane: "Open in Kasane",
+    openInKasaneTitle: "Open this work in the Kasane viewer (annotations, contents and more) in a new tab",
     zoomHintE: "Press E to zoom",
     helpHtml:
       "Look: drag / wheel ・ Walk: WASD / arrows (stick on mobile)<br>Aim at a work → <b>Zoom button</b> (or <b>E</b> while walking) ・ Esc to exit",

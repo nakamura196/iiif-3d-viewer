@@ -27,6 +27,9 @@
 `?u=<IIIF の URL>`、`?selections=0,2`、`?limit=`、`?mode=walk|orbit`、`?quality=auto|high|medium|low`、
 `?look=museum`、`?vc=auto|always|off`。
 
+Kasane で足したもの: `?record=1` で、作品を自動で巡って録画する 2 つのボタン（一人称・三人称、WebM で保存）を出す。
+紹介動画を作るための道具なので、指定しなければ出さない。
+
 ## 権利
 
 - 3D は three.js（MIT）、深ズームは OpenSeadragon（New BSD）

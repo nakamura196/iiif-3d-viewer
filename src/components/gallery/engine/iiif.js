@@ -218,15 +218,16 @@ export async function loadAuto(url, opts = {}) {
   const type = detectIiifType(doc);
   if (type === "curation") return parseCurationDoc(doc, opts);
   if (type === "collection") return loadCollection(url, opts);
-  return parseManifestDoc(doc, opts);
+  return parseManifestDoc(doc, { ...opts, url });
 }
 
 /** Manifest URL → 壁ソース配列 [{ label, by, source:{type:'iiif', id} }] */
 export async function loadManifest(url, opts = {}) {
-  return parseManifestDoc(await fetchJson(url), opts);
+  return parseManifestDoc(await fetchJson(url), { ...opts, url });
 }
 
-function parseManifestDoc(m, { limit = 24 } = {}) {
+function parseManifestDoc(m, { limit = 24, url = null } = {}) {
+  const manifestUrl = url || m["@id"] || m.id || null;
   const manLabel = plainLabel(m.label);
   const meta = extractMeta(m);
   // v2: sequences[0].canvases  /  v3: items
@@ -241,6 +242,7 @@ function parseManifestDoc(m, { limit = 24 } = {}) {
       by: manLabel,
       source,
       meta,
+      origin: originOf(manifestUrl, c["@id"] || c.id),
     });
     if (walls.length >= limit) break;
   }
@@ -327,6 +329,7 @@ async function resolveCurationMembers(members, { limit = 64 } = {}) {
         by: cleanDescription(m.description),
         source: { type: "iiif", id: svc, region: xywh },
         meta: extractMeta(man),
+        origin: originOf(m.manifest, m["@id"] || m.id),
       });
     } catch (err) {
       console.warn("curation member skip:", err.message);
@@ -346,6 +349,12 @@ function selectionMembers(sel) {
     if (!member || member.manifest || !selManifest) return member;
     return { ...member, manifest: selManifest };
   }).filter(Boolean);
+}
+
+// 元の資料(マニフェストと Canvas。Canvas は #xywh 付きのこともある)。
+// 拡大表示の「Kasane で開く」が使う。どちらかが分からなければ null
+function originOf(manifest, canvas) {
+  return manifest && canvas ? { manifest, canvas } : null;
 }
 
 function splitCanvasId(cid) {

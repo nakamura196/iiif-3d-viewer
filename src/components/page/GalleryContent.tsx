@@ -101,6 +101,7 @@ const GalleryContent = () => {
             <button id="osd-info" title="Info">i</button>
             <button id="osd-close" title="Esc">×</button>
             <div id="osd-panel"></div>
+            <a id="osd-kasane" target="_blank" rel="noopener" data-i18n="openInKasane" data-i18n-title="openInKasaneTitle"></a>
           </div>
         </div>
       </main>
