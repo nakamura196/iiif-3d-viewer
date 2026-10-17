@@ -7,7 +7,13 @@
     "compositePause": "一時停止",
     "compositeSeek": "再生位置",
     "youTubeCaptions": "字幕",
-    "youTubeCaptionsOff": "字幕なし"
+    "youTubeCaptionsOff": "字幕なし",
+    "youTubeError": "この動画をここでは再生できませんでした",
+    "youTubeErrorBlocked": "YouTube の再生部品を読み込めませんでした。広告ブロッカーなどの拡張機能が止めていないか、ネットワークにつながっているかを確かめてください。",
+    "youTubeErrorGone": "動画が削除されたか、非公開になっています。",
+    "youTubeErrorEmbed": "この動画は、ほかのサイトでは再生できない設定か、削除・非公開になっています。YouTube で直接お確かめください。",
+    "youTubeErrorOther": "YouTube 側で再生に失敗しました。少し待ってから開き直すか、YouTube で直接ご覧ください。",
+    "youTubeOpen": "YouTube で見る"
   },
   "Transcript": {
     "language": "言語"

@@ -34,7 +34,7 @@ interface YTNamespace {
       events?: {
         onReady?: (e: { target: YTPlayer }) => void;
         onStateChange?: (e: { data: number; target: YTPlayer }) => void;
-        onError?: () => void;
+        onError?: (e: { data: number }) => void;
       };
     },
   ) => YTPlayer;
@@ -75,6 +75,17 @@ const loadApi = (): Promise<YTNamespace> => {
   return apiPromise;
 };
 
+// YouTube のエラー番号を、見る人向けの理由の文に振り分ける
+// （2: 指定の誤り、5: 再生の不具合、100: 削除・非公開、101/150: 持ち主が埋め込みを止めている）
+const youTubeReason = (f: 'api' | number) =>
+  f === 'api'
+    ? 'youTubeErrorBlocked'
+    : f === 100
+      ? 'youTubeErrorGone'
+      : f === 101 || f === 150
+        ? 'youTubeErrorEmbed'
+        : 'youTubeErrorOther';
+
 interface Props {
   videoId: string;
   /** seconds; where the video opens */
@@ -98,7 +109,8 @@ const ownCaptions = (player: YTPlayer, on: boolean) => {
 export default function YouTubeView({ videoId, start = 0, tracks = [], mediaRef, onTimeUpdate }: Props) {
   const t = useTranslations('Viewer');
   const host = useRef<HTMLDivElement>(null);
-  const [failed, setFailed] = useState(false);
+  // 再生できなかった理由。'api' は YouTube の部品そのものが読み込めなかったとき、数値は YouTube のエラー番号
+  const [failed, setFailed] = useState<'api' | number | null>(null);
   const [time, setTime] = useState(start);
   const onTime = useRef(onTimeUpdate);
   const playerRef = useRef<YTPlayer | null>(null);
@@ -150,7 +162,9 @@ export default function YouTubeView({ videoId, start = 0, tracks = [], mediaRef,
       .then((YT) => {
         if (cancelled) return;
         player = new YT.Player(target, {
-          host: 'https://www.youtube-nocookie.com',
+          // youtube-nocookie.com を host にすると、2026-10 時点ではどの動画もエラー 150（埋め込み不可）になる。
+          // YouTube の公式の見本動画でも同じなので、こちらの動画の設定ではなく YouTube 側の挙動
+          host: 'https://www.youtube.com',
           videoId,
           width: '100%',
           height: '100%',
@@ -173,11 +187,11 @@ export default function YouTubeView({ videoId, start = 0, tracks = [], mediaRef,
               // 再生中は 1 秒に 4 回、位置を知らせる（<video> の timeupdate と同じくらい）
               if (e.data === PLAYING) timer = window.setInterval(() => report(e.target.getCurrentTime()), 250);
             },
-            onError: () => setFailed(true),
+            onError: (e) => setFailed(e.data),
           },
         });
       })
-      .catch(() => setFailed(true));
+      .catch(() => setFailed('api'));
 
     return () => {
       cancelled = true;
@@ -217,8 +231,24 @@ export default function YouTubeView({ videoId, start = 0, tracks = [], mediaRef,
       .join('\n');
   }, [track, cues, time]);
 
-  if (failed) {
-    return <div className="p-4 text-sm text-[var(--ds-fg)]" role="alert">{t('mediaError')}</div>;
+  if (failed !== null) {
+    const watch = `https://www.youtube.com/watch?v=${videoId}${start > 0 ? `&t=${Math.floor(start)}` : ''}`;
+    return (
+      <div className="w-full h-full flex items-center justify-center p-6 bg-[var(--ds-surface-2)]" role="alert">
+        <div className="max-w-md text-center text-sm text-[var(--ds-fg)] space-y-3">
+          <p className="font-semibold">{t('youTubeError')}</p>
+          <p className="text-[var(--ds-fg-muted)]">{t(youTubeReason(failed))}</p>
+          <a
+            href={watch}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block px-3 py-1.5 rounded-lg border border-[var(--ds-border)] bg-[var(--ds-surface)] hover:bg-[var(--ds-surface-2)]"
+          >
+            {t('youTubeOpen')}
+          </a>
+        </div>
+      </div>
+    );
   }
 
   return (
