@@ -8,6 +8,7 @@ export * from './services/upgradeV2';
 export * from './services/sharedServices';
 export * from './viewCamera';
 export * from './focusCamera';
+export * from './zoomDistance';
 export * from './annotationFilter';
 export * from './regions';
 export * from './thumbnail';

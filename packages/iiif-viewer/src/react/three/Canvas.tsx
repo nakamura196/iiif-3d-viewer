@@ -4,8 +4,9 @@ import { Suspense, useEffect, useState, useRef, useImperativeHandle, forwardRef,
 import Scene, { type PlacedModel, type ViewHandle } from '../three/Scene';
 import ModelErrorBoundary from './ModelErrorBoundary';
 import { useAtom, useAtomValue } from 'jotai';
-import { manifestAtom, modelAnimationAtom, sceneIdAtom } from '../atoms';
+import { manifestAtom, modelAnimationAtom, modelRadiusAtom, sceneIdAtom } from '../atoms';
 import { sceneCamerasOf } from '../../core';
+import { nextZoomDistance, zoomLimitsFor } from '../../core';
 import { labelIn } from '../../core';
 import { useProgress } from '@react-three/drei';
 import { useTheme } from '../env';
@@ -63,6 +64,7 @@ const CameraController = forwardRef<{ zoomIn: () => void; zoomOut: () => void },
     const { camera } = useThree();
     const zoomAnimationRef = useRef<ZoomAnimation | null>(null);
     const targetRef = useRef(new THREE.Vector3(0, 0, 0));
+    const modelRadius = useAtomValue(modelRadiusAtom);
 
     // アニメーションフレーム処理
     useFrame(() => {
@@ -100,22 +102,16 @@ const CameraController = forwardRef<{ zoomIn: () => void; zoomOut: () => void },
       const target = controlsRef.current.target;
       const currentDistance = camera.position.distanceTo(target);
 
-      // ズームイン/アウトに応じて目標距離を計算
-      const factor = zoomIn ? (1 - ZOOM_FACTOR) : (1 + ZOOM_FACTOR);
-      const targetDistance = currentDistance * factor;
-
-      // 最小/最大距離の制限
-      const minDistance = 0.5;
-      const maxDistance = 50;
-      const clampedTargetDistance = Math.max(minDistance, Math.min(maxDistance, targetDistance));
+      // 模型の大きさに合わせた距離の制限（単位が mm でも m でも効くように）
+      const targetDistance = nextZoomDistance(currentDistance, zoomIn, ZOOM_FACTOR, zoomLimitsFor(modelRadius ?? 1));
 
       zoomAnimationRef.current = {
         startTime: performance.now(),
         duration: ZOOM_DURATION,
         startDistance: currentDistance,
-        targetDistance: clampedTargetDistance,
+        targetDistance,
       };
-    }, [camera, controlsRef]);
+    }, [camera, controlsRef, modelRadius]);
 
     useImperativeHandle(ref, () => ({
       zoomIn: () => startZoomAnimation(true),
