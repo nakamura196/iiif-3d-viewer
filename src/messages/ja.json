@@ -59,7 +59,6 @@
     "title": "利用規約"
   },
   "GeoRef": {
-    "viewOnMap": "地図に重ねて見る",
     "openInViewer": "ビューアで開く",
     "map": "地図",
     "viewer3d": "3D",
@@ -379,7 +378,34 @@
       "collection": "コレクション"
     }
   },
-  "Gallery": {
-    "openInGallery": "3D の美術館で見る"
+  "OtherViews": {
+    "tab": "ほかの表示",
+    "open": "開く",
+    "view": "閲覧",
+    "mapHeading": "地図に重ねて見る",
+    "mapHint": "位置情報のある絵図・地図を、いまの地図の上に重ねて見比べます。",
+    "galleryHeading": "3D の美術館で見る",
+    "galleryHint": "この資料の画像を 3D の展示室の壁に掛け、歩いて見て回ります。設定を選んでから「閲覧」を押してください。",
+    "mode": "見かた",
+    "modes": {
+      "orbit": "見回す",
+      "thirdperson": "歩く（三人称）",
+      "walk": "歩く（一人称）"
+    },
+    "look": "内装",
+    "looks": {
+      "standard": "標準",
+      "museum": "写真館"
+    },
+    "quality": "画質",
+    "qualities": {
+      "auto": "自動",
+      "high": "高",
+      "medium": "中",
+      "low": "低"
+    },
+    "limit": "枚数",
+    "limitDefault": "既定",
+    "limitOption": "{n} 枚まで"
   }
 }

@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useAtomValue } from 'jotai';
 import type { ContainerInfo, ManifestV4 } from '../../../core';
 import { useTranslations } from '../../env';
-import { PANELS } from '../../panels/registry';
+import { withExtraPanels } from '../../panels/registry';
+import type { Panel } from '../../panels/types';
 import { annotationsAtom } from '../../atoms';
 import { inferenceResultsAtom } from '../../inference/state';
 import { localAnnotationPagesAtom } from '../../overlays/canvasAnnotationState';
@@ -20,6 +21,8 @@ type Props = {
   /** The container that is shown. Without it: metadata, and annotations when any are loaded (compare page). */
   container?: ContainerInfo;
   manifest?: ManifestV4 | null;
+  /** Tabs added by the host page (links to its own pages etc.), mixed in by order. */
+  extraPanels?: Panel[];
 };
 
 const TAB_CLASS = (active: boolean) =>
@@ -29,7 +32,7 @@ const TAB_CLASS = (active: boolean) =>
       : 'border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
   }`;
 
-const Info = ({ tab, onTabChange, container, manifest }: Props) => {
+const Info = ({ tab, onTabChange, container, manifest, extraPanels }: Props) => {
   const t = useTranslations('Info');
   const [inner, setInner] = useState<InfoTab | null>(null);
   const annotationCount = useAtomValue(annotationsAtom).length;
@@ -38,7 +41,7 @@ const Info = ({ tab, onTabChange, container, manifest }: Props) => {
   // 文字の検索の印そのものは数えない（印だけが残ってタブが消えなくなるため）
   const localAnnotationCount = localPages.filter((l) => l.source !== CONTENT_SEARCH_SOURCE).length + inferenceCount;
   const ctx = { container, manifest, annotationCount, localAnnotationCount };
-  const available = PANELS.filter((p) => p.available(ctx));
+  const available = withExtraPanels(extraPanels).filter((p) => p.available(ctx));
   const ids = available.map((p) => p.id);
   // 「資料情報」は前の「資料情報（about）」タブも兼ねる。古いリンクの ?tab=about はそこへ
   const asked = tab === 'about' ? 'metadata' : tab;
@@ -56,7 +59,7 @@ const Info = ({ tab, onTabChange, container, manifest }: Props) => {
       <div className="flex overflow-x-auto border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
         {available.map((p) => (
           <button key={p.id} onClick={() => handleTabChange(p.id)} className={TAB_CLASS(active?.id === p.id)}>
-            {t(p.id)}
+            {p.label ?? t(p.id)}
           </button>
         ))}
       </div>

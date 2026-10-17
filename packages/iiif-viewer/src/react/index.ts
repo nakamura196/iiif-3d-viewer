@@ -18,6 +18,7 @@ export { default as ModelChoice } from './three/ModelChoice';
 export { default as SidePanel } from './layout/SidePanel';
 export { default as Info, type InfoTab } from './layout/panels/Info';
 export { PANEL_IDS } from './panels/registry';
+export type { Panel, PanelContext } from './panels/types';
 // 権利のタブ（/georef の右の欄でも使う）
 export { rightsPanel } from './panels/AboutPanel';
 export { default as AnnotationList } from './annotation/AnnotationList';

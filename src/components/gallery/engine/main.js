@@ -179,7 +179,11 @@ async function enterByUrl(url, { selections, limit, startMode } = {}) {
   await buildGalleryFromSource({ auto: url, selections, limit }, { resetView: true });
   $("#loading").style.display = "none";
   $("#entrance-back").classList.add("show");
+  // 三人称は ?mode=thirdperson と書いたときだけ(ビューアの「ほかの表示」で選んで来る)。
+  // config の controlMode(thirdperson)では従来どおり見回すで入る
+  const explicit = new URLSearchParams(location.search).get("mode");
   if (startMode === "walk") setMode("walk");
+  else if (explicit === "thirdperson") setMode("thirdperson");
   else if (G.cfg.autoRotate !== false) G.controls.autoRotate = true;
 }
 

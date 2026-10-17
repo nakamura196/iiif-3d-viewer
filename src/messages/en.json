@@ -59,7 +59,6 @@
     "title": "Terms of Service"
   },
   "GeoRef": {
-    "viewOnMap": "View on the map",
     "openInViewer": "Open in the viewer",
     "map": "Map",
     "viewer3d": "3D",
@@ -379,7 +378,34 @@
       "collection": "Collection"
     }
   },
-  "Gallery": {
-    "openInGallery": "View in 3D gallery"
+  "OtherViews": {
+    "tab": "Other views",
+    "open": "Open",
+    "view": "View",
+    "mapHeading": "View on the map",
+    "mapHint": "Overlay the georeferenced map or picture on a present-day map.",
+    "galleryHeading": "View in 3D gallery",
+    "galleryHint": "Hang the images of this item on the walls of a 3D room and walk around. Choose the settings, then press View.",
+    "mode": "Mode",
+    "modes": {
+      "orbit": "Look around",
+      "thirdperson": "Walk (third person)",
+      "walk": "Walk (first person)"
+    },
+    "look": "Interior",
+    "looks": {
+      "standard": "Standard",
+      "museum": "Lightbox"
+    },
+    "quality": "Quality",
+    "qualities": {
+      "auto": "Auto",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "limit": "Works",
+    "limitDefault": "Default",
+    "limitOption": "Up to {n}"
   }
 }

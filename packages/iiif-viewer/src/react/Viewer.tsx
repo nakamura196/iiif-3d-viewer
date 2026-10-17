@@ -10,6 +10,7 @@ import { ViewerEnv, useTranslations, type ResolvedTheme } from './env';
 import Info, { type InfoTab } from './layout/panels/Info';
 import SidePanel from './layout/SidePanel';
 import { CanvasNavigationContext, indexOfCanvas, type CanvasNavigation } from './navigation';
+import type { Panel } from './panels/types';
 import { PlaybackContext, type Playback } from './playback';
 import { useManifest } from './useManifest';
 
@@ -31,6 +32,8 @@ export interface ViewerProps {
   onTabChange?: (tab: InfoTab) => void;
   /** Extra controls placed next to the model choice (bottom left of the 3D view). */
   renderActions?: (state: ViewerActionsState) => ReactNode;
+  /** Extra side panel tabs from the host page (e.g. links to its other pages). */
+  panels?: Panel[];
   className?: string;
 }
 
@@ -52,9 +55,10 @@ function ViewerBody({
   tab,
   onTabChange,
   renderActions,
+  panels,
   className = '',
   dark,
-}: Pick<ViewerProps, 'iiifContent' | 'tab' | 'onTabChange' | 'renderActions' | 'className'> & {
+}: Pick<ViewerProps, 'iiifContent' | 'tab' | 'onTabChange' | 'renderActions' | 'panels' | 'className'> & {
   dark: boolean;
 }) {
   const t = useTranslations('Viewer');
@@ -137,7 +141,7 @@ function ViewerBody({
           {display && container ? view : <div className="relative flex-1 min-h-0 min-w-0">{view}</div>}
         </div>
         <SidePanel className="bg-[var(--ds-surface)] shadow-lg overflow-y-auto border-t sm:border-t-0 sm:border-l border-[var(--ds-border)]">
-          <Info tab={tab} onTabChange={onTabChange} container={container} manifest={manifest} />
+          <Info tab={tab} onTabChange={onTabChange} container={container} manifest={manifest} extraPanels={panels} />
         </SidePanel>
       </div>
       </CanvasNavigationContext.Provider>
@@ -157,6 +161,7 @@ export function Viewer({
   tab,
   onTabChange,
   renderActions,
+  panels,
   className,
 }: ViewerProps) {
   const [store] = useState(() => createStore());
@@ -171,6 +176,7 @@ export function Viewer({
           tab={tab}
           onTabChange={onTabChange}
           renderActions={renderActions}
+          panels={panels}
           className={className}
           dark={resolvedTheme === 'dark'}
         />
