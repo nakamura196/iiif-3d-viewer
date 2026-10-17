@@ -26,6 +26,7 @@ import {
   splitId,
   startOf,
   pageThumbnailUrl,
+  stepArrows,
   viewingOf,
 } from './structure';
 
@@ -48,6 +49,17 @@ describe('断片', () => {
   });
   it('id から断片を分ける', () => {
     expect(splitId('https://x/canvas/1#t=0,9')).toEqual({ id: 'https://x/canvas/1', fragment: { t: [0, 9] } });
+  });
+});
+
+describe('読む向きと前へ／次へ の矢印', () => {
+  it('左から右・右から左は横の矢印。右から左は「次へ」を左に置く', () => {
+    expect(stepArrows('left-to-right')).toEqual({ prev: '←', next: '→', nextFirst: false, vertical: false });
+    expect(stepArrows('right-to-left')).toEqual({ prev: '→', next: '←', nextFirst: true, vertical: false });
+  });
+  it('上から下・下から上は縦の矢印。下から上は「次へ」が上（先）', () => {
+    expect(stepArrows('top-to-bottom')).toEqual({ prev: '↑', next: '↓', nextFirst: false, vertical: true });
+    expect(stepArrows('bottom-to-top')).toEqual({ prev: '↓', next: '↑', nextFirst: true, vertical: true });
   });
 });
 

@@ -17,6 +17,7 @@ import {
   parseContentState,
   parseDroppedText,
   startOf,
+  stepArrows,
   type CanvasTarget,
   type ContentStateTargets,
   type ContainerInfo,
@@ -75,6 +76,8 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
   const type = (manifest as { type?: string } | null)?.type;
   const isCollection = type === 'Collection';
   const rtl = viewing.direction === 'right-to-left';
+  const btt = viewing.direction === 'bottom-to-top';
+  const arrows = stepArrows(viewing.direction);
 
   const go = useCallback(
     (index: number, target?: CanvasTarget, highlight?: boolean) => {
@@ -196,9 +199,9 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
   }, [manifest, type, open]);
 
   // --- keyboard: arrow keys follow the viewing direction ---
-  const keyRef = useRef({ step, rtl, groups, go });
+  const keyRef = useRef({ step, rtl, btt, groups, go });
   useEffect(() => {
-    keyRef.current = { step, rtl, groups, go };
+    keyRef.current = { step, rtl, btt, groups, go };
   });
   useEffect(() => {
     const host = sentinel.current?.parentElement?.parentElement;
@@ -207,7 +210,7 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
     host.classList.add('outline-none');
     const onKey = (e: KeyboardEvent) => {
       if (e.ctrlKey || e.metaKey || e.altKey || isEditable(e.target)) return;
-      const { step: move, rtl: isRtl, groups: gs, go: goTo } = keyRef.current;
+      const { step: move, rtl: isRtl, btt: isBtt, groups: gs, go: goTo } = keyRef.current;
       let handled = true;
       switch (e.key) {
         case 'ArrowRight':
@@ -216,12 +219,16 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
         case 'ArrowLeft':
           move(isRtl ? 1 : -1);
           break;
-        case 'PageDown':
         case 'ArrowDown':
+          move(isBtt ? -1 : 1);
+          break;
+        case 'ArrowUp':
+          move(isBtt ? 1 : -1);
+          break;
+        case 'PageDown':
           move(1);
           break;
         case 'PageUp':
-        case 'ArrowUp':
           move(-1);
           break;
         case 'Home':
@@ -300,8 +307,10 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
 
   const btn =
     'shrink-0 px-2 py-1 text-sm rounded border border-[var(--ds-border)] text-[var(--ds-fg)] hover:bg-[var(--ds-surface-2)] disabled:opacity-40 disabled:hover:bg-transparent';
-  // on the screen the left button is "previous" except for right-to-left books
-  const leftIsNext = rtl;
+  // on the screen the left button is "previous" except for right-to-left and bottom-to-top books;
+  // books read up or down get up/down arrows (the up one on the left)
+  const leftIsNext = arrows.nextFirst;
+  const [leftIcon, rightIcon] = arrows.vertical ? (leftIsNext ? [arrows.next, arrows.prev] : [arrows.prev, arrows.next]) : ['‹', '›'];
 
   return (
     <div className="bg-[var(--ds-surface)] border-b border-[var(--ds-border)]">
@@ -323,7 +332,7 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
             aria-label={leftIsNext ? t('next') : t('prev')}
             title={leftIsNext ? t('next') : t('prev')}
           >
-            ‹
+            {leftIcon}
           </button>
           <span className="text-sm tabular-nums text-[var(--ds-fg)]" aria-live="polite">
             {progress}
@@ -336,7 +345,7 @@ export default function ContainerList({ containers, selected, onSelect }: Props)
             aria-label={leftIsNext ? t('prev') : t('next')}
             title={leftIsNext ? t('prev') : t('next')}
           >
-            ›
+            {rightIcon}
           </button>
         </div>
       )}

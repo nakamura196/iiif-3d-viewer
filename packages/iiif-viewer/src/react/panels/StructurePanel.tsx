@@ -9,6 +9,7 @@ import {
   navigableTree,
   rangesOf,
   sequencesOf,
+  viewingOf,
   type TocNode,
 } from '../../core';
 import { navRequestAtom, nextSeq, sequenceIdAtom } from '../displays/structureState';
@@ -31,12 +32,15 @@ function Tree({
   onOpen,
   time,
   depth,
+  rtl,
 }: {
   nodes: TocNode[];
   activeId: string | undefined;
   time: number;
   onOpen: (node: TocNode) => void;
   depth: number;
+  /** right-to-left books: the thumbnail grid fills from the right */
+  rtl: boolean;
 }) {
   const locale = useLocale();
   const t = useTranslations('Structure');
@@ -72,9 +76,9 @@ function Tree({
             {row(n)}
             {n.children.length > 0 &&
               (thumbs ? (
-                <ul className="grid grid-cols-2 gap-2 p-2">
+                <ul className="grid grid-cols-2 gap-2 p-2" dir={rtl ? 'rtl' : undefined}>
                   {n.children.map((c, j) => (
-                    <li key={`${c.id}-${j}`}>
+                    <li key={`${c.id}-${j}`} dir={rtl ? 'ltr' : undefined}>
                       <button
                         type="button"
                         disabled={!c.target}
@@ -91,7 +95,7 @@ function Tree({
                   ))}
                 </ul>
               ) : (
-                <Tree nodes={n.children} activeId={activeId} time={time} onOpen={onOpen} depth={depth + 1} />
+                <Tree nodes={n.children} activeId={activeId} time={time} onOpen={onOpen} depth={depth + 1} rtl={rtl} />
               ))}
           </li>
         );
@@ -138,7 +142,7 @@ function StructurePanel({ container, manifest }: PanelContext) {
       )}
       {tree.length > 0 ? (
         <nav aria-label={t('toc')}>
-          <Tree nodes={tree} activeId={container?.id} time={currentTime} onOpen={open} depth={0} />
+          <Tree nodes={tree} activeId={container?.id} time={currentTime} onOpen={open} depth={0} rtl={viewingOf(manifest).direction === 'right-to-left'} />
         </nav>
       ) : sequences.length <= 1 ? (
         <p className="text-sm text-[var(--ds-fg)] opacity-70">{t('empty')}</p>
