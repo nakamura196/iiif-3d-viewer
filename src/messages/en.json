@@ -382,6 +382,8 @@
     "tab": "Other views",
     "open": "Open",
     "view": "View",
+    "compareHeading": "Compare two",
+    "compareHint": "Compare two of the candidates (other versions of the model or image) side by side, or with a swipe.",
     "mapHeading": "View on the map",
     "mapHint": "Overlay the georeferenced map or picture on a present-day map.",
     "galleryHeading": "View in 3D gallery",
